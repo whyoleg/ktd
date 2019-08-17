@@ -7,7 +7,7 @@ data class Documentation(
     val byParameters: List<Pair<String, String>>
 )
 
-data class Function(
+data class Definition(
     val name: String,
     val returnType: String,
     val documentation: Documentation,
@@ -15,6 +15,9 @@ data class Function(
 )
 
 const val pack = "dev.whyoleg.ktd"
+const val dir = "library/src/main/kotlin/dev/whyoleg/ktd/api"
+val customKinds = listOf("Photo", "Notification", "Poll", "Animation")
+
 fun header(subPack: String): String =
     """
         @file:Suppress("unused")
@@ -25,84 +28,150 @@ fun header(subPack: String): String =
         import $pack.api.TdApi.*
     """.trimIndent()
 
+val apiHeader = """
+    package $pack.api
+
+    class TdApi {
+        abstract class Object {
+            external override fun toString(): String
+        }
+    
+        abstract class Function : Object() {
+            external override fun toString(): String
+        }
+        
+""".trimIndent()
+
 fun decodeType(type: String): String = when (val t = type.capitalize()) {
-    "Int32" -> "Int"
+    "Int32"          -> "Int"
     "Int53", "Int64" -> "Long"
-    "Bool"  -> "Boolean"
-    "Bytes" -> "ByteArray"
-    else    -> when {
-        t.startsWith("Vector") -> "List<${decodeType(t.drop(7).dropLast(1))}>"
+    "Bool"           -> "Boolean"
+    "Bytes"          -> "ByteArray"
+    else             -> when {
+        t.startsWith("Vector") -> "Array<${decodeType(t.drop(7).dropLast(1))}>"
         else                   -> t
     }
 }
 
+fun List<String>.groupBlocks(): List<List<String>> {
+    val mutableList = mutableListOf<List<String>>()
+    val list = mutableListOf<String>()
+    forEach {
+        if (it.startsWith("//@description ") && list.isNotEmpty()) {
+            mutableList.add(list.toList())
+            list.clear()
+        }
+        list += it
+    }
+    return mutableList
+}
+
+fun List<List<String>>.parseDefinitions(): List<Definition> = map { list ->
+    val documentation = list.dropLast(1)
+    val func = list.last()
+    val funcDefinition = func.dropLast(1).split(" ")
+    val funcName = funcDefinition.first().capitalize()
+    val returnType = funcDefinition.last()
+    val parameters = funcDefinition.drop(1).dropLast(2).map { it.split(":") }.map { (name, type) ->
+        val fName = name.split("_").joinToString("") { it.capitalize() }.decapitalize()
+        val fType = decodeType(type)
+        fName to fType
+    }
+
+    val doc = documentation
+        .joinToString(" ")
+        .replace("//-", "\n")
+        .replace("//@description ", "")
+        .replace("//", "")
+        .replace("@", "\n@")
+
+    val documentation2 = if (doc.contains("\n@")) {
+        val byParameters =
+            doc.substringAfter("\n@")
+                .replace("@", "")
+                .split("\n")
+                .map {
+                    val pName = it.substringBefore(" ")
+                    val fpName = pName.split("_").joinToString("") { it.capitalize() }.decapitalize()
+                    pName to (fpName to it.substringAfter(" ").replace(pName, fpName))
+                }
+        val formated = byParameters.fold(doc.substringBefore("\n@")) { string, v ->
+            string.replace(v.first, v.second.first)
+        }
+        Documentation(formated, byParameters.map { it.second })
+    } else Documentation(doc, emptyList())
+
+    Definition(
+        name = funcName,
+        returnType = returnType,
+        documentation = documentation2,
+        parameters = parameters
+    )
+}
+
+val Definition.valsString
+    get() = if (parameters.isNotEmpty())
+        parameters.joinToString(",\n\t", "(\n\t", "\n)") { (name, type) -> "val $name: $type" }
+    else ""
+
+fun List<Definition>.generateClasses(superClassChooser: (Definition) -> String): List<String> = map {
+    val docMain = it.documentation.main.replace("\n", "\n * ")
+    val docParams =
+        if (it.documentation.byParameters.isNotEmpty())
+            it.documentation.byParameters.joinToString("\n *", "\n *\n *") { (name, text) -> " @$name - $text" }
+        else ""
+
+    val fullDoc = "/**\n * $docMain$docParams\n */"
+
+    val dataIdentificator = if (it.valsString.isEmpty()) "" else "data"
+    "$fullDoc\n$dataIdentificator class ${it.name}${it.valsString}: ${superClassChooser(it)}()\n"
+}
+
 fun main() {
-    val customKinds = listOf("Photo", "Notification", "Poll", "Animation")
 
+    val lines = File("td/td/generate/scheme/td_api.tl").readLines().filter(String::isNotEmpty)
+    val rawFunctions = lines.dropWhile { it != "---functions---" }.drop(1)
 
-    val dir = "library/src/main/kotlin/dev/whyoleg/ktd/api"
-    val lines = File("td/td/generate/scheme/td_api.tl").readLines().asSequence()
-    val rawFunctions = lines.dropWhile { it != "---functions---" }.drop(1).filter(String::isNotEmpty)
+    val (rawClasses, rawObjects) =
+        lines
+            .dropWhile { !it.startsWith("vector") }.drop(1)
+            .takeWhile { it != "---functions---" }
+            .partition { it.startsWith("//@class") }
 
-    val groupedRawFunctions = sequence<List<String>> {
-        val list = mutableListOf<String>()
-        rawFunctions.forEach {
-            if (it.startsWith("//@description ") && list.isNotEmpty()) {
-                yield(list.toList())
-                list.clear()
-            }
-            list += it
-        }
+    val classes = rawClasses.map { it.substringAfter("//@class ") }
+    val classNames = classes.map { it.substringBefore(" ") }
+
+    val generatedAbstracts = classes.map {
+        val name = it.substringBefore(" ")
+        val documentation = it.substringAfter(" @description ")
+        it.substringBefore(" ") to "/**\n * $documentation\n */\nabstract class $name : Object()"
+    }.toMutableList()
+
+    val objectsDefinitions = rawObjects.groupBlocks().parseDefinitions()
+    val generatedObjects = objectsDefinitions.generateClasses { def -> classNames.find { it == def.returnType } ?: "Object" }
+    val zippedObjects = objectsDefinitions zip generatedObjects
+
+    val functionDefinitions = rawFunctions.groupBlocks().parseDefinitions()
+    val generatedFunctions = functionDefinitions.generateClasses { "Function" }
+
+    val objects = zippedObjects.joinToString("\n") { (def, classText) ->
+        val text = generatedAbstracts.find { it.first == def.returnType }?.second
+        if (text != null) {
+            generatedAbstracts.removeIf { it.first == def.returnType }
+            "$text\n\n$classText"
+        } else classText
     }
+    val functions = generatedFunctions.joinToString("\n")
+    val result = "$objects\n$functions".split("\n").joinToString("\n\t", "\t")
+    val apiText = "$apiHeader\n$result\n}"
 
-    val functions = groupedRawFunctions.map { list ->
-        val documentation = list.dropLast(1)
-        val func = list.last()
-        val funcDefinition = func.dropLast(1).split(" ")
-        val funcName = funcDefinition.first().capitalize()
-        val returnType = funcDefinition.last()
-        val parameters = funcDefinition.drop(1).dropLast(2).map { it.split(":") }.map { (name, type) ->
-            val fName = name.split("_").joinToString("") { it.capitalize() }.decapitalize()
-            val fType = decodeType(type)
-            fName to fType
-        }
+    File(dir).mkdirs()
+    File("$dir/TdApi.kt").writeText(apiText)
 
-        val doc = documentation
-            .joinToString(" ")
-            .replace("//-", "\n")
-            .replace("//@description ", "")
-            .replace("//", "")
-            .replace("@", "\n@")
-
-        val documentation2 = if (doc.contains("\n@")) {
-            val byParameters =
-                doc.substringAfter("\n@")
-                    .replace("@", "")
-                    .split("\n")
-                    .map {
-                        val pName = it.substringBefore(" ")
-                        val fpName = pName.split("_").joinToString("") { it.capitalize() }.decapitalize()
-                        pName to (fpName to it.substringAfter(" ").replace(pName, fpName))
-                    }
-            val formated = byParameters.fold(doc.substringBefore("\n@")) { string, v ->
-                string.replace(v.first, v.second.first)
-            }
-            Documentation(formated, byParameters.map { it.second })
-        } else Documentation(doc, emptyList())
-        println(documentation2)
-
-        Function(
-            name = funcName,
-            returnType = returnType,
-            documentation = documentation2,
-            parameters = parameters
-        )
-    }
-
-    val returnTypes = functions.map(Function::returnType).toSet()
+    val returnTypes = functionDefinitions.map(Definition::returnType).toSet()
     val functionKinds = returnTypes.map { it to it.decapitalize().takeWhile(Char::isLowerCase).capitalize() }.toMap()
     val kinds = functionKinds.values.toMutableList() + customKinds - "Ok" - "T"
-    val groupedFunctions = functions.groupBy { (name, returnType) ->
+    val groupedFunctions = functionDefinitions.groupBy { (name, returnType) ->
         when (returnType) {
             "Ok" -> kinds.map { it to name.indexOf(it) }.filter { it.second != -1 }.sortedWith(Comparator { t1, t2 ->
                 when (val c1 = t1.second.compareTo(t2.second)) {
@@ -115,13 +184,11 @@ fun main() {
     }
 
     groupedFunctions.forEach { (kind, list) ->
-        println(kind)
-
         val generatedFunctions = list.map { (name, returnType, documentation, parameters) ->
             val docMain = documentation.main.replace("\n", "\n * ")
             val docParams =
                 if (documentation.byParameters.isNotEmpty())
-                    documentation.byParameters.joinToString("\n*", "\n *\n *") { (name, text) -> " @$name - $text" }
+                    documentation.byParameters.joinToString("\n *", "\n *\n *") { (name, text) -> " @$name - $text" }
                 else ""
 
             val shortDoc = "/**\n * $docMain\n */"

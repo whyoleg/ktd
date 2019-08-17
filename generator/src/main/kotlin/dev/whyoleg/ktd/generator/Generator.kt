@@ -31,6 +31,9 @@ fun header(subPack: String): String =
 val apiHeader = """
     package $pack.api
 
+    typealias TelegramObject = TdApi.Object
+    typealias TelegramFunction = TdApi.Function
+
     class TdApi {
         abstract class Object {
             external override fun toString(): String
@@ -43,11 +46,14 @@ val apiHeader = """
 """.trimIndent()
 
 fun decodeType(type: String): String = when (val t = type.capitalize()) {
-    "Int32"          -> "Int"
-    "Int53", "Int64" -> "Long"
-    "Bool"           -> "Boolean"
-    "Bytes"          -> "ByteArray"
-    else             -> when {
+    "Int32"                          -> "Int"
+    "Int53", "Int64"                 -> "Long"
+    "Bool"                           -> "Boolean"
+    "Bytes"                          -> "ByteArray"
+    "Vector<int32>"                  -> "IntArray"
+    "Vector<int53>", "Vector<int64>" -> "LongArray"
+    "Vector<bool>"                   -> "BooleanArray"
+    else                             -> when {
         t.startsWith("Vector") -> "Array<${decodeType(t.drop(7).dropLast(1))}>"
         else                   -> t
     }
@@ -63,6 +69,7 @@ fun List<String>.groupBlocks(): List<List<String>> {
         }
         list += it
     }
+    if (list.isNotEmpty()) mutableList.add(list)
     return mutableList
 }
 

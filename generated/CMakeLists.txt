@@ -16,13 +16,13 @@ if (NOT Java_FOUND)
 endif()
 message(STATUS "Found Java: ${Java_JAVAC_EXECUTABLE} ${Java_JAVADOC_EXECUTABLE}")
 
-set(TD_API_JAVA_PACKAGE "dev/whyoleg/ktd/api")
+set(TD_API_JAVA_PACKAGE "dev/whyoleg/ktd")
 set(TD_API_JAVA_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(TD_API_TLO_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td/generate/scheme/td_api.tlo)
 set(TD_API_TL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td/generate/scheme/td_api.tl)
 set(TD_API_GENERATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td_generate_java_api)
 
-set(GENERATE_JAVA_API_CMD ${TD_API_GENERATE_PATH} TdApi ${TD_API_TLO_PATH} ${TD_API_JAVA_PATH} ${TD_API_JAVA_PACKAGE})
+set(GENERATE_JAVA_API_CMD ${TD_API_GENERATE_PATH} TdApi ${TD_API_TLO_PATH} ${TD_API_JAVA_PATH} "bin")
 
 set(JAVADOC_TL_DOCUMENTATION_GENERATOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td/generate/JavadocTlDocumentationGenerator.php)
 

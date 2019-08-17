@@ -1,5 +1,6 @@
 package dev.whyoleg.ktd
 
+import dev.whyoleg.ktd.api.*
 import mu.*
 
 @PublishedApi
@@ -13,6 +14,7 @@ internal object Client {
     internal val nativeLogger = KotlinLogging.logger("TelegramNativeLogger")
 
     init {
+        println(System.getProperty("java.library.path"))
         nativeLogger.info { "Start native with: ${System.getProperty("java.library.path")}" }
         runCatching { System.loadLibrary("tdjni") }.onFailure {
             nativeLogger.error(it) { "Can't load td library" }

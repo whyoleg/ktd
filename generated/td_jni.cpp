@@ -9,6 +9,8 @@
 #include <string>
 #include <utility>
 
+#define API_PACKAGE_NAME PACKAGE_NAME "/api"
+
 namespace td_jni {
 
 static td::td_api::object_ptr<td::td_api::Function> fetch_function(JNIEnv *env, jobject function) {
@@ -109,11 +111,12 @@ static jint register_native(JavaVM *vm) {
   };
 
   auto client_class = td::jni::get_jclass(env, PACKAGE_NAME "/Client");
-  auto object_class = td::jni::get_jclass(env, PACKAGE_NAME "/TdApi$Object");
-  auto function_class = td::jni::get_jclass(env, PACKAGE_NAME "/TdApi$Function");
+  auto object_class = td::jni::get_jclass(env, API_PACKAGE_NAME "/TdApi$Object");
+  auto function_class = td::jni::get_jclass(env, API_PACKAGE_NAME "/TdApi$Function");
 
-#define TD_OBJECT "L" PACKAGE_NAME "/TdApi$Object;"
-#define TD_FUNCTION "L" PACKAGE_NAME "/TdApi$Function;"
+
+#define TD_OBJECT "L" API_PACKAGE_NAME "/TdApi$Object;"
+#define TD_FUNCTION "L" API_PACKAGE_NAME "/TdApi$Function;"
   register_method(client_class, "createNativeClient", "()J", Client_createNativeClient);
   register_method(client_class, "nativeClientSend", "(JJ" TD_FUNCTION ")V", Client_nativeClientSend);
   register_method(client_class, "nativeClientReceive", "(J[J[" TD_OBJECT "D)I", Client_nativeClientReceive);
@@ -125,9 +128,9 @@ static jint register_native(JavaVM *vm) {
 #undef TD_FUNCTION
 #undef TD_OBJECT
 
-  td::jni::init_vars(env, PACKAGE_NAME);
-  td::td_api::Object::init_jni_vars(env, PACKAGE_NAME);
-  td::td_api::Function::init_jni_vars(env, PACKAGE_NAME);
+  td::jni::init_vars(env, API_PACKAGE_NAME);
+  td::td_api::Object::init_jni_vars(env, API_PACKAGE_NAME);
+  td::td_api::Function::init_jni_vars(env, API_PACKAGE_NAME);
   td::Log::set_fatal_error_callback(on_fatal_error);
 
   return JAVA_VERSION;

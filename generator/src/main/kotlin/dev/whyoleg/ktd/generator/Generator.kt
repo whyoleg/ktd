@@ -89,10 +89,11 @@ fun List<List<String>>.parseDefinitions(): List<Definition> = map { list ->
     }
 
     val doc = documentation
-        .joinToString(" ")
+        .joinToString("")
         .replace("//-", "\n")
         .replace("//@description ", "")
         .replace("//", "")
+        .replace(" @", "@")
         .replace("@", "\n@")
 
     val documentation2 = if (doc.contains("\n@")) {
@@ -136,8 +137,7 @@ fun List<Definition>.generateClasses(superClassChooser: (Definition) -> String):
 
     val fullDoc = "/**\n * $docMain$docParams\n */"
 
-    val dataIdentificator = if (it.valsString.isEmpty()) "" else "data "
-    "$fullDoc\n${dataIdentificator}class ${it.name}${it.valsString} : ${superClassChooser(it)}() {\n    override val constructor: Int get() = ${it.crc}\n}\n"
+    "$fullDoc\nclass ${it.name}${it.valsString} : ${superClassChooser(it)}() {\n    override val constructor: Int get() = ${it.crc}\n}\n"
 }
 
 fun main() {
@@ -175,7 +175,7 @@ fun main() {
         } else classText
     }
     val functions = generatedFunctions.joinToString("\n")
-    val result = "$objects\n$functions".split("\n").joinToString("\n    ", "    ")
+    val result = "$objects\n$functions".split("\n").joinToString("\n    ", "    ").replace("    \n", "\n")
     val apiText = "$apiHeader\n$result\n}"
 
     File(dir).mkdirs()

@@ -41,11 +41,11 @@ val apiHeader = """
             external override fun toString(): String
             abstract val constructor: Int
         }
-    
+
         abstract class Function : Object() {
             external override fun toString(): String
         }
-        
+
 """.trimIndent()
 
 fun decodeType(type: String): String = when (val t = type.capitalize()) {
@@ -175,8 +175,8 @@ fun main() {
         } else classText
     }
     val functions = generatedFunctions.joinToString("\n")
-    val result = "$objects\n$functions".split("\n").joinToString("\n    ", "    ").replace("    \n", "\n")
-    val apiText = "$apiHeader\n$result\n}"
+    val result = "$objects\n$functions".split("\n").joinToString("\n    ", "    ", "\n").replace("    \n", "\n")
+    val apiText = "$apiHeader\n$result}"
 
     File(dir).mkdirs()
     File("$dir/TdApi.kt").writeText(apiText)
@@ -207,7 +207,8 @@ fun main() {
             val shortDoc = "/**\n * $docMain\n */"
             val fullDoc = "/**\n * $docMain$docParams\n */"
             val params = if (parameters.isNotEmpty()) parameters.joinToString(",\n    ", "\n    ", "\n") { (n, t) -> "$n: $t" } else ""
-            val paramsCall = if (parameters.isNotEmpty()) parameters.joinToString(",\n        ", "\n        ", "\n    ") { it.first } else ""
+            val paramsCall =
+                if (parameters.isNotEmpty()) parameters.joinToString(",\n        ", "\n        ", "\n    ") { it.first } else ""
             val raw = "$shortDoc\nsuspend fun TelegramClient.$kind(\n    f: $name\n): $returnType = execRaw(f) as $returnType\n"
             val paramed =
                 "$fullDoc\nsuspend fun TelegramClient.${name.decapitalize()}($params): $returnType = $kind(\n    $name($paramsCall)\n)\n"

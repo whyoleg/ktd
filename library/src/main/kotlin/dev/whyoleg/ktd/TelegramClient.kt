@@ -54,11 +54,3 @@ class TelegramClient : CoroutineScope {
         }
     }
 }
-
-fun main() {
-    runBlocking {
-        TelegramClient().channel.consumeEach {
-            println(it)
-        }
-    }
-}

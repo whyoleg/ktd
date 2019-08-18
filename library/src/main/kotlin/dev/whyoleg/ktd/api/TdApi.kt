@@ -12,7 +12,7 @@ class TdApi {
     abstract class Function : Object() {
         external override fun toString(): String
     }
-    
+
     /**
      * An object of this type can be returned on every function call, in case of an error
      *
@@ -13153,5 +13153,5 @@ class TdApi {
     class TestUseError : Function() {
         override val constructor: Int get() = 528842186
     }
-    
+
 }

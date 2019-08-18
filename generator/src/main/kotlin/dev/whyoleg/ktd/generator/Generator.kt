@@ -1,6 +1,7 @@
 package dev.whyoleg.ktd.generator
 
 import java.io.*
+import java.util.zip.*
 
 data class Documentation(
     val main: String,
@@ -11,7 +12,8 @@ data class Definition(
     val name: String,
     val returnType: String,
     val documentation: Documentation,
-    val parameters: List<Pair<String, String>>
+    val parameters: List<Pair<String, String>>,
+    val crc: Int
 )
 
 const val pack = "dev.whyoleg.ktd"
@@ -37,6 +39,7 @@ val apiHeader = """
     class TdApi {
         abstract class Object {
             external override fun toString(): String
+            abstract val constructor: Int
         }
     
         abstract class Function : Object() {
@@ -75,8 +78,8 @@ fun List<String>.groupBlocks(): List<List<String>> {
 
 fun List<List<String>>.parseDefinitions(): List<Definition> = map { list ->
     val documentation = list.dropLast(1)
-    val func = list.last()
-    val funcDefinition = func.dropLast(1).split(" ")
+    val func = list.last().dropLast(1)
+    val funcDefinition = func.split(" ")
     val funcName = funcDefinition.first().capitalize()
     val returnType = funcDefinition.last()
     val parameters = funcDefinition.drop(1).dropLast(2).map { it.split(":") }.map { (name, type) ->
@@ -108,17 +111,20 @@ fun List<List<String>>.parseDefinitions(): List<Definition> = map { list ->
         Documentation(formated, byParameters.map { it.second })
     } else Documentation(doc, emptyList())
 
+    val crc = CRC32().apply { update(func.toByteArray()) }.value.toInt()
+
     Definition(
         name = funcName,
         returnType = returnType,
         documentation = documentation2,
-        parameters = parameters
+        parameters = parameters,
+        crc = crc
     )
 }
 
 val Definition.valsString
     get() = if (parameters.isNotEmpty())
-        parameters.joinToString(",\n\t", "(\n\t", "\n)") { (name, type) -> "val $name: $type" }
+        parameters.joinToString(",\n    ", "(\n    ", "\n)") { (name, type) -> "val $name: $type" }
     else ""
 
 fun List<Definition>.generateClasses(superClassChooser: (Definition) -> String): List<String> = map {
@@ -130,8 +136,8 @@ fun List<Definition>.generateClasses(superClassChooser: (Definition) -> String):
 
     val fullDoc = "/**\n * $docMain$docParams\n */"
 
-    val dataIdentificator = if (it.valsString.isEmpty()) "" else "data"
-    "$fullDoc\n$dataIdentificator class ${it.name}${it.valsString}: ${superClassChooser(it)}()\n"
+    val dataIdentificator = if (it.valsString.isEmpty()) "" else "data "
+    "$fullDoc\n${dataIdentificator}class ${it.name}${it.valsString} : ${superClassChooser(it)}() {\n    override val constructor: Int get() = ${it.crc}\n}\n"
 }
 
 fun main() {
@@ -169,7 +175,7 @@ fun main() {
         } else classText
     }
     val functions = generatedFunctions.joinToString("\n")
-    val result = "$objects\n$functions".split("\n").joinToString("\n\t", "\t")
+    val result = "$objects\n$functions".split("\n").joinToString("\n    ", "    ")
     val apiText = "$apiHeader\n$result\n}"
 
     File(dir).mkdirs()
@@ -200,11 +206,11 @@ fun main() {
 
             val shortDoc = "/**\n * $docMain\n */"
             val fullDoc = "/**\n * $docMain$docParams\n */"
-            val params = if (parameters.isNotEmpty()) parameters.joinToString(",\n\t", "\n\t", "\n") { (n, t) -> "$n: $t" } else ""
-            val paramsCall = if (parameters.isNotEmpty()) parameters.joinToString(",\n\t\t", "\n\t\t", "\n\t") { it.first } else ""
-            val raw = "$shortDoc\nsuspend fun TelegramClient.$kind(\n\tf: $name\n): $returnType = execRaw(f) as $returnType\n"
+            val params = if (parameters.isNotEmpty()) parameters.joinToString(",\n    ", "\n    ", "\n") { (n, t) -> "$n: $t" } else ""
+            val paramsCall = if (parameters.isNotEmpty()) parameters.joinToString(",\n        ", "\n        ", "\n    ") { it.first } else ""
+            val raw = "$shortDoc\nsuspend fun TelegramClient.$kind(\n    f: $name\n): $returnType = execRaw(f) as $returnType\n"
             val paramed =
-                "$fullDoc\nsuspend fun TelegramClient.${name.decapitalize()}($params): $returnType = $kind(\n\t$name($paramsCall)\n)\n"
+                "$fullDoc\nsuspend fun TelegramClient.${name.decapitalize()}($params): $returnType = $kind(\n    $name($paramsCall)\n)\n"
             raw to paramed
         }
         File("$dir/$kind").mkdirs()

@@ -31,5 +31,6 @@ internal class NativeClient(private val configuration: TelegramClientConfigurati
             }
             eventIds[i] = 0
         }
+        eventsCount = 0
     }
 }

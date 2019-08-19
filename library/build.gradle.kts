@@ -1,4 +1,5 @@
 plugins {
+    `java-library`
     `maven-publish`
 }
 
@@ -19,6 +20,14 @@ kampJvmCommon {
     }
 }
 
+tasks {
+    jar {
+        from("src/main/libs") {
+            include("**/**/libtdjni.so")
+        }
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -27,7 +36,6 @@ publishing {
             version = "0.1.0"
 
             from(components["java"])
-            artifact(file("src/main/libs/libtdjni.so"))
         }
     }
 }

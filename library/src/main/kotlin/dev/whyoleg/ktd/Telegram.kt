@@ -2,7 +2,6 @@ package dev.whyoleg.ktd
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
-import kotlinx.coroutines.flow.*
 import mu.*
 
 class Telegram(
@@ -24,11 +23,5 @@ class Telegram(
 
     private companion object {
         private val logger = KotlinLogging.logger { }
-    }
-}
-
-suspend fun main() {
-    Telegram().client().updates.collect {
-        println(it)
     }
 }

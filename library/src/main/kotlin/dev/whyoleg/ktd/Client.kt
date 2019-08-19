@@ -2,6 +2,7 @@ package dev.whyoleg.ktd
 
 import dev.whyoleg.ktd.api.*
 import mu.*
+import java.io.*
 
 @PublishedApi
 internal object Client {
@@ -14,8 +15,11 @@ internal object Client {
     val nativeLogger = KotlinLogging.logger("TelegramNativeLogger")
 
     init {
-        nativeLogger.info { "Start native with: ${System.getProperty("java.library.path")}" }
-        runCatching { System.loadLibrary("tdjni") }.onFailure {
+        runCatching {
+            val file = File.createTempFile("libtdjni", ".so")
+            Client::class.java.getResourceAsStream("/linux/amd64/libtdjni.so").copyTo(file.outputStream())
+            System.load(file.absolutePath)
+        }.onFailure {
             nativeLogger.error(it) { "Can't load td library" }
             throw it
         }

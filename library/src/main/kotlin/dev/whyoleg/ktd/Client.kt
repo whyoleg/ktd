@@ -11,7 +11,7 @@ internal object Client {
     external fun nativeClientSend(nativeClientId: Long, eventId: Long, function: TelegramFunction)
     external fun nativeClientReceive(nativeClientId: Long, eventIds: LongArray, events: Array<TelegramObject?>, timeout: Double): Int
 
-    internal val nativeLogger = KotlinLogging.logger("TelegramNativeLogger")
+    val nativeLogger = KotlinLogging.logger("TelegramNativeLogger")
 
     init {
         nativeLogger.info { "Start native with: ${System.getProperty("java.library.path")}" }

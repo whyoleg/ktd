@@ -35,6 +35,7 @@ val apiHeader = """
 
     typealias TelegramObject = TdApi.Object
     typealias TelegramFunction = TdApi.Function
+    typealias TelegramUpdate = TdApi.Update
 
     class TdApi {
         abstract class Object {

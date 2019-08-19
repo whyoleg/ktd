@@ -2,55 +2,69 @@ package dev.whyoleg.ktd
 
 import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.*
 import mu.*
-import kotlin.coroutines.*
 
-class TelegramClient : CoroutineScope {
-    private val job = Job()
-    override val coroutineContext: CoroutineContext = job + Dispatchers.Default
-    private val nativeClient = NativeClient()
+class TelegramClient internal constructor(configuration: TelegramClientConfiguration, parent: Job) : Job by Job(parent) {
+    private val nativeClient = NativeClient(configuration)
     private val eventHandlers = mutableMapOf<Long, CompletableDeferred<TelegramObject>>()
 
-    @PublishedApi
-    internal val channel = Channel<TelegramObject>(Int.MAX_VALUE)
-
     init {
-        launch { eventHandler.send(this@TelegramClient) }
-        job.invokeOnCompletion {
-            logger.debug { "STOP TELEGRAM" }
+        invokeOnCompletion {
+            logger.debug(it) { "Telegram client stopped" }
             nativeClient.destroy()
-            channel.cancel()
-            eventHandlers.values.forEach(CompletableDeferred<*>::cancel)
         }
     }
 
-    fun send(function: TelegramFunction): Long = nativeClient.send(function)
+    private val mutex = Mutex()
+
+    private val objectsCache = UnlimitedCacheChannel<TelegramObject>(this)
+    private val updatesCache = UnlimitedCacheChannel<TelegramUpdate>(this)
+
+    val objects: Flow<TelegramObject> = objectsCache.flow
+    val updates: Flow<TelegramUpdate> = updatesCache.flow
+
+    public fun send(function: TelegramFunction): Long = nativeClient.send(function)
 
     internal suspend fun execRaw(function: TelegramFunction): TelegramObject {
-        val deferred = CompletableDeferred<TelegramObject>(job)
-        val eventId = nativeClient.send(function) { eventHandlers[it] = deferred }
-        val value = deferred.await()
+        val deferred = CompletableDeferred<TelegramObject>(this)
+        val eventId = mutex.withLock {
+            val eventId = send(function)
+            eventHandlers[eventId] = deferred
+            eventId
+        }
+        val result = deferred.runCatching { await() }
         eventHandlers -= eventId
 
-        if (value is TdApi.Error) logger.error { "Error($eventId): $function -> $value" }
-        return value
+        return when (val value = result.getOrThrow()) {
+            is TdApi.Error -> {
+                logger.error { "Error($eventId): $function -> (${value.code})${value.message}" }
+                throw TelegramException(value.code, value.message)
+            }
+            else           -> value
+        }
     }
 
-    private fun receive() = with(nativeClient) {
-        receive { eventId, obj ->
-            eventHandlers[eventId]?.complete(obj) ?: channel.send(obj)
+    internal fun receive() {
+        if (!mutex.tryLock()) return
+        try {
+            nativeClient.receive()
+        } finally {
+            mutex.unlock()
+        }
+        nativeClient.handle { eventId, obj ->
+            when (val handler = eventHandlers[eventId]) {
+                null -> when (obj) {
+                    is TelegramUpdate -> updatesCache.offer(obj)
+                    else              -> objectsCache.offer(obj)
+                }
+                else -> handler.complete(obj)
+            }
         }
     }
 
     private companion object {
         private val logger = KotlinLogging.logger { }
-        //TODO make it explicitly launched and can be canceled
-        private val eventHandler = GlobalScope.actor<TelegramClient>(Dispatchers.IO) {
-            consumeEach { client ->
-                client.runCatching(TelegramClient::receive).onFailure { logger.error(it) { "Error on receiving telegram events" } }
-                if (client.isActive) launch { channel.send(client) }
-            }
-        }
     }
 }

@@ -4,7 +4,7 @@ import dev.whyoleg.kamp.builtin.*
 plugins { `kotlin-dsl` }
 
 buildscript {
-    repositories { mavenLocal() }
+    repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
     dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.0") }
 }
 

@@ -1,3 +1,6 @@
+import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.builtin.*
+
 plugins { `kotlin-dsl` }
 
 buildscript {

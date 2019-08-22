@@ -18,24 +18,17 @@ kampJvmCommon {
             }
         }
     }
+    publishing {
+        bintray(publication) {
+            repo = "ktd"
+        }
+    }
 }
 
 tasks {
     jar {
         from("src/main/libs") {
             include("**/**/libtdjni.so")
-        }
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "dev.whyoleg"
-            artifactId = "ktd"
-            version = "0.1.0"
-
-            from(components["java"])
         }
     }
 }

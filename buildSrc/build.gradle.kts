@@ -5,7 +5,7 @@ plugins { `kotlin-dsl` }
 
 buildscript {
     repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.3") }
+    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.4") }
 }
 
 kampBuild(
@@ -18,5 +18,5 @@ kampBuild(
         logging = "1.7.6"
     )
 ) {
-    with(BuiltInPlugins) { resolvePlugins(updates, kotlinJvm, serialization, atomicfu, versioning, bintray) }
+    with(BuiltInPlugins) { resolvePlugins(updates, kotlinJvm, serialization, atomicfu, versioning, bintray, buildScan) }
 }

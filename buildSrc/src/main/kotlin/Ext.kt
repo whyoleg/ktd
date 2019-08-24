@@ -4,9 +4,11 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") { "0.1.0-${info.build}" }
+val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") { "0.1.0-${versioning.info.build}" }
 
-fun Project.kampJvmCommon(block: KampJvmExtension.() -> Unit) = kampJvm(Versions.builtIn, configuration) {
+@KampDSL
+fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
+    plugins(Plugins.versioning)
     options {
         jvmTarget = Versions.jdk
         sourceCompatibility = Versions.jdk

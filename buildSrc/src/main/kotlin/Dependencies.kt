@@ -3,6 +3,6 @@
 import dev.whyoleg.kamp.builtin.*
 import dev.whyoleg.kamp.dependency.*
 
-object Dependencies : BuiltInDependencies(Versions.builtIn) {
+object Dependencies : BuiltInDependencies() {
     val tdlib = LibraryDependency("src/main/libs/libtdjni.so")
 }

@@ -1,11 +1,10 @@
 plugins {
     `java-library`
-    `maven-publish`
 }
 
-kampJvmCommon {
+kampJvm {
     with(Plugins) {
-        plugins(atomicfu)
+        plugins(atomicfu, mavenPublish)
     }
     source {
         main {

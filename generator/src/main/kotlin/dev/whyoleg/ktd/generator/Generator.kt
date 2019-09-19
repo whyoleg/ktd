@@ -179,7 +179,10 @@ fun main() {
     val result = "$objects\n$functions".split("\n").joinToString("\n    ", "    ", "\n").replace("    \n", "\n")
     val apiText = "$apiHeader\n$result}"
 
-    File(dir).mkdirs()
+    File(dir).apply {
+        deleteRecursively()
+        mkdirs()
+    }
     File("$dir/TdApi.kt").writeText(apiText)
 
     val returnTypes = functionDefinitions.map(Definition::returnType).toSet()

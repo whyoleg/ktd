@@ -13,6 +13,7 @@ val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") {
             "${version}$commitPostfix"
         }
         else -> {
+            println(tag)
             require(version == tag) { "Tag doesn't match version" }
             version
         }

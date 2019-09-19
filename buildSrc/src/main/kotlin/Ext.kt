@@ -6,7 +6,7 @@ import org.gradle.api.*
 
 val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") {
     val version = "0.2.0"
-    when (val tag: String? = System.getenv("GITHUB_REF")?.substringAfter("refs/tags/")) {
+    when (val tag: String? = System.getenv("GITHUB_REF")?.substringAfter("refs/tags/")?.takeIf(String::isNotBlank)) {
         null -> {
             val sha: String? = System.getenv("GITHUB_SHA")
             val commitPostfix = sha?.let { "-$it" } ?: ""

@@ -1,8 +1,8 @@
-name: Build and publish
+name: Build and publish version with commit
 on:
   push:
     branches:
-      - master
+      - develop
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,7 +11,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Build and publish using gradle
+      - name: Build
+        run: ./gradlew build
+      - name: Publish
         env:
           bintray_user: ${{secrets.bintray_user}}
           bintray_key: ${{secrets.bintray_key}}

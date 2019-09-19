@@ -1,3 +1,4 @@
 [submodule "td"]
 	path = td
 	url = git@github.com:tdlib/td.git
+	branch = master

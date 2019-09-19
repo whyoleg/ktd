@@ -15,4 +15,4 @@ cmake -DTd_DIR=$DATA -DCMAKE_INSTALL_PREFIX:PATH=.. ..
 cmake --build . --target install
 
 cd ../bin || exit
-cp libtdjni.so ../../library/src/main/libs
+cp libtdjni.so ../../library/src/main/libs/linux/amd64

@@ -6,14 +6,19 @@ import org.gradle.api.*
 
 val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") {
     val version = "0.2.0"
-    when (val tag: String? = System.getenv("GITHUB_REF")?.substringAfter("refs/tags/")?.takeIf(String::isNotBlank)) {
+    val tag =
+        System.getenv("GITHUB_REF")
+            ?.takeIf { it.startsWith("refs/tags/") }
+            ?.substringAfter("refs/tags/")
+            ?.takeIf(String::isNotBlank)
+
+    when (tag) {
         null -> {
             val sha: String? = System.getenv("GITHUB_SHA")
             val commitPostfix = sha?.let { "-$it" } ?: ""
             "${version}$commitPostfix"
         }
         else -> {
-            println(tag)
             require(version == tag) { "Tag doesn't match version" }
             version
         }

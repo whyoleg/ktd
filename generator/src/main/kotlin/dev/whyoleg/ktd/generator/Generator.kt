@@ -142,13 +142,6 @@ fun List<Definition>.generateClasses(superClassChooser: (Definition) -> String):
 }
 
 fun main() {
-    println("refs/heads/develop"
-        ?.takeIf { it.startsWith("refs/tags/") }
-        ?.substringAfter("refs/tags/")
-        ?.takeIf(String::isNotBlank))
-}
-
-fun main2() {
 
     val lines = File("td/td/generate/scheme/td_api.tl").readLines().filter(String::isNotEmpty)
     val rawFunctions = lines.dropWhile { it != "---functions---" }.drop(1)
@@ -199,7 +192,7 @@ fun main2() {
         when (returnType) {
             "Ok" -> kinds.map { it to name.indexOf(it) }.filter { it.second != -1 }.sortedWith(Comparator { t1, t2 ->
                 when (val c1 = t1.second.compareTo(t2.second)) {
-                    0 -> t2.first.length.compareTo(t1.first.length)
+                    0    -> t2.first.length.compareTo(t1.first.length)
                     else -> c1
                 }
             }).firstOrNull()?.first ?: "util"

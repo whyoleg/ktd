@@ -6,21 +6,19 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.TdApi.*
 
 /**
- * Sets the phone number of the user and sends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitPhoneNumber
+ * Sets the phone number of the user and sends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitPhoneNumber,
+ * or if there is no pending authentication query and the current authorization state is authorizationStateWaitCode or authorizationStateWaitPassword
  *
  * @phoneNumber - The phone number of the user, in international format
- * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
- * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+ * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.setAuthenticationPhoneNumber(
     phoneNumber: String,
-    allowFlashCall: Boolean,
-    isCurrentPhoneNumber: Boolean
+    settings: PhoneNumberAuthenticationSettings
 ): Ok = authentication(
     SetAuthenticationPhoneNumber(
         phoneNumber,
-        allowFlashCall,
-        isCurrentPhoneNumber
+        settings
     )
 )
 
@@ -55,18 +53,15 @@ suspend fun TelegramClient.recoverAuthenticationPassword(
  * Changes the phone number of the user and sends an authentication code to the user's new phone number. On success, returns information about the sent code
  *
  * @phoneNumber - The new phone number of the user in international format
- * @allowFlashCall - Pass true if the code can be sent via flash call to the specified phone number
- * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+ * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.changePhoneNumber(
     phoneNumber: String,
-    allowFlashCall: Boolean,
-    isCurrentPhoneNumber: Boolean
+    settings: PhoneNumberAuthenticationSettings
 ): AuthenticationCodeInfo = authentication(
     ChangePhoneNumber(
         phoneNumber,
-        allowFlashCall,
-        isCurrentPhoneNumber
+        settings
     )
 )
 
@@ -81,18 +76,15 @@ suspend fun TelegramClient.resendChangePhoneNumberCode(): AuthenticationCodeInfo
  * Sends a code to verify a phone number to be added to a user's Telegram Passport
  *
  * @phoneNumber - The phone number of the user, in international format
- * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
- * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+ * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.sendPhoneNumberVerificationCode(
     phoneNumber: String,
-    allowFlashCall: Boolean,
-    isCurrentPhoneNumber: Boolean
+    settings: PhoneNumberAuthenticationSettings
 ): AuthenticationCodeInfo = authentication(
     SendPhoneNumberVerificationCode(
         phoneNumber,
-        allowFlashCall,
-        isCurrentPhoneNumber
+        settings
     )
 )
 
@@ -108,20 +100,17 @@ suspend fun TelegramClient.resendPhoneNumberVerificationCode(): AuthenticationCo
  *
  * @hash - Value of the "hash" parameter from the link
  * @phoneNumber - Value of the "phone" parameter from the link
- * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
- * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+ * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.sendPhoneNumberConfirmationCode(
     hash: String,
     phoneNumber: String,
-    allowFlashCall: Boolean,
-    isCurrentPhoneNumber: Boolean
+    settings: PhoneNumberAuthenticationSettings
 ): AuthenticationCodeInfo = authentication(
     SendPhoneNumberConfirmationCode(
         hash,
         phoneNumber,
-        allowFlashCall,
-        isCurrentPhoneNumber
+        settings
     )
 )
 

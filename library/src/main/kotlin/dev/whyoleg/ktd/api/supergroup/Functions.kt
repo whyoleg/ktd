@@ -27,38 +27,24 @@ suspend fun TelegramClient.supergroup(
 ): Ok = execRaw(f) as Ok
 
 /**
- * Changes the sticker set of a supergroup; requires appropriate rights in the supergroup
+ * Changes the sticker set of a supergroup; requires can_change_info rights
  */
 suspend fun TelegramClient.supergroup(
     f: SetSupergroupStickerSet
 ): Ok = execRaw(f) as Ok
 
 /**
- * Toggles whether all members of a supergroup can add new members; requires appropriate administrator rights in the supergroup.
- */
-suspend fun TelegramClient.supergroup(
-    f: ToggleSupergroupInvites
-): Ok = execRaw(f) as Ok
-
-/**
- * Toggles sender signatures messages sent in a channel; requires appropriate administrator rights in the channel.
+ * Toggles sender signatures messages sent in a channel; requires can_change_info rights
  */
 suspend fun TelegramClient.supergroup(
     f: ToggleSupergroupSignMessages
 ): Ok = execRaw(f) as Ok
 
 /**
- * Toggles whether the message history of a supergroup is available to new members; requires appropriate administrator rights in the supergroup.
+ * Toggles whether the message history of a supergroup is available to new members; requires can_change_info rights
  */
 suspend fun TelegramClient.supergroup(
     f: ToggleSupergroupIsAllHistoryAvailable
-): Ok = execRaw(f) as Ok
-
-/**
- * Changes information about a supergroup or channel; requires appropriate administrator rights
- */
-suspend fun TelegramClient.supergroup(
-    f: SetSupergroupDescription
 ): Ok = execRaw(f) as Ok
 
 /**

@@ -41,6 +41,13 @@ suspend fun TelegramClient.message(
 ): Message = execRaw(f) as Message
 
 /**
+ * Returns information about a public or private message link
+ */
+suspend fun TelegramClient.message(
+    f: GetMessageLinkInfo
+): MessageLinkInfo = execRaw(f) as MessageLinkInfo
+
+/**
  * Sends a message. Returns the sent message
  */
 suspend fun TelegramClient.message(

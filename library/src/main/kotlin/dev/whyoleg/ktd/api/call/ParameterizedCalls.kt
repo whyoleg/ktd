@@ -65,16 +65,19 @@ suspend fun TelegramClient.discardCall(
  * @callId - Call identifier
  * @rating - Call rating; 1-5
  * @comment - An optional user comment if the rating is less than 5
+ * @problems - List of the exact types of problems with the call, specified by the user
  */
 suspend fun TelegramClient.sendCallRating(
     callId: Int,
     rating: Int,
-    comment: String
+    comment: String,
+    problems: Array<CallProblem>
 ): Ok = call(
     SendCallRating(
         callId,
         rating,
-        comment
+        comment,
+        problems
     )
 )
 

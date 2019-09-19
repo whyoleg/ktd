@@ -6,6 +6,22 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.TdApi.*
 
 /**
+ * Finishes user registration. Works only when the current authorization state is authorizationStateWaitRegistration
+ *
+ * @firstName - The first name of the user; 1-64 characters
+ * @lastName - The last name of the user; 0-64 characters
+ */
+suspend fun TelegramClient.registerUser(
+    firstName: String,
+    lastName: String
+): Ok = user(
+    RegisterUser(
+        firstName,
+        lastName
+    )
+)
+
+/**
  * Returns the current user
  */
 suspend fun TelegramClient.getMe(): User = user(

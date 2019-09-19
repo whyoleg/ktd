@@ -69,6 +69,13 @@ suspend fun TelegramClient.test(
 ): Ok = execRaw(f) as Ok
 
 /**
+ * Sends a simple network request to the Telegram servers via proxy; for testing only. Can be called before authorization
+ */
+suspend fun TelegramClient.test(
+    f: TestProxy
+): Ok = execRaw(f) as Ok
+
+/**
  * Forces an updates.getDifference call to the Telegram servers; for testing only
  */
 suspend fun TelegramClient.test(

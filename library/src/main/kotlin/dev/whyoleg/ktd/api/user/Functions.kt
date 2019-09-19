@@ -6,6 +6,13 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.TdApi.*
 
 /**
+ * Finishes user registration. Works only when the current authorization state is authorizationStateWaitRegistration
+ */
+suspend fun TelegramClient.user(
+    f: RegisterUser
+): Ok = execRaw(f) as Ok
+
+/**
  * Returns the current user
  */
 suspend fun TelegramClient.user(

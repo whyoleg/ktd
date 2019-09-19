@@ -84,7 +84,7 @@ suspend fun TelegramClient.getPreferredCountryLanguage(
 )
 
 /**
- * Uses current user IP to found his country. Returns two-letter ISO 3166-1 alpha-2 country code. Can be called before authorization
+ * Uses current user IP to found their country. Returns two-letter ISO 3166-1 alpha-2 country code. Can be called before authorization
  */
 suspend fun TelegramClient.getCountryCode(): Text = text(
     GetCountryCode()

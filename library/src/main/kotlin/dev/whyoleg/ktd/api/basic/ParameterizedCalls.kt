@@ -30,19 +30,3 @@ suspend fun TelegramClient.getBasicGroupFullInfo(
         basicGroupId
     )
 )
-
-/**
- * Toggles the "All members are admins" setting in basic groups; requires creator privileges in the group
- *
- * @basicGroupId - Identifier of the basic group
- * @everyoneIsAdministrator - New value of everyoneIsAdministrator
- */
-suspend fun TelegramClient.toggleBasicGroupAdministrators(
-    basicGroupId: Int,
-    everyoneIsAdministrator: Boolean
-): Ok = basic(
-    ToggleBasicGroupAdministrators(
-        basicGroupId,
-        everyoneIsAdministrator
-    )
-)

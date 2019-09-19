@@ -198,7 +198,7 @@ fun main() {
     }
 
     groupedFunctions.forEach { (kind, list) ->
-        val generatedFunctions = list.map { (name, returnType, documentation, parameters) ->
+        val allFunctions = list.map { (name, returnType, documentation, parameters) ->
             val docMain = documentation.main.replace("\n", "\n * ")
             val docParams =
                 if (documentation.byParameters.isNotEmpty())
@@ -217,11 +217,11 @@ fun main() {
         }
         File("$dir/$kind").mkdirs()
 
-        val shortFunctions = generatedFunctions.map { it.first }
+        val shortFunctions = allFunctions.map { it.first }
         val shortText = "${header(kind)}\n\n${shortFunctions.joinToString("\n")}"
         File("$dir/$kind/Functions.kt").writeText(shortText)
 
-        val longFunctions = generatedFunctions.map { it.second }
+        val longFunctions = allFunctions.map { it.second }
         val longText = "${header(kind)}\n\n${longFunctions.joinToString("\n")}"
 
         File("$dir/$kind/ParameterizedCalls.kt").writeText(longText)

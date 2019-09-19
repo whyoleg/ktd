@@ -18,10 +18,3 @@ suspend fun TelegramClient.basic(
 suspend fun TelegramClient.basic(
     f: GetBasicGroupFullInfo
 ): BasicGroupFullInfo = execRaw(f) as BasicGroupFullInfo
-
-/**
- * Toggles the "All members are admins" setting in basic groups; requires creator privileges in the group
- */
-suspend fun TelegramClient.basic(
-    f: ToggleBasicGroupAdministrators
-): Ok = execRaw(f) as Ok

@@ -111,6 +111,25 @@ suspend fun TelegramClient.testNetwork(): Ok = test(
 )
 
 /**
+ * Sends a simple network request to the Telegram servers via proxy; for testing only. Can be called before authorization
+ *
+ * @server - Proxy server IP address
+ * @port - Proxy server port
+ * @type - Proxy type
+ */
+suspend fun TelegramClient.testProxy(
+    server: String,
+    port: Int,
+    type: ProxyType
+): Ok = test(
+    TestProxy(
+        server,
+        port,
+        type
+    )
+)
+
+/**
  * Forces an updates.getDifference call to the Telegram servers; for testing only
  */
 suspend fun TelegramClient.testGetDifference(): Ok = test(

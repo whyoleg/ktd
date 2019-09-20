@@ -19,6 +19,8 @@ internal object Client {
             val file = File.createTempFile("libtdjni", ".so")
             Client::class.java.getResourceAsStream("/linux/amd64/libtdjni.so").copyTo(file.outputStream())
             System.load(file.absolutePath)
+        }.recover {
+            System.loadLibrary("tdjni") //if no lib in jar - find on local machine
         }.onFailure {
             nativeLogger.error(it) { "Can't load td library" }
             throw it

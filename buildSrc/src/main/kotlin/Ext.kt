@@ -5,7 +5,7 @@ import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
 val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") {
-    val version = "0.2.0"
+    val version = "0.2.1"
     val tag =
         System.getenv("GITHUB_REF")
             ?.takeIf { it.startsWith("refs/tags/") }

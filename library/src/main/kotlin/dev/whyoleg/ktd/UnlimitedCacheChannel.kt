@@ -9,10 +9,12 @@ internal class UnlimitedCacheChannel<T>(job: Job) {
     private inner class Add(val value: T) : Action()
     private inner class Sub(val channel: SendChannel<T>) : Action()
     private inner class UnSub(val channel: SendChannel<T>) : Action()
+    private inner class Clear : Action()
+
+    private val list = mutableListOf<T>()
+    private val subscribers = mutableSetOf<SendChannel<T>>()
 
     private val cache = GlobalScope.actor<Action>(Dispatchers.Default + job, Channel.UNLIMITED) {
-        val list = mutableListOf<T>()
-        val subscribers = mutableSetOf<SendChannel<T>>()
         consumeEach { action ->
             when (action) {
                 is Add   -> {
@@ -26,13 +28,22 @@ internal class UnlimitedCacheChannel<T>(job: Job) {
                     list.forEach { ch.offer(it) }
                 }
                 is UnSub -> subscribers -= action.channel
+                is Clear -> list.clear()
             }
         }
     }
 
+    init {
+        cache.invokeOnClose { error ->
+            subscribers.forEach { it.close(error) }
+            subscribers.clear()
+            list.clear()
+        }
+    }
+
     val flow: Flow<T>
-        get() = flow<T> {
-            val unlimitedFlow = channelFlow<T> {
+        get() = flow {
+            val unlimitedFlow = channelFlow {
                 cache.offer(Sub(this))
                 awaitClose { cache.offer(UnSub(this)) }
             }.buffer(Channel.UNLIMITED)
@@ -41,5 +52,9 @@ internal class UnlimitedCacheChannel<T>(job: Job) {
 
     fun offer(value: T) {
         cache.offer(Add(value))
+    }
+
+    fun clear() {
+        cache.offer(Clear())
     }
 }

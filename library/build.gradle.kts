@@ -24,6 +24,7 @@ kampJvm {
     }
 }
 
+//TODO add this to kamp, them remove
 tasks {
     jar {
         from("src/main/libs") {

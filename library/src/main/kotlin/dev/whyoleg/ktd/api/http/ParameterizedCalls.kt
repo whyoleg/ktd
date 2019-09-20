@@ -22,7 +22,36 @@ suspend fun TelegramClient.getMessageLink(
 )
 
 /**
- * Returns URL with the chat statistics. Currently this method can be used only for channels
+ * Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements. The URL will be valid for 30 seconds after generation
+ *
+ * @languageCode - Language code for which the emoji replacements will be suggested
+ */
+suspend fun TelegramClient.getEmojiSuggestionsUrl(
+    languageCode: String
+): HttpUrl = http(
+    GetEmojiSuggestionsUrl(
+        languageCode
+    )
+)
+
+/**
+ * Constructs a persistent HTTP URL for a background
+ *
+ * @name - Background name
+ * @type - Background type
+ */
+suspend fun TelegramClient.getBackgroundUrl(
+    name: String,
+    type: BackgroundType
+): HttpUrl = http(
+    GetBackgroundUrl(
+        name,
+        type
+    )
+)
+
+/**
+ * Returns an HTTP URL with the chat statistics. Currently this method can be used only for channels
  *
  * @chatId - Chat identifier
  * @parameters - Parameters from "tg:statsrefresh?params=******" link

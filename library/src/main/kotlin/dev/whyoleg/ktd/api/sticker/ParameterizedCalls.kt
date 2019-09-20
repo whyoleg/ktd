@@ -206,19 +206,6 @@ suspend fun TelegramClient.removeFavoriteSticker(
 )
 
 /**
- * Returns emoji corresponding to a sticker
- *
- * @sticker - Sticker file identifier
- */
-suspend fun TelegramClient.getStickerEmojis(
-    sticker: InputFile
-): StickerEmojis = sticker(
-    GetStickerEmojis(
-        sticker
-    )
-)
-
-/**
  * Creates a new sticker set; for bots only. Returns the newly created sticker set
  *
  * @userId - Sticker set owner

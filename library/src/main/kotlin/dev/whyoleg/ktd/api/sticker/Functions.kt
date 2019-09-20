@@ -104,13 +104,6 @@ suspend fun TelegramClient.sticker(
 ): Ok = execRaw(f) as Ok
 
 /**
- * Returns emoji corresponding to a sticker
- */
-suspend fun TelegramClient.sticker(
-    f: GetStickerEmojis
-): StickerEmojis = execRaw(f) as StickerEmojis
-
-/**
  * Creates a new sticker set; for bots only. Returns the newly created sticker set
  */
 suspend fun TelegramClient.sticker(

@@ -13,7 +13,21 @@ suspend fun TelegramClient.http(
 ): HttpUrl = execRaw(f) as HttpUrl
 
 /**
- * Returns URL with the chat statistics. Currently this method can be used only for channels
+ * Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements. The URL will be valid for 30 seconds after generation
+ */
+suspend fun TelegramClient.http(
+    f: GetEmojiSuggestionsUrl
+): HttpUrl = execRaw(f) as HttpUrl
+
+/**
+ * Constructs a persistent HTTP URL for a background
+ */
+suspend fun TelegramClient.http(
+    f: GetBackgroundUrl
+): HttpUrl = execRaw(f) as HttpUrl
+
+/**
+ * Returns an HTTP URL with the chat statistics. Currently this method can be used only for channels
  */
 suspend fun TelegramClient.http(
     f: GetChatStatisticsUrl

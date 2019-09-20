@@ -276,7 +276,7 @@ suspend fun TelegramClient.createNewSecretChat(
 )
 
 /**
- * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom. Deactivates the original basic group
+ * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom; requires creator privileges. Deactivates the original basic group
  *
  * @chatId - Identifier of the chat to upgrade
  */
@@ -289,7 +289,7 @@ suspend fun TelegramClient.upgradeBasicGroupChatToSupergroupChat(
 )
 
 /**
- * Changes the chat title. Supported only for basic groups, supergroups and channels. Requires administrator rights in basic groups and the appropriate administrator rights in supergroups and channels. The title will not be changed until the request to the server has been completed
+ * Changes the chat title. Supported only for basic groups, supergroups and channels. Requires can_change_info rights. The title will not be changed until the request to the server has been completed
  *
  * @chatId - Chat identifier
  * @title - New title of the chat; 1-128 characters
@@ -305,7 +305,7 @@ suspend fun TelegramClient.setChatTitle(
 )
 
 /**
- * Changes the photo of a chat. Supported only for basic groups, supergroups and channels. Requires administrator rights in basic groups and the appropriate administrator rights in supergroups and channels. The photo will not be changed before request to the server has been completed
+ * Changes the photo of a chat. Supported only for basic groups, supergroups and channels. Requires can_change_info rights. The photo will not be changed before request to the server has been completed
  *
  * @chatId - Chat identifier
  * @photo - New chat photo. You can use a zero InputFileId to delete the chat photo. Files that are accessible only by HTTP URL are not acceptable
@@ -317,6 +317,22 @@ suspend fun TelegramClient.setChatPhoto(
     SetChatPhoto(
         chatId,
         photo
+    )
+)
+
+/**
+ * Changes the chat members permissions. Supported only for basic groups and supergroups. Requires can_restrict_members administrator right
+ *
+ * @chatId - Chat identifier
+ * @permissions - New non-administrator members permissions in the chat
+ */
+suspend fun TelegramClient.setChatPermissions(
+    chatId: Long,
+    permissions: ChatPermissions
+): Ok = chat(
+    SetChatPermissions(
+        chatId,
+        permissions
     )
 )
 
@@ -417,7 +433,23 @@ suspend fun TelegramClient.setChatClientData(
 )
 
 /**
- * Pins a message in a chat; requires appropriate administrator rights in the group or channel
+ * Changes information about a chat. Available for basic groups, supergroups, and channels. Requires can_change_info rights
+ *
+ * @chatId - Identifier of the chat
+ * @paramDescription - New chat description; 0-255 characters
+ */
+suspend fun TelegramClient.setChatDescription(
+    chatId: Long,
+    description: String
+): Ok = chat(
+    SetChatDescription(
+        chatId,
+        description
+    )
+)
+
+/**
+ * Pins a message in a chat; requires can_pin_messages rights
  *
  * @chatId - Identifier of the chat
  * @messageId - Identifier of the new pinned message
@@ -436,7 +468,7 @@ suspend fun TelegramClient.pinChatMessage(
 )
 
 /**
- * Removes the pinned message from a chat; requires appropriate administrator rights in the group or channel
+ * Removes the pinned message from a chat; requires can_pin_messages rights in the group or channel
  *
  * @chatId - Identifier of the chat
  */
@@ -567,7 +599,7 @@ suspend fun TelegramClient.searchChatMembers(
 )
 
 /**
- * Generates a new invite link for a chat; the previously generated link is revoked. Available for basic groups, supergroups, and channels. In basic groups this can be called only by the group's creator; in supergroups and channels this requires appropriate administrator rights
+ * Generates a new invite link for a chat; the previously generated link is revoked. Available for basic groups, supergroups, and channels. Requires administrator privileges and can_invite_users right
  *
  * @chatId - Chat identifier
  */

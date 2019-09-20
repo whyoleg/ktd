@@ -179,8 +179,10 @@ suspend fun TelegramClient.sendMessageAlbum(
  * @fromChatId - Identifier of the chat from which to forward messages
  * @messageIds - Identifiers of the messages to forward
  * @disableNotification - Pass true to disable notification for the message, doesn't work if messages are forwarded to a secret chat
- * @fromBackground - Pass true if the message is sent from the background
+ * @fromBackground - Pass true if the messages are sent from the background
  * @asAlbum - True, if the messages should be grouped into an album after forwarding. For this to work, no more than 10 messages may be forwarded, and all of them must be photo or video messages
+ * @sendCopy - True, if content of the messages needs to be copied without links to the original messages. Always true if the messages are forwarded to a secret chat
+ * @removeCaption - True, if media captions of message copies needs to be removed. Ignored if send_copy is false
  */
 suspend fun TelegramClient.forwardMessages(
     chatId: Long,
@@ -188,7 +190,9 @@ suspend fun TelegramClient.forwardMessages(
     messageIds: LongArray,
     disableNotification: Boolean,
     fromBackground: Boolean,
-    asAlbum: Boolean
+    asAlbum: Boolean,
+    sendCopy: Boolean,
+    removeCaption: Boolean
 ): Messages = messages(
     ForwardMessages(
         chatId,
@@ -196,7 +200,26 @@ suspend fun TelegramClient.forwardMessages(
         messageIds,
         disableNotification,
         fromBackground,
-        asAlbum
+        asAlbum,
+        sendCopy,
+        removeCaption
+    )
+)
+
+/**
+ * Resends messages which failed to send. Can be called only for messages for which messageSendingStateFailed.can_retry is true and after specified in messageSendingStateFailed.retry_after time passed.
+ * If a message is re-sent, the corresponding failed to send message is deleted. Returns the sent messages in the same order as the message identifiers passed in messageIds. If a message can't be re-sent, null will be returned instead of the message
+ *
+ * @chatId - Identifier of the chat to send messages
+ * @messageIds - Identifiers of the messages to resend. Message identifiers must be in a strictly increasing order
+ */
+suspend fun TelegramClient.resendMessages(
+    chatId: Long,
+    messageIds: LongArray
+): Messages = messages(
+    ResendMessages(
+        chatId,
+        messageIds
     )
 )
 

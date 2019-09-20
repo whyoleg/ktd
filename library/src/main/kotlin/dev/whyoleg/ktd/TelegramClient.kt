@@ -27,7 +27,7 @@ class TelegramClient internal constructor(configuration: TelegramClientConfigura
 
     public fun send(function: TelegramFunction): Long = nativeClient.send(function)
 
-    internal suspend fun execRaw(function: TelegramFunction): TelegramObject {
+    suspend fun execRaw(function: TelegramFunction): TelegramObject {
         val deferred = CompletableDeferred<TelegramObject>(this)
         val eventId = mutex.withLock {
             val eventId = send(function)

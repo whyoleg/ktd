@@ -7,7 +7,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 
 /**
  * Returns an ordered list of chats. Chats are sorted by the pair (order, chat_id) in decreasing order. (For example, to get a list of chats from the beginning, the offsetOrder should be equal to a biggest signed 64-bit number 9223372036854775807 == 2^63 - 1).
- * For optimal performance the number of returned chats is chosen by the library.
+ * For optimal performance the number of returned chats is chosen by the library
  */
 suspend fun TelegramClient.chats(
     f: GetChats
@@ -42,7 +42,7 @@ suspend fun TelegramClient.chats(
 ): Chats = execRaw(f) as Chats
 
 /**
- * Returns a list of public chats created by the user
+ * Returns a list of public chats with username created by the user
  */
 suspend fun TelegramClient.chats(
     f: GetCreatedPublicChats

@@ -83,6 +83,19 @@ suspend fun TelegramClient.getChatMessageByDate(
 )
 
 /**
+ * Returns information about a public or private message link
+ *
+ * @url - The message link in the format "https:t.me/c/...", or "tg:privatepost?...", or "https:t.me/username/...", or "tg:resolve?..."
+ */
+suspend fun TelegramClient.getMessageLinkInfo(
+    url: String
+): MessageLinkInfo = message(
+    GetMessageLinkInfo(
+        url
+    )
+)
+
+/**
  * Sends a message. Returns the sent message
  *
  * @chatId - Target chat
@@ -115,7 +128,7 @@ suspend fun TelegramClient.sendMessage(
  *
  * @botUserId - Identifier of the bot
  * @chatId - Identifier of the target chat
- * @parameter - A hidden parameter sent to the bot for deep linking purposes (https:api.telegram.org/bots#deep-linking)
+ * @parameter - A hidden parameter sent to the bot for deep linking purposes (https:core.telegram.org/bots#deep-linking)
  */
 suspend fun TelegramClient.sendBotStartMessage(
     botUserId: Int,

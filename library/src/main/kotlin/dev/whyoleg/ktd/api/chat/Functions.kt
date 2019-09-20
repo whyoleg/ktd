@@ -132,24 +132,31 @@ suspend fun TelegramClient.chat(
 ): Chat = execRaw(f) as Chat
 
 /**
- * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom. Deactivates the original basic group
+ * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom; requires creator privileges. Deactivates the original basic group
  */
 suspend fun TelegramClient.chat(
     f: UpgradeBasicGroupChatToSupergroupChat
 ): Chat = execRaw(f) as Chat
 
 /**
- * Changes the chat title. Supported only for basic groups, supergroups and channels. Requires administrator rights in basic groups and the appropriate administrator rights in supergroups and channels. The title will not be changed until the request to the server has been completed
+ * Changes the chat title. Supported only for basic groups, supergroups and channels. Requires can_change_info rights. The title will not be changed until the request to the server has been completed
  */
 suspend fun TelegramClient.chat(
     f: SetChatTitle
 ): Ok = execRaw(f) as Ok
 
 /**
- * Changes the photo of a chat. Supported only for basic groups, supergroups and channels. Requires administrator rights in basic groups and the appropriate administrator rights in supergroups and channels. The photo will not be changed before request to the server has been completed
+ * Changes the photo of a chat. Supported only for basic groups, supergroups and channels. Requires can_change_info rights. The photo will not be changed before request to the server has been completed
  */
 suspend fun TelegramClient.chat(
     f: SetChatPhoto
+): Ok = execRaw(f) as Ok
+
+/**
+ * Changes the chat members permissions. Supported only for basic groups and supergroups. Requires can_restrict_members administrator right
+ */
+suspend fun TelegramClient.chat(
+    f: SetChatPermissions
 ): Ok = execRaw(f) as Ok
 
 /**
@@ -195,14 +202,21 @@ suspend fun TelegramClient.chat(
 ): Ok = execRaw(f) as Ok
 
 /**
- * Pins a message in a chat; requires appropriate administrator rights in the group or channel
+ * Changes information about a chat. Available for basic groups, supergroups, and channels. Requires can_change_info rights
+ */
+suspend fun TelegramClient.chat(
+    f: SetChatDescription
+): Ok = execRaw(f) as Ok
+
+/**
+ * Pins a message in a chat; requires can_pin_messages rights
  */
 suspend fun TelegramClient.chat(
     f: PinChatMessage
 ): Ok = execRaw(f) as Ok
 
 /**
- * Removes the pinned message from a chat; requires appropriate administrator rights in the group or channel
+ * Removes the pinned message from a chat; requires can_pin_messages rights in the group or channel
  */
 suspend fun TelegramClient.chat(
     f: UnpinChatMessage
@@ -258,7 +272,7 @@ suspend fun TelegramClient.chat(
 ): ChatMembers = execRaw(f) as ChatMembers
 
 /**
- * Generates a new invite link for a chat; the previously generated link is revoked. Available for basic groups, supergroups, and channels. In basic groups this can be called only by the group's creator; in supergroups and channels this requires appropriate administrator rights
+ * Generates a new invite link for a chat; the previously generated link is revoked. Available for basic groups, supergroups, and channels. Requires administrator privileges and can_invite_users right
  */
 suspend fun TelegramClient.chat(
     f: GenerateChatInviteLink

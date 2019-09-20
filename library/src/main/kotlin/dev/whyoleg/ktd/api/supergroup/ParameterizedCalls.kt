@@ -48,7 +48,7 @@ suspend fun TelegramClient.setSupergroupUsername(
 )
 
 /**
- * Changes the sticker set of a supergroup; requires appropriate rights in the supergroup
+ * Changes the sticker set of a supergroup; requires can_change_info rights
  *
  * @supergroupId - Identifier of the supergroup
  * @stickerSetId - New value of the supergroup sticker set identifier. Use 0 to remove the supergroup sticker set
@@ -64,23 +64,7 @@ suspend fun TelegramClient.setSupergroupStickerSet(
 )
 
 /**
- * Toggles whether all members of a supergroup can add new members; requires appropriate administrator rights in the supergroup.
- *
- * @supergroupId - Identifier of the supergroup
- * @anyoneCanInvite - New value of anyoneCanInvite
- */
-suspend fun TelegramClient.toggleSupergroupInvites(
-    supergroupId: Int,
-    anyoneCanInvite: Boolean
-): Ok = supergroup(
-    ToggleSupergroupInvites(
-        supergroupId,
-        anyoneCanInvite
-    )
-)
-
-/**
- * Toggles sender signatures messages sent in a channel; requires appropriate administrator rights in the channel.
+ * Toggles sender signatures messages sent in a channel; requires can_change_info rights
  *
  * @supergroupId - Identifier of the channel
  * @signMessages - New value of signMessages
@@ -96,7 +80,7 @@ suspend fun TelegramClient.toggleSupergroupSignMessages(
 )
 
 /**
- * Toggles whether the message history of a supergroup is available to new members; requires appropriate administrator rights in the supergroup.
+ * Toggles whether the message history of a supergroup is available to new members; requires can_change_info rights
  *
  * @supergroupId - The identifier of the supergroup
  * @isAllHistoryAvailable - The new value of isAllHistoryAvailable
@@ -108,22 +92,6 @@ suspend fun TelegramClient.toggleSupergroupIsAllHistoryAvailable(
     ToggleSupergroupIsAllHistoryAvailable(
         supergroupId,
         isAllHistoryAvailable
-    )
-)
-
-/**
- * Changes information about a supergroup or channel; requires appropriate administrator rights
- *
- * @supergroupId - Identifier of the supergroup or channel
- * @paramDescription - New supergroup or channel description; 0-255 characters
- */
-suspend fun TelegramClient.setSupergroupDescription(
-    supergroupId: Int,
-    description: String
-): Ok = supergroup(
-    SetSupergroupDescription(
-        supergroupId,
-        description
     )
 )
 

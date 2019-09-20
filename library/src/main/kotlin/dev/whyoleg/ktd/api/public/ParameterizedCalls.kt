@@ -6,7 +6,7 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.TdApi.*
 
 /**
- * Returns a public HTTPS link to a message. Available only for messages in public supergroups and channels
+ * Returns a public HTTPS link to a message. Available only for messages in supergroups and channels with username
  *
  * @chatId - Identifier of the chat to which the message belongs
  * @messageId - Identifier of the message

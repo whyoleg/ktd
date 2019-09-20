@@ -195,7 +195,7 @@ class TdApi {
      * Contains Telegram terms of service
      *
      * @text - Text of the terms of service
-     * @minUserAge - Mininum age of a user to be able to accept the terms; 0 if any
+     * @minUserAge - Minimum age of a user to be able to accept the terms; 0 if any
      * @showPopup - True, if a blocking popup with terms of service must be shown to the user
      */
     class TermsOfService(
@@ -237,25 +237,32 @@ class TdApi {
     }
 
     /**
-     * TDLib needs the user's authentication code to finalize authorization
+     * TDLib needs the user's authentication code to authorize
      *
-     * @isRegistered - True, if the user is already registered
-     * @termsOfService - Telegram terms of service, which should be accepted before user can continue registration; may be null
      * @codeInfo - Information about the authorization code that was sent
      */
     class AuthorizationStateWaitCode(
-        val isRegistered: Boolean,
-        val termsOfService: TermsOfService,
         val codeInfo: AuthenticationCodeInfo
     ) : AuthorizationState() {
-        override val constructor: Int get() = -122899120
+        override val constructor: Int get() = 52643073
+    }
+
+    /**
+     * The user is unregistered and need to accept terms of service and enter their first name and last name to finish registration
+     *
+     * @termsOfService - Telegram terms of service
+     */
+    class AuthorizationStateWaitRegistration(
+        val termsOfService: TermsOfService
+    ) : AuthorizationState() {
+        override val constructor: Int get() = 550350511
     }
 
     /**
      * The user has been authorized, but needs to enter a password to start using the application
      *
      * @passwordHint - Hint for the password; may be empty
-     * @hasRecoveryEmailAddress - True if a recovery email address has been set up
+     * @hasRecoveryEmailAddress - True, if a recovery email address has been set up
      * @recoveryEmailAddressPattern - Pattern of the email address to which the recovery email was sent; empty until a recovery email has been sent
      */
     class AuthorizationStateWaitPassword(
@@ -471,6 +478,21 @@ class TdApi {
     }
 
     /**
+     * Thumbnail image of a very poor quality and low resolution
+     *
+     * @width - Thumbnail width, usually doesn't exceed 40
+     * @height - Thumbnail height, usually doesn't exceed 40
+     * @data - The thumbnail in JPEG format
+     */
+    class Minithumbnail(
+        val width: Int,
+        val height: Int,
+        val data: ByteArray
+    ) : Object() {
+        override val constructor: Int get() = -328540758
+    }
+
+    /**
      * Part of the face, relative to which a mask should be placed
      */
     abstract class MaskPoint : Object()
@@ -547,6 +569,7 @@ class TdApi {
      * @height - Height of the animation
      * @fileName - Original name of the file; as defined by the sender
      * @mimeType - MIME type of the file, usually "image/gif" or "video/mp4"
+     * @minithumbnail - Animation minithumbnail; may be null
      * @thumbnail - Animation thumbnail; may be null
      * @animation - File containing the animation
      */
@@ -556,10 +579,11 @@ class TdApi {
         val height: Int,
         val fileName: String,
         val mimeType: String,
+        val minithumbnail: Minithumbnail,
         val thumbnail: PhotoSize,
         val animation: File
     ) : Object() {
-        override val constructor: Int get() = -1723168340
+        override val constructor: Int get() = -1629245379
     }
 
     /**
@@ -570,6 +594,7 @@ class TdApi {
      * @performer - Performer of the audio; as defined by the sender
      * @fileName - Original name of the file; as defined by the sender
      * @mimeType - The MIME type of the file; as defined by the sender
+     * @albumCoverMinithumbnail - The minithumbnail of the album cover; may be null
      * @albumCoverThumbnail - The thumbnail of the album cover; as defined by the sender. The full size thumbnail should be extracted from the downloaded file; may be null
      * @audio - File containing the audio
      */
@@ -579,10 +604,11 @@ class TdApi {
         val performer: String,
         val fileName: String,
         val mimeType: String,
+        val albumCoverMinithumbnail: Minithumbnail,
         val albumCoverThumbnail: PhotoSize,
         val audio: File
     ) : Object() {
-        override val constructor: Int get() = 383148432
+        override val constructor: Int get() = 1475294302
     }
 
     /**
@@ -590,29 +616,33 @@ class TdApi {
      *
      * @fileName - Original name of the file; as defined by the sender
      * @mimeType - MIME type of the file; as defined by the sender
-     * @thumbnail - Document thumbnail; as defined by the sender; may be null
+     * @minithumbnail - Document minithumbnail; may be null
+     * @thumbnail - Document thumbnail in JPEG or PNG format (PNG will be used only for background patterns); as defined by the sender; may be null
      * @document - File containing the document
      */
     class Document(
         val fileName: String,
         val mimeType: String,
+        val minithumbnail: Minithumbnail,
         val thumbnail: PhotoSize,
         val document: File
     ) : Object() {
-        override val constructor: Int get() = -736037786
+        override val constructor: Int get() = 21881988
     }
 
     /**
      * Describes a photo
      *
      * @hasStickers - True, if stickers were added to the photo
+     * @minithumbnail - Photo minithumbnail; may be null
      * @sizes - Available variants of the photo, in different sizes
      */
     class Photo(
         val hasStickers: Boolean,
+        val minithumbnail: Minithumbnail,
         val sizes: Array<PhotoSize>
     ) : Object() {
-        override val constructor: Int get() = 1749213339
+        override val constructor: Int get() = 274335369
     }
 
     /**
@@ -622,6 +652,7 @@ class TdApi {
      * @width - Sticker width; as defined by the sender
      * @height - Sticker height; as defined by the sender
      * @emoji - Emoji corresponding to the sticker
+     * @isAnimated - True, if the sticker is an animated sticker in TGS format
      * @isMask - True, if the sticker is a mask
      * @maskPosition - Position where the mask should be placed; may be null
      * @thumbnail - Sticker thumbnail in WEBP or JPEG format; may be null
@@ -632,12 +663,13 @@ class TdApi {
         val width: Int,
         val height: Int,
         val emoji: String,
+        val isAnimated: Boolean,
         val isMask: Boolean,
         val maskPosition: MaskPosition,
         val thumbnail: PhotoSize,
         val sticker: File
     ) : Object() {
-        override val constructor: Int get() = -876442962
+        override val constructor: Int get() = -1835470627
     }
 
     /**
@@ -650,6 +682,7 @@ class TdApi {
      * @mimeType - MIME type of the file; as defined by the sender
      * @hasStickers - True, if stickers were added to the photo
      * @supportsStreaming - True, if the video should be tried to be streamed
+     * @minithumbnail - Video minithumbnail; may be null
      * @thumbnail - Video thumbnail; as defined by the sender; may be null
      * @video - File containing the video
      */
@@ -661,10 +694,11 @@ class TdApi {
         val mimeType: String,
         val hasStickers: Boolean,
         val supportsStreaming: Boolean,
+        val minithumbnail: Minithumbnail,
         val thumbnail: PhotoSize,
         val video: File
     ) : Object() {
-        override val constructor: Int get() = -437410347
+        override val constructor: Int get() = -536898740
     }
 
     /**
@@ -672,16 +706,18 @@ class TdApi {
      *
      * @duration - Duration of the video, in seconds; as defined by the sender
      * @length - Video width and height; as defined by the sender
+     * @minithumbnail - Video minithumbnail; may be null
      * @thumbnail - Video thumbnail; as defined by the sender; may be null
      * @video - File containing the video
      */
     class VideoNote(
         val duration: Int,
         val length: Int,
+        val minithumbnail: Minithumbnail,
         val thumbnail: PhotoSize,
         val video: File
     ) : Object() {
-        override val constructor: Int get() = -1177396120
+        override val constructor: Int get() = -1080075672
     }
 
     /**
@@ -800,8 +836,8 @@ class TdApi {
      * Describes a user profile photo
      *
      * @id - Photo identifier; 0 for an empty photo. Can be used to find a photo in a list of userProfilePhotos
-     * @small - A small (160x160) user profile photo
-     * @big - A big (640x640) user profile photo
+     * @small - A small (160x160) user profile photo. The file can be downloaded only before the photo is changed
+     * @big - A big (640x640) user profile photo. The file can be downloaded only before the photo is changed
      */
     class ProfilePhoto(
         val id: Long,
@@ -814,8 +850,8 @@ class TdApi {
     /**
      * Describes the photo of a chat
      *
-     * @small - A small (160x160) chat photo
-     * @big - A big (640x640) chat photo
+     * @small - A small (160x160) chat photo. The file can be downloaded only before the photo is changed
+     * @big - A big (640x640) chat photo. The file can be downloaded only before the photo is changed
      */
     class ChatPhoto(
         val small: File,
@@ -937,6 +973,7 @@ class TdApi {
      * @isSupport - True, if the user is Telegram support account
      * @restrictionReason - If non-empty, it contains the reason why access to this user must be restricted. The format of the string is "{type}: {description}".
      * @{type} - contains the type of the restriction and at least one of the suffixes "-all", "-ios", "-android", or "-wp", which describe the platforms on which access should be restricted. (For example, "terms-ios-android". {description} contains a human-readable description of the restriction, which can be shown to the user)
+     * @isScam - True, if many users reported this user as a scam
      * @haveAccess - If false, the user is inaccessible, and the only information known about the user is inside this class. It can't be passed to any method except GetUser
      * @type - Type of the user
      * @languageCode - IETF language tag of the user's language; only available to bots
@@ -954,11 +991,12 @@ class TdApi {
         val isVerified: Boolean,
         val isSupport: Boolean,
         val restrictionReason: String,
+        val isScam: Boolean,
         val haveAccess: Boolean,
         val type: UserType,
         val languageCode: String
     ) : Object() {
-        override val constructor: Int get() = 248614314
+        override val constructor: Int get() = 56535118
     }
 
     /**
@@ -1026,6 +1064,31 @@ class TdApi {
     }
 
     /**
+     * Describes actions that a user is allowed to take in a chat
+     *
+     * @canSendMessages - True, if the user can send text messages, contacts, locations, and venues
+     * @canSendMediaMessages - True, if the user can send audio files, documents, photos, videos, video notes, and voice notes. Implies can_send_messages permissions
+     * @canSendPolls - True, if the user can send polls. Implies can_send_messages permissions
+     * @canSendOtherMessages - True, if the user can send animations, games, and stickers and use inline bots. Implies can_send_messages permissions
+     * @canAddWebPagePreviews - True, if the user may add a web page preview to their messages. Implies can_send_messages permissions
+     * @canChangeInfo - True, if the user can change the chat title, photo, and other settings
+     * @canInviteUsers - True, if the user can invite new users to the chat
+     * @canPinMessages - True, if the user can pin messages
+     */
+    class ChatPermissions(
+        val canSendMessages: Boolean,
+        val canSendMediaMessages: Boolean,
+        val canSendPolls: Boolean,
+        val canSendOtherMessages: Boolean,
+        val canAddWebPagePreviews: Boolean,
+        val canChangeInfo: Boolean,
+        val canInviteUsers: Boolean,
+        val canPinMessages: Boolean
+    ) : Object() {
+        override val constructor: Int get() = 1584650463
+    }
+
+    /**
      * Provides information about the status of a member in a chat
      */
     abstract class ChatMemberStatus : Object()
@@ -1052,7 +1115,7 @@ class TdApi {
      * @canInviteUsers - True, if the administrator can invite new users to the chat
      * @canRestrictMembers - True, if the administrator can restrict, ban, or unban chat members
      * @canPinMessages - True, if the administrator can pin messages; applicable to groups only
-     * @canPromoteMembers - True, if the administrator can add new administrators with a subset of his own privileges or demote administrators that were directly or indirectly promoted by him
+     * @canPromoteMembers - True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by him
      */
     class ChatMemberStatusAdministrator(
         val canBeEdited: Boolean,
@@ -1080,20 +1143,14 @@ class TdApi {
      *
      * @isMember - True, if the user is a member of the chat
      * @restrictedUntilDate - Point in time (Unix timestamp) when restrictions will be lifted from the user; 0 if never. If the user is restricted for more than 366 days or for less than 30 seconds from the current time, the user is considered to be restricted forever
-     * @canSendMessages - True, if the user can send text messages, contacts, locations, and venues
-     * @canSendMediaMessages - True, if the user can send audio files, documents, photos, videos, video notes, and voice notes. Implies can_send_messages permissions
-     * @canSendOtherMessages - True, if the user can send animations, games, and stickers and use inline bots. Implies can_send_media_messages permissions
-     * @canAddWebPagePreviews - True, if the user may add a web page preview to his messages. Implies can_send_messages permissions
+     * @permissions - User permissions in the chat
      */
     class ChatMemberStatusRestricted(
         val isMember: Boolean,
         val restrictedUntilDate: Int,
-        val canSendMessages: Boolean,
-        val canSendMediaMessages: Boolean,
-        val canSendOtherMessages: Boolean,
-        val canAddWebPagePreviews: Boolean
+        val permissions: ChatPermissions
     ) : ChatMemberStatus() {
-        override val constructor: Int get() = 2068116214
+        override val constructor: Int get() = 1661432998
     }
 
     /**
@@ -1152,6 +1209,13 @@ class TdApi {
     abstract class ChatMembersFilter : Object()
 
     /**
+     * Returns contacts of the user
+     */
+    class ChatMembersFilterContacts : ChatMembersFilter() {
+        override val constructor: Int get() = 1774485671
+    }
+
+    /**
      * Returns the creator and administrators
      */
     class ChatMembersFilterAdministrators : ChatMembersFilter() {
@@ -1196,6 +1260,17 @@ class TdApi {
      */
     class SupergroupMembersFilterRecent : SupergroupMembersFilter() {
         override val constructor: Int get() = 1178199509
+    }
+
+    /**
+     * Returns contacts of the user, which are members of the supergroup or channel
+     *
+     * @query - Query to search for
+     */
+    class SupergroupMembersFilterContacts(
+        val query: String
+    ) : SupergroupMembersFilter() {
+        override val constructor: Int get() = -1282910856
     }
 
     /**
@@ -1251,7 +1326,6 @@ class TdApi {
      * @id - Group identifier
      * @memberCount - Number of members in the group
      * @status - Status of the current user in the group
-     * @everyoneIsAdministrator - True, if all members have been granted administrator rights in the group
      * @isActive - True, if the group is active
      * @upgradedToSupergroupId - Identifier of the supergroup to which this group was upgraded; 0 if none
      */
@@ -1259,26 +1333,27 @@ class TdApi {
         val id: Int,
         val memberCount: Int,
         val status: ChatMemberStatus,
-        val everyoneIsAdministrator: Boolean,
         val isActive: Boolean,
         val upgradedToSupergroupId: Int
     ) : Object() {
-        override val constructor: Int get() = 1572712718
+        override val constructor: Int get() = -317839045
     }
 
     /**
      * Contains full information about a basic group
      *
+     * @paramDescription - Group description
      * @creatorUserId - User identifier of the creator of the group; 0 if unknown
      * @members - Group members
      * @inviteLink - Invite link for this group; available only for the group creator and only after it has been generated at least once
      */
     class BasicGroupFullInfo(
+        val description: String,
         val creatorUserId: Int,
         val members: Array<ChatMember>,
         val inviteLink: String
     ) : Object() {
-        override val constructor: Int get() = 25969205
+        override val constructor: Int get() = -1363723425
     }
 
     /**
@@ -1289,12 +1364,12 @@ class TdApi {
      * @date - Point in time (Unix timestamp) when the current user joined, or the point in time when the supergroup or channel was created, in case the user is not a member
      * @status - Status of the current user in the supergroup or channel
      * @memberCount - Member count; 0 if unknown. Currently it is guaranteed to be known only if the supergroup or channel was found through SearchPublicChats
-     * @anyoneCanInvite - True, if any member of the supergroup can invite other members. This field has no meaning for channels
      * @signMessages - True, if messages sent to the channel should contain information about the sender. This field is only applicable to channels
      * @isChannel - True, if the supergroup is a channel
      * @isVerified - True, if the supergroup or channel is verified
      * @restrictionReason - If non-empty, contains the reason why access to this supergroup or channel must be restricted. Format of the string is "{type}: {description}".
      * @{type} - Contains the type of the restriction and at least one of the suffixes "-all", "-ios", "-android", or "-wp", which describe the platforms on which access should be restricted. (For example, "terms-ios-android". {description} contains a human-readable description of the restriction, which can be shown to the user)
+     * @isScam - True, if many users reported this supergroup as a scam
      */
     class Supergroup(
         val id: Int,
@@ -1302,13 +1377,13 @@ class TdApi {
         val date: Int,
         val status: ChatMemberStatus,
         val memberCount: Int,
-        val anyoneCanInvite: Boolean,
         val signMessages: Boolean,
         val isChannel: Boolean,
         val isVerified: Boolean,
-        val restrictionReason: String
+        val restrictionReason: String,
+        val isScam: Boolean
     ) : Object() {
-        override val constructor: Int get() = -1737513476
+        override val constructor: Int get() = -1622883426
     }
 
     /**
@@ -1415,7 +1490,7 @@ class TdApi {
     }
 
     /**
-     * The message was originally written by a user, which is hidden by his privacy settings
+     * The message was originally written by a user, which is hidden by their privacy settings
      *
      * @senderName - Name of the sender
      */
@@ -1445,8 +1520,8 @@ class TdApi {
      *
      * @origin - Origin of a forwarded message
      * @date - Point in time (Unix timestamp) when the message was originally sent
-     * @fromChatId - For messages forwarded to the chat with the current user (saved messages), the identifier of the chat from which the message was forwarded last time; 0 if unknown
-     * @fromMessageId - For messages forwarded to the chat with the current user (saved messages), the identifier of the original message from which the new message was forwarded last time; 0 if unknown
+     * @fromChatId - For messages forwarded to the chat with the current user (saved messages) or to the channel discussion supergroup, the identifier of the chat from which the message was forwarded last time; 0 if unknown
+     * @fromMessageId - For messages forwarded to the chat with the current user (saved messages) or to the channel discussion supergroup, the identifier of the original message from which the new message was forwarded last time; 0 if unknown
      */
     class MessageForwardInfo(
         val origin: MessageForwardOrigin,
@@ -1471,16 +1546,26 @@ class TdApi {
 
     /**
      * The message failed to be sent
+     *
+     * @errorCode - An error code; 0 if unknown
+     * @errorMessage - Error message
+     * @canRetry - True, if the message can be re-sent
+     * @retryAfter - Time left before the message can be re-sent, in seconds. No update is sent when this field changes
      */
-    class MessageSendingStateFailed : MessageSendingState() {
-        override val constructor: Int get() = -546610323
+    class MessageSendingStateFailed(
+        val errorCode: Int,
+        val errorMessage: String,
+        val canRetry: Boolean,
+        val retryAfter: Double
+    ) : MessageSendingState() {
+        override val constructor: Int get() = 2054476087
     }
 
     /**
      * Describes a message
      *
      * @id - Message identifier, unique for the chat to which the message belongs
-     * @senderUserId - Identifier of the user who sent the message; 0 if unknown. It is unknown for channel posts
+     * @senderUserId - Identifier of the user who sent the message; 0 if unknown. Currently, it is unknown for channel posts and for channel posts automatically forwarded to discussion group
      * @chatId - Chat identifier
      * @sendingState - Information about the sending state of the message; may be null
      * @isOutgoing - True, if the message is outgoing
@@ -1704,6 +1789,7 @@ class TdApi {
      * @type - Type of the chat
      * @title - Chat title
      * @photo - Chat photo; may be null
+     * @permissions - Actions that non-administrator chat members are allowed to take in the chat
      * @lastMessage - Last message in the chat; may be null
      * @order - Descending parameter by which chats are sorted in the main chat list. If the order number of two chats is the same, they must be sorted in descending order by ID. If 0, the position of the chat in the list is undetermined
      * @isPinned - True, if the chat is pinned
@@ -1728,6 +1814,7 @@ class TdApi {
         val type: ChatType,
         val title: String,
         val photo: ChatPhoto,
+        val permissions: ChatPermissions,
         val lastMessage: Message,
         val order: Long,
         val isPinned: Boolean,
@@ -1747,7 +1834,7 @@ class TdApi {
         val draftMessage: DraftMessage,
         val clientData: String
     ) : Object() {
-        override val constructor: Int get() = 697768263
+        override val constructor: Int get() = 1433927525
     }
 
     /**
@@ -1781,7 +1868,7 @@ class TdApi {
      * @photo - Chat photo; may be null
      * @memberCount - Number of members
      * @memberUserIds - User identifiers of some chat members that may be known to the current user
-     * @isPublic - True, if the chat is a public supergroup or channel with a username
+     * @isPublic - True, if the chat is a public supergroup or a channel with a username
      */
     class ChatInviteLinkInfo(
         val chatId: Long,
@@ -1848,6 +1935,21 @@ class TdApi {
         val url: String
     ) : InlineKeyboardButtonType() {
         override val constructor: Int get() = 1130741420
+    }
+
+    /**
+     * A button that opens a specified URL and automatically logs in in current user if they allowed to do that
+     *
+     * @url - HTTP URL to open
+     * @id - Unique button identifier
+     * @forwardText - If non-empty, new text of the button in forwarded messages
+     */
+    class InlineKeyboardButtonTypeLoginUrl(
+        val url: String,
+        val id: Int,
+        val forwardText: String
+    ) : InlineKeyboardButtonType() {
+        override val constructor: Int get() = 281435539
     }
 
     /**
@@ -2103,8 +2205,8 @@ class TdApi {
      * A small image inside the text
      *
      * @document - The image represented as a document. The image can be in GIF, JPEG or PNG format
-     * @width - Width of a bounding box in which the image should be shown, 0 if unknown
-     * @height - Height of a bounding box in which the image should be shown, 0 if unknown
+     * @width - Width of a bounding box in which the image should be shown; 0 if unknown
+     * @height - Height of a bounding box in which the image should be shown; 0 if unknown
      */
     class RichTextIcon(
         val document: Document,
@@ -2498,8 +2600,8 @@ class TdApi {
      * @url - Web page URL, if available
      * @html - HTML-markup of the embedded page
      * @posterPhoto - Poster photo, if available; may be null
-     * @width - Block width, 0 if unknown
-     * @height - Block height, 0 if unknown
+     * @width - Block width; 0 if unknown
+     * @height - Block height; 0 if unknown
      * @caption - Block caption
      * @isFullWidth - True, if the block should be full width
      * @allowScrolling - True, if scrolling should be allowed
@@ -2522,7 +2624,7 @@ class TdApi {
      *
      * @url - Web page URL
      * @author - Post author
-     * @authorPhoto - Post author photo
+     * @authorPhoto - Post author photo; may be null
      * @date - Point in time (Unix timestamp) when the post was created; 0 if unknown
      * @pageBlocks - Post content
      * @caption - Post caption
@@ -4700,13 +4802,17 @@ class TdApi {
      * @fromChatId - Identifier for the chat this forwarded message came from
      * @messageId - Identifier of the message to forward
      * @inGameShare - True, if a game message should be shared within a launched game; applies only to game messages
+     * @sendCopy - True, if content of the message needs to be copied without a link to the original message. Always true if the message is forwarded to a secret chat
+     * @removeCaption - True, if media caption of the message copy needs to be removed. Ignored if send_copy is false
      */
     class InputMessageForwarded(
         val fromChatId: Long,
         val messageId: Long,
-        val inGameShare: Boolean
+        val inGameShare: Boolean,
+        val sendCopy: Boolean,
+        val removeCaption: Boolean
     ) : InputMessageContent() {
-        override val constructor: Int get() = 1561363198
+        override val constructor: Int get() = 1503132333
     }
 
     /**
@@ -5009,14 +5115,14 @@ class TdApi {
     }
 
     /**
-     * Represents a list of all emoji corresponding to a sticker in a sticker set. The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
+     * Represents a list of emoji
      *
      * @emojis - List of emojis
      */
-    class StickerEmojis(
+    class Emojis(
         val emojis: Array<String>
     ) : Object() {
-        override val constructor: Int get() = 486808798
+        override val constructor: Int get() = 1999063574
     }
 
     /**
@@ -5025,27 +5131,31 @@ class TdApi {
      * @id - Identifier of the sticker set
      * @title - Title of the sticker set
      * @name - Name of the sticker set
+     * @thumbnail - Sticker set thumbnail in WEBP format with width and height 100; may be null. The file can be downloaded only before the thumbnail is changed
      * @isInstalled - True, if the sticker set has been installed by the current user
      * @isArchived - True, if the sticker set has been archived. A sticker set can't be installed and archived simultaneously
      * @isOfficial - True, if the sticker set is official
+     * @isAnimated - True, is the stickers in the set are animated
      * @isMasks - True, if the stickers in the set are masks
      * @isViewed - True for already viewed trending sticker sets
      * @stickers - List of stickers in this set
-     * @emojis - A list of emoji corresponding to the stickers in the same order
+     * @emojis - A list of emoji corresponding to the stickers in the same order. The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
      */
     class StickerSet(
         val id: Long,
         val title: String,
         val name: String,
+        val thumbnail: PhotoSize,
         val isInstalled: Boolean,
         val isArchived: Boolean,
         val isOfficial: Boolean,
+        val isAnimated: Boolean,
         val isMasks: Boolean,
         val isViewed: Boolean,
         val stickers: Array<Sticker>,
-        val emojis: Array<StickerEmojis>
+        val emojis: Array<Emojis>
     ) : Object() {
-        override val constructor: Int get() = 1854058080
+        override val constructor: Int get() = 1121147939
     }
 
     /**
@@ -5054,9 +5164,11 @@ class TdApi {
      * @id - Identifier of the sticker set
      * @title - Title of the sticker set
      * @name - Name of the sticker set
+     * @thumbnail - Sticker set thumbnail in WEBP format with width and height 100; may be null
      * @isInstalled - True, if the sticker set has been installed by current user
      * @isArchived - True, if the sticker set has been archived. A sticker set can't be installed and archived simultaneously
      * @isOfficial - True, if the sticker set is official
+     * @isAnimated - True, is the stickers in the set are animated
      * @isMasks - True, if the stickers in the set are masks
      * @isViewed - True for already viewed trending sticker sets
      * @size - Total number of stickers in the set
@@ -5066,15 +5178,17 @@ class TdApi {
         val id: Long,
         val title: String,
         val name: String,
+        val thumbnail: PhotoSize,
         val isInstalled: Boolean,
         val isArchived: Boolean,
         val isOfficial: Boolean,
+        val isAnimated: Boolean,
         val isMasks: Boolean,
         val isViewed: Boolean,
         val size: Int,
         val covers: Array<Sticker>
     ) : Object() {
-        override val constructor: Int get() = 534902809
+        override val constructor: Int get() = 448504627
     }
 
     /**
@@ -5257,6 +5371,60 @@ class TdApi {
     }
 
     /**
+     * Describes the exact type of a problem with a call
+     */
+    abstract class CallProblem : Object()
+
+    /**
+     * The user heard their own voice
+     */
+    class CallProblemEcho : CallProblem() {
+        override val constructor: Int get() = 801116548
+    }
+
+    /**
+     * The user heard background noise
+     */
+    class CallProblemNoise : CallProblem() {
+        override val constructor: Int get() = 1053065359
+    }
+
+    /**
+     * The other side kept disappearing
+     */
+    class CallProblemInterruptions : CallProblem() {
+        override val constructor: Int get() = 1119493218
+    }
+
+    /**
+     * The speech was distorted
+     */
+    class CallProblemDistortedSpeech : CallProblem() {
+        override val constructor: Int get() = 379960581
+    }
+
+    /**
+     * The user couldn't hear the other side
+     */
+    class CallProblemSilentLocal : CallProblem() {
+        override val constructor: Int get() = 253652790
+    }
+
+    /**
+     * The other side couldn't hear the user
+     */
+    class CallProblemSilentRemote : CallProblem() {
+        override val constructor: Int get() = 573634714
+    }
+
+    /**
+     * The call ended unexpectedly
+     */
+    class CallProblemDropped : CallProblem() {
+        override val constructor: Int get() = -1207311487
+    }
+
+    /**
      * Describes a call
      *
      * @id - Call identifier, not persistent
@@ -5271,6 +5439,21 @@ class TdApi {
         val state: CallState
     ) : Object() {
         override val constructor: Int get() = -1837599107
+    }
+
+    /**
+     * Contains settings for the authentication of the user's phone number
+     *
+     * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
+     * @isCurrentPhoneNumber - Pass true if the authenticated phone number is used on the current device
+     * @allowSmsRetrieverApi - For official applications only. True, if the app can use Android SMS Retriever API (requires Google Play Services >= 10.2) to automatically receive the authentication code from the SMS. See https:developers.google.com/identity/sms-retriever/ for more details
+     */
+    class PhoneNumberAuthenticationSettings(
+        val allowFlashCall: Boolean,
+        val isCurrentPhoneNumber: Boolean,
+        val allowSmsRetrieverApi: Boolean
+    ) : Object() {
+        override val constructor: Int get() = -859198743
     }
 
     /**
@@ -5541,11 +5724,11 @@ class TdApi {
     }
 
     /**
-     * Represents a link to a WEBP sticker
+     * Represents a link to a WEBP or a TGS sticker
      *
      * @id - Unique identifier of the query result
      * @thumbnailUrl - URL of the sticker thumbnail, if it exists
-     * @stickerUrl - The URL of the WEBP sticker (sticker file size must not exceed 5MB)
+     * @stickerUrl - The URL of the WEBP or a TGS sticker (sticker file size must not exceed 5MB)
      * @stickerWidth - Width of the sticker
      * @stickerHeight - Height of the sticker
      * @replyMarkup - The message reply markup. Must be of type replyMarkupInlineKeyboard or null
@@ -5959,6 +6142,17 @@ class TdApi {
     }
 
     /**
+     * A poll in a message was stopped
+     *
+     * @message - The message with the poll
+     */
+    class ChatEventPollStopped(
+        val message: Message
+    ) : ChatEventAction() {
+        override val constructor: Int get() = 2009893861
+    }
+
+    /**
      * A message was pinned
      *
      * @message - Pinned message
@@ -6047,6 +6241,19 @@ class TdApi {
     }
 
     /**
+     * The chat permissions was changed
+     *
+     * @oldPermissions - Previous chat permissions
+     * @newPermissions - New chat permissions
+     */
+    class ChatEventPermissionsChanged(
+        val oldPermissions: ChatPermissions,
+        val newPermissions: ChatPermissions
+    ) : ChatEventAction() {
+        override val constructor: Int get() = -1311557720
+    }
+
+    /**
      * The chat description was changed
      *
      * @oldDescription - Previous chat description
@@ -6079,21 +6286,21 @@ class TdApi {
      * @newPhoto - New chat photo value; may be null
      */
     class ChatEventPhotoChanged(
-        val oldPhoto: ChatPhoto,
-        val newPhoto: ChatPhoto
+        val oldPhoto: Photo,
+        val newPhoto: Photo
     ) : ChatEventAction() {
-        override val constructor: Int get() = -811572541
+        override val constructor: Int get() = 1037662734
     }
 
     /**
-     * The anyoneCanInvite setting of a supergroup chat was toggled
+     * The canInviteUsers permission of a supergroup chat was toggled
      *
-     * @anyoneCanInvite - New value of anyoneCanInvite
+     * @canInviteUsers - New value of canInviteUsers permission
      */
     class ChatEventInvitesToggled(
-        val anyoneCanInvite: Boolean
+        val canInviteUsers: Boolean
     ) : ChatEventAction() {
-        override val constructor: Int get() = 568706937
+        override val constructor: Int get() = -62548373
     }
 
     /**
@@ -6452,29 +6659,106 @@ class TdApi {
     }
 
     /**
-     * Contains information about a wallpaper
-     *
-     * @id - Unique persistent wallpaper identifier
-     * @sizes - Available variants of the wallpaper in different sizes. These photos can only be downloaded; they can't be sent in a message
-     * @color - Main color of the wallpaper in RGB24 format; should be treated as background color if no photos are specified
+     * Describes a type of a background
      */
-    class Wallpaper(
-        val id: Int,
-        val sizes: Array<PhotoSize>,
-        val color: Int
-    ) : Object() {
-        override val constructor: Int get() = -932330656
+    abstract class BackgroundType : Object()
+
+    /**
+     * A wallpaper in JPEG format
+     *
+     * @isBlurred - True, if the wallpaper must be downscaled to fit in 450x450 square and then box-blurred with radius 12
+     * @isMoving - True, if the background needs to be slightly moved when device is rotated
+     */
+    class BackgroundTypeWallpaper(
+        val isBlurred: Boolean,
+        val isMoving: Boolean
+    ) : BackgroundType() {
+        override val constructor: Int get() = 1972128891
     }
 
     /**
-     * Contains a list of wallpapers
+     * A PNG pattern to be combined with the color chosen by the user
      *
-     * @wallpapers - A list of wallpapers
+     * @isMoving - True, if the background needs to be slightly moved when device is rotated
+     * @color - Main color of the background in RGB24 format
+     * @intensity - Intensity of the pattern when it is shown above the main background color, 0-100
      */
-    class Wallpapers(
-        val wallpapers: Array<Wallpaper>
+    class BackgroundTypePattern(
+        val isMoving: Boolean,
+        val color: Int,
+        val intensity: Int
+    ) : BackgroundType() {
+        override val constructor: Int get() = -1091944673
+    }
+
+    /**
+     * A solid background
+     *
+     * @color - A color of the background in RGB24 format
+     */
+    class BackgroundTypeSolid(
+        val color: Int
+    ) : BackgroundType() {
+        override val constructor: Int get() = -31192323
+    }
+
+    /**
+     * Describes a chat background
+     *
+     * @id - Unique background identifier
+     * @isDefault - True, if this is one of default backgrounds
+     * @isDark - True, if the background is dark and is recommended to be used with dark theme
+     * @name - Unique background name
+     * @document - Document with the background; may be null. Null only for solid backgrounds
+     * @type - Type of the background
+     */
+    class Background(
+        val id: Long,
+        val isDefault: Boolean,
+        val isDark: Boolean,
+        val name: String,
+        val document: Document,
+        val type: BackgroundType
     ) : Object() {
-        override val constructor: Int get() = -1087889538
+        override val constructor: Int get() = -429971172
+    }
+
+    /**
+     * Contains a list of backgrounds
+     *
+     * @backgrounds - A list of backgrounds
+     */
+    class Backgrounds(
+        val backgrounds: Array<Background>
+    ) : Object() {
+        override val constructor: Int get() = -1268313319
+    }
+
+    /**
+     * Contains information about background to set
+     */
+    abstract class InputBackground : Object()
+
+    /**
+     * A background from a local file
+     *
+     * @background - Background file to use. Only inputFileLocal and inputFileGenerated are supported. The file nust be in JPEG format for wallpapers and in PNG format for patterns
+     */
+    class InputBackgroundLocal(
+        val background: InputFile
+    ) : InputBackground() {
+        override val constructor: Int get() = -1747094364
+    }
+
+    /**
+     * A background from the server
+     *
+     * @backgroundId - The background identifier
+     */
+    class InputBackgroundRemote(
+        val backgroundId: Long
+    ) : InputBackground() {
+        override val constructor: Int get() = -274976231
     }
 
     /**
@@ -6515,7 +6799,7 @@ class TdApi {
     }
 
     /**
-     * The user has too much public chats, one of them should be made private first
+     * The user has too much chats with username, one of them should be made private first
      */
     class CheckChatUsernameResultPublicChatsTooMuch : CheckChatUsernameResult() {
         override val constructor: Int get() = 858247741
@@ -6545,7 +6829,7 @@ class TdApi {
     }
 
     /**
-     * An animation message (GIF-style)
+     * An animation message (GIF-style).
      *
      * @animation - Message content; may be null
      * @caption - Animation caption
@@ -7175,6 +7459,20 @@ class TdApi {
     }
 
     /**
+     * A privacy setting for managing whether the user's profile photo is visible
+     */
+    class UserPrivacySettingShowProfilePhoto : UserPrivacySetting() {
+        override val constructor: Int get() = 1408485877
+    }
+
+    /**
+     * A privacy setting for managing whether a link to the user's account is included in forwarded messages
+     */
+    class UserPrivacySettingShowLinkInForwardedMessages : UserPrivacySetting() {
+        override val constructor: Int get() = 592688870
+    }
+
+    /**
      * A privacy setting for managing whether the user can be invited to chats
      */
     class UserPrivacySettingAllowChatInvites : UserPrivacySetting() {
@@ -7357,7 +7655,7 @@ class TdApi {
     }
 
     /**
-     * Contains a public HTTPS link to a message in a public supergroup or channel
+     * Contains a public HTTPS link to a message in a public supergroup or channel with a username
      *
      * @link - Message link
      * @html - HTML-code for embedding the message
@@ -7367,6 +7665,23 @@ class TdApi {
         val html: String
     ) : Object() {
         override val constructor: Int get() = -679603433
+    }
+
+    /**
+     * Contains information about a link to a message in a chat
+     *
+     * @isPublic - True, if the link is a public link for a message in a chat
+     * @chatId - If found, identifier of the chat to which the message belongs, 0 otherwise
+     * @message - If found, the linked message; may be null
+     * @forAlbum - True, if the whole media album to which the message belongs is linked
+     */
+    class MessageLinkInfo(
+        val isPublic: Boolean,
+        val chatId: Long,
+        val message: Message,
+        val forAlbum: Boolean
+    ) : Object() {
+        override val constructor: Int get() = 657372995
     }
 
     /**
@@ -7491,7 +7806,7 @@ class TdApi {
     }
 
     /**
-     * The file is a wallpaper
+     * The file is a wallpaper or a background pattern
      */
     class FileTypeWallpaper : FileType() {
         override val constructor: Int get() = 1854930076
@@ -7667,12 +7982,50 @@ class TdApi {
     }
 
     /**
+     * Contains auto-download settings
+     *
+     * @isAutoDownloadEnabled - True, if the auto-download is enabled
+     * @maxPhotoFileSize - Maximum size of a photo file to be auto-downloaded
+     * @maxVideoFileSize - Maximum size of a video file to be auto-downloaded
+     * @maxOtherFileSize - Maximum size of other file types to be auto-downloaded
+     * @preloadLargeVideos - True, if the beginning of videos needs to be preloaded for instant playback
+     * @preloadNextAudio - True, if the next audio track needs to be preloaded while the user is listening to an audio file
+     * @useLessDataForCalls - True, if "use less data for calls" option needs to be enabled
+     */
+    class AutoDownloadSettings(
+        val isAutoDownloadEnabled: Boolean,
+        val maxPhotoFileSize: Int,
+        val maxVideoFileSize: Int,
+        val maxOtherFileSize: Int,
+        val preloadLargeVideos: Boolean,
+        val preloadNextAudio: Boolean,
+        val useLessDataForCalls: Boolean
+    ) : Object() {
+        override val constructor: Int get() = -1086183818
+    }
+
+    /**
+     * Contains auto-download settings presets for the user
+     *
+     * @low - Preset with lowest settings; supposed to be used by default when roaming
+     * @medium - Preset with medium settings; supposed to be used by default when using mobile data
+     * @high - Preset with highest settings; supposed to be used by default when connected on Wi-Fi
+     */
+    class AutoDownloadSettingsPresets(
+        val low: AutoDownloadSettings,
+        val medium: AutoDownloadSettings,
+        val high: AutoDownloadSettings
+    ) : Object() {
+        override val constructor: Int get() = -782099166
+    }
+
+    /**
      * Describes the current state of the connection to Telegram servers
      */
     abstract class ConnectionState : Object()
 
     /**
-     * Currently waiting for the network to become available. Use SetNetworkType to change the available network type
+     * Currently waiting for the network to become available. Use setNetworkType to change the available network type
      */
     class ConnectionStateWaitingForNetwork : ConnectionState() {
         override val constructor: Int get() = 1695405912
@@ -8038,7 +8391,7 @@ class TdApi {
     /**
      * A message failed to send. Be aware that some messages being sent can be irrecoverably deleted, in which case updateDeleteMessages will be received instead of this update
      *
-     * @message - Contains information about the message that failed to send
+     * @message - Contains information about the message which failed to send
      * @oldMessageId - The previous temporary message identifier
      * @errorCode - An error code
      * @errorMessage - Error message
@@ -8162,6 +8515,19 @@ class TdApi {
         val photo: ChatPhoto
     ) : Update() {
         override val constructor: Int get() = -209353966
+    }
+
+    /**
+     * Chat permissions was changed
+     *
+     * @chatId - Chat identifier
+     * @permissions - The new chat permissions
+     */
+    class UpdateChatPermissions(
+        val chatId: Long,
+        val permissions: ChatPermissions
+    ) : Update() {
+        override val constructor: Int get() = -1622010003
     }
 
     /**
@@ -8738,6 +9104,19 @@ class TdApi {
     }
 
     /**
+     * The selected background has changed
+     *
+     * @forDarkTheme - True, if background for dark theme has changed
+     * @background - The new selected background; may be null
+     */
+    class UpdateSelectedBackground(
+        val forDarkTheme: Boolean,
+        val background: Background
+    ) : Update() {
+        override val constructor: Int get() = -1715658659
+    }
+
+    /**
      * Some language pack strings have been updated
      *
      * @localizationTarget - Localization target to which the language pack belongs
@@ -9103,18 +9482,17 @@ class TdApi {
     }
 
     /**
-     * Sets the phone number of the user and sends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitPhoneNumber
+     * Sets the phone number of the user and sends an authentication code to the user. Works only when the current authorization state is authorizationStateWaitPhoneNumber,
+     * or if there is no pending authentication query and the current authorization state is authorizationStateWaitCode or authorizationStateWaitPassword
      *
      * @phoneNumber - The phone number of the user, in international format
-     * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
-     * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+     * @settings - Settings for the authentication of the user's phone number
      */
     class SetAuthenticationPhoneNumber(
         val phoneNumber: String,
-        val allowFlashCall: Boolean,
-        val isCurrentPhoneNumber: Boolean
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
-        override val constructor: Int get() = -856055465
+        override val constructor: Int get() = 868276259
     }
 
     /**
@@ -9128,15 +9506,24 @@ class TdApi {
      * Checks the authentication code. Works only when the current authorization state is authorizationStateWaitCode
      *
      * @code - The verification code received via SMS, Telegram message, phone call, or flash call
-     * @firstName - If the user is not yet registered, the first name of the user; 1-64 characters. You can also pass an empty string for unregistered user there to check verification code validness. In the latter case PHONE_NUMBER_UNOCCUPIED error will be returned for a valid code
-     * @lastName - If the user is not yet registered; the last name of the user; optional; 0-64 characters
      */
     class CheckAuthenticationCode(
-        val code: String,
+        val code: String
+    ) : Function() {
+        override val constructor: Int get() = -302103382
+    }
+
+    /**
+     * Finishes user registration. Works only when the current authorization state is authorizationStateWaitRegistration
+     *
+     * @firstName - The first name of the user; 1-64 characters
+     * @lastName - The last name of the user; 0-64 characters
+     */
+    class RegisterUser(
         val firstName: String,
         val lastName: String
     ) : Function() {
-        override val constructor: Int get() = -707293555
+        override val constructor: Int get() = -109994467
     }
 
     /**
@@ -9256,7 +9643,7 @@ class TdApi {
     }
 
     /**
-     * Changes the 2-step verification recovery email address of the user. If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed
+     * Changes the 2-step verification recovery email address of the user. If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed.
      * If newRecoveryEmailAddress is the same as the email address that is currently set up, this call succeeds immediately and aborts all other requests waiting for an email confirmation
      *
      * @password - Password of the current user
@@ -9509,7 +9896,7 @@ class TdApi {
 
     /**
      * Returns an ordered list of chats. Chats are sorted by the pair (order, chat_id) in decreasing order. (For example, to get a list of chats from the beginning, the offsetOrder should be equal to a biggest signed 64-bit number 9223372036854775807 == 2^63 - 1).
-     * For optimal performance the number of returned chats is chosen by the library.
+     * For optimal performance the number of returned chats is chosen by the library
      *
      * @offsetOrder - Chat order to return chats from
      * @offsetChatId - Chat identifier to return chats from
@@ -9640,7 +10027,7 @@ class TdApi {
     }
 
     /**
-     * Returns a list of public chats created by the user
+     * Returns a list of public chats with username created by the user
      */
     class GetCreatedPublicChats : Function() {
         override val constructor: Int get() = 1609082914
@@ -9849,7 +10236,7 @@ class TdApi {
     }
 
     /**
-     * Returns a public HTTPS link to a message. Available only for messages in public supergroups and channels
+     * Returns a public HTTPS link to a message. Available only for messages in supergroups and channels with username
      *
      * @chatId - Identifier of the chat to which the message belongs
      * @messageId - Identifier of the message
@@ -9874,6 +10261,17 @@ class TdApi {
         val messageId: Long
     ) : Function() {
         override val constructor: Int get() = 1362732326
+    }
+
+    /**
+     * Returns information about a public or private message link
+     *
+     * @url - The message link in the format "https:t.me/c/...", or "tg:privatepost?...", or "https:t.me/username/...", or "tg:resolve?..."
+     */
+    class GetMessageLinkInfo(
+        val url: String
+    ) : Function() {
+        override val constructor: Int get() = -700533672
     }
 
     /**
@@ -9921,7 +10319,7 @@ class TdApi {
      *
      * @botUserId - Identifier of the bot
      * @chatId - Identifier of the target chat
-     * @parameter - A hidden parameter sent to the bot for deep linking purposes (https:api.telegram.org/bots#deep-linking)
+     * @parameter - A hidden parameter sent to the bot for deep linking purposes (https:core.telegram.org/bots#deep-linking)
      */
     class SendBotStartMessage(
         val botUserId: Int,
@@ -9961,8 +10359,10 @@ class TdApi {
      * @fromChatId - Identifier of the chat from which to forward messages
      * @messageIds - Identifiers of the messages to forward
      * @disableNotification - Pass true to disable notification for the message, doesn't work if messages are forwarded to a secret chat
-     * @fromBackground - Pass true if the message is sent from the background
+     * @fromBackground - Pass true if the messages are sent from the background
      * @asAlbum - True, if the messages should be grouped into an album after forwarding. For this to work, no more than 10 messages may be forwarded, and all of them must be photo or video messages
+     * @sendCopy - True, if content of the messages needs to be copied without links to the original messages. Always true if the messages are forwarded to a secret chat
+     * @removeCaption - True, if media captions of message copies needs to be removed. Ignored if send_copy is false
      */
     class ForwardMessages(
         val chatId: Long,
@@ -9970,9 +10370,25 @@ class TdApi {
         val messageIds: LongArray,
         val disableNotification: Boolean,
         val fromBackground: Boolean,
-        val asAlbum: Boolean
+        val asAlbum: Boolean,
+        val sendCopy: Boolean,
+        val removeCaption: Boolean
     ) : Function() {
-        override val constructor: Int get() = -1584590243
+        override val constructor: Int get() = -807412365
+    }
+
+    /**
+     * Resends messages which failed to send. Can be called only for messages for which messageSendingStateFailed.can_retry is true and after specified in messageSendingStateFailed.retry_after time passed.
+     * If a message is re-sent, the corresponding failed to send message is deleted. Returns the sent messages in the same order as the message identifiers passed in messageIds. If a message can't be re-sent, null will be returned instead of the message
+     *
+     * @chatId - Identifier of the chat to send messages
+     * @messageIds - Identifiers of the messages to resend. Message identifiers must be in a strictly increasing order
+     */
+    class ResendMessages(
+        val chatId: Long,
+        val messageIds: LongArray
+    ) : Function() {
+        override val constructor: Int get() = 1624461496
     }
 
     /**
@@ -10677,7 +11093,7 @@ class TdApi {
     }
 
     /**
-     * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom. Deactivates the original basic group
+     * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom; requires creator privileges. Deactivates the original basic group
      *
      * @chatId - Identifier of the chat to upgrade
      */
@@ -10688,7 +11104,7 @@ class TdApi {
     }
 
     /**
-     * Changes the chat title. Supported only for basic groups, supergroups and channels. Requires administrator rights in basic groups and the appropriate administrator rights in supergroups and channels. The title will not be changed until the request to the server has been completed
+     * Changes the chat title. Supported only for basic groups, supergroups and channels. Requires can_change_info rights. The title will not be changed until the request to the server has been completed
      *
      * @chatId - Chat identifier
      * @title - New title of the chat; 1-128 characters
@@ -10701,7 +11117,7 @@ class TdApi {
     }
 
     /**
-     * Changes the photo of a chat. Supported only for basic groups, supergroups and channels. Requires administrator rights in basic groups and the appropriate administrator rights in supergroups and channels. The photo will not be changed before request to the server has been completed
+     * Changes the photo of a chat. Supported only for basic groups, supergroups and channels. Requires can_change_info rights. The photo will not be changed before request to the server has been completed
      *
      * @chatId - Chat identifier
      * @photo - New chat photo. You can use a zero InputFileId to delete the chat photo. Files that are accessible only by HTTP URL are not acceptable
@@ -10711,6 +11127,19 @@ class TdApi {
         val photo: InputFile
     ) : Function() {
         override val constructor: Int get() = 132244217
+    }
+
+    /**
+     * Changes the chat members permissions. Supported only for basic groups and supergroups. Requires can_restrict_members administrator right
+     *
+     * @chatId - Chat identifier
+     * @permissions - New non-administrator members permissions in the chat
+     */
+    class SetChatPermissions(
+        val chatId: Long,
+        val permissions: ChatPermissions
+    ) : Function() {
+        override val constructor: Int get() = 2138507006
     }
 
     /**
@@ -10792,7 +11221,20 @@ class TdApi {
     }
 
     /**
-     * Pins a message in a chat; requires appropriate administrator rights in the group or channel
+     * Changes information about a chat. Available for basic groups, supergroups, and channels. Requires can_change_info rights
+     *
+     * @chatId - Identifier of the chat
+     * @paramDescription - New chat description; 0-255 characters
+     */
+    class SetChatDescription(
+        val chatId: Long,
+        val description: String
+    ) : Function() {
+        override val constructor: Int get() = 1957213277
+    }
+
+    /**
+     * Pins a message in a chat; requires can_pin_messages rights
      *
      * @chatId - Identifier of the chat
      * @messageId - Identifier of the new pinned message
@@ -10807,7 +11249,7 @@ class TdApi {
     }
 
     /**
-     * Removes the pinned message from a chat; requires appropriate administrator rights in the group or channel
+     * Removes the pinned message from a chat; requires can_pin_messages rights in the group or channel
      *
      * @chatId - Identifier of the chat
      */
@@ -11131,7 +11573,7 @@ class TdApi {
     }
 
     /**
-     * Generates a new invite link for a chat; the previously generated link is revoked. Available for basic groups, supergroups, and channels. In basic groups this can be called only by the group's creator; in supergroups and channels this requires appropriate administrator rights
+     * Generates a new invite link for a chat; the previously generated link is revoked. Available for basic groups, supergroups, and channels. Requires administrator privileges and can_invite_users right
      *
      * @chatId - Chat identifier
      */
@@ -11212,13 +11654,15 @@ class TdApi {
      * @callId - Call identifier
      * @rating - Call rating; 1-5
      * @comment - An optional user comment if the rating is less than 5
+     * @problems - List of the exact types of problems with the call, specified by the user
      */
     class SendCallRating(
         val callId: Int,
         val rating: Int,
-        val comment: String
+        val comment: String,
+        val problems: Array<CallProblem>
     ) : Function() {
-        override val constructor: Int get() = 243075146
+        override val constructor: Int get() = -660908180
     }
 
     /**
@@ -11587,14 +12031,38 @@ class TdApi {
     }
 
     /**
-     * Returns emoji corresponding to a sticker
+     * Returns emoji corresponding to a sticker. The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
      *
      * @sticker - Sticker file identifier
      */
     class GetStickerEmojis(
         val sticker: InputFile
     ) : Function() {
-        override val constructor: Int get() = 95352475
+        override val constructor: Int get() = -1895508665
+    }
+
+    /**
+     * Searches for emojis by keywords. Supported only if the file database is enabled
+     *
+     * @text - Text to search for
+     * @exactMatch - True, if only emojis, which exactly match text needs to be returned
+     */
+    class SearchEmojis(
+        val text: String,
+        val exactMatch: Boolean
+    ) : Function() {
+        override val constructor: Int get() = 454272250
+    }
+
+    /**
+     * Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements. The URL will be valid for 30 seconds after generation
+     *
+     * @languageCode - Language code for which the emoji replacements will be suggested
+     */
+    class GetEmojiSuggestionsUrl(
+        val languageCode: String
+    ) : Function() {
+        override val constructor: Int get() = -1404101841
     }
 
     /**
@@ -11742,15 +12210,13 @@ class TdApi {
      * Changes the phone number of the user and sends an authentication code to the user's new phone number. On success, returns information about the sent code
      *
      * @phoneNumber - The new phone number of the user in international format
-     * @allowFlashCall - Pass true if the code can be sent via flash call to the specified phone number
-     * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+     * @settings - Settings for the authentication of the user's phone number
      */
     class ChangePhoneNumber(
         val phoneNumber: String,
-        val allowFlashCall: Boolean,
-        val isCurrentPhoneNumber: Boolean
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
-        override val constructor: Int get() = -1510625218
+        override val constructor: Int get() = -124666973
     }
 
     /**
@@ -11822,19 +12288,6 @@ class TdApi {
     }
 
     /**
-     * Toggles the "All members are admins" setting in basic groups; requires creator privileges in the group
-     *
-     * @basicGroupId - Identifier of the basic group
-     * @everyoneIsAdministrator - New value of everyoneIsAdministrator
-     */
-    class ToggleBasicGroupAdministrators(
-        val basicGroupId: Int,
-        val everyoneIsAdministrator: Boolean
-    ) : Function() {
-        override val constructor: Int get() = -591395611
-    }
-
-    /**
      * Changes the username of a supergroup or channel, requires creator privileges in the supergroup or channel
      *
      * @supergroupId - Identifier of the supergroup or channel
@@ -11848,7 +12301,7 @@ class TdApi {
     }
 
     /**
-     * Changes the sticker set of a supergroup; requires appropriate rights in the supergroup
+     * Changes the sticker set of a supergroup; requires can_change_info rights
      *
      * @supergroupId - Identifier of the supergroup
      * @stickerSetId - New value of the supergroup sticker set identifier. Use 0 to remove the supergroup sticker set
@@ -11861,20 +12314,7 @@ class TdApi {
     }
 
     /**
-     * Toggles whether all members of a supergroup can add new members; requires appropriate administrator rights in the supergroup.
-     *
-     * @supergroupId - Identifier of the supergroup
-     * @anyoneCanInvite - New value of anyoneCanInvite
-     */
-    class ToggleSupergroupInvites(
-        val supergroupId: Int,
-        val anyoneCanInvite: Boolean
-    ) : Function() {
-        override val constructor: Int get() = -797384141
-    }
-
-    /**
-     * Toggles sender signatures messages sent in a channel; requires appropriate administrator rights in the channel.
+     * Toggles sender signatures messages sent in a channel; requires can_change_info rights
      *
      * @supergroupId - Identifier of the channel
      * @signMessages - New value of signMessages
@@ -11887,7 +12327,7 @@ class TdApi {
     }
 
     /**
-     * Toggles whether the message history of a supergroup is available to new members; requires appropriate administrator rights in the supergroup.
+     * Toggles whether the message history of a supergroup is available to new members; requires can_change_info rights
      *
      * @supergroupId - The identifier of the supergroup
      * @isAllHistoryAvailable - The new value of isAllHistoryAvailable
@@ -11897,19 +12337,6 @@ class TdApi {
         val isAllHistoryAvailable: Boolean
     ) : Function() {
         override val constructor: Int get() = 1701526555
-    }
-
-    /**
-     * Changes information about a supergroup or channel; requires appropriate administrator rights
-     *
-     * @supergroupId - Identifier of the supergroup or channel
-     * @paramDescription - New supergroup or channel description; 0-255 characters
-     */
-    class SetSupergroupDescription(
-        val supergroupId: Int,
-        val description: String
-    ) : Function() {
-        override val constructor: Int get() = 227623488
     }
 
     /**
@@ -12078,10 +12505,71 @@ class TdApi {
     }
 
     /**
-     * Returns background wallpapers
+     * Returns backgrounds installed by the user
+     *
+     * @forDarkTheme - True, if the backgrounds needs to be ordered for dark theme
      */
-    class GetWallpapers : Function() {
-        override val constructor: Int get() = 2097518555
+    class GetBackgrounds(
+        val forDarkTheme: Boolean
+    ) : Function() {
+        override val constructor: Int get() = 249072633
+    }
+
+    /**
+     * Constructs a persistent HTTP URL for a background
+     *
+     * @name - Background name
+     * @type - Background type
+     */
+    class GetBackgroundUrl(
+        val name: String,
+        val type: BackgroundType
+    ) : Function() {
+        override val constructor: Int get() = 733769682
+    }
+
+    /**
+     * Searches for a background by its name
+     *
+     * @name - The name of the background
+     */
+    class SearchBackground(
+        val name: String
+    ) : Function() {
+        override val constructor: Int get() = -2130996959
+    }
+
+    /**
+     * Changes the background selected by the user; adds background to the list of installed backgrounds
+     *
+     * @background - The input background to use, null for solid backgrounds
+     * @type - Background type; null for default background. The method will return error 404 if type is null
+     * @forDarkTheme - True, if the background is chosen for dark theme
+     */
+    class SetBackground(
+        val background: InputBackground,
+        val type: BackgroundType,
+        val forDarkTheme: Boolean
+    ) : Function() {
+        override val constructor: Int get() = -1035439225
+    }
+
+    /**
+     * Removes background from the list of installed backgrounds
+     *
+     * @backgroundId - The background indentifier
+     */
+    class RemoveBackground(
+        val backgroundId: Long
+    ) : Function() {
+        override val constructor: Int get() = -1484545642
+    }
+
+    /**
+     * Resets list of installed backgrounds to its default value
+     */
+    class ResetBackgrounds : Function() {
+        override val constructor: Int get() = 204852088
     }
 
     /**
@@ -12352,7 +12840,7 @@ class TdApi {
     }
 
     /**
-     * Returns URL with the chat statistics. Currently this method can be used only for channels
+     * Returns an HTTP URL with the chat statistics. Currently this method can be used only for channels
      *
      * @chatId - Chat identifier
      * @parameters - Parameters from "tg:statsrefresh?params=******" link
@@ -12458,6 +12946,26 @@ class TdApi {
     }
 
     /**
+     * Returns auto-download settings presets for the currently logged in user
+     */
+    class GetAutoDownloadSettingsPresets : Function() {
+        override val constructor: Int get() = -1721088201
+    }
+
+    /**
+     * Sets auto-download settings
+     *
+     * @settings - New user auto-download settings
+     * @type - Type of the network for which the new settings are applied
+     */
+    class SetAutoDownloadSettings(
+        val settings: AutoDownloadSettings,
+        val type: NetworkType
+    ) : Function() {
+        override val constructor: Int get() = -353671948
+    }
+
+    /**
      * Returns one of the available Telegram Passport elements
      *
      * @type - Telegram Passport element type
@@ -12533,15 +13041,13 @@ class TdApi {
      * Sends a code to verify a phone number to be added to a user's Telegram Passport
      *
      * @phoneNumber - The phone number of the user, in international format
-     * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
-     * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+     * @settings - Settings for the authentication of the user's phone number
      */
     class SendPhoneNumberVerificationCode(
         val phoneNumber: String,
-        val allowFlashCall: Boolean,
-        val isCurrentPhoneNumber: Boolean
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
-        override val constructor: Int get() = -280632685
+        override val constructor: Int get() = 2081689035
     }
 
     /**
@@ -12639,16 +13145,14 @@ class TdApi {
      *
      * @hash - Value of the "hash" parameter from the link
      * @phoneNumber - Value of the "phone" parameter from the link
-     * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
-     * @isCurrentPhoneNumber - Pass true if the phone number is used on the current device. Ignored if allow_flash_call is false
+     * @settings - Settings for the authentication of the user's phone number
      */
     class SendPhoneNumberConfirmationCode(
         val hash: String,
         val phoneNumber: String,
-        val allowFlashCall: Boolean,
-        val isCurrentPhoneNumber: Boolean
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
-        override val constructor: Int get() = 1975492794
+        override val constructor: Int get() = -1901171495
     }
 
     /**
@@ -12823,7 +13327,7 @@ class TdApi {
     }
 
     /**
-     * Uses current user IP to found his country. Returns two-letter ISO 3166-1 alpha-2 country code. Can be called before authorization
+     * Uses current user IP to found their country. Returns two-letter ISO 3166-1 alpha-2 country code. Can be called before authorization
      */
     class GetCountryCode : Function() {
         override val constructor: Int get() = 1540593906
@@ -13135,6 +13639,21 @@ class TdApi {
     }
 
     /**
+     * Sends a simple network request to the Telegram servers via proxy; for testing only. Can be called before authorization
+     *
+     * @server - Proxy server IP address
+     * @port - Proxy server port
+     * @type - Proxy type
+     */
+    class TestProxy(
+        val server: String,
+        val port: Int,
+        val type: ProxyType
+    ) : Function() {
+        override val constructor: Int get() = 965027595
+    }
+
+    /**
      * Forces an updates.getDifference call to the Telegram servers; for testing only
      */
     class TestGetDifference : Function() {
@@ -13149,10 +13668,14 @@ class TdApi {
     }
 
     /**
-     * Does nothing and ensures that the Error object is used; for testing only. This is an offline method. Can be called before authorization
+     * Returns the specified error and ensures that the Error object is used; for testing only. This is an offline method. Can be called before authorization. Can be called synchronously
+     *
+     * @error - The error to be returned
      */
-    class TestUseError : Function() {
-        override val constructor: Int get() = 528842186
+    class TestReturnError(
+        val error: Error
+    ) : Function() {
+        override val constructor: Int get() = 455179506
     }
 
 }

@@ -6,8 +6,14 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.TdApi.*
 
 /**
- * Does nothing and ensures that the Error object is used; for testing only. This is an offline method. Can be called before authorization
+ * Returns the specified error and ensures that the Error object is used; for testing only. This is an offline method. Can be called before authorization. Can be called synchronously
+ *
+ * @error - The error to be returned
  */
-suspend fun TelegramClient.testUseError(): Error = error(
-    TestUseError()
+suspend fun TelegramClient.testReturnError(
+    error: Error
+): Error = error(
+    TestReturnError(
+        error
+    )
 )

@@ -1,3 +1,5 @@
+import dev.whyoleg.kamp.*
+
 kampJvm {
     source {
         main {

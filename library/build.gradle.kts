@@ -2,7 +2,7 @@ plugins {
     `java-library`
 }
 
-kampJvm {
+configuredKamp {
     with(Plugins) {
         plugins(atomicfu, mavenPublish)
     }

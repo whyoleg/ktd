@@ -1,32 +1,14 @@
 import dev.whyoleg.kamp.*
+import dev.whyoleg.kamp.configuration.*
 import dev.whyoleg.kamp.ext.*
 import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd") {
-    val version = "0.2.1"
-    val tag =
-        System.getenv("GITHUB_REF")
-            ?.takeIf { it.startsWith("refs/tags/") }
-            ?.substringAfter("refs/tags/")
-            ?.takeIf(String::isNotBlank)
-
-    when (tag) {
-        null -> {
-            val sha: String? = System.getenv("GITHUB_SHA")
-            val commitPostfix = sha?.let { "-$it" } ?: ""
-            "${version}$commitPostfix"
-        }
-        else -> {
-            require(version == tag) { "Tag doesn't match version" }
-            version
-        }
-    }
-}
+val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd", "0.2.2")
 
 @KampDSL
-fun Project.kampJvm(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
+fun Project.configuredKamp(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
     options {
         jvmTarget = Versions.jdk
         sourceCompatibility = Versions.jdk

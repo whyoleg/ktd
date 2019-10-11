@@ -1,4 +1,4 @@
-name: Build and publish version with commit
+name: Build version
 on:
   push:
     branches:
@@ -13,8 +13,3 @@ jobs:
           java-version: 11
       - name: Build
         run: ./gradlew build
-      - name: Publish
-        env:
-          bintray_user: ${{secrets.bintray_user}}
-          bintray_key: ${{secrets.bintray_key}}
-        run: ./gradlew bintrayUpload

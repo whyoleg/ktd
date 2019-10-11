@@ -1,22 +1,13 @@
 import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.builtin.*
+import dev.whyoleg.kamp.plugin.*
 
 plugins { `kotlin-dsl` }
 
 buildscript {
     repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.6") }
+    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.10") }
 }
 
-kampBuild(
-    BuiltInVersions(
-        atomicfu = "0.13.0",
-        coroutines = "1.3.1",
-        kotlin = "1.3.50",
-        serialization = "0.12.0",
-        updates = "0.22.0",
-        logging = "1.7.6"
-    )
-) {
+kampBuild {
     with(BuiltInPlugins) { resolvePlugins(updates, kotlinJvm, serialization, atomicfu, bintray, buildScan) }
 }

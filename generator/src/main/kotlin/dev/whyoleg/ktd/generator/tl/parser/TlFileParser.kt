@@ -35,7 +35,10 @@ private fun RawTlData.toTlData(): TlData = when (type) {
 }
 
 private fun RawTlData.toAbstract(): TlAbstract {
-    return TlAbstract(expression, list.map { it.substringAfter(descriptionToken).trim() })
+    val map = groupLines()
+    val (descriptions, additions) = map.splitByKey(descriptionToken)
+    val metadata = TlMetadata(descriptions, additions, emptyList())
+    return TlAbstract(expression, metadata)
 }
 
 private fun RawTlData.toObject(): TlObject {
@@ -54,23 +57,26 @@ private fun RawTlData.toFunction(): TlFunction {
 }
 
 private fun RawTlData.extractMetadata(): TlMetadata {
-    val map =
-        list
-            .groupBy { it.substringBefore(spaceToken) }
-            .mapValues { (_, value) -> value.map { it.substringAfter(spaceToken) } }
-
-    val descriptions = map[descriptionToken] ?: error("No description")
-    val additions = map[descriptionToken + questionToken] ?: emptyList()
+    val map = groupLines()
+    val (descriptions, additions) = map.splitByKey(descriptionToken)
     val propertiesString = expression.substringAfter(spaceToken).substringBefore(equalToken).trim()
     val properties = if (propertiesString.isBlank()) emptyList()
     else propertiesString.split(spaceToken).map { propertyDefinition ->
         val (name, type) = propertyDefinition.split(":")
         val key = if (name == descriptionToken) descriptionParamToken else name
-        val listData = map[key] ?: error("No description")
-        val (propAdditions, propDescriptions) = listData.partition { it.startsWith(questionToken) }
-        TlProperty(name, type.toTlType(), propDescriptions, propAdditions.map(String::toTlAddition))
+        val (propDescriptions, propAdditions) = map.splitByKey(key)
+        TlProperty(name, type.toTlType(), propDescriptions, propAdditions)
     }
-    return TlMetadata(descriptions, additions.map(String::toTlAddition), properties)
+    return TlMetadata(descriptions, additions, properties)
 }
 
-private fun String.toTlAddition(): TlAddition = this
+private fun RawTlData.groupLines() =
+    list
+        .groupBy { it.substringBefore(spaceToken) }
+        .mapValues { (_, value) -> value.map { it.substringAfter(spaceToken).capitalize() } }
+
+private fun Map<String, List<String>>.splitByKey(key: String) = run {
+    val descriptions = this[key] ?: error("No $key in lines")
+    val additions = this[key + questionToken] ?: emptyList()
+    descriptions to additions.map(::TlAddition)
+}

@@ -8,8 +8,8 @@ sealed class TlData(
 
 data class TlAbstract(
     override val type: String,
-    val descriptions: List<String>
-) : TlData(type, "Object", TlMetadata(descriptions, emptyList(), emptyList()))
+    override val metadata: TlMetadata
+) : TlData(type, "Object", metadata)
 
 sealed class TlClass(
     type: String,

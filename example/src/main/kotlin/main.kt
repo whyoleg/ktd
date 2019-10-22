@@ -68,7 +68,7 @@ suspend fun main() {
                 println("Users:")
                 users.userIds.forEach {
                     val user: User = client.getUser(it)
-                    if (user.username.isNotBlank()) println(user.username)
+                    if (!user.username.isNullOrBlank()) println(user.username)
                 }
                 job.cancel()
             }

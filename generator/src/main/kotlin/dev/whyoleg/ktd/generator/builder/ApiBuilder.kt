@@ -2,7 +2,8 @@ package dev.whyoleg.ktd.generator.builder
 
 import dev.whyoleg.ktd.generator.tl.*
 
-fun StringBuilder.buildApi(dataList: List<TlData>) {
+fun StringBuilder.buildApi(scheme: TlScheme) {
+    suppress("unused")
     useExperimentalAnnotationsForFile()
     append("\n")
     buildPackage("api")
@@ -24,17 +25,20 @@ fun StringBuilder.buildApi(dataList: List<TlData>) {
         withCurlyBrackets {
             append("external override fun toString(): String")
         }
-        val metadata = dataList.extractMetadata()
-        dataList.forEach {
+        scheme.data.forEach {
             append("\n")
-            buildClass(it, metadata)
+            buildClass(it, scheme.metadata[it])
         }
     }
 }
 
 fun StringBuilder.useExperimentalAnnotationsForFile() {
     append("@file:UseExperimental")
-    buildParameters(TlAddition.annotations().map { it.annotation + "::class" })
+    withRoundBrackets {
+        TlAddition.annotations().joinTo(this, ",\n") {
+            "${it.annotation}::class"
+        }
+    }
     append("\n")
 }
 

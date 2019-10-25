@@ -5,9 +5,24 @@ import dev.whyoleg.ktd.generator.tl.*
 const val group = "dev.whyoleg.ktd"
 const val tabIndent = "    "
 
+fun StringBuilder.suppress(vararg suppressed: String) {
+    append("@file:Suppress")
+    withRoundBrackets {
+        suppressed.joinTo(this, ",\n") { "\"$it\"" }
+    }
+    append("\n")
+}
+
+fun StringBuilder.buildImport(vararg packages: String) {
+    append("import ").append(group)
+    if (packages.isNotEmpty()) packages.joinTo(this, ".", ".", ".*\n", transform = String::trim)
+    else append(".*\n")
+}
+
 fun StringBuilder.buildPackage(vararg packages: String) {
     append("package ").append(group)
-    packages.joinTo(this, ".", ".", "\n", transform = String::trim)
+    if (packages.isNotEmpty()) packages.joinTo(this, ".", ".", "\n", transform = String::trim)
+    else append("\n")
 }
 
 fun StringBuilder.buildTypealias(from: String, to: String) {

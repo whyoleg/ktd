@@ -1,3 +1,6 @@
+@file:Suppress(
+    "unused"
+)
 @file:UseExperimental(
     BotsOnly::class,
     TestingOnly::class
@@ -460,6 +463,9 @@ class TdApi {
 
     /**
      * A file defined by its remote ID
+     * The remote ID is guaranteed to work only if it was received after TDLib launch and the corresponding file is still accessible to the user
+     * For example, if the file is from a message, then the message must be not deleted and accessible to the user
+     * If a file database is disabled, then the corresponding object with the file must be preloaded by the client
      *
      * @id - Remote file identifier
      */
@@ -633,7 +639,7 @@ class TdApi {
 
     /**
      * Describes an audio file
-     * Audio is usually in MP3 format
+     * Audio is usually in MP3 or M4A format
      *
      * @duration - Duration of the audio, in seconds
      *             As defined by the sender
@@ -744,7 +750,7 @@ class TdApi {
      *             As defined by the sender
      * @mimeType - MIME type of the file
      *             As defined by the sender
-     * @hasStickers - True, if stickers were added to the photo
+     * @hasStickers - True, if stickers were added to the video
      * @supportsStreaming - True, if the video should be tried to be streamed
      * @minithumbnail - Video minithumbnail
      * @thumbnail - Video thumbnail
@@ -2319,12 +2325,14 @@ class TdApi {
      *
      * @text - Text
      * @url - URL
+     * @isCached - True, if the URL has cached instant view server-side
      */
     class RichTextUrl(
         val text: RichText,
-        val url: String
+        val url: String,
+        val isCached: Boolean
     ) : RichText() {
-        override val constructor: Int get() = 1967248447
+        override val constructor: Int get() = 83939092
     }
 
     /**
@@ -2510,6 +2518,7 @@ class TdApi {
      * Represents a cell of a table
      *
      * @text - Cell text
+     *         If the text is null, then the cell should be invisible
      * @isHeader - True, if it is a header cell
      * @colspan - The number of columns the cell should span
      * @rowspan - The number of rows the cell should span
@@ -2771,6 +2780,19 @@ class TdApi {
         val isLooped: Boolean
     ) : PageBlock() {
         override val constructor: Int get() = 510041394
+    }
+
+    /**
+     * A voice note
+     *
+     * @voiceNote - Voice note
+     * @caption - Voice note caption
+     */
+    class PageBlockVoiceNote(
+        val voiceNote: VoiceNote,
+        val caption: PageBlockCaption
+    ) : PageBlock() {
+        override val constructor: Int get() = 1823310463
     }
 
     /**
@@ -6415,6 +6437,28 @@ class TdApi {
     }
 
     /**
+     * Contains the response of a request to TON lite server
+     *
+     * @response - The response
+     */
+    class TonLiteServerResponse(
+        val response: ByteArray
+    ) : Object() {
+        override val constructor: Int get() = 928306959
+    }
+
+    /**
+     * Contains the salt to be used with locally stored password to access a local TON-based wallet
+     *
+     * @salt - The salt
+     */
+    class TonWalletPasswordSalt(
+        val salt: ByteArray
+    ) : Object() {
+        override val constructor: Int get() = -1406795233
+    }
+
+    /**
      * Represents a chat event
      */
     abstract class ChatEventAction : Object()
@@ -7552,14 +7596,16 @@ class TdApi {
      *
      * @id - Unique persistent identifier of this notification
      * @date - Notification date
+     * @isSilent - True, if the notification was initially silent
      * @type - Notification type
      */
     class Notification(
         val id: Int,
         val date: Int,
+        val isSilent: Boolean,
         val type: NotificationType
     ) : Object() {
-        override val constructor: Int get() = 926876603
+        override val constructor: Int get() = 788743120
     }
 
     /**
@@ -8882,7 +8928,7 @@ class TdApi {
 
     /**
      * The last message of a chat was changed
-     * If last_message is null then the last message in the chat became unknown
+     * If last_message is null, then the last message in the chat became unknown
      * Some new unknown messages might be added to the chat in this case
      *
      * @chatId - Chat identifier
@@ -10318,6 +10364,9 @@ class TdApi {
      * Returns information about a file by its remote ID
      * This is an offline request
      * Can be used to register a URL as a file for further uploading, or sending as a message
+     * Even the request succeeds, the file can be used only if it is still accessible to the user
+     * For example, if the file is from a message, then the message must be not deleted and accessible to the user
+     * If a file database is disabled, then the corresponding object with the file must be preloaded by the client
      *
      * @remoteFileId - Remote identifier of the file to get
      * @fileType - File type, if known
@@ -14110,6 +14159,24 @@ class TdApi {
         val data: String? = null
     ) : Function() {
         override val constructor: Int get() = -1293603521
+    }
+
+    /**
+     * Sends a request to TON lite server through Telegram servers
+     *
+     * @request - The request
+     */
+    class SendTonLiteServerRequest(
+        val request: ByteArray = byteArrayOf()
+    ) : Function() {
+        override val constructor: Int get() = 964887713
+    }
+
+    /**
+     * Returns a salt to be used with locally stored password to access a local TON-based wallet
+     */
+    class GetTonWalletPasswordSalt : Function() {
+        override val constructor: Int get() = -642507025
     }
 
     /**

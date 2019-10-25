@@ -2,23 +2,16 @@ package dev.whyoleg.ktd.generator.builder
 
 import dev.whyoleg.ktd.generator.tl.*
 
-fun StringBuilder.buildClass(data: TlData, metadata: TlSchemeMetadata) {
-    val withDefault: Boolean = data.type.toLowerCase() in metadata.typesWithDefaultsProperties
-    val isNullable: Boolean = data.type.toLowerCase() in metadata.typesWithNullableProperties
-
+fun StringBuilder.buildClass(data: TlData, metadata: TlDataMetadata) {
     val declaration = when (data) {
         is TlAbstract -> "abstract class "
         is TlClass    -> "class "
     }
-    val propertiesDescriptions =
-        if (data.metadata.properties.isEmpty()) emptyList() else listOf("") + data.metadata.properties.flatMap(TlProperty::descriptionLines)
-    val descriptions = data.metadata.descriptions + data.metadata.additions.strings() + propertiesDescriptions
 
-
-    buildDescription(descriptions)
+    buildDescription(data.descriptionsWithProperties())
     buildAnnotations(data.metadata.additions)
     append(declaration).append(data.type.capitalize())
-    buildParameters(data.metadata.properties.map { it.toVal(withDefault, isNullable) })
+    buildParameters(data.metadata.properties.map { it.toVal(metadata) })
     append(" : ").append(data.parentType.capitalize()).append("()")
 
     if (data is TlClass) {
@@ -32,3 +25,11 @@ fun StringBuilder.buildClass(data: TlData, metadata: TlSchemeMetadata) {
 fun StringBuilder.buildConstructorField(crc: Int) {
     append("override val constructor: Int get() = ").append(crc)
 }
+
+fun TlData.descriptions(): List<String> = metadata.descriptions + metadata.additions.strings()
+
+fun TlData.descriptionsWithProperties(): List<String> =
+    descriptions() + (when (metadata.properties.isEmpty()) {
+        true  -> emptyList()
+        false -> listOf("") + metadata.properties.flatMap(TlProperty::descriptionLines)
+    })

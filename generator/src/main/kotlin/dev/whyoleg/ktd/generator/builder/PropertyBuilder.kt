@@ -2,18 +2,28 @@ package dev.whyoleg.ktd.generator.builder
 
 import dev.whyoleg.ktd.generator.tl.*
 
-fun StringBuilder.buildParameters(parameters: List<String>) {
+fun StringBuilder.buildParameters(parameters: List<String>, addEmptyBrackets: Boolean = false) {
     if (parameters.isNotEmpty()) withRoundBrackets {
         parameters.joinTo(this, ",\n")
-    }
+    } else if (addEmptyBrackets) append("()")
 }
 
-fun TlProperty.toVal(withDefault: Boolean, isNullable: Boolean): String {
+fun TlProperty.toVal(metadata: TlDataMetadata): String {
+    val (withDefault, isNullable) = metadata
     val propName = name.snakeToCamel()
 
     val nullableToken = if (type is TlRefType && (isNullable || withDefault)) questionToken else emptyToken
     val default = if (withDefault) " = ${type.default}" else emptyToken
     return "${inlineAnnotations()}val $propName: ${type.kotlinType}$nullableToken$default"
+}
+
+fun TlProperty.toParameter(metadata: TlDataMetadata): String {
+    val (withDefault, isNullable) = metadata
+    val propName = name.snakeToCamel()
+
+    val nullableToken = if (type is TlRefType && (isNullable || withDefault)) questionToken else emptyToken
+    val default = if (withDefault) " = ${type.default}" else emptyToken
+    return "${inlineAnnotations()}$propName: ${type.kotlinType}$nullableToken$default"
 }
 
 fun TlProperty.descriptionLines(): List<String> {

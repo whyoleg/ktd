@@ -1,8 +1,23 @@
 package dev.whyoleg.ktd.generator.tl
 
+data class TlScheme(
+    val data: List<TlData>,
+    val metadata: TlSchemeMetadata
+)
+
 data class TlSchemeMetadata(
     val typesWithNullableProperties: Set<String>,
     val typesWithDefaultsProperties: Set<String>
+)
+
+data class TlDataMetadata(
+    val withDefault: Boolean,
+    val isNullable: Boolean
+)
+
+operator fun TlSchemeMetadata.get(data: TlData): TlDataMetadata = TlDataMetadata(
+    withDefault = data.type.toLowerCase() in typesWithDefaultsProperties,
+    isNullable = data.type.toLowerCase() in typesWithNullableProperties
 )
 
 fun List<TlData>.extractMetadata(): TlSchemeMetadata {

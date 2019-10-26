@@ -5,14 +5,16 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 
-val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd", "0.2.2")
+private const val jdk = "1.6"
+
+private val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd", "0.3.0")
 
 @KampDSL
 fun Project.configuredKamp(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
     options {
-        jvmTarget = Versions.jdk
-        sourceCompatibility = Versions.jdk
-        targetCompatibility = Versions.jdk
+        jvmTarget = jdk
+        sourceCompatibility = jdk
+        targetCompatibility = jdk
     }
     languageSettings {
         progressiveMode = true

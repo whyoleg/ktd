@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.proxy(
     f: AddProxy
-): Proxy = execRaw(f) as Proxy
+): Proxy = exec(f) as Proxy
 
 /**
  * Edits an existing proxy server for network requests
@@ -26,7 +26,7 @@ suspend fun TelegramClient.proxy(
  */
 suspend fun TelegramClient.proxy(
     f: EditProxy
-): Proxy = execRaw(f) as Proxy
+): Proxy = exec(f) as Proxy
 
 /**
  * Enables a proxy
@@ -35,7 +35,7 @@ suspend fun TelegramClient.proxy(
  */
 suspend fun TelegramClient.proxy(
     f: EnableProxy
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Disables the currently enabled proxy
@@ -43,7 +43,7 @@ suspend fun TelegramClient.proxy(
  */
 suspend fun TelegramClient.proxy(
     f: DisableProxy
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes a proxy server
@@ -51,7 +51,7 @@ suspend fun TelegramClient.proxy(
  */
 suspend fun TelegramClient.proxy(
     f: RemoveProxy
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Computes time needed to receive a response from a Telegram server through a proxy
@@ -59,4 +59,4 @@ suspend fun TelegramClient.proxy(
  */
 suspend fun TelegramClient.proxy(
     f: PingProxy
-): Seconds = execRaw(f) as Seconds
+): Seconds = exec(f) as Seconds

@@ -9,38 +9,19 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 suspend fun main() {
-    val job = Job()
     val telegram = Telegram(
-        parent = job,
         configuration = TelegramClientConfiguration(
             maxEventsCount = 1000,
             receiveTimeout = 0.01 //ms
         )
     )
     val client = telegram.client()
-    client.updates.filterIsInstance<UpdateAuthorizationState>().collect {
+    client.updates.filterIsInstance<UpdateAuthorizationState>().onEach {
+        println(it.authorizationState)
         when (it.authorizationState) {
             is AuthorizationStateWaitTdlibParameters -> {
                 println("Send parameters")
-                client.setTdlibParameters(
-                    parameters = TdlibParameters(
-                        useTestDc = false,
-                        databaseDirectory = "db",
-                        filesDirectory = "files",
-                        useFileDatabase = true,
-                        useChatInfoDatabase = true,
-                        useMessageDatabase = true,
-                        apiId = 1, //provide id
-                        apiHash = "", //provide hash
-                        systemLanguageCode = "en",
-                        deviceModel = "",
-                        systemVersion = "",
-                        applicationVersion = "1",
-                        enableStorageOptimizer = false,
-                        ignoreFileNames = false,
-                        useSecretChats = false
-                    )
-                )
+                client.setTdlibParameters(tdlibParameters)
             }
             is AuthorizationStateWaitEncryptionKey   -> client.setDatabaseEncryptionKey(ByteArray(DEFAULT_BUFFER_SIZE).apply { fill(1) })
             is AuthorizationStateWaitPhoneNumber     -> {
@@ -61,19 +42,21 @@ suspend fun main() {
                 client.checkAuthenticationCode(code)
             }
             is AuthorizationStateReady               -> {
-                val me: User = client.getMe()
-                println("Your username: ${me.username}")
-                val users: Users = client.getContacts()
-                println("Users:")
-                users.userIds.forEach {
-                    val user: User = client.getUser(it)
-                    if (!user.username.isNullOrBlank()) println(user.username)
-                }
-                job.cancel()
+                throw Throwable()
             }
             is AuthorizationStateClosed              -> {
                 println("TDLIB closed, finish")
             }
         }
+    }.runCatching { collect() }
+
+    val me: User = client.getMe()
+    println("Your username: ${me.username}")
+    val users: Users = client.getContacts()
+    println("Users:")
+    users.userIds.forEach {
+        val user: User = client.getUser(it)
+        if (!user.username.isNullOrBlank()) println(user.username)
     }
+    telegram.cancelAndJoin()
 }

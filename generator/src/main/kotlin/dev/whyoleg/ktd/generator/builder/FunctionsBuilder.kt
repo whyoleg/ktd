@@ -89,7 +89,7 @@ fun StringBuilder.buildRawFunction(rawType: String, function: TlFunction) {
         append("f: ").append(function.type.capitalize())
     }
     val returnType = function.returnType.capitalize()
-    append(": ").append(returnType).append(" = execRaw(f) as ").append(returnType)
+    append(": ").append(returnType).append(" = exec(f) as ").append(returnType)
     append("\n")
 }
 

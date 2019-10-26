@@ -10,8 +10,10 @@ internal class NativeClient(private val configuration: TelegramClientConfigurati
 
     private val counter = atomic(0L)
 
-    fun send(function: TelegramFunction): Long = counter.incrementAndGet().also {
-        Client.nativeClientSend(clientId, it, function)
+    fun send(function: TelegramFunction): Long {
+        val id = counter.incrementAndGet()
+        Client.nativeClientSend(clientId, id, function)
+        return id
     }
 
     private val eventIds = LongArray(configuration.maxEventsCount)

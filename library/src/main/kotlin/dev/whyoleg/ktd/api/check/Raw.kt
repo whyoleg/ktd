@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.check(
     f: CheckDatabaseEncryptionKey
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks the authentication code
@@ -26,7 +26,7 @@ suspend fun TelegramClient.check(
  */
 suspend fun TelegramClient.check(
     f: CheckAuthenticationCode
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks the authentication password for correctness
@@ -34,7 +34,7 @@ suspend fun TelegramClient.check(
  */
 suspend fun TelegramClient.check(
     f: CheckAuthenticationPassword
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks the authentication token of a bot
@@ -44,14 +44,14 @@ suspend fun TelegramClient.check(
 @BotsOnly
 suspend fun TelegramClient.check(
     f: CheckAuthenticationBotToken
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks whether a username can be set for a chat
  */
 suspend fun TelegramClient.check(
     f: CheckChatUsername
-): CheckChatUsernameResult = execRaw(f) as CheckChatUsernameResult
+): CheckChatUsernameResult = exec(f) as CheckChatUsernameResult
 
 /**
  * Sets the result of a pre-checkout query
@@ -59,32 +59,32 @@ suspend fun TelegramClient.check(
 @BotsOnly
 suspend fun TelegramClient.check(
     f: AnswerPreCheckoutQuery
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks the authentication code sent to confirm a new phone number of the user
  */
 suspend fun TelegramClient.check(
     f: CheckChangePhoneNumberCode
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks the phone number verification code for Telegram Passport
  */
 suspend fun TelegramClient.check(
     f: CheckPhoneNumberVerificationCode
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks the email address verification code for Telegram Passport
  */
 suspend fun TelegramClient.check(
     f: CheckEmailAddressVerificationCode
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Checks phone number confirmation code
  */
 suspend fun TelegramClient.check(
     f: CheckPhoneNumberConfirmationCode
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

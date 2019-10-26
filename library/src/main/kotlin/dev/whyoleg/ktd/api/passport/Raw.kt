@@ -17,14 +17,14 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.passport(
     f: GetPassportElement
-): PassportElement = execRaw(f) as PassportElement
+): PassportElement = exec(f) as PassportElement
 
 /**
  * Returns all available Telegram Passport elements
  */
 suspend fun TelegramClient.passport(
     f: GetAllPassportElements
-): PassportElements = execRaw(f) as PassportElements
+): PassportElements = exec(f) as PassportElements
 
 /**
  * Adds an element to the user's Telegram Passport
@@ -32,14 +32,14 @@ suspend fun TelegramClient.passport(
  */
 suspend fun TelegramClient.passport(
     f: SetPassportElement
-): PassportElement = execRaw(f) as PassportElement
+): PassportElement = exec(f) as PassportElement
 
 /**
  * Deletes a Telegram Passport element
  */
 suspend fun TelegramClient.passport(
     f: DeletePassportElement
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Informs the user that some of the elements in their Telegram Passport contain errors
@@ -48,14 +48,14 @@ suspend fun TelegramClient.passport(
 @BotsOnly
 suspend fun TelegramClient.passport(
     f: SetPassportElementErrors
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns a Telegram Passport authorization form for sharing data with a service
  */
 suspend fun TelegramClient.passport(
     f: GetPassportAuthorizationForm
-): PassportAuthorizationForm = execRaw(f) as PassportAuthorizationForm
+): PassportAuthorizationForm = exec(f) as PassportAuthorizationForm
 
 /**
  * Returns already available Telegram Passport elements suitable for completing a Telegram Passport authorization form
@@ -63,7 +63,7 @@ suspend fun TelegramClient.passport(
  */
 suspend fun TelegramClient.passport(
     f: GetPassportAuthorizationFormAvailableElements
-): PassportElementsWithErrors = execRaw(f) as PassportElementsWithErrors
+): PassportElementsWithErrors = exec(f) as PassportElementsWithErrors
 
 /**
  * Sends a Telegram Passport authorization form, effectively sharing data with the service
@@ -71,4 +71,4 @@ suspend fun TelegramClient.passport(
  */
 suspend fun TelegramClient.passport(
     f: SendPassportAuthorizationForm
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.json(
     f: GetJsonValue
-): JsonValue = execRaw(f) as JsonValue
+): JsonValue = exec(f) as JsonValue
 
 /**
  * Returns application config, provided by the server
@@ -28,4 +28,4 @@ suspend fun TelegramClient.json(
  */
 suspend fun TelegramClient.json(
     f: GetApplicationConfig
-): JsonValue = execRaw(f) as JsonValue
+): JsonValue = exec(f) as JsonValue

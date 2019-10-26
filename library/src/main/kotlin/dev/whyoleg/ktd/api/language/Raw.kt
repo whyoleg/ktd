@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.language(
     f: GetLanguagePackString
-): LanguagePackStringValue = execRaw(f) as LanguagePackStringValue
+): LanguagePackStringValue = exec(f) as LanguagePackStringValue
 
 /**
  * Returns information about a language pack
@@ -30,7 +30,7 @@ suspend fun TelegramClient.language(
  */
 suspend fun TelegramClient.language(
     f: GetLanguagePackInfo
-): LanguagePackInfo = execRaw(f) as LanguagePackInfo
+): LanguagePackInfo = exec(f) as LanguagePackInfo
 
 /**
  * Returns strings from a language pack in the current localization target by their keys
@@ -38,7 +38,7 @@ suspend fun TelegramClient.language(
  */
 suspend fun TelegramClient.language(
     f: GetLanguagePackStrings
-): LanguagePackStrings = execRaw(f) as LanguagePackStrings
+): LanguagePackStrings = exec(f) as LanguagePackStrings
 
 /**
  * Fetches the latest versions of all strings from a language pack in the current localization target from the server
@@ -47,7 +47,7 @@ suspend fun TelegramClient.language(
  */
 suspend fun TelegramClient.language(
     f: SynchronizeLanguagePack
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Deletes all information about a language pack in the current localization target
@@ -56,4 +56,4 @@ suspend fun TelegramClient.language(
  */
 suspend fun TelegramClient.language(
     f: DeleteLanguagePack
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

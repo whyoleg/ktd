@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.chat(
     f: GetChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Returns an ordered list of chats
@@ -27,7 +27,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GetChats
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Searches a public chat by its username
@@ -37,7 +37,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SearchPublicChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Searches public chats by looking for specified query in their username and title
@@ -48,7 +48,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SearchPublicChats
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Searches for the specified query in the title and username of already known chats, this is an offline request
@@ -56,7 +56,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SearchChats
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Searches for the specified query in the title and username of already known chats via request to the server
@@ -64,7 +64,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SearchChatsOnServer
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Returns a list of frequently used chats
@@ -72,7 +72,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GetTopChats
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Removes a chat from the list of frequently used chats
@@ -80,7 +80,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: RemoveTopChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Adds a chat to the list of recently found chats
@@ -89,28 +89,28 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: AddRecentlyFoundChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes a chat from the list of recently found chats
  */
 suspend fun TelegramClient.chat(
     f: RemoveRecentlyFoundChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Clears the list of recently found chats
  */
 suspend fun TelegramClient.chat(
     f: ClearRecentlyFoundChats
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns a list of public chats with username created by the user
  */
 suspend fun TelegramClient.chat(
     f: GetCreatedPublicChats
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Returns a list of common group chats with a given user
@@ -118,7 +118,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GetGroupsInCommon
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Deletes all messages in the chat
@@ -126,14 +126,14 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: DeleteChatHistory
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns approximate number of messages of the specified type in the chat
  */
 suspend fun TelegramClient.chat(
     f: GetChatMessageCount
-): Count = execRaw(f) as Count
+): Count = exec(f) as Count
 
 /**
  * Sends a notification about a screenshot taken in a chat
@@ -141,7 +141,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SendChatScreenshotTakenNotification
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Deletes all messages sent by the specified user to a chat
@@ -150,7 +150,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: DeleteChatMessagesFromUser
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Deletes the default reply markup from a chat
@@ -159,14 +159,14 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: DeleteChatReplyMarkup
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Sends a notification about user activity in a chat
  */
 suspend fun TelegramClient.chat(
     f: SendChatAction
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Informs TDLib that the chat is opened by the user
@@ -174,7 +174,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: OpenChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Informs TDLib that the chat is closed by the user
@@ -182,42 +182,42 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: CloseChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Marks all mentions in a chat as read
  */
 suspend fun TelegramClient.chat(
     f: ReadAllChatMentions
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns an existing chat corresponding to a given user
  */
 suspend fun TelegramClient.chat(
     f: CreatePrivateChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Returns an existing chat corresponding to a known basic group
  */
 suspend fun TelegramClient.chat(
     f: CreateBasicGroupChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Returns an existing chat corresponding to a known supergroup or channel
  */
 suspend fun TelegramClient.chat(
     f: CreateSupergroupChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Returns an existing chat corresponding to a known secret chat
  */
 suspend fun TelegramClient.chat(
     f: CreateSecretChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Creates a new basic group and sends a corresponding messageBasicGroupChatCreate
@@ -225,7 +225,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: CreateNewBasicGroupChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Creates a new supergroup or channel and sends a corresponding messageSupergroupChatCreate
@@ -233,7 +233,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: CreateNewSupergroupChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Creates a new secret chat
@@ -241,7 +241,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: CreateNewSecretChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom
@@ -250,7 +250,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: UpgradeBasicGroupChatToSupergroupChat
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Changes the chat title
@@ -260,7 +260,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SetChatTitle
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the photo of a chat
@@ -270,7 +270,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SetChatPhoto
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the chat members permissions
@@ -279,21 +279,21 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SetChatPermissions
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the draft message in a chat
  */
 suspend fun TelegramClient.chat(
     f: SetChatDraftMessage
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the notification settings of a chat
  */
 suspend fun TelegramClient.chat(
     f: SetChatNotificationSettings
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the pinned state of a chat
@@ -301,28 +301,28 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: ToggleChatIsPinned
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the marked as unread state of a chat
  */
 suspend fun TelegramClient.chat(
     f: ToggleChatIsMarkedAsUnread
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the value of the default disable_notification parameter, used when a message is sent to a chat
  */
 suspend fun TelegramClient.chat(
     f: ToggleChatDefaultDisableNotification
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes client data associated with a chat
  */
 suspend fun TelegramClient.chat(
     f: SetChatClientData
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes information about a chat
@@ -331,7 +331,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SetChatDescription
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Pins a message in a chat
@@ -339,7 +339,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: PinChatMessage
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes the pinned message from a chat
@@ -347,7 +347,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: UnpinChatMessage
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Adds current user as a new member to a chat
@@ -355,7 +355,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: JoinChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes current user from chat members
@@ -363,7 +363,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: LeaveChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Adds a new member to a chat
@@ -372,7 +372,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: AddChatMember
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Adds multiple new members to a chat
@@ -383,7 +383,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: AddChatMembers
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the status of a chat member, needs appropriate privileges
@@ -393,14 +393,14 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SetChatMemberStatus
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns information about a single member of a chat
  */
 suspend fun TelegramClient.chat(
     f: GetChatMember
-): ChatMember = execRaw(f) as ChatMember
+): ChatMember = exec(f) as ChatMember
 
 /**
  * Searches for a specified query in the first name, last name and username of the members of a specified chat
@@ -408,21 +408,21 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: SearchChatMembers
-): ChatMembers = execRaw(f) as ChatMembers
+): ChatMembers = exec(f) as ChatMembers
 
 /**
  * Returns list of chats with non-default notification settings
  */
 suspend fun TelegramClient.chat(
     f: GetChatNotificationSettingsExceptions
-): Chats = execRaw(f) as Chats
+): Chats = exec(f) as Chats
 
 /**
  * Changes the order of pinned chats
  */
 suspend fun TelegramClient.chat(
     f: SetPinnedChats
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Generates a new invite link for a chat
@@ -432,14 +432,14 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GenerateChatInviteLink
-): ChatInviteLink = execRaw(f) as ChatInviteLink
+): ChatInviteLink = exec(f) as ChatInviteLink
 
 /**
  * Checks the validity of an invite link for a chat and returns information about the corresponding chat
  */
 suspend fun TelegramClient.chat(
     f: CheckChatInviteLink
-): ChatInviteLinkInfo = execRaw(f) as ChatInviteLinkInfo
+): ChatInviteLinkInfo = exec(f) as ChatInviteLinkInfo
 
 /**
  * Uses an invite link to add the current user to the chat if possible
@@ -447,7 +447,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: JoinChatByInviteLink
-): Chat = execRaw(f) as Chat
+): Chat = exec(f) as Chat
 
 /**
  * Returns information about members or banned users in a supergroup or channel
@@ -456,7 +456,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GetSupergroupMembers
-): ChatMembers = execRaw(f) as ChatMembers
+): ChatMembers = exec(f) as ChatMembers
 
 /**
  * Returns a list of service actions taken by chat members and administrators in the last 48 hours
@@ -467,14 +467,14 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GetChatEventLog
-): ChatEvents = execRaw(f) as ChatEvents
+): ChatEvents = exec(f) as ChatEvents
 
 /**
  * Returns information on whether the current chat can be reported as spam
  */
 suspend fun TelegramClient.chat(
     f: GetChatReportSpamState
-): ChatReportSpamState = execRaw(f) as ChatReportSpamState
+): ChatReportSpamState = exec(f) as ChatReportSpamState
 
 /**
  * Reports to the server whether a chat is a spam chat or not
@@ -483,7 +483,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: ChangeChatReportSpamState
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Reports a chat to the Telegram moderators
@@ -491,7 +491,7 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: ReportChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns an HTTP URL with the chat statistics
@@ -499,4 +499,4 @@ suspend fun TelegramClient.chat(
  */
 suspend fun TelegramClient.chat(
     f: GetChatStatisticsUrl
-): HttpUrl = execRaw(f) as HttpUrl
+): HttpUrl = exec(f) as HttpUrl

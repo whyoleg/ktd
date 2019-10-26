@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.poll(
     f: SetPollAnswer
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Stops a poll
@@ -25,4 +25,4 @@ suspend fun TelegramClient.poll(
  */
 suspend fun TelegramClient.poll(
     f: StopPoll
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

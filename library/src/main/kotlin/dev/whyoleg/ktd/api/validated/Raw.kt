@@ -17,4 +17,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.validated(
     f: ValidateOrderInfo
-): ValidatedOrderInfo = execRaw(f) as ValidatedOrderInfo
+): ValidatedOrderInfo = exec(f) as ValidatedOrderInfo

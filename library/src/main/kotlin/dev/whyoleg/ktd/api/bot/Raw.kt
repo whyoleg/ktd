@@ -18,4 +18,4 @@ import dev.whyoleg.ktd.api.TdApi.*
 @BotsOnly
 suspend fun TelegramClient.bot(
     f: SetBotUpdatesStatus
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

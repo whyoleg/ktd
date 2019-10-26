@@ -17,18 +17,18 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.session(
     f: GetActiveSessions
-): Sessions = execRaw(f) as Sessions
+): Sessions = exec(f) as Sessions
 
 /**
  * Terminates a session of the current user
  */
 suspend fun TelegramClient.session(
     f: TerminateSession
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Terminates all other sessions of the current user
  */
 suspend fun TelegramClient.session(
     f: TerminateAllOtherSessions
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

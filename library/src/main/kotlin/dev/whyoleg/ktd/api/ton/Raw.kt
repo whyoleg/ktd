@@ -17,11 +17,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.ton(
     f: SendTonLiteServerRequest
-): TonLiteServerResponse = execRaw(f) as TonLiteServerResponse
+): TonLiteServerResponse = exec(f) as TonLiteServerResponse
 
 /**
  * Returns a salt to be used with locally stored password to access a local TON-based wallet
  */
 suspend fun TelegramClient.ton(
     f: GetTonWalletPasswordSalt
-): TonWalletPasswordSalt = execRaw(f) as TonWalletPasswordSalt
+): TonWalletPasswordSalt = exec(f) as TonWalletPasswordSalt

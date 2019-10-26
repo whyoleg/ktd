@@ -17,11 +17,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.auto(
     f: GetAutoDownloadSettingsPresets
-): AutoDownloadSettingsPresets = execRaw(f) as AutoDownloadSettingsPresets
+): AutoDownloadSettingsPresets = exec(f) as AutoDownloadSettingsPresets
 
 /**
  * Sets auto-download settings
  */
 suspend fun TelegramClient.auto(
     f: SetAutoDownloadSettings
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

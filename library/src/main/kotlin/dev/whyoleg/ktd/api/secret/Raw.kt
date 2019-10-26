@@ -18,11 +18,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.secret(
     f: GetSecretChat
-): SecretChat = execRaw(f) as SecretChat
+): SecretChat = exec(f) as SecretChat
 
 /**
  * Closes a secret chat, effectively transfering its state to secretChatStateClosed
  */
 suspend fun TelegramClient.secret(
     f: CloseSecretChat
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

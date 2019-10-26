@@ -17,4 +17,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.terms(
     f: AcceptTermsOfService
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

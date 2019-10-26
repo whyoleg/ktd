@@ -1,60 +1,65 @@
 package dev.whyoleg.ktd
 
+import kotlinx.collections.immutable.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
 
 internal class UnlimitedCacheChannel<T>(job: Job) {
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob(job))
+
     private abstract inner class Action
     private inner class Add(val value: T) : Action()
     private inner class Sub(val channel: SendChannel<T>) : Action()
     private inner class UnSub(val channel: SendChannel<T>) : Action()
-    private inner class Clear : Action()
 
-    private val list = mutableListOf<T>()
-    private val subscribers = mutableSetOf<SendChannel<T>>()
+    private var cache = persistentListOf<T>()
+    private val cacheChannel = Channel<Action>(Channel.UNLIMITED)
 
-    private val cache = GlobalScope.actor<Action>(Dispatchers.Default + job, Channel.UNLIMITED) {
-        consumeEach { action ->
-            when (action) {
-                is Add   -> {
-                    val value = action.value
-                    list += value
-                    subscribers.forEach { sub -> sub.offer(value) }
-                }
-                is Sub   -> {
-                    val ch = action.channel
-                    subscribers += ch
-                    list.forEach { ch.offer(it) }
-                }
-                is UnSub -> subscribers -= action.channel
-                is Clear -> list.clear()
-            }
-        }
+    //key - flow channel, value - unlimited channel
+    private val subscribers = mutableMapOf<SendChannel<T>, SendChannel<T>>()
+
+    public val flow: Flow<T> = channelFlow {
+        cacheChannel.offer(Sub(this))
+        awaitClose { cacheChannel.offer(UnSub(this)) }
     }
 
     init {
-        cache.invokeOnClose { error ->
-            subscribers.forEach { it.close(error) }
+        scope.launch {
+            cacheChannel.consumeEach { action ->
+                when (action) {
+                    is Add   -> {
+                        val value = action.value
+                        cache += value
+                        subscribers.forEach { (_, unlimitedChannel) -> unlimitedChannel.offer(value) }
+                    }
+                    is Sub   -> {
+                        val flowChannel = action.channel
+                        val unlimitedChannel = unlimitedChannel(flowChannel, cache)
+                        subscribers[flowChannel] = unlimitedChannel
+                    }
+                    is UnSub -> {
+                        subscribers.remove(action.channel)?.close()
+                    }
+                }
+            }
+        }.invokeOnCompletion { error ->
+            subscribers.forEach { (flowChannel, unlimitedChannel) -> flowChannel.close(error) }
             subscribers.clear()
-            list.clear()
         }
     }
 
-    val flow: Flow<T>
-        get() = flow {
-            val unlimitedFlow = channelFlow {
-                cache.offer(Sub(this))
-                awaitClose { cache.offer(UnSub(this)) }
-            }.buffer(Channel.UNLIMITED)
-            emitAll(unlimitedFlow)
+    private fun unlimitedChannel(flowChannel: SendChannel<T>, cache: List<T>): SendChannel<T> {
+        val unlimitedChannel = Channel<T>(Channel.UNLIMITED)
+        scope.launch {
+            cache.forEach { flowChannel.send(it) }
+            unlimitedChannel.consumeEach { flowChannel.send(it) }
         }
-
-    fun offer(value: T) {
-        cache.offer(Add(value))
+        return unlimitedChannel
     }
 
-    fun clear() {
-        cache.offer(Clear())
+    public fun offer(value: T) {
+        cacheChannel.offer(Add(value))
     }
+
 }

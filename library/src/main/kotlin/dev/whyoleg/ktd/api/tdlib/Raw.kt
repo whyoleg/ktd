@@ -18,4 +18,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.tdlib(
     f: SetTdlibParameters
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

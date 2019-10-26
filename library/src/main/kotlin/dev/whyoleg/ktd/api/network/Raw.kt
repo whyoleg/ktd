@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.network(
     f: SetNetworkType
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns network data usage statistics
@@ -28,7 +28,7 @@ suspend fun TelegramClient.network(
  */
 suspend fun TelegramClient.network(
     f: GetNetworkStatistics
-): NetworkStatistics = execRaw(f) as NetworkStatistics
+): NetworkStatistics = exec(f) as NetworkStatistics
 
 /**
  * Adds the specified data to data usage statistics
@@ -36,7 +36,7 @@ suspend fun TelegramClient.network(
  */
 suspend fun TelegramClient.network(
     f: AddNetworkStatistics
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Resets all network data usage statistics to zero
@@ -44,4 +44,4 @@ suspend fun TelegramClient.network(
  */
 suspend fun TelegramClient.network(
     f: ResetNetworkStatistics
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

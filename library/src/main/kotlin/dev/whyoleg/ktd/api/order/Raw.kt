@@ -17,11 +17,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.order(
     f: GetSavedOrderInfo
-): OrderInfo = execRaw(f) as OrderInfo
+): OrderInfo = exec(f) as OrderInfo
 
 /**
  * Deletes saved order info
  */
 suspend fun TelegramClient.order(
     f: DeleteSavedOrderInfo
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.emoji(
     f: GetStickerEmojis
-): Emojis = execRaw(f) as Emojis
+): Emojis = exec(f) as Emojis
 
 /**
  * Searches for emojis by keywords
@@ -26,7 +26,7 @@ suspend fun TelegramClient.emoji(
  */
 suspend fun TelegramClient.emoji(
     f: SearchEmojis
-): Emojis = execRaw(f) as Emojis
+): Emojis = exec(f) as Emojis
 
 /**
  * Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements
@@ -34,4 +34,4 @@ suspend fun TelegramClient.emoji(
  */
 suspend fun TelegramClient.emoji(
     f: GetEmojiSuggestionsUrl
-): HttpUrl = execRaw(f) as HttpUrl
+): HttpUrl = exec(f) as HttpUrl

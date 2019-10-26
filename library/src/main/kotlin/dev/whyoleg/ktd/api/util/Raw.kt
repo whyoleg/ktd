@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.util(
     f: Close
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Closes the TDLib instance, destroying all local data without a proper logout
@@ -29,14 +29,14 @@ suspend fun TelegramClient.util(
  */
 suspend fun TelegramClient.util(
     f: Destroy
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns t.me URLs recently visited by a newly registered user
  */
 suspend fun TelegramClient.util(
     f: GetRecentlyVisitedTMeUrls
-): TMeUrls = execRaw(f) as TMeUrls
+): TMeUrls = exec(f) as TMeUrls
 
 /**
  * Succeeds after a specified amount of time has passed
@@ -45,4 +45,4 @@ suspend fun TelegramClient.util(
  */
 suspend fun TelegramClient.util(
     f: SetAlarm
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

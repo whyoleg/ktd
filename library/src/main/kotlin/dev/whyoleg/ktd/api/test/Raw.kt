@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallEmpty
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns the received string
@@ -30,7 +30,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallString
-): TestString = execRaw(f) as TestString
+): TestString = exec(f) as TestString
 
 /**
  * Returns the received bytes
@@ -40,7 +40,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallBytes
-): TestBytes = execRaw(f) as TestBytes
+): TestBytes = exec(f) as TestBytes
 
 /**
  * Returns the received vector of numbers
@@ -50,7 +50,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallVectorInt
-): TestVectorInt = execRaw(f) as TestVectorInt
+): TestVectorInt = exec(f) as TestVectorInt
 
 /**
  * Returns the received vector of objects containing a number
@@ -60,7 +60,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallVectorIntObject
-): TestVectorIntObject = execRaw(f) as TestVectorIntObject
+): TestVectorIntObject = exec(f) as TestVectorIntObject
 
 /**
  * Returns the received vector of strings
@@ -70,7 +70,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallVectorString
-): TestVectorString = execRaw(f) as TestVectorString
+): TestVectorString = exec(f) as TestVectorString
 
 /**
  * Returns the received vector of objects containing a string
@@ -80,7 +80,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestCallVectorStringObject
-): TestVectorStringObject = execRaw(f) as TestVectorStringObject
+): TestVectorStringObject = exec(f) as TestVectorStringObject
 
 /**
  * Returns the squared received number
@@ -90,7 +90,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestSquareInt
-): TestInt = execRaw(f) as TestInt
+): TestInt = exec(f) as TestInt
 
 /**
  * Sends a simple network request to the Telegram servers
@@ -99,7 +99,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestNetwork
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Sends a simple network request to the Telegram servers via proxy
@@ -108,7 +108,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestProxy
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Forces an updates.getDifference call to the Telegram servers
@@ -116,7 +116,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestGetDifference
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Does nothing and ensures that the Update object is used
@@ -126,7 +126,7 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestUseUpdate
-): Update = execRaw(f) as Update
+): Update = exec(f) as Update
 
 /**
  * Returns the specified error and ensures that the Error object is used
@@ -137,4 +137,4 @@ suspend fun TelegramClient.test(
 @TestingOnly
 suspend fun TelegramClient.test(
     f: TestReturnError
-): Error = execRaw(f) as Error
+): Error = exec(f) as Error

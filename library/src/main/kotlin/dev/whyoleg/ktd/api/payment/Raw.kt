@@ -18,25 +18,25 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.payment(
     f: GetPaymentForm
-): PaymentForm = execRaw(f) as PaymentForm
+): PaymentForm = exec(f) as PaymentForm
 
 /**
  * Sends a filled-out payment form to the bot for final verification
  */
 suspend fun TelegramClient.payment(
     f: SendPaymentForm
-): PaymentResult = execRaw(f) as PaymentResult
+): PaymentResult = exec(f) as PaymentResult
 
 /**
  * Returns information about a successful payment
  */
 suspend fun TelegramClient.payment(
     f: GetPaymentReceipt
-): PaymentReceipt = execRaw(f) as PaymentReceipt
+): PaymentReceipt = exec(f) as PaymentReceipt
 
 /**
  * Deletes saved credentials for all payment provider bots
  */
 suspend fun TelegramClient.payment(
     f: DeleteSavedCredentials
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

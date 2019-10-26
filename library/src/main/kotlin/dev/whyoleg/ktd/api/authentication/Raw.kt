@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.authentication(
     f: SetAuthenticationPhoneNumber
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Re-sends an authentication code to the user
@@ -26,7 +26,7 @@ suspend fun TelegramClient.authentication(
  */
 suspend fun TelegramClient.authentication(
     f: ResendAuthenticationCode
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Requests to send a password recovery code to an email address that was previously set up
@@ -34,7 +34,7 @@ suspend fun TelegramClient.authentication(
  */
 suspend fun TelegramClient.authentication(
     f: RequestAuthenticationPasswordRecovery
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Recovers the password with a password recovery code sent to an email address that was previously set up
@@ -42,7 +42,7 @@ suspend fun TelegramClient.authentication(
  */
 suspend fun TelegramClient.authentication(
     f: RecoverAuthenticationPassword
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the phone number of the user and sends an authentication code to the user's new phone number
@@ -50,7 +50,7 @@ suspend fun TelegramClient.authentication(
  */
 suspend fun TelegramClient.authentication(
     f: ChangePhoneNumber
-): AuthenticationCodeInfo = execRaw(f) as AuthenticationCodeInfo
+): AuthenticationCodeInfo = exec(f) as AuthenticationCodeInfo
 
 /**
  * Re-sends the authentication code sent to confirm a new phone number for the user
@@ -58,21 +58,21 @@ suspend fun TelegramClient.authentication(
  */
 suspend fun TelegramClient.authentication(
     f: ResendChangePhoneNumberCode
-): AuthenticationCodeInfo = execRaw(f) as AuthenticationCodeInfo
+): AuthenticationCodeInfo = exec(f) as AuthenticationCodeInfo
 
 /**
  * Sends a code to verify a phone number to be added to a user's Telegram Passport
  */
 suspend fun TelegramClient.authentication(
     f: SendPhoneNumberVerificationCode
-): AuthenticationCodeInfo = execRaw(f) as AuthenticationCodeInfo
+): AuthenticationCodeInfo = exec(f) as AuthenticationCodeInfo
 
 /**
  * Re-sends the code to verify a phone number to be added to a user's Telegram Passport
  */
 suspend fun TelegramClient.authentication(
     f: ResendPhoneNumberVerificationCode
-): AuthenticationCodeInfo = execRaw(f) as AuthenticationCodeInfo
+): AuthenticationCodeInfo = exec(f) as AuthenticationCodeInfo
 
 /**
  * Sends phone number confirmation code
@@ -80,11 +80,11 @@ suspend fun TelegramClient.authentication(
  */
 suspend fun TelegramClient.authentication(
     f: SendPhoneNumberConfirmationCode
-): AuthenticationCodeInfo = execRaw(f) as AuthenticationCodeInfo
+): AuthenticationCodeInfo = exec(f) as AuthenticationCodeInfo
 
 /**
  * Resends phone number confirmation code
  */
 suspend fun TelegramClient.authentication(
     f: ResendPhoneNumberConfirmationCode
-): AuthenticationCodeInfo = execRaw(f) as AuthenticationCodeInfo
+): AuthenticationCodeInfo = exec(f) as AuthenticationCodeInfo

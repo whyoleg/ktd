@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 @BotsOnly
 suspend fun TelegramClient.game(
     f: GetGameHighScores
-): GameHighScores = execRaw(f) as GameHighScores
+): GameHighScores = exec(f) as GameHighScores
 
 /**
  * Returns game high scores and some part of the high score table in the range of the specified user
@@ -26,4 +26,4 @@ suspend fun TelegramClient.game(
 @BotsOnly
 suspend fun TelegramClient.game(
     f: GetInlineGameHighScores
-): GameHighScores = execRaw(f) as GameHighScores
+): GameHighScores = exec(f) as GameHighScores

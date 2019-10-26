@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.file(
     f: GetFile
-): File = execRaw(f) as File
+): File = exec(f) as File
 
 /**
  * Returns information about a file by its remote ID
@@ -30,7 +30,7 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: GetRemoteFile
-): File = execRaw(f) as File
+): File = exec(f) as File
 
 /**
  * Downloads a file from the cloud
@@ -38,14 +38,14 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: DownloadFile
-): File = execRaw(f) as File
+): File = exec(f) as File
 
 /**
  * Returns file downloaded prefix size from a given offset
  */
 suspend fun TelegramClient.file(
     f: GetFileDownloadedPrefixSize
-): Count = execRaw(f) as Count
+): Count = exec(f) as Count
 
 /**
  * Stops the downloading of a file
@@ -53,7 +53,7 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: CancelDownloadFile
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Asynchronously uploads a file to the cloud without sending it in a message
@@ -62,7 +62,7 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: UploadFile
-): File = execRaw(f) as File
+): File = exec(f) as File
 
 /**
  * Stops the uploading of a file
@@ -71,7 +71,7 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: CancelUploadFile
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Writes a part of a generated file
@@ -79,21 +79,21 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: WriteGeneratedFilePart
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Informs TDLib on a file generation prograss
  */
 suspend fun TelegramClient.file(
     f: SetFileGenerationProgress
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Finishes the file generation
  */
 suspend fun TelegramClient.file(
     f: FinishFileGeneration
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Reads a part of a file from the TDLib file cache and returns read bytes
@@ -101,14 +101,14 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: ReadFilePart
-): FilePart = execRaw(f) as FilePart
+): FilePart = exec(f) as FilePart
 
 /**
  * Deletes a file from the TDLib file cache
  */
 suspend fun TelegramClient.file(
     f: DeleteFile
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Uploads a PNG image with a sticker
@@ -117,7 +117,7 @@ suspend fun TelegramClient.file(
 @BotsOnly
 suspend fun TelegramClient.file(
     f: UploadStickerFile
-): File = execRaw(f) as File
+): File = exec(f) as File
 
 /**
  * Returns information about a file with a map thumbnail in PNG format
@@ -125,4 +125,4 @@ suspend fun TelegramClient.file(
  */
 suspend fun TelegramClient.file(
     f: GetMapThumbnailFile
-): File = execRaw(f) as File
+): File = exec(f) as File

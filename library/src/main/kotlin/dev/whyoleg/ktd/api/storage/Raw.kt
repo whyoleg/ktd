@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.storage(
     f: GetStorageStatistics
-): StorageStatistics = execRaw(f) as StorageStatistics
+): StorageStatistics = exec(f) as StorageStatistics
 
 /**
  * Quickly returns approximate storage usage statistics
@@ -26,7 +26,7 @@ suspend fun TelegramClient.storage(
  */
 suspend fun TelegramClient.storage(
     f: GetStorageStatisticsFast
-): StorageStatisticsFast = execRaw(f) as StorageStatisticsFast
+): StorageStatisticsFast = exec(f) as StorageStatisticsFast
 
 /**
  * Optimizes storage usage, i.e
@@ -35,4 +35,4 @@ suspend fun TelegramClient.storage(
  */
 suspend fun TelegramClient.storage(
     f: OptimizeStorage
-): StorageStatistics = execRaw(f) as StorageStatistics
+): StorageStatistics = exec(f) as StorageStatistics

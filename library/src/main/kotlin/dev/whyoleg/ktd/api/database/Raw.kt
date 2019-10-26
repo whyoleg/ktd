@@ -18,11 +18,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.database(
     f: SetDatabaseEncryptionKey
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns database statistics
  */
 suspend fun TelegramClient.database(
     f: GetDatabaseStatistics
-): DatabaseStatistics = execRaw(f) as DatabaseStatistics
+): DatabaseStatistics = exec(f) as DatabaseStatistics

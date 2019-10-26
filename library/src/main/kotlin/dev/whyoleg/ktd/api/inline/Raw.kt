@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: EditInlineMessageText
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Edits the content of a live location in an inline message sent via a bot
@@ -26,7 +26,7 @@ suspend fun TelegramClient.inline(
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: EditInlineMessageLiveLocation
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Edits the content of a message with an animation, an audio, a document, a photo or a video in an inline message sent via a bot
@@ -34,7 +34,7 @@ suspend fun TelegramClient.inline(
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: EditInlineMessageMedia
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Edits the caption of an inline message sent via a bot
@@ -42,7 +42,7 @@ suspend fun TelegramClient.inline(
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: EditInlineMessageCaption
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Edits the reply markup of an inline message sent via a bot
@@ -50,7 +50,7 @@ suspend fun TelegramClient.inline(
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: EditInlineMessageReplyMarkup
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Sends an inline query to a bot and returns its results
@@ -58,7 +58,7 @@ suspend fun TelegramClient.inline(
  */
 suspend fun TelegramClient.inline(
     f: GetInlineQueryResults
-): InlineQueryResults = execRaw(f) as InlineQueryResults
+): InlineQueryResults = exec(f) as InlineQueryResults
 
 /**
  * Sets the result of an inline query
@@ -66,7 +66,7 @@ suspend fun TelegramClient.inline(
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: AnswerInlineQuery
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Updates the game score of the specified user in a game
@@ -74,4 +74,4 @@ suspend fun TelegramClient.inline(
 @BotsOnly
 suspend fun TelegramClient.inline(
     f: SetInlineGameScore
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

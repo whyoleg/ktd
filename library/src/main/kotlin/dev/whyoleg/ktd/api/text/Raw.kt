@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.text(
     f: GetTextEntities
-): TextEntities = execRaw(f) as TextEntities
+): TextEntities = exec(f) as TextEntities
 
 /**
  * Parses Bold, Italic, Code, Pre, PreCode and TextUrl entities contained in the text
@@ -30,7 +30,7 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: ParseTextEntities
-): FormattedText = execRaw(f) as FormattedText
+): FormattedText = exec(f) as FormattedText
 
 /**
  * Returns the MIME type of a file, guessed by its extension
@@ -41,7 +41,7 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: GetFileMimeType
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Returns the extension of a file, guessed by its MIME type
@@ -52,7 +52,7 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: GetFileExtension
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Removes potentially dangerous characters from the name of a file
@@ -64,7 +64,7 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: CleanFileName
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Converts a JsonValue object to corresponding JSON-serialized string
@@ -74,7 +74,7 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: GetJsonString
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Returns an IETF language tag of the language preferred in the country, which should be used to fill native fields in Telegram Passport personal details
@@ -82,7 +82,7 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: GetPreferredCountryLanguage
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Uses current user IP to found their country
@@ -91,14 +91,14 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: GetCountryCode
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Returns the default text for invitation messages to be used as a placeholder when the current user invites friends to Telegram
  */
 suspend fun TelegramClient.text(
     f: GetInviteText
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text
 
 /**
  * Returns an HTTPS link, which can be used to add a proxy
@@ -107,4 +107,4 @@ suspend fun TelegramClient.text(
  */
 suspend fun TelegramClient.text(
     f: GetProxyLink
-): Text = execRaw(f) as Text
+): Text = exec(f) as Text

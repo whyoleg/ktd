@@ -18,11 +18,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.group(
     f: GetBasicGroup
-): BasicGroup = execRaw(f) as BasicGroup
+): BasicGroup = exec(f) as BasicGroup
 
 /**
  * Returns full information about a basic group by its identifier
  */
 suspend fun TelegramClient.group(
     f: GetBasicGroupFullInfo
-): BasicGroupFullInfo = execRaw(f) as BasicGroupFullInfo
+): BasicGroupFullInfo = exec(f) as BasicGroupFullInfo

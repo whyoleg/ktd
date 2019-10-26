@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.option(
     f: GetOption
-): OptionValue = execRaw(f) as OptionValue
+): OptionValue = exec(f) as OptionValue
 
 /**
  * Sets the value of an option
@@ -27,4 +27,4 @@ suspend fun TelegramClient.option(
  */
 suspend fun TelegramClient.option(
     f: SetOption
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

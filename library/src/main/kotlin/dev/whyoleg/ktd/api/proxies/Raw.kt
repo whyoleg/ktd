@@ -18,4 +18,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.proxies(
     f: GetProxies
-): Proxies = execRaw(f) as Proxies
+): Proxies = exec(f) as Proxies

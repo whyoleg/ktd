@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.profile(
     f: SetProfilePhoto
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Deletes a profile photo
@@ -26,4 +26,4 @@ suspend fun TelegramClient.profile(
  */
 suspend fun TelegramClient.profile(
     f: DeleteProfilePhoto
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.message(
     f: GetMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Returns information about a message, if it is available locally without sending network request
@@ -25,21 +25,21 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: GetMessageLocally
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Returns information about a message that is replied by given message
  */
 suspend fun TelegramClient.message(
     f: GetRepliedMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Returns information about a pinned chat message
  */
 suspend fun TelegramClient.message(
     f: GetChatPinnedMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Returns information about messages
@@ -47,7 +47,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: GetMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Returns messages in a chat
@@ -57,7 +57,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: GetChatHistory
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Searches for messages with given words in the chat
@@ -68,7 +68,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SearchChatMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Searches for messages in all chats except secret chats
@@ -77,7 +77,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SearchMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Searches for messages in secret chats
@@ -86,7 +86,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SearchSecretMessages
-): FoundMessages = execRaw(f) as FoundMessages
+): FoundMessages = exec(f) as FoundMessages
 
 /**
  * Searches for call messages
@@ -96,7 +96,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SearchCallMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Returns information about the recent locations of chat members that were sent to the chat
@@ -104,7 +104,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SearchChatRecentLocationMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Returns all active live locations that should be updated by the client
@@ -112,14 +112,14 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: GetActiveLiveLocationMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Returns the last message sent in a chat no later than the specified date
  */
 suspend fun TelegramClient.message(
     f: GetChatMessageByDate
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Returns a public HTTPS link to a message
@@ -127,7 +127,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: GetPublicMessageLink
-): PublicMessageLink = execRaw(f) as PublicMessageLink
+): PublicMessageLink = exec(f) as PublicMessageLink
 
 /**
  * Returns a private HTTPS link to a message in a chat
@@ -136,14 +136,14 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: GetMessageLink
-): HttpUrl = execRaw(f) as HttpUrl
+): HttpUrl = exec(f) as HttpUrl
 
 /**
  * Returns information about a public or private message link
  */
 suspend fun TelegramClient.message(
     f: GetMessageLinkInfo
-): MessageLinkInfo = execRaw(f) as MessageLinkInfo
+): MessageLinkInfo = exec(f) as MessageLinkInfo
 
 /**
  * Sends a message
@@ -151,7 +151,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SendMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Sends messages grouped together into an album
@@ -160,7 +160,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SendMessageAlbum
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Invites a bot to a chat (if it is not yet a member) and sends it the /start command
@@ -170,7 +170,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SendBotStartMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Sends the result of an inline query as a message
@@ -179,7 +179,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: SendInlineQueryResultMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Forwards previously sent messages
@@ -188,7 +188,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: ForwardMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Resends messages which failed to send
@@ -199,14 +199,14 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: ResendMessages
-): Messages = execRaw(f) as Messages
+): Messages = exec(f) as Messages
 
 /**
  * Changes the current TTL setting (sets a new self-destruct timer) in a secret chat and sends the corresponding message
  */
 suspend fun TelegramClient.message(
     f: SendChatSetTtlMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Adds a local message to a chat
@@ -215,14 +215,14 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: AddLocalMessage
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Deletes messages
  */
 suspend fun TelegramClient.message(
     f: DeleteMessages
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Edits the text of a message (or a text of a game message)
@@ -230,7 +230,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: EditMessageText
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Edits the message content of a live location
@@ -239,7 +239,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: EditMessageLiveLocation
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Edits the content of a message with an animation, an audio, a document, a photo or a video
@@ -250,7 +250,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: EditMessageMedia
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Edits the message content caption
@@ -258,7 +258,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: EditMessageCaption
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Edits the message reply markup
@@ -267,7 +267,7 @@ suspend fun TelegramClient.message(
 @BotsOnly
 suspend fun TelegramClient.message(
     f: EditMessageReplyMarkup
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Updates the game score of the specified user in the game
@@ -275,7 +275,7 @@ suspend fun TelegramClient.message(
 @BotsOnly
 suspend fun TelegramClient.message(
     f: SetGameScore
-): Message = execRaw(f) as Message
+): Message = exec(f) as Message
 
 /**
  * Informs TDLib that messages are being viewed by the user
@@ -283,7 +283,7 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: ViewMessages
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Informs TDLib that the message content has been opened (e.g., the user has opened a photo, video, document, location or venue, or has listened to an audio file or voice note message)
@@ -291,11 +291,11 @@ suspend fun TelegramClient.message(
  */
 suspend fun TelegramClient.message(
     f: OpenMessageContent
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Clears draft messages in all chats
  */
 suspend fun TelegramClient.message(
     f: ClearAllDraftMessages
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

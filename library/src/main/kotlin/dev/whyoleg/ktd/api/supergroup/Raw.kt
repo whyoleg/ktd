@@ -18,21 +18,21 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.supergroup(
     f: GetSupergroup
-): Supergroup = execRaw(f) as Supergroup
+): Supergroup = exec(f) as Supergroup
 
 /**
  * Returns full information about a supergroup or channel by its identifier, cached for up to 1 minute
  */
 suspend fun TelegramClient.supergroup(
     f: GetSupergroupFullInfo
-): SupergroupFullInfo = execRaw(f) as SupergroupFullInfo
+): SupergroupFullInfo = exec(f) as SupergroupFullInfo
 
 /**
  * Changes the username of a supergroup or channel, requires creator privileges in the supergroup or channel
  */
 suspend fun TelegramClient.supergroup(
     f: SetSupergroupUsername
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the sticker set of a supergroup
@@ -40,7 +40,7 @@ suspend fun TelegramClient.supergroup(
  */
 suspend fun TelegramClient.supergroup(
     f: SetSupergroupStickerSet
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Toggles sender signatures messages sent in a channel
@@ -48,7 +48,7 @@ suspend fun TelegramClient.supergroup(
  */
 suspend fun TelegramClient.supergroup(
     f: ToggleSupergroupSignMessages
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Toggles whether the message history of a supergroup is available to new members
@@ -56,7 +56,7 @@ suspend fun TelegramClient.supergroup(
  */
 suspend fun TelegramClient.supergroup(
     f: ToggleSupergroupIsAllHistoryAvailable
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Reports some messages from a user in a supergroup as spam
@@ -64,7 +64,7 @@ suspend fun TelegramClient.supergroup(
  */
 suspend fun TelegramClient.supergroup(
     f: ReportSupergroupSpam
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Deletes a supergroup or channel along with all messages in the corresponding chat
@@ -74,4 +74,4 @@ suspend fun TelegramClient.supergroup(
  */
 suspend fun TelegramClient.supergroup(
     f: DeleteSupergroup
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

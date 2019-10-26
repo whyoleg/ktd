@@ -17,11 +17,11 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.hashtag(
     f: SearchHashtags
-): Hashtags = execRaw(f) as Hashtags
+): Hashtags = exec(f) as Hashtags
 
 /**
  * Removes a hashtag from the list of recently used hashtags
  */
 suspend fun TelegramClient.hashtag(
     f: RemoveRecentHashtag
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

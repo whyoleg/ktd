@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.notification(
     f: RemoveNotification
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes a group of active notifications
@@ -26,21 +26,21 @@ suspend fun TelegramClient.notification(
  */
 suspend fun TelegramClient.notification(
     f: RemoveNotificationGroup
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns the notification settings for chats of a given type
  */
 suspend fun TelegramClient.notification(
     f: GetScopeNotificationSettings
-): ScopeNotificationSettings = execRaw(f) as ScopeNotificationSettings
+): ScopeNotificationSettings = exec(f) as ScopeNotificationSettings
 
 /**
  * Changes notification settings for chats of a given type
  */
 suspend fun TelegramClient.notification(
     f: SetScopeNotificationSettings
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Resets all notification settings to their default values
@@ -48,7 +48,7 @@ suspend fun TelegramClient.notification(
  */
 suspend fun TelegramClient.notification(
     f: ResetAllNotificationSettings
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Handles a push notification
@@ -57,7 +57,7 @@ suspend fun TelegramClient.notification(
  */
 suspend fun TelegramClient.notification(
     f: ProcessPushNotification
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification
@@ -67,4 +67,4 @@ suspend fun TelegramClient.notification(
  */
 suspend fun TelegramClient.notification(
     f: GetPushReceiverId
-): PushReceiverId = execRaw(f) as PushReceiverId
+): PushReceiverId = exec(f) as PushReceiverId

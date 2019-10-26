@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.web(
     f: GetWebPagePreview
-): WebPage = execRaw(f) as WebPage
+): WebPage = exec(f) as WebPage
 
 /**
  * Returns an instant view version of a web page if available
@@ -27,18 +27,18 @@ suspend fun TelegramClient.web(
  */
 suspend fun TelegramClient.web(
     f: GetWebPageInstantView
-): WebPageInstantView = execRaw(f) as WebPageInstantView
+): WebPageInstantView = exec(f) as WebPageInstantView
 
 /**
  * Disconnects website from the current user's Telegram account
  */
 suspend fun TelegramClient.web(
     f: DisconnectWebsite
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Disconnects all websites from the current user's Telegram account
  */
 suspend fun TelegramClient.web(
     f: DisconnectAllWebsites
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

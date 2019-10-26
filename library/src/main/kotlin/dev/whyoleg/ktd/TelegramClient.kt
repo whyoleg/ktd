@@ -7,8 +7,11 @@ import kotlinx.coroutines.sync.*
 import mu.*
 
 class TelegramClient internal constructor(configuration: TelegramClientConfiguration, parent: Job) : Job by Job(parent) {
+    private val mutex = Mutex()
     private val nativeClient = NativeClient(configuration)
     private val eventHandlers = mutableMapOf<Long, CompletableDeferred<TelegramObject>>()
+    private val updatesCache = UnlimitedCacheChannel<TelegramUpdate>(this)
+    public val updates: Flow<TelegramUpdate> = updatesCache.flow
 
     init {
         invokeOnCompletion {
@@ -17,20 +20,16 @@ class TelegramClient internal constructor(configuration: TelegramClientConfigura
         }
     }
 
-    private val mutex = Mutex()
+    public fun send(function: TelegramFunction) {
+        sendInternal(function)
+    }
 
-    private val objectsCache = UnlimitedCacheChannel<TelegramObject>(this)
-    private val updatesCache = UnlimitedCacheChannel<TelegramUpdate>(this)
+    private fun sendInternal(function: TelegramFunction): Long = nativeClient.send(function)
 
-    val objects: Flow<TelegramObject> = objectsCache.flow
-    val updates: Flow<TelegramUpdate> = updatesCache.flow
-
-    public fun send(function: TelegramFunction): Long = nativeClient.send(function)
-
-    suspend fun execRaw(function: TelegramFunction): TelegramObject {
+    suspend fun exec(function: TelegramFunction): TelegramObject {
         val deferred = CompletableDeferred<TelegramObject>(this)
         val eventId = mutex.withLock {
-            val eventId = send(function)
+            val eventId = sendInternal(function)
             eventHandlers[eventId] = deferred
             eventId
         }
@@ -54,13 +53,9 @@ class TelegramClient internal constructor(configuration: TelegramClientConfigura
             mutex.unlock()
         }
         nativeClient.handle { eventId, obj ->
-            when (val handler = eventHandlers[eventId]) {
-                null -> when (obj) {
-                    is TelegramUpdate -> updatesCache.offer(obj)
-                    else              -> objectsCache.offer(obj)
-                }
-                else -> handler.complete(obj)
-            }
+            eventHandlers[eventId]
+                ?.complete(obj)
+                ?: if (obj is TelegramUpdate) updatesCache.offer(obj)
         }
     }
 

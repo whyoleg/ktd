@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.callback(
     f: GetCallbackQueryAnswer
-): CallbackQueryAnswer = execRaw(f) as CallbackQueryAnswer
+): CallbackQueryAnswer = exec(f) as CallbackQueryAnswer
 
 /**
  * Sets the result of a callback query
@@ -26,4 +26,4 @@ suspend fun TelegramClient.callback(
 @BotsOnly
 suspend fun TelegramClient.callback(
     f: AnswerCallbackQuery
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

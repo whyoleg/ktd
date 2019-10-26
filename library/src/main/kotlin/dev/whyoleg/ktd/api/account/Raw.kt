@@ -17,14 +17,14 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.account(
     f: SetAccountTtl
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns the period of inactivity after which the account of the current user will automatically be deleted
  */
 suspend fun TelegramClient.account(
     f: GetAccountTtl
-): AccountTtl = execRaw(f) as AccountTtl
+): AccountTtl = exec(f) as AccountTtl
 
 /**
  * Deletes the account of the current user, deleting all information associated with the user from the server
@@ -33,4 +33,4 @@ suspend fun TelegramClient.account(
  */
 suspend fun TelegramClient.account(
     f: DeleteAccount
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

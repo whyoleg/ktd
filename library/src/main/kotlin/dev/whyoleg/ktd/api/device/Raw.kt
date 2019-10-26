@@ -18,4 +18,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.device(
     f: RegisterDevice
-): PushReceiverId = execRaw(f) as PushReceiverId
+): PushReceiverId = exec(f) as PushReceiverId

@@ -17,4 +17,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.connected(
     f: GetConnectedWebsites
-): ConnectedWebsites = execRaw(f) as ConnectedWebsites
+): ConnectedWebsites = exec(f) as ConnectedWebsites

@@ -19,4 +19,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.localization(
     f: GetLocalizationTargetInfo
-): LocalizationTargetInfo = execRaw(f) as LocalizationTargetInfo
+): LocalizationTargetInfo = exec(f) as LocalizationTargetInfo

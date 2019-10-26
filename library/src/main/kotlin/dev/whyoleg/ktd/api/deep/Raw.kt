@@ -20,4 +20,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.deep(
     f: GetDeepLinkInfo
-): DeepLinkInfo = execRaw(f) as DeepLinkInfo
+): DeepLinkInfo = exec(f) as DeepLinkInfo

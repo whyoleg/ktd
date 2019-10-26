@@ -18,35 +18,35 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.sticker(
     f: GetStickers
-): Stickers = execRaw(f) as Stickers
+): Stickers = exec(f) as Stickers
 
 /**
  * Searches for stickers from public sticker sets that correspond to a given emoji
  */
 suspend fun TelegramClient.sticker(
     f: SearchStickers
-): Stickers = execRaw(f) as Stickers
+): Stickers = exec(f) as Stickers
 
 /**
  * Returns a list of installed sticker sets
  */
 suspend fun TelegramClient.sticker(
     f: GetInstalledStickerSets
-): StickerSets = execRaw(f) as StickerSets
+): StickerSets = exec(f) as StickerSets
 
 /**
  * Returns a list of archived sticker sets
  */
 suspend fun TelegramClient.sticker(
     f: GetArchivedStickerSets
-): StickerSets = execRaw(f) as StickerSets
+): StickerSets = exec(f) as StickerSets
 
 /**
  * Returns a list of trending sticker sets
  */
 suspend fun TelegramClient.sticker(
     f: GetTrendingStickerSets
-): StickerSets = execRaw(f) as StickerSets
+): StickerSets = exec(f) as StickerSets
 
 /**
  * Returns a list of sticker sets attached to a file
@@ -54,28 +54,28 @@ suspend fun TelegramClient.sticker(
  */
 suspend fun TelegramClient.sticker(
     f: GetAttachedStickerSets
-): StickerSets = execRaw(f) as StickerSets
+): StickerSets = exec(f) as StickerSets
 
 /**
  * Returns information about a sticker set by its identifier
  */
 suspend fun TelegramClient.sticker(
     f: GetStickerSet
-): StickerSet = execRaw(f) as StickerSet
+): StickerSet = exec(f) as StickerSet
 
 /**
  * Searches for a sticker set by its name
  */
 suspend fun TelegramClient.sticker(
     f: SearchStickerSet
-): StickerSet = execRaw(f) as StickerSet
+): StickerSet = exec(f) as StickerSet
 
 /**
  * Searches for installed sticker sets by looking for specified query in their title and name
  */
 suspend fun TelegramClient.sticker(
     f: SearchInstalledStickerSets
-): StickerSets = execRaw(f) as StickerSets
+): StickerSets = exec(f) as StickerSets
 
 /**
  * Searches for ordinary sticker sets by looking for specified query in their title and name
@@ -83,35 +83,35 @@ suspend fun TelegramClient.sticker(
  */
 suspend fun TelegramClient.sticker(
     f: SearchStickerSets
-): StickerSets = execRaw(f) as StickerSets
+): StickerSets = exec(f) as StickerSets
 
 /**
  * Installs/uninstalls or activates/archives a sticker set
  */
 suspend fun TelegramClient.sticker(
     f: ChangeStickerSet
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Informs the server that some trending sticker sets have been viewed by the user
  */
 suspend fun TelegramClient.sticker(
     f: ViewTrendingStickerSets
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Changes the order of installed sticker sets
  */
 suspend fun TelegramClient.sticker(
     f: ReorderInstalledStickerSets
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns a list of recently used stickers
  */
 suspend fun TelegramClient.sticker(
     f: GetRecentStickers
-): Stickers = execRaw(f) as Stickers
+): Stickers = exec(f) as Stickers
 
 /**
  * Manually adds a new sticker to the list of recently used stickers
@@ -121,28 +121,28 @@ suspend fun TelegramClient.sticker(
  */
 suspend fun TelegramClient.sticker(
     f: AddRecentSticker
-): Stickers = execRaw(f) as Stickers
+): Stickers = exec(f) as Stickers
 
 /**
  * Removes a sticker from the list of recently used stickers
  */
 suspend fun TelegramClient.sticker(
     f: RemoveRecentSticker
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Clears the list of recently used stickers
  */
 suspend fun TelegramClient.sticker(
     f: ClearRecentStickers
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns favorite stickers
  */
 suspend fun TelegramClient.sticker(
     f: GetFavoriteStickers
-): Stickers = execRaw(f) as Stickers
+): Stickers = exec(f) as Stickers
 
 /**
  * Adds a new sticker to the list of favorite stickers
@@ -152,14 +152,14 @@ suspend fun TelegramClient.sticker(
  */
 suspend fun TelegramClient.sticker(
     f: AddFavoriteSticker
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes a sticker from the list of favorite stickers
  */
 suspend fun TelegramClient.sticker(
     f: RemoveFavoriteSticker
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Creates a new sticker set
@@ -168,7 +168,7 @@ suspend fun TelegramClient.sticker(
 @BotsOnly
 suspend fun TelegramClient.sticker(
     f: CreateNewStickerSet
-): StickerSet = execRaw(f) as StickerSet
+): StickerSet = exec(f) as StickerSet
 
 /**
  * Adds a new sticker to a set
@@ -177,7 +177,7 @@ suspend fun TelegramClient.sticker(
 @BotsOnly
 suspend fun TelegramClient.sticker(
     f: AddStickerToSet
-): StickerSet = execRaw(f) as StickerSet
+): StickerSet = exec(f) as StickerSet
 
 /**
  * Changes the position of a sticker in the set to which it belongs
@@ -186,7 +186,7 @@ suspend fun TelegramClient.sticker(
 @BotsOnly
 suspend fun TelegramClient.sticker(
     f: SetStickerPositionInSet
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes a sticker from the set to which it belongs
@@ -195,4 +195,4 @@ suspend fun TelegramClient.sticker(
 @BotsOnly
 suspend fun TelegramClient.sticker(
     f: RemoveStickerFromSet
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

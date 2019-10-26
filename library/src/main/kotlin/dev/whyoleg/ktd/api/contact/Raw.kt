@@ -18,21 +18,21 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.contact(
     f: ImportContacts
-): ImportedContacts = execRaw(f) as ImportedContacts
+): ImportedContacts = exec(f) as ImportedContacts
 
 /**
  * Removes users from the contact list
  */
 suspend fun TelegramClient.contact(
     f: RemoveContacts
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Returns the total number of imported contacts
  */
 suspend fun TelegramClient.contact(
     f: GetImportedContactCount
-): Count = execRaw(f) as Count
+): Count = exec(f) as Count
 
 /**
  * Changes imported contacts using the list of current user contacts saved on the device
@@ -41,11 +41,11 @@ suspend fun TelegramClient.contact(
  */
 suspend fun TelegramClient.contact(
     f: ChangeImportedContacts
-): ImportedContacts = execRaw(f) as ImportedContacts
+): ImportedContacts = exec(f) as ImportedContacts
 
 /**
  * Clears all imported contacts, contact list remains unchanged
  */
 suspend fun TelegramClient.contact(
     f: ClearImportedContacts
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

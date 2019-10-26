@@ -14,6 +14,7 @@ configuredKamp {
                 +Dependencies.logging.logging
                 +Dependencies.coroutines.core
                 +Dependencies.tdlib
+                +Dependencies.immutableCollections
             }
         }
     }

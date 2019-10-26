@@ -20,4 +20,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.authorization(
     f: GetAuthorizationState
-): AuthorizationState = execRaw(f) as AuthorizationState
+): AuthorizationState = exec(f) as AuthorizationState

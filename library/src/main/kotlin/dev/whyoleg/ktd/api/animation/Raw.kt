@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.animation(
     f: GetSavedAnimations
-): Animations = execRaw(f) as Animations
+): Animations = exec(f) as Animations
 
 /**
  * Manually adds a new animation to the list of saved animations
@@ -27,11 +27,11 @@ suspend fun TelegramClient.animation(
  */
 suspend fun TelegramClient.animation(
     f: AddSavedAnimation
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok
 
 /**
  * Removes an animation from the list of saved animations
  */
 suspend fun TelegramClient.animation(
     f: RemoveSavedAnimation
-): Ok = execRaw(f) as Ok
+): Ok = exec(f) as Ok

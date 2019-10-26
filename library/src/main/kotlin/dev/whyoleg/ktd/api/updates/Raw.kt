@@ -21,4 +21,4 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.updates(
     f: GetCurrentState
-): Updates = execRaw(f) as Updates
+): Updates = exec(f) as Updates

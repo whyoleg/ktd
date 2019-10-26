@@ -3,9 +3,8 @@ import dev.whyoleg.ktd.api.TdApi.*
 import dev.whyoleg.ktd.api.authentication.*
 import dev.whyoleg.ktd.api.check.*
 import dev.whyoleg.ktd.api.database.*
+import dev.whyoleg.ktd.api.tdlib.*
 import dev.whyoleg.ktd.api.user.*
-import dev.whyoleg.ktd.api.users.*
-import dev.whyoleg.ktd.api.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -68,7 +67,7 @@ suspend fun main() {
                 println("Users:")
                 users.userIds.forEach {
                     val user: User = client.getUser(it)
-                    if (user.username.isNotBlank()) println(user.username)
+                    if (!user.username.isNullOrBlank()) println(user.username)
                 }
                 job.cancel()
             }

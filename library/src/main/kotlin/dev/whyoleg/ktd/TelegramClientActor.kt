@@ -29,6 +29,12 @@ private fun handle(job: Job, channel: ReceiveChannel<Action>) {
         val ignoredEvents = mutableSetOf<Long>()
         channel.consumeEach {
             when (it) {
+                is Action.Ignore  -> println("IGNORE: ${it.id}")
+                is Action.Handler -> println("HANDLER: ${it.id}")
+                is Action.Event   -> println("EVENT: ${it.id}")
+            }
+            println("STATS BEFORE: ${eventHandlers.keys}-${eventResults.keys}-${ignoredEvents}")
+            when (it) {
                 is Action.Ignore  -> if (eventResults.remove(it.id) == null) ignoredEvents += it.id
                 is Action.Handler -> when (val event = eventResults.remove(it.id)) {
                     null -> eventHandlers[it.id] = it.deferred
@@ -39,6 +45,7 @@ private fun handle(job: Job, channel: ReceiveChannel<Action>) {
                     else -> handler.completeWith(it.event)
                 }
             }
+            println("STATS  AFTER: ${eventHandlers.keys}-${eventResults.keys}-${ignoredEvents}")
         }
     }
 }
@@ -49,6 +56,7 @@ internal class TelegramClientActor(private val nativeClient: NativeClient, priva
 
     init {
         launchOnSingleThread(job, nativeClient.clientId) {
+            println("[${nativeClient.clientId}] RECEIVE")
             nativeClient.receive(this::handle)
         }
         handle(job, channel)
@@ -63,10 +71,10 @@ internal class TelegramClientActor(private val nativeClient: NativeClient, priva
 
     suspend fun await(function: TelegramFunction): TelegramObject {
         val eventId = nativeClient.send(function)
-        println("AWAIT: $eventId")
+        println("[${nativeClient.clientId}] AWAIT: $eventId")
         val deferred = CompletableDeferred<TelegramObject>(job)
         channel.offer(Action.Handler(eventId, deferred))
-        return deferred.await().also { println("RESULT: $eventId") }
+        return deferred.await().also { println("[${nativeClient.clientId}] RESULT: $eventId") }
     }
 
     fun ignore(function: TelegramFunction) {

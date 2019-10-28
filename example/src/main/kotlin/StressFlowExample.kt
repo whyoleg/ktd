@@ -9,17 +9,19 @@ suspend fun main() {
     val telegram = Telegram(
         configuration = TelegramClientConfiguration(
             maxEventsCount = 1000,
-            receiveTimeout = 1.seconds //ms
+            receiveTimeout = 0.1.seconds //ms
         )
     )
     val telegramScope = CoroutineScope(Dispatchers.Default + telegram)
     val firstClient = telegram.client()
     firstClient.authorizationStateUpdates
         .onEach {
+            println(it)
             when {
                 firstClient.autoHandleAuthState(it)      -> Unit
                 firstClient.handlePhoneAuthorization(it) -> Unit
                 it is AuthorizationStateReady            -> throw AuthComplete
+                it is AuthorizationStateWaitRegistration -> firstClient.registerUser("Oleg", "Oleg")
             }
         }
         .onAuthReady()
@@ -34,8 +36,8 @@ suspend fun main() {
         fun output(number: Int) = file.resolve("flow$number/db")
         fun copy(file: String, number: Int) = input.resolve(file).copyTo(output(number).resolve(file))
         (0..count).forEach {
-            copy("db.sqlite", it)
-            copy("td.binlog", it)
+            copy("db_test.sqlite", it)
+            copy("td_test.binlog", it)
         }
     }
     println(copyTime)
@@ -65,6 +67,7 @@ suspend fun main() {
     val getContactsTime = measureTime {
         clients.mapIndexed { i, client ->
             telegramScope.async(telegram) {
+                client.getMe()
                 client.getContacts()
             }
         }.awaitAll()

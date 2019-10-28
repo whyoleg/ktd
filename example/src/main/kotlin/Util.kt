@@ -8,7 +8,7 @@ import dev.whyoleg.ktd.api.user.*
 import kotlinx.coroutines.flow.*
 
 fun tdlibParameters(dbPath: String = "flow") = TdlibParameters(
-    useTestDc = false,
+    useTestDc = true,
     databaseDirectory = "example/td/$dbPath/db",
     filesDirectory = "example/td/$dbPath/files",
     useFileDatabase = true,

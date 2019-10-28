@@ -3,29 +3,25 @@ package dev.whyoleg.ktd
 import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.*
 
-internal class NativeClient(private val configuration: TelegramClientConfiguration) {
+internal class NativeClient(configuration: TelegramClientConfiguration) {
 
-    private val clientId: Long = Client.createNativeClient()
-    fun destroy(): Unit = Client.destroyNativeClient(clientId)
+    val clientId: Long = TdClient.create()
 
-    private val counter = atomic(0L)
-
-    fun send(function: TelegramFunction): Long {
-        val id = counter.incrementAndGet()
-        Client.nativeClientSend(clientId, id, function)
-        return id
-    }
-
+    private val eventCounter = atomic(0L)
     private val eventIds = LongArray(configuration.maxEventsCount)
     private val events = arrayOfNulls<TelegramObject>(configuration.maxEventsCount)
-    private var eventsCount: Int = 0
+    private val timeout = configuration.receiveTimeout.inMilliseconds
 
-    fun receive() {
-        check(eventsCount == 0) { "Events are not handled" }
-        eventsCount = Client.nativeClientReceive(clientId, eventIds, events, configuration.receiveTimeout)
+    fun destroy(): Unit = TdClient.destroy(clientId)
+
+    fun send(function: TelegramFunction): Long {
+        val eventId = eventCounter.incrementAndGet()
+        TdClient.send(clientId, eventId, function)
+        return eventId
     }
 
-    internal inline fun handle(onEvent: (eventId: Long, obj: TelegramObject) -> Unit) {
+    inline fun receive(onEvent: (eventId: Long, obj: TelegramObject) -> Unit) {
+        val eventsCount = TdClient.receive(clientId, eventIds, events, timeout)
         repeat(eventsCount) { i ->
             events[i]?.let {
                 onEvent(eventIds[i], it)
@@ -33,6 +29,5 @@ internal class NativeClient(private val configuration: TelegramClientConfigurati
             }
             eventIds[i] = 0
         }
-        eventsCount = 0
     }
 }

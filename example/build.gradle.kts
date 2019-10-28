@@ -1,6 +1,4 @@
-import dev.whyoleg.kamp.*
-
-kampJvm {
+configuredKamp {
     source {
         main {
             implementation {

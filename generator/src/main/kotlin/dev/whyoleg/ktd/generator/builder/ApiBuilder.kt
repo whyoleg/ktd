@@ -11,6 +11,7 @@ fun StringBuilder.buildApi(scheme: TlScheme) {
     buildTypealias("TelegramObject", "TdApi.Object")
     buildTypealias("TelegramFunction", "TdApi.Function")
     buildTypealias("TelegramUpdate", "TdApi.Update")
+    buildTypealias("TelegramError", "TdApi.Error")
     append("\n")
     append("class TdApi ")
     withCurlyBrackets {

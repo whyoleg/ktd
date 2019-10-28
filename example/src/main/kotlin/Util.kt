@@ -7,10 +7,10 @@ import dev.whyoleg.ktd.api.tdlib.*
 import dev.whyoleg.ktd.api.user.*
 import kotlinx.coroutines.flow.*
 
-val tdlibParameters = TdlibParameters(
+fun tdlibParameters(dbPath: String = "flow") = TdlibParameters(
     useTestDc = false,
-    databaseDirectory = "example/td/flow/db",
-    filesDirectory = "example/td/flow/files",
+    databaseDirectory = "example/td/$dbPath/db",
+    filesDirectory = "example/td/$dbPath/files",
     useFileDatabase = true,
     useChatInfoDatabase = true,
     useMessageDatabase = true,
@@ -25,13 +25,12 @@ val tdlibParameters = TdlibParameters(
     useSecretChats = false
 )
 
-
 val TelegramClient.authorizationStateUpdates: Flow<AuthorizationState>
     get() = updates.filterIsInstance<UpdateAuthorizationState>().mapNotNull { it.authorizationState }
 
-suspend fun TelegramClient.autoHandleAuthState(state: AuthorizationState): Boolean {
+suspend fun TelegramClient.autoHandleAuthState(state: AuthorizationState, dbPath: String = "flow"): Boolean {
     when (state) {
-        is AuthorizationStateWaitTdlibParameters -> setTdlibParameters(tdlibParameters)
+        is AuthorizationStateWaitTdlibParameters -> setTdlibParameters(tdlibParameters(dbPath))
         is AuthorizationStateWaitEncryptionKey   -> setDatabaseEncryptionKey(ByteArray(DEFAULT_BUFFER_SIZE).apply { fill(1) })
         else                                     -> return false
     }
@@ -64,7 +63,7 @@ suspend fun TelegramClient.handlePhoneAuthorization(state: AuthorizationState): 
 
 object AuthComplete : Throwable()
 
-fun Flow<AuthorizationState>.onAuthReady(block: suspend () -> Unit): Flow<AuthorizationState> = catch {
+fun Flow<AuthorizationState>.onAuthReady(block: suspend () -> Unit = {}): Flow<AuthorizationState> = catch {
     if (it is AuthComplete) block() else throw it
 }
 

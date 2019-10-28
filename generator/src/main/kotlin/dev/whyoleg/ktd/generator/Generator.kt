@@ -13,6 +13,7 @@ fun main() {
     val scheme = TlScheme(tlData, metadata)
     val functionsMap = tlData.groupFunctions()
     with(outputDir) {
+        deleteRecursively()
         mkdirs()
         file("Experimental") {
             buildExperimental()

@@ -11,6 +11,7 @@ package dev.whyoleg.ktd.api
 typealias TelegramObject = TdApi.Object
 typealias TelegramFunction = TdApi.Function
 typealias TelegramUpdate = TdApi.Update
+typealias TelegramError = TdApi.Error
 
 class TdApi {
 

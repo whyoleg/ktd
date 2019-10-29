@@ -3,6 +3,7 @@ package dev.whyoleg.ktd
 import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.*
 
 private sealed class Action {
     data class Handler(val id: Long, val deferred: CompletableDeferred<TelegramObject>) : Action()
@@ -29,12 +30,6 @@ private fun handle(job: Job, channel: ReceiveChannel<Action>) {
         val ignoredEvents = mutableSetOf<Long>()
         channel.consumeEach {
             when (it) {
-                is Action.Ignore  -> println("IGNORE: ${it.id}")
-                is Action.Handler -> println("HANDLER: ${it.id}")
-                is Action.Event   -> println("EVENT: ${it.id}")
-            }
-            println("STATS BEFORE: ${eventHandlers.keys}-${eventResults.keys}-${ignoredEvents}")
-            when (it) {
                 is Action.Ignore  -> if (eventResults.remove(it.id) == null) ignoredEvents += it.id
                 is Action.Handler -> when (val event = eventResults.remove(it.id)) {
                     null -> eventHandlers[it.id] = it.deferred
@@ -45,21 +40,18 @@ private fun handle(job: Job, channel: ReceiveChannel<Action>) {
                     else -> handler.completeWith(it.event)
                 }
             }
-            println("STATS  AFTER: ${eventHandlers.keys}-${eventResults.keys}-${ignoredEvents}")
         }
     }
 }
 
-internal class TelegramClientActor(private val nativeClient: NativeClient, private val job: Job) {
+internal class TelegramClientActor(private val nativeClient: NativeClient, job: Job) : TelegramClient, Job by job {
     private val channel = Channel<Action>(Channel.UNLIMITED)
-    val updatesChannel = UpdatesChannel(job)
+    private val updatesChannel = UpdatesChannel(this)
+    override val updates: Flow<TelegramUpdate> = updatesChannel.flow
 
     init {
-        launchOnSingleThread(job, nativeClient.clientId) {
-            println("[${nativeClient.clientId}] RECEIVE")
-            nativeClient.receive(this::handle)
-        }
-        handle(job, channel)
+        launchOnSingleThread(this, nativeClient.clientId) { nativeClient.receive(this::handle) }
+        handle(this, channel)
     }
 
     private fun handle(eventId: Long, obj: TelegramObject) {
@@ -69,15 +61,14 @@ internal class TelegramClientActor(private val nativeClient: NativeClient, priva
         }
     }
 
-    suspend fun await(function: TelegramFunction): TelegramObject {
+    override suspend fun exec(function: TelegramFunction): TelegramObject {
         val eventId = nativeClient.send(function)
-        println("[${nativeClient.clientId}] AWAIT: $eventId")
-        val deferred = CompletableDeferred<TelegramObject>(job)
+        val deferred = CompletableDeferred<TelegramObject>(this)
         channel.offer(Action.Handler(eventId, deferred))
-        return deferred.await().also { println("[${nativeClient.clientId}] RESULT: $eventId") }
+        return deferred.await()
     }
 
-    fun ignore(function: TelegramFunction) {
+    override fun send(function: TelegramFunction) {
         val eventId = nativeClient.send(function)
         channel.offer(Action.Ignore(eventId))
     }

@@ -21,7 +21,7 @@ internal object TdClient {
         }.recover {
             System.loadLibrary("tdjni") //if no lib in jar - find on local machine
         }.onFailure {
-            TdLog.logger.error(it) { "Can't load td library" }
+            println("Can't load td library")
             throw it
         }
         execute(TdApi.SetLogVerbosityLevel(0))

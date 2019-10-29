@@ -10,7 +10,6 @@ class Telegram(
         val job = Job(this)
         val nativeClient = NativeClient(configuration)
         job.invokeOnCompletion { nativeClient.destroy() }
-        val actor = TelegramClientActor(nativeClient, job)
-        return TelegramClient(actor, job)
+        return TelegramClientActor(nativeClient, job)
     }
 }

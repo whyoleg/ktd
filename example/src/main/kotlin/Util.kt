@@ -8,14 +8,14 @@ import dev.whyoleg.ktd.api.user.*
 import kotlinx.coroutines.flow.*
 
 fun tdlibParameters(dbPath: String = "flow") = TdlibParameters(
-    useTestDc = true,
+    useTestDc = System.getProperty("test")!!.toBoolean(),
     databaseDirectory = "example/td/$dbPath/db",
     filesDirectory = "example/td/$dbPath/files",
     useFileDatabase = true,
     useChatInfoDatabase = true,
     useMessageDatabase = true,
-    apiId = 0, //provide id
-    apiHash = "", //provide hash
+    apiId = System.getProperty("apiId").toInt(),//provide id
+    apiHash = System.getProperty("apiHash"), //provide hash
     systemLanguageCode = "en",
     deviceModel = "Mobile",
     systemVersion = "1",

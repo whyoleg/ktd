@@ -8,13 +8,14 @@ configuredKamp {
     }
     source {
         main {
-            implementation {
+            implementation(Dependencies.kotlinx.atomicfu)
+            api {
                 +Dependencies.kotlin.stdlib
-                +Dependencies.kotlinx.atomicfu
-                +Dependencies.logging.logging
                 +Dependencies.coroutines.core
-                +Dependencies.tdlib
                 +Dependencies.immutableCollections
+
+                //native lib
+                +Dependencies.tdlib
             }
         }
     }

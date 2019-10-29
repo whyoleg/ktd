@@ -16,20 +16,6 @@ endif()
 message(STATUS "Found Java: ${Java_JAVAC_EXECUTABLE} ${Java_JAVADOC_EXECUTABLE}")
 
 set(TD_API_JAVA_PACKAGE "dev/whyoleg/ktd")
-set(TD_API_JAVA_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-set(TD_API_TLO_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td/generate/scheme/td_api.tlo)
-set(TD_API_TL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td/generate/scheme/td_api.tl)
-set(TD_API_GENERATE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td_generate_java_api)
-
-set(GENERATE_JAVA_API_CMD ${TD_API_GENERATE_PATH} TdApi ${TD_API_TLO_PATH} ${TD_API_JAVA_PATH} "bin")
-
-set(JAVADOC_TL_DOCUMENTATION_GENERATOR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/td/bin/td/generate/JavadocTlDocumentationGenerator.php)
-
-add_custom_target(td_generate_java_api
-  COMMAND ${GENERATE_JAVA_API_CMD}
-  COMMENT "Generating Java TDLib API source files"
-  DEPENDS ${TD_API_GENERATE_PATH} ${TD_API_TLO_PATH} ${TD_API_TL_PATH} ${JAVADOC_TL_DOCUMENTATION_GENERATOR_PATH}
-)
 
 add_library(tdjni SHARED td_jni.cpp)
 target_include_directories(tdjni PRIVATE ${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2})
@@ -69,8 +55,6 @@ endif()
 if (NOT HAVE_STD14)
   message(FATAL_ERROR "No C++14 support in the compiler. Please upgrade the compiler.")
 endif()
-
-add_dependencies(tdjni td_generate_java_api)
 
 install(TARGETS tdjni
   LIBRARY DESTINATION bin

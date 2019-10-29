@@ -6,12 +6,13 @@ import dev.whyoleg.ktd.api.tdlib.*
 import dev.whyoleg.ktd.api.user.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlin.time.*
 
 suspend fun main() {
     val telegram = Telegram(
         configuration = TelegramClientConfiguration(
             maxEventsCount = 1000,
-            receiveTimeout = 0.01 //ms
+            receiveTimeout = 1.seconds //ms
         )
     )
     val client = telegram.client()
@@ -20,7 +21,7 @@ suspend fun main() {
         when (it.authorizationState) {
             is AuthorizationStateWaitTdlibParameters -> {
                 println("Send parameters")
-                client.setTdlibParameters(tdlibParameters)
+                client.setTdlibParameters(tdlibParameters())
             }
             is AuthorizationStateWaitEncryptionKey   -> client.setDatabaseEncryptionKey(ByteArray(DEFAULT_BUFFER_SIZE).apply { fill(1) })
             is AuthorizationStateWaitPhoneNumber     -> {

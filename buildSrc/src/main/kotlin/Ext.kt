@@ -10,7 +10,7 @@ private const val jdk = "1.6"
 private val configuration = ProjectConfiguration("dev.whyoleg.ktd", "ktd", "0.3.0")
 
 @KampDSL
-fun Project.configuredKamp(block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
+fun Project.configuredKamp(configuration: ProjectConfiguration? = null, block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
     options {
         jvmTarget = jdk
         sourceCompatibility = jdk
@@ -23,6 +23,9 @@ fun Project.configuredKamp(block: KampJvmExtension.() -> Unit) = kampJvm(configu
     }
     apply(block)
 }
+
+@KampDSL
+fun Project.configuredKamp(block: KampJvmExtension.() -> Unit) = configuredKamp(configuration, block)
 
 val publication = Publication(
     name = "ktd",

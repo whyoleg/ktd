@@ -23,7 +23,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 suspend fun TelegramClient.validateOrderInfo(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    orderInfo: OrderInfo? = null,
+    orderInfo: OrderInfo,
     allowSave: Boolean = false
 ): ValidatedOrderInfo = validated(
     ValidateOrderInfo(

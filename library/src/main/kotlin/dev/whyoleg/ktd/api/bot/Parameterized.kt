@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 @BotsOnly
 suspend fun TelegramClient.setBotUpdatesStatus(
     pendingUpdateCount: Int = 0,
-    errorMessage: String? = null
+    errorMessage: String
 ): Ok = bot(
     SetBotUpdatesStatus(
         pendingUpdateCount,

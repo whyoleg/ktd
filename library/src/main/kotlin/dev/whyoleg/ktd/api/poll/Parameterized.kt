@@ -43,7 +43,7 @@ suspend fun TelegramClient.setPollAnswer(
 suspend fun TelegramClient.stopPoll(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    @BotsOnly replyMarkup: ReplyMarkup? = null
+    @BotsOnly replyMarkup: ReplyMarkup
 ): Ok = poll(
     StopPoll(
         chatId,

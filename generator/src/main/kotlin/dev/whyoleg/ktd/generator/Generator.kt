@@ -12,6 +12,7 @@ fun main() {
     val metadata = tlData.extractMetadata()
     val scheme = TlScheme(tlData, metadata)
     val functionsMap = tlData.groupFunctions()
+    val syncFunctions = tlData.filterIsInstance<TlFunction>().filter { TlAddition.Sync in it.metadata.additions }
     with(outputDir) {
         deleteRecursively()
         mkdirs()
@@ -30,6 +31,15 @@ fun main() {
                 file("Parameterized") {
                     buildFunctions(type, functions, metadata)
                 }
+            }
+        }
+        with(resolve("sync")) {
+            mkdirs()
+            file("Raw") {
+                buildRawSyncFunctions(syncFunctions)
+            }
+            file("Parameterized") {
+                buildSyncFunctions(syncFunctions, metadata)
             }
         }
     }

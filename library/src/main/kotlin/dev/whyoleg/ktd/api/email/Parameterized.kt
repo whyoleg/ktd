@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @password - The password for the current user
  */
 suspend fun TelegramClient.getRecoveryEmailAddress(
-    password: String? = null
+    password: String
 ): RecoveryEmailAddress = email(
     GetRecoveryEmailAddress(
         password
@@ -39,7 +39,7 @@ suspend fun TelegramClient.requestPasswordRecovery(): EmailAddressAuthentication
  * @emailAddress - Email address
  */
 suspend fun TelegramClient.sendEmailAddressVerificationCode(
-    emailAddress: String? = null
+    emailAddress: String
 ): EmailAddressAuthenticationCodeInfo = email(
     SendEmailAddressVerificationCode(
         emailAddress

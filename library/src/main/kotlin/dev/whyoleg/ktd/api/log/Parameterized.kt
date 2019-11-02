@@ -31,9 +31,9 @@ suspend fun TelegramClient.logOut(): Ok = log(
  * @data - The log event data
  */
 suspend fun TelegramClient.saveApplicationLogEvent(
-    type: String? = null,
+    type: String,
     chatId: Long = 0L,
-    data: JsonValue? = null
+    data: JsonValue
 ): Ok = log(
     SaveApplicationLogEvent(
         type,
@@ -51,7 +51,7 @@ suspend fun TelegramClient.saveApplicationLogEvent(
  * @logStream - New log stream
  */
 suspend fun TelegramClient.setLogStream(
-    logStream: LogStream? = null
+    logStream: LogStream
 ): Ok = log(
     SetLogStream(
         logStream
@@ -115,7 +115,7 @@ suspend fun TelegramClient.getLogTags(): LogTags = log(
  * @newVerbosityLevel - New verbosity level
  */
 suspend fun TelegramClient.setLogTagVerbosityLevel(
-    tag: String? = null,
+    tag: String,
     newVerbosityLevel: Int = 0
 ): Ok = log(
     SetLogTagVerbosityLevel(
@@ -133,7 +133,7 @@ suspend fun TelegramClient.setLogTagVerbosityLevel(
  * @tag - Logging tag to change verbosity level
  */
 suspend fun TelegramClient.getLogTagVerbosityLevel(
-    tag: String? = null
+    tag: String
 ): LogVerbosityLevel = log(
     GetLogTagVerbosityLevel(
         tag
@@ -151,7 +151,7 @@ suspend fun TelegramClient.getLogTagVerbosityLevel(
  */
 suspend fun TelegramClient.addLogMessage(
     verbosityLevel: Int = 0,
-    text: String? = null
+    text: String
 ): Ok = log(
     AddLogMessage(
         verbosityLevel,

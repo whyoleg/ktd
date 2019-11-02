@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @ttl - New account TTL
  */
 suspend fun TelegramClient.setAccountTtl(
-    ttl: AccountTtl? = null
+    ttl: AccountTtl
 ): Ok = account(
     SetAccountTtl(
         ttl

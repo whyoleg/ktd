@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @json - The JSON-serialized string
  */
 suspend fun TelegramClient.getJsonValue(
-    json: String? = null
+    json: String
 ): JsonValue = json(
     GetJsonValue(
         json

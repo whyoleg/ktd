@@ -77,6 +77,9 @@ private fun RawTlData.groupLines() =
 
 private fun Map<String, List<String>>.splitByKey(key: String) = run {
     val descriptions = this[key] ?: error("No $key in lines")
-    val additions = this[key + questionToken] ?: emptyList()
-    descriptions to additions.map(::TlAddition)
+    val additions = this[key + questionToken]?.map(::TlAddition) ?: emptyList()
+    val additionsWithSync = if (descriptions.any { it.toLowerCase() == "can be called synchronously" }) {
+        additions + TlAddition.Sync
+    } else additions
+    descriptions to additionsWithSync
 }

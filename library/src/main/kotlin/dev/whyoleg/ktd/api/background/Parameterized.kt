@@ -32,8 +32,8 @@ suspend fun TelegramClient.getBackgrounds(
  * @type - Background type
  */
 suspend fun TelegramClient.getBackgroundUrl(
-    name: String? = null,
-    type: BackgroundType? = null
+    name: String,
+    type: BackgroundType
 ): HttpUrl = background(
     GetBackgroundUrl(
         name,
@@ -47,7 +47,7 @@ suspend fun TelegramClient.getBackgroundUrl(
  * @name - The name of the background
  */
 suspend fun TelegramClient.searchBackground(
-    name: String? = null
+    name: String
 ): Background = background(
     SearchBackground(
         name
@@ -65,8 +65,8 @@ suspend fun TelegramClient.searchBackground(
  * @forDarkTheme - True, if the background is chosen for dark theme
  */
 suspend fun TelegramClient.setBackground(
-    background: InputBackground? = null,
-    type: BackgroundType? = null,
+    background: InputBackground,
+    type: BackgroundType,
     forDarkTheme: Boolean = false
 ): Background = background(
     SetBackground(

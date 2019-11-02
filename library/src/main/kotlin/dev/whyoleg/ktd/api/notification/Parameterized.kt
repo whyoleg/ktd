@@ -52,7 +52,7 @@ suspend fun TelegramClient.removeNotificationGroup(
  * @scope - Types of chats for which to return the notification settings information
  */
 suspend fun TelegramClient.getScopeNotificationSettings(
-    scope: NotificationSettingsScope? = null
+    scope: NotificationSettingsScope
 ): ScopeNotificationSettings = notification(
     GetScopeNotificationSettings(
         scope
@@ -66,8 +66,8 @@ suspend fun TelegramClient.getScopeNotificationSettings(
  * @notificationSettings - The new notification settings for the given scope
  */
 suspend fun TelegramClient.setScopeNotificationSettings(
-    scope: NotificationSettingsScope? = null,
-    notificationSettings: ScopeNotificationSettings? = null
+    scope: NotificationSettingsScope,
+    notificationSettings: ScopeNotificationSettings
 ): Ok = notification(
     SetScopeNotificationSettings(
         scope,
@@ -91,7 +91,7 @@ suspend fun TelegramClient.resetAllNotificationSettings(): Ok = notification(
  * @payload - JSON-encoded push notification payload with all fields sent by the server, and "google.sent_time" and "google.notification.sound" fields added
  */
 suspend fun TelegramClient.processPushNotification(
-    payload: String? = null
+    payload: String
 ): Ok = notification(
     ProcessPushNotification(
         payload
@@ -107,7 +107,7 @@ suspend fun TelegramClient.processPushNotification(
  * @payload - JSON-encoded push notification payload
  */
 suspend fun TelegramClient.getPushReceiverId(
-    payload: String? = null
+    payload: String
 ): PushReceiverId = notification(
     GetPushReceiverId(
         payload

@@ -31,8 +31,8 @@ suspend fun TelegramClient.getPasswordState(): PasswordState = password(
  * @newRecoveryEmailAddress - New recovery email address
  */
 suspend fun TelegramClient.setPassword(
-    oldPassword: String? = null,
-    newPassword: String? = null,
+    oldPassword: String,
+    newPassword: String,
     newHint: String? = null,
     setRecoveryEmailAddress: Boolean = false,
     newRecoveryEmailAddress: String? = null
@@ -55,8 +55,8 @@ suspend fun TelegramClient.setPassword(
  * @newRecoveryEmailAddress - New recovery email address
  */
 suspend fun TelegramClient.setRecoveryEmailAddress(
-    password: String? = null,
-    newRecoveryEmailAddress: String? = null
+    password: String,
+    newRecoveryEmailAddress: String
 ): PasswordState = password(
     SetRecoveryEmailAddress(
         password,
@@ -70,7 +70,7 @@ suspend fun TelegramClient.setRecoveryEmailAddress(
  * @code - Verification code
  */
 suspend fun TelegramClient.checkRecoveryEmailAddressCode(
-    code: String? = null
+    code: String
 ): PasswordState = password(
     CheckRecoveryEmailAddressCode(
         code
@@ -90,7 +90,7 @@ suspend fun TelegramClient.resendRecoveryEmailAddressCode(): PasswordState = pas
  * @recoveryCode - Recovery code to check
  */
 suspend fun TelegramClient.recoverPassword(
-    recoveryCode: String? = null
+    recoveryCode: String
 ): PasswordState = password(
     RecoverPassword(
         recoveryCode
@@ -105,7 +105,7 @@ suspend fun TelegramClient.recoverPassword(
  *             Should be between 60 and 86400
  */
 suspend fun TelegramClient.createTemporaryPassword(
-    password: String? = null,
+    password: String,
     validFor: Int = 0
 ): TemporaryPasswordState = password(
     CreateTemporaryPassword(

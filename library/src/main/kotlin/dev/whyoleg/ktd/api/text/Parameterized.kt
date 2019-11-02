@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @text - The text in which to look for entites
  */
 suspend fun TelegramClient.getTextEntities(
-    text: String? = null
+    text: String
 ): TextEntities = text(
     GetTextEntities(
         text
@@ -38,8 +38,8 @@ suspend fun TelegramClient.getTextEntities(
  * @parseMode - Text parse mode
  */
 suspend fun TelegramClient.parseTextEntities(
-    text: String? = null,
-    parseMode: TextParseMode? = null
+    text: String,
+    parseMode: TextParseMode
 ): FormattedText = text(
     ParseTextEntities(
         text,
@@ -57,7 +57,7 @@ suspend fun TelegramClient.parseTextEntities(
  * @fileName - The name of the file or path to the file
  */
 suspend fun TelegramClient.getFileMimeType(
-    fileName: String? = null
+    fileName: String
 ): Text = text(
     GetFileMimeType(
         fileName
@@ -74,7 +74,7 @@ suspend fun TelegramClient.getFileMimeType(
  * @mimeType - The MIME type of the file
  */
 suspend fun TelegramClient.getFileExtension(
-    mimeType: String? = null
+    mimeType: String
 ): Text = text(
     GetFileExtension(
         mimeType
@@ -92,7 +92,7 @@ suspend fun TelegramClient.getFileExtension(
  * @fileName - File name or path to the file
  */
 suspend fun TelegramClient.cleanFileName(
-    fileName: String? = null
+    fileName: String
 ): Text = text(
     CleanFileName(
         fileName
@@ -108,7 +108,7 @@ suspend fun TelegramClient.cleanFileName(
  * @jsonValue - The JsonValue object
  */
 suspend fun TelegramClient.getJsonString(
-    jsonValue: JsonValue? = null
+    jsonValue: JsonValue
 ): Text = text(
     GetJsonString(
         jsonValue
@@ -122,7 +122,7 @@ suspend fun TelegramClient.getJsonString(
  * @countryCode - A two-letter ISO 3166-1 alpha-2 country code
  */
 suspend fun TelegramClient.getPreferredCountryLanguage(
-    countryCode: String? = null
+    countryCode: String
 ): Text = text(
     GetPreferredCountryLanguage(
         countryCode

@@ -8,4 +8,6 @@ interface TelegramClient : Job {
     val updates: Flow<TelegramUpdate>
     fun send(function: TelegramFunction)
     suspend fun exec(function: TelegramFunction): TelegramObject
+
+    companion object
 }

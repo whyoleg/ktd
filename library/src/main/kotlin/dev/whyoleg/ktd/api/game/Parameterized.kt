@@ -40,7 +40,7 @@ suspend fun TelegramClient.getGameHighScores(
  */
 @BotsOnly
 suspend fun TelegramClient.getInlineGameHighScores(
-    inlineMessageId: String? = null,
+    inlineMessageId: String,
     userId: Int = 0
 ): GameHighScores = game(
     GetInlineGameHighScores(

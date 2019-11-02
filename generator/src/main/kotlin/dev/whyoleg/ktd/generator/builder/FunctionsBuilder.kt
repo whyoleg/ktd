@@ -75,12 +75,6 @@ fun List<TlData>.groupFunctions(): Map<String, List<TlFunction>> {
         .mapValues { (_, list) -> list.map { it.first } }
 }
 
-///**
-// * Changes the period of inactivity after which the account of the current user will automatically be deleted
-// */
-//suspend fun TelegramClient.account(
-//    f: SetAccountTtl
-//): Ok = execRaw(f) as Ok
 fun StringBuilder.buildRawFunction(rawType: String, function: TlFunction) {
     buildDescription(function.descriptions())
     buildAnnotations(function.metadata.additions)
@@ -93,18 +87,6 @@ fun StringBuilder.buildRawFunction(rawType: String, function: TlFunction) {
     append("\n")
 }
 
-///**
-// * Changes the period of inactivity after which the account of the current user will automatically be deleted
-// *
-// * @ttl - New account TTL
-// */
-//suspend fun TelegramClient.setAccountTtl(
-//    ttl: AccountTtl
-//): Ok = account(
-//    SetAccountTtl(
-//        ttl
-//    )
-//)
 fun StringBuilder.buildFunction(rawType: String, function: TlFunction, metadata: TlDataMetadata) {
     buildDescription(function.descriptionsWithProperties())
     buildAnnotations(function.metadata.additions)

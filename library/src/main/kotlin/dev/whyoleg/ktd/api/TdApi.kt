@@ -35,7 +35,7 @@ class TdApi {
      */
     class Error(
         val code: Int = 0,
-        val message: String? = null
+        val message: String
     ) : Object() {
         override val constructor: Int get() = -1679978726
     }
@@ -73,18 +73,18 @@ class TdApi {
      */
     class TdlibParameters(
         val useTestDc: Boolean = false,
-        val databaseDirectory: String? = null,
-        val filesDirectory: String? = null,
+        val databaseDirectory: String,
+        val filesDirectory: String,
         val useFileDatabase: Boolean = false,
         val useChatInfoDatabase: Boolean = false,
         val useMessageDatabase: Boolean = false,
         val useSecretChats: Boolean = false,
         val apiId: Int = 0,
-        val apiHash: String? = null,
-        val systemLanguageCode: String? = null,
-        val deviceModel: String? = null,
-        val systemVersion: String? = null,
-        val applicationVersion: String? = null,
+        val apiHash: String,
+        val systemLanguageCode: String,
+        val deviceModel: String,
+        val systemVersion: String,
+        val applicationVersion: String,
         val enableStorageOptimizer: Boolean = false,
         val ignoreFileNames: Boolean = false
     ) : Object() {
@@ -150,8 +150,8 @@ class TdApi {
      * @timeout - Timeout before the code should be re-sent, in seconds
      */
     class AuthenticationCodeInfo(
-        val phoneNumber: String?,
-        val type: AuthenticationCodeType?,
+        val phoneNumber: String,
+        val type: AuthenticationCodeType,
         val nextType: AuthenticationCodeType?,
         val timeout: Int
     ) : Object() {
@@ -166,7 +166,7 @@ class TdApi {
      *           0 if unknown
      */
     class EmailAddressAuthenticationCodeInfo(
-        val emailAddressPattern: String?,
+        val emailAddressPattern: String,
         val length: Int
     ) : Object() {
         override val constructor: Int get() = 1151066659
@@ -182,7 +182,7 @@ class TdApi {
     class TextEntity(
         val offset: Int = 0,
         val length: Int = 0,
-        val type: TextEntityType? = null
+        val type: TextEntityType
     ) : Object() {
         override val constructor: Int get() = -1951688280
     }
@@ -205,7 +205,7 @@ class TdApi {
      * @entities - Entities contained in the text
      */
     class FormattedText(
-        val text: String? = null,
+        val text: String,
         val entities: Array<TextEntity> = emptyArray()
     ) : Object() {
         override val constructor: Int get() = -1551025682
@@ -263,7 +263,7 @@ class TdApi {
      * @codeInfo - Information about the authorization code that was sent
      */
     class AuthorizationStateWaitCode(
-        val codeInfo: AuthenticationCodeInfo?
+        val codeInfo: AuthenticationCodeInfo
     ) : AuthorizationState() {
         override val constructor: Int get() = 52643073
     }
@@ -274,7 +274,7 @@ class TdApi {
      * @termsOfService - Telegram terms of service
      */
     class AuthorizationStateWaitRegistration(
-        val termsOfService: TermsOfService?
+        val termsOfService: TermsOfService
     ) : AuthorizationState() {
         override val constructor: Int get() = 550350511
     }
@@ -290,7 +290,7 @@ class TdApi {
     class AuthorizationStateWaitPassword(
         val passwordHint: String?,
         val hasRecoveryEmailAddress: Boolean,
-        val recoveryEmailAddressPattern: String?
+        val recoveryEmailAddressPattern: String
     ) : AuthorizationState() {
         override val constructor: Int get() = 187548796
     }
@@ -355,7 +355,7 @@ class TdApi {
      * @recoveryEmailAddress - Recovery email address
      */
     class RecoveryEmailAddress(
-        val recoveryEmailAddress: String?
+        val recoveryEmailAddress: String
     ) : Object() {
         override val constructor: Int get() = 1290526187
     }
@@ -390,7 +390,7 @@ class TdApi {
      *                   The actual file size may be bigger, and some parts of it may contain garbage
      */
     class LocalFile(
-        val path: String,
+        val path: String?,
         val canBeDownloaded: Boolean,
         val canBeDeleted: Boolean,
         val isDownloadingActive: Boolean,
@@ -417,7 +417,7 @@ class TdApi {
      *                 0 if unknown
      */
     class RemoteFile(
-        val id: String,
+        val id: String?,
         val isUploadingActive: Boolean,
         val isUploadingCompleted: Boolean,
         val uploadedSize: Int
@@ -440,8 +440,8 @@ class TdApi {
         val id: Int,
         val size: Int,
         val expectedSize: Int,
-        val local: LocalFile?,
-        val remote: RemoteFile?
+        val local: LocalFile,
+        val remote: RemoteFile
     ) : Object() {
         override val constructor: Int get() = 766337656
     }
@@ -471,7 +471,7 @@ class TdApi {
      * @id - Remote file identifier
      */
     class InputFileRemote(
-        val id: String? = null
+        val id: String
     ) : InputFile() {
         override val constructor: Int get() = -107574466
     }
@@ -482,7 +482,7 @@ class TdApi {
      * @path - Local path to the file
      */
     class InputFileLocal(
-        val path: String? = null
+        val path: String
     ) : InputFile() {
         override val constructor: Int get() = 2056030919
     }
@@ -499,8 +499,8 @@ class TdApi {
      *                 0 if unknown
      */
     class InputFileGenerated(
-        val originalPath: String? = null,
-        val conversion: String? = null,
+        val originalPath: String,
+        val conversion: String,
         val expectedSize: Int = 0
     ) : InputFile() {
         override val constructor: Int get() = -1781351885
@@ -583,7 +583,7 @@ class TdApi {
      *          (For example, 2.0 means a doubled size)
      */
     class MaskPosition(
-        val point: MaskPoint? = null,
+        val point: MaskPoint,
         val xShift: Double = 0.0,
         val yShift: Double = 0.0,
         val scale: Double = 0.0
@@ -631,8 +631,8 @@ class TdApi {
         val height: Int,
         val fileName: String,
         val mimeType: String,
-        val minithumbnail: Minithumbnail,
-        val thumbnail: PhotoSize,
+        val minithumbnail: Minithumbnail?,
+        val thumbnail: PhotoSize?,
         val animation: File
     ) : Object() {
         override val constructor: Int get() = -1629245379
@@ -664,8 +664,8 @@ class TdApi {
         val performer: String,
         val fileName: String,
         val mimeType: String,
-        val albumCoverMinithumbnail: Minithumbnail,
-        val albumCoverThumbnail: PhotoSize,
+        val albumCoverMinithumbnail: Minithumbnail?,
+        val albumCoverThumbnail: PhotoSize?,
         val audio: File
     ) : Object() {
         override val constructor: Int get() = 1475294302
@@ -686,8 +686,8 @@ class TdApi {
     class Document(
         val fileName: String,
         val mimeType: String,
-        val minithumbnail: Minithumbnail,
-        val thumbnail: PhotoSize,
+        val minithumbnail: Minithumbnail?,
+        val thumbnail: PhotoSize?,
         val document: File
     ) : Object() {
         override val constructor: Int get() = 21881988
@@ -702,7 +702,7 @@ class TdApi {
      */
     class Photo(
         val hasStickers: Boolean,
-        val minithumbnail: Minithumbnail,
+        val minithumbnail: Minithumbnail?,
         val sizes: Array<PhotoSize>
     ) : Object() {
         override val constructor: Int get() = 274335369
@@ -731,8 +731,8 @@ class TdApi {
         val emoji: String,
         val isAnimated: Boolean,
         val isMask: Boolean,
-        val maskPosition: MaskPosition,
-        val thumbnail: PhotoSize,
+        val maskPosition: MaskPosition?,
+        val thumbnail: PhotoSize?,
         val sticker: File
     ) : Object() {
         override val constructor: Int get() = -1835470627
@@ -766,8 +766,8 @@ class TdApi {
         val mimeType: String,
         val hasStickers: Boolean,
         val supportsStreaming: Boolean,
-        val minithumbnail: Minithumbnail,
-        val thumbnail: PhotoSize,
+        val minithumbnail: Minithumbnail?,
+        val thumbnail: PhotoSize?,
         val video: File
     ) : Object() {
         override val constructor: Int get() = -536898740
@@ -789,8 +789,8 @@ class TdApi {
     class VideoNote(
         val duration: Int,
         val length: Int,
-        val minithumbnail: Minithumbnail,
-        val thumbnail: PhotoSize,
+        val minithumbnail: Minithumbnail?,
+        val thumbnail: PhotoSize?,
         val video: File
     ) : Object() {
         override val constructor: Int get() = -1080075672
@@ -828,10 +828,10 @@ class TdApi {
      *           Otherwise 0
      */
     class Contact(
-        val phoneNumber: String? = null,
-        val firstName: String? = null,
-        val lastName: String? = null,
-        val vcard: String? = null,
+        val phoneNumber: String,
+        val firstName: String,
+        val lastName: String,
+        val vcard: String,
         val userId: Int = 0
     ) : Object() {
         override val constructor: Int get() = -1483002540
@@ -870,12 +870,12 @@ class TdApi {
      *         As defined by the sender
      */
     class Venue(
-        val location: Location? = null,
-        val title: String? = null,
-        val address: String? = null,
-        val provider: String? = null,
-        val id: String? = null,
-        val type: String? = null
+        val location: Location,
+        val title: String,
+        val address: String,
+        val provider: String,
+        val id: String,
+        val type: String
     ) : Object() {
         override val constructor: Int get() = 1070406393
     }
@@ -899,7 +899,7 @@ class TdApi {
         val text: FormattedText,
         val description: String,
         val photo: Photo,
-        val animation: Animation
+        val animation: Animation?
     ) : Object() {
         override val constructor: Int get() = -1565597752
     }
@@ -1089,21 +1089,21 @@ class TdApi {
      */
     class User(
         val id: Int,
-        val firstName: String?,
-        val lastName: String?,
-        val username: String?,
-        val phoneNumber: String?,
-        val status: UserStatus?,
+        val firstName: String,
+        val lastName: String,
+        val username: String,
+        val phoneNumber: String,
+        val status: UserStatus,
         val profilePhoto: ProfilePhoto?,
-        val outgoingLink: LinkState?,
-        val incomingLink: LinkState?,
+        val outgoingLink: LinkState,
+        val incomingLink: LinkState,
         val isVerified: Boolean,
         val isSupport: Boolean,
-        val restrictionReason: String?,
+        val restrictionReason: String,
         val isScam: Boolean,
         val haveAccess: Boolean,
-        val type: UserType?,
-        @BotsOnly val languageCode: String?
+        val type: UserType,
+        @BotsOnly val languageCode: String
     ) : Object() {
         override val constructor: Int get() = 56535118
     }
@@ -1124,8 +1124,8 @@ class TdApi {
         val isBlocked: Boolean,
         val canBeCalled: Boolean,
         val hasPrivateCalls: Boolean,
-        val bio: String?,
-        val shareText: String?,
+        val bio: String,
+        val shareText: String,
         val groupInCommonCount: Int,
         val botInfo: BotInfo?
     ) : Object() {
@@ -1270,7 +1270,7 @@ class TdApi {
     class ChatMemberStatusRestricted(
         val isMember: Boolean = false,
         val restrictedUntilDate: Int = 0,
-        val permissions: ChatPermissions? = null
+        val permissions: ChatPermissions
     ) : ChatMemberStatus() {
         override val constructor: Int get() = 1661432998
     }
@@ -1311,7 +1311,7 @@ class TdApi {
         val userId: Int,
         val inviterUserId: Int,
         val joinedChatDate: Int,
-        val status: ChatMemberStatus?,
+        val status: ChatMemberStatus,
         val botInfo: BotInfo?
     ) : Object() {
         override val constructor: Int get() = -806137076
@@ -1397,7 +1397,7 @@ class TdApi {
      * @query - Query to search for
      */
     class SupergroupMembersFilterContacts(
-        val query: String? = null
+        val query: String
     ) : SupergroupMembersFilter() {
         override val constructor: Int get() = -1282910856
     }
@@ -1415,7 +1415,7 @@ class TdApi {
      * @query - Query to search for
      */
     class SupergroupMembersFilterSearch(
-        val query: String? = null
+        val query: String
     ) : SupergroupMembersFilter() {
         override val constructor: Int get() = -1696358469
     }
@@ -1427,7 +1427,7 @@ class TdApi {
      * @query - Query to search for
      */
     class SupergroupMembersFilterRestricted(
-        val query: String? = null
+        val query: String
     ) : SupergroupMembersFilter() {
         override val constructor: Int get() = -1107800034
     }
@@ -1439,7 +1439,7 @@ class TdApi {
      * @query - Query to search for
      */
     class SupergroupMembersFilterBanned(
-        val query: String? = null
+        val query: String
     ) : SupergroupMembersFilter() {
         override val constructor: Int get() = -1210621683
     }
@@ -1464,7 +1464,7 @@ class TdApi {
     class BasicGroup(
         val id: Int,
         val memberCount: Int,
-        val status: ChatMemberStatus?,
+        val status: ChatMemberStatus,
         val isActive: Boolean,
         val upgradedToSupergroupId: Int
     ) : Object() {
@@ -1482,10 +1482,10 @@ class TdApi {
      *               Available only for the group creator and only after it has been generated at least once
      */
     class BasicGroupFullInfo(
-        val description: String?,
+        val description: String,
         val creatorUserId: Int,
         val members: Array<ChatMember>,
-        val inviteLink: String?
+        val inviteLink: String
     ) : Object() {
         override val constructor: Int get() = -1363723425
     }
@@ -1516,14 +1516,14 @@ class TdApi {
      */
     class Supergroup(
         val id: Int,
-        val username: String?,
+        val username: String,
         val date: Int,
-        val status: ChatMemberStatus?,
+        val status: ChatMemberStatus,
         val memberCount: Int,
         val signMessages: Boolean,
         val isChannel: Boolean,
         val isVerified: Boolean,
-        val restrictionReason: String?,
+        val restrictionReason: String,
         val isScam: Boolean
     ) : Object() {
         override val constructor: Int get() = -1622883426
@@ -1557,7 +1557,7 @@ class TdApi {
      *                             0 if none
      */
     class SupergroupFullInfo(
-        val description: String?,
+        val description: String,
         val memberCount: Int,
         val administratorCount: Int,
         val restrictedCount: Int,
@@ -1568,7 +1568,7 @@ class TdApi {
         val canViewStatistics: Boolean,
         val isAllHistoryAvailable: Boolean,
         val stickerSetId: Long,
-        val inviteLink: String?,
+        val inviteLink: String,
         val upgradedFromBasicGroupId: Int,
         val upgradedFromMaxMessageId: Long
     ) : Object() {
@@ -1622,7 +1622,7 @@ class TdApi {
     class SecretChat(
         val id: Int,
         val userId: Int,
-        val state: SecretChatState?,
+        val state: SecretChatState,
         val isOutbound: Boolean,
         val ttl: Int,
         val keyHash: ByteArray,
@@ -1778,10 +1778,10 @@ class TdApi {
         val ttl: Int,
         val ttlExpiresIn: Double,
         val viaBotUserId: Int,
-        val authorSignature: String?,
+        val authorSignature: String,
         val views: Int,
         val mediaAlbumId: Long,
-        val content: MessageContent?,
+        val content: MessageContent,
         val replyMarkup: ReplyMarkup?
     ) : Object() {
         override val constructor: Int get() = -1804824068
@@ -1859,7 +1859,7 @@ class TdApi {
         val useDefaultMuteFor: Boolean = false,
         val muteFor: Int = 0,
         val useDefaultSound: Boolean = false,
-        val sound: String? = null,
+        val sound: String,
         val useDefaultShowPreview: Boolean = false,
         val showPreview: Boolean = false,
         val useDefaultDisablePinnedMessageNotifications: Boolean = false,
@@ -1882,7 +1882,7 @@ class TdApi {
      */
     class ScopeNotificationSettings(
         val muteFor: Int = 0,
-        val sound: String? = null,
+        val sound: String,
         val showPreview: Boolean = false,
         val disablePinnedMessageNotifications: Boolean = false,
         val disableMentionNotifications: Boolean = false
@@ -1900,7 +1900,7 @@ class TdApi {
      */
     class DraftMessage(
         val replyToMessageId: Long = 0L,
-        val inputMessageText: InputMessageContent? = null
+        val inputMessageText: InputMessageContent
     ) : Object() {
         override val constructor: Int get() = 1902914742
     }
@@ -1994,10 +1994,10 @@ class TdApi {
      */
     class Chat(
         val id: Long,
-        val type: ChatType?,
-        val title: String?,
+        val type: ChatType,
+        val title: String,
         val photo: ChatPhoto?,
-        val permissions: ChatPermissions?,
+        val permissions: ChatPermissions,
         val lastMessage: Message?,
         val order: Long,
         val isPinned: Boolean,
@@ -2011,11 +2011,11 @@ class TdApi {
         val lastReadInboxMessageId: Long,
         val lastReadOutboxMessageId: Long,
         val unreadMentionCount: Int,
-        val notificationSettings: ChatNotificationSettings?,
+        val notificationSettings: ChatNotificationSettings,
         val pinnedMessageId: Long,
         val replyMarkupMessageId: Long,
         val draftMessage: DraftMessage?,
-        val clientData: String?
+        val clientData: String
     ) : Object() {
         override val constructor: Int get() = 1433927525
     }
@@ -2037,7 +2037,7 @@ class TdApi {
      * @inviteLink - Chat invite link
      */
     class ChatInviteLink(
-        val inviteLink: String?
+        val inviteLink: String
     ) : Object() {
         override val constructor: Int get() = -882072492
     }
@@ -2056,8 +2056,8 @@ class TdApi {
      */
     class ChatInviteLinkInfo(
         val chatId: Long,
-        val type: ChatType?,
-        val title: String?,
+        val type: ChatType,
+        val title: String,
         val photo: ChatPhoto?,
         val memberCount: Int,
         val memberUserIds: IntArray,
@@ -2527,7 +2527,7 @@ class TdApi {
      * @valign - Vertical cell content alignment
      */
     class PageBlockTableCell(
-        val text: RichText,
+        val text: RichText?,
         val isHeader: Boolean,
         val colspan: Int,
         val rowspan: Int,
@@ -2550,10 +2550,10 @@ class TdApi {
      */
     class PageBlockRelatedArticle(
         val url: String,
-        val title: String,
-        val description: String,
-        val photo: Photo,
-        val author: String,
+        val title: String?,
+        val description: String?,
+        val photo: Photo?,
+        val author: String?,
         val publishDate: Int
     ) : Object() {
         override val constructor: Int get() = 481199251
@@ -2731,7 +2731,7 @@ class TdApi {
      * @needAutoplay - True, if the animation should be played automatically
      */
     class PageBlockAnimation(
-        val animation: Animation,
+        val animation: Animation?,
         val caption: PageBlockCaption,
         val needAutoplay: Boolean
     ) : PageBlock() {
@@ -2745,7 +2745,7 @@ class TdApi {
      * @caption - Audio file caption
      */
     class PageBlockAudio(
-        val audio: Audio,
+        val audio: Audio?,
         val caption: PageBlockCaption
     ) : PageBlock() {
         override val constructor: Int get() = -63371245
@@ -2759,7 +2759,7 @@ class TdApi {
      * @url - URL that needs to be opened when the photo is clicked
      */
     class PageBlockPhoto(
-        val photo: Photo,
+        val photo: Photo?,
         val caption: PageBlockCaption,
         val url: String
     ) : PageBlock() {
@@ -2775,7 +2775,7 @@ class TdApi {
      * @isLooped - True, if the video should be looped
      */
     class PageBlockVideo(
-        val video: Video,
+        val video: Video?,
         val caption: PageBlockCaption,
         val needAutoplay: Boolean,
         val isLooped: Boolean
@@ -2790,7 +2790,7 @@ class TdApi {
      * @caption - Voice note caption
      */
     class PageBlockVoiceNote(
-        val voiceNote: VoiceNote,
+        val voiceNote: VoiceNote?,
         val caption: PageBlockCaption
     ) : PageBlock() {
         override val constructor: Int get() = 1823310463
@@ -2824,7 +2824,7 @@ class TdApi {
     class PageBlockEmbedded(
         val url: String,
         val html: String,
-        val posterPhoto: Photo,
+        val posterPhoto: Photo?,
         val width: Int,
         val height: Int,
         val caption: PageBlockCaption,
@@ -2848,7 +2848,7 @@ class TdApi {
     class PageBlockEmbeddedPost(
         val url: String,
         val author: String,
-        val authorPhoto: Photo,
+        val authorPhoto: Photo?,
         val date: Int,
         val pageBlocks: Array<PageBlock>,
         val caption: PageBlockCaption
@@ -2891,7 +2891,7 @@ class TdApi {
      */
     class PageBlockChatLink(
         val title: String,
-        val photo: ChatPhoto,
+        val photo: ChatPhoto?,
         val username: String
     ) : PageBlock() {
         override val constructor: Int get() = 214606645
@@ -2975,7 +2975,7 @@ class TdApi {
     class WebPageInstantView(
         val pageBlocks: Array<PageBlock>,
         val version: Int,
-        val url: String?,
+        val url: String,
         val isRtl: Boolean,
         val isFull: Boolean
     ) : Object() {
@@ -3009,19 +3009,19 @@ class TdApi {
      * @instantViewVersion - Version of instant view, available for the web page (currently can be 1 or 2), 0 if none
      */
     class WebPage(
-        val url: String?,
-        val displayUrl: String?,
-        val type: String?,
-        val siteName: String?,
-        val title: String?,
-        val description: String?,
+        val url: String,
+        val displayUrl: String,
+        val type: String,
+        val siteName: String,
+        val title: String,
+        val description: String,
         val photo: Photo?,
-        val embedUrl: String?,
-        val embedType: String?,
+        val embedUrl: String,
+        val embedType: String,
         val embedWidth: Int,
         val embedHeight: Int,
         val duration: Int,
-        val author: String?,
+        val author: String,
         val animation: Animation?,
         val audio: Audio?,
         val document: Document?,
@@ -3045,12 +3045,12 @@ class TdApi {
      * @postalCode - Address postal code
      */
     class Address(
-        val countryCode: String? = null,
-        val state: String? = null,
-        val city: String? = null,
-        val streetLine1: String? = null,
-        val streetLine2: String? = null,
-        val postalCode: String? = null
+        val countryCode: String,
+        val state: String,
+        val city: String,
+        val streetLine1: String,
+        val streetLine2: String,
+        val postalCode: String
     ) : Object() {
         override val constructor: Int get() = -2043654342
     }
@@ -3062,7 +3062,7 @@ class TdApi {
      * @amount - Currency amount in minimal quantity of the currency
      */
     class LabeledPricePart(
-        val label: String? = null,
+        val label: String,
         val amount: Long = 0L
     ) : Object() {
         override val constructor: Int get() = 552789798
@@ -3083,7 +3083,7 @@ class TdApi {
      * @isFlexible - True, if the total price depends on the shipping method
      */
     class Invoice(
-        val currency: String? = null,
+        val currency: String,
         val priceParts: Array<LabeledPricePart> = emptyArray(),
         val isTest: Boolean = false,
         val needName: Boolean = false,
@@ -3106,9 +3106,9 @@ class TdApi {
      * @shippingAddress - Shipping address for this order
      */
     class OrderInfo(
-        val name: String? = null,
-        val phoneNumber: String? = null,
-        val emailAddress: String? = null,
+        val name: String,
+        val phoneNumber: String,
+        val emailAddress: String,
         val shippingAddress: Address? = null
     ) : Object() {
         override val constructor: Int get() = 783997294
@@ -3122,8 +3122,8 @@ class TdApi {
      * @priceParts - A list of objects used to calculate the total shipping costs
      */
     class ShippingOption(
-        val id: String? = null,
-        val title: String? = null,
+        val id: String,
+        val title: String,
         val priceParts: Array<LabeledPricePart> = emptyArray()
     ) : Object() {
         override val constructor: Int get() = 1931214798
@@ -3154,7 +3154,7 @@ class TdApi {
      * @savedCredentialsId - Identifier of the saved credentials
      */
     class InputCredentialsSaved(
-        val savedCredentialsId: String? = null
+        val savedCredentialsId: String
     ) : InputCredentials() {
         override val constructor: Int get() = -2034385364
     }
@@ -3166,7 +3166,7 @@ class TdApi {
      * @allowSave - True, if the credential identifier can be saved on the server side
      */
     class InputCredentialsNew(
-        val data: String? = null,
+        val data: String,
         val allowSave: Boolean = false
     ) : InputCredentials() {
         override val constructor: Int get() = -829689558
@@ -3178,7 +3178,7 @@ class TdApi {
      * @data - JSON-encoded data with the credential identifier
      */
     class InputCredentialsAndroidPay(
-        val data: String? = null
+        val data: String
     ) : InputCredentials() {
         override val constructor: Int get() = 1979566832
     }
@@ -3189,7 +3189,7 @@ class TdApi {
      * @data - JSON-encoded data with the credential identifier
      */
     class InputCredentialsApplePay(
-        val data: String? = null
+        val data: String
     ) : InputCredentials() {
         override val constructor: Int get() = -1246570799
     }
@@ -3223,8 +3223,8 @@ class TdApi {
      * @needPassword - True, if the user will be able to save credentials protected by a password they set up
      */
     class PaymentForm(
-        val invoice: Invoice?,
-        val url: String?,
+        val invoice: Invoice,
+        val url: String,
         val paymentsProvider: PaymentsProviderStripe?,
         val savedOrderInfo: OrderInfo?,
         val savedCredentials: SavedCredentials?,
@@ -3242,7 +3242,7 @@ class TdApi {
      * @shippingOptions - Available shipping options
      */
     class ValidatedOrderInfo(
-        val orderInfoId: String?,
+        val orderInfoId: String,
         val shippingOptions: Array<ShippingOption>
     ) : Object() {
         override val constructor: Int get() = -1403494636
@@ -3257,7 +3257,7 @@ class TdApi {
      */
     class PaymentResult(
         val success: Boolean,
-        val verificationUrl: String?
+        val verificationUrl: String
     ) : Object() {
         override val constructor: Int get() = -804263843
     }
@@ -3275,10 +3275,10 @@ class TdApi {
     class PaymentReceipt(
         val date: Int,
         val paymentsProviderUserId: Int,
-        val invoice: Invoice?,
+        val invoice: Invoice,
         val orderInfo: OrderInfo?,
         val shippingOption: ShippingOption?,
-        val credentialsTitle: String?
+        val credentialsTitle: String
     ) : Object() {
         override val constructor: Int get() = -1171223545
     }
@@ -3422,16 +3422,16 @@ class TdApi {
      * @residenceCountryCode - A two-letter ISO 3166-1 alpha-2 country code of the user's residence country
      */
     class PersonalDetails(
-        val firstName: String? = null,
-        val middleName: String? = null,
-        val lastName: String? = null,
-        val nativeFirstName: String? = null,
-        val nativeMiddleName: String? = null,
-        val nativeLastName: String? = null,
-        val birthdate: Date? = null,
-        val gender: String? = null,
-        val countryCode: String? = null,
-        val residenceCountryCode: String? = null
+        val firstName: String,
+        val middleName: String,
+        val lastName: String,
+        val nativeFirstName: String,
+        val nativeMiddleName: String,
+        val nativeLastName: String,
+        val birthdate: Date,
+        val gender: String,
+        val countryCode: String,
+        val residenceCountryCode: String
     ) : Object() {
         override val constructor: Int get() = -1061656137
     }
@@ -3449,10 +3449,10 @@ class TdApi {
      */
     class IdentityDocument(
         val number: String,
-        val expiryDate: Date,
+        val expiryDate: Date?,
         val frontSide: DatedFile,
         val reverseSide: DatedFile,
-        val selfie: DatedFile,
+        val selfie: DatedFile?,
         val translation: Array<DatedFile>
     ) : Object() {
         override val constructor: Int get() = -1738333786
@@ -3470,11 +3470,11 @@ class TdApi {
      * @translation - List of files containing a certified English translation of the document
      */
     class InputIdentityDocument(
-        val number: String? = null,
-        val expiryDate: Date? = null,
-        val frontSide: InputFile? = null,
-        val reverseSide: InputFile? = null,
-        val selfie: InputFile? = null,
+        val number: String,
+        val expiryDate: Date,
+        val frontSide: InputFile,
+        val reverseSide: InputFile,
+        val selfie: InputFile,
         val translation: Array<InputFile> = emptyArray()
     ) : Object() {
         override val constructor: Int get() = 2096106238
@@ -3517,7 +3517,7 @@ class TdApi {
      * @personalDetails - Personal details of the user
      */
     class PassportElementPersonalDetails(
-        val personalDetails: PersonalDetails?
+        val personalDetails: PersonalDetails
     ) : PassportElement() {
         override val constructor: Int get() = 1217724035
     }
@@ -3528,7 +3528,7 @@ class TdApi {
      * @passport - Passport
      */
     class PassportElementPassport(
-        val passport: IdentityDocument?
+        val passport: IdentityDocument
     ) : PassportElement() {
         override val constructor: Int get() = -263985373
     }
@@ -3539,7 +3539,7 @@ class TdApi {
      * @driverLicense - Driver license
      */
     class PassportElementDriverLicense(
-        val driverLicense: IdentityDocument?
+        val driverLicense: IdentityDocument
     ) : PassportElement() {
         override val constructor: Int get() = 1643580589
     }
@@ -3550,7 +3550,7 @@ class TdApi {
      * @identityCard - Identity card
      */
     class PassportElementIdentityCard(
-        val identityCard: IdentityDocument?
+        val identityCard: IdentityDocument
     ) : PassportElement() {
         override val constructor: Int get() = 2083775797
     }
@@ -3561,7 +3561,7 @@ class TdApi {
      * @internalPassport - Internal passport
      */
     class PassportElementInternalPassport(
-        val internalPassport: IdentityDocument?
+        val internalPassport: IdentityDocument
     ) : PassportElement() {
         override val constructor: Int get() = 36220295
     }
@@ -3572,7 +3572,7 @@ class TdApi {
      * @address - Address
      */
     class PassportElementAddress(
-        val address: Address?
+        val address: Address
     ) : PassportElement() {
         override val constructor: Int get() = -782625232
     }
@@ -3583,7 +3583,7 @@ class TdApi {
      * @utilityBill - Utility bill
      */
     class PassportElementUtilityBill(
-        val utilityBill: PersonalDocument?
+        val utilityBill: PersonalDocument
     ) : PassportElement() {
         override val constructor: Int get() = -234611246
     }
@@ -3594,7 +3594,7 @@ class TdApi {
      * @bankStatement - Bank statement
      */
     class PassportElementBankStatement(
-        val bankStatement: PersonalDocument?
+        val bankStatement: PersonalDocument
     ) : PassportElement() {
         override val constructor: Int get() = -366464408
     }
@@ -3605,7 +3605,7 @@ class TdApi {
      * @rentalAgreement - Rental agreement
      */
     class PassportElementRentalAgreement(
-        val rentalAgreement: PersonalDocument?
+        val rentalAgreement: PersonalDocument
     ) : PassportElement() {
         override val constructor: Int get() = -290141400
     }
@@ -3616,7 +3616,7 @@ class TdApi {
      * @passportRegistration - Passport registration pages
      */
     class PassportElementPassportRegistration(
-        val passportRegistration: PersonalDocument?
+        val passportRegistration: PersonalDocument
     ) : PassportElement() {
         override val constructor: Int get() = 618323071
     }
@@ -3627,7 +3627,7 @@ class TdApi {
      * @temporaryRegistration - Temporary registration
      */
     class PassportElementTemporaryRegistration(
-        val temporaryRegistration: PersonalDocument?
+        val temporaryRegistration: PersonalDocument
     ) : PassportElement() {
         override val constructor: Int get() = 1237626864
     }
@@ -3638,7 +3638,7 @@ class TdApi {
      * @phoneNumber - Phone number
      */
     class PassportElementPhoneNumber(
-        val phoneNumber: String?
+        val phoneNumber: String
     ) : PassportElement() {
         override val constructor: Int get() = -1320118375
     }
@@ -3649,7 +3649,7 @@ class TdApi {
      * @emailAddress - Email address
      */
     class PassportElementEmailAddress(
-        val emailAddress: String?
+        val emailAddress: String
     ) : PassportElement() {
         override val constructor: Int get() = -1528129531
     }
@@ -3665,7 +3665,7 @@ class TdApi {
      * @personalDetails - Personal details of the user
      */
     class InputPassportElementPersonalDetails(
-        val personalDetails: PersonalDetails? = null
+        val personalDetails: PersonalDetails
     ) : InputPassportElement() {
         override val constructor: Int get() = 164791359
     }
@@ -3676,7 +3676,7 @@ class TdApi {
      * @passport - The passport to be saved
      */
     class InputPassportElementPassport(
-        val passport: InputIdentityDocument? = null
+        val passport: InputIdentityDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = -497011356
     }
@@ -3687,7 +3687,7 @@ class TdApi {
      * @driverLicense - The driver license to be saved
      */
     class InputPassportElementDriverLicense(
-        val driverLicense: InputIdentityDocument? = null
+        val driverLicense: InputIdentityDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = 304813264
     }
@@ -3698,7 +3698,7 @@ class TdApi {
      * @identityCard - The identity card to be saved
      */
     class InputPassportElementIdentityCard(
-        val identityCard: InputIdentityDocument? = null
+        val identityCard: InputIdentityDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = -9963390
     }
@@ -3709,7 +3709,7 @@ class TdApi {
      * @internalPassport - The internal passport to be saved
      */
     class InputPassportElementInternalPassport(
-        val internalPassport: InputIdentityDocument? = null
+        val internalPassport: InputIdentityDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = 715360043
     }
@@ -3720,7 +3720,7 @@ class TdApi {
      * @address - The address to be saved
      */
     class InputPassportElementAddress(
-        val address: Address? = null
+        val address: Address
     ) : InputPassportElement() {
         override val constructor: Int get() = 461630480
     }
@@ -3731,7 +3731,7 @@ class TdApi {
      * @utilityBill - The utility bill to be saved
      */
     class InputPassportElementUtilityBill(
-        val utilityBill: InputPersonalDocument? = null
+        val utilityBill: InputPersonalDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = 1389203841
     }
@@ -3742,7 +3742,7 @@ class TdApi {
      * @bankStatement - The bank statement to be saved
      */
     class InputPassportElementBankStatement(
-        val bankStatement: InputPersonalDocument? = null
+        val bankStatement: InputPersonalDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = -26585208
     }
@@ -3753,7 +3753,7 @@ class TdApi {
      * @rentalAgreement - The rental agreement to be saved
      */
     class InputPassportElementRentalAgreement(
-        val rentalAgreement: InputPersonalDocument? = null
+        val rentalAgreement: InputPersonalDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = 1736154155
     }
@@ -3764,7 +3764,7 @@ class TdApi {
      * @passportRegistration - The passport registration page to be saved
      */
     class InputPassportElementPassportRegistration(
-        val passportRegistration: InputPersonalDocument? = null
+        val passportRegistration: InputPersonalDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = 1314562128
     }
@@ -3775,7 +3775,7 @@ class TdApi {
      * @temporaryRegistration - The temporary registration document to be saved
      */
     class InputPassportElementTemporaryRegistration(
-        val temporaryRegistration: InputPersonalDocument? = null
+        val temporaryRegistration: InputPersonalDocument
     ) : InputPassportElement() {
         override val constructor: Int get() = -1913238047
     }
@@ -3786,7 +3786,7 @@ class TdApi {
      * @phoneNumber - The phone number to be saved
      */
     class InputPassportElementPhoneNumber(
-        val phoneNumber: String? = null
+        val phoneNumber: String
     ) : InputPassportElement() {
         override val constructor: Int get() = 1319357497
     }
@@ -3797,7 +3797,7 @@ class TdApi {
      * @emailAddress - The email address to be saved
      */
     class InputPassportElementEmailAddress(
-        val emailAddress: String? = null
+        val emailAddress: String
     ) : InputPassportElement() {
         override val constructor: Int get() = -248605659
     }
@@ -4006,8 +4006,8 @@ class TdApi {
         val type: PassportElementType,
         val data: ByteArray,
         val frontSide: DatedFile,
-        val reverseSide: DatedFile,
-        val selfie: DatedFile,
+        val reverseSide: DatedFile?,
+        val selfie: DatedFile?,
         val translation: Array<DatedFile>,
         val files: Array<DatedFile>,
         val value: String,
@@ -4042,7 +4042,7 @@ class TdApi {
      * @dataHash - Current data hash
      */
     class InputPassportElementErrorSourceDataField(
-        val fieldName: String? = null,
+        val fieldName: String,
         val dataHash: ByteArray = byteArrayOf()
     ) : InputPassportElementErrorSource() {
         override val constructor: Int get() = -426795002
@@ -4141,9 +4141,9 @@ class TdApi {
      */
     @BotsOnly
     class InputPassportElementError(
-        val type: PassportElementType? = null,
-        val message: String? = null,
-        val source: InputPassportElementErrorSource? = null
+        val type: PassportElementType,
+        val message: String,
+        val source: InputPassportElementErrorSource
     ) : Object() {
         override val constructor: Int get() = 285756898
     }
@@ -4161,7 +4161,7 @@ class TdApi {
      */
     class MessageText(
         val text: FormattedText,
-        val webPage: WebPage
+        val webPage: WebPage?
     ) : MessageContent() {
         override val constructor: Int get() = 1989037971
     }
@@ -4369,7 +4369,7 @@ class TdApi {
     class MessageInvoice(
         val title: String,
         val description: String,
-        val photo: Photo,
+        val photo: Photo?,
         val currency: String,
         val totalAmount: Long,
         val startParameter: String,
@@ -4591,8 +4591,8 @@ class TdApi {
         val currency: String,
         val totalAmount: Long,
         val invoicePayload: ByteArray,
-        val shippingOptionId: String,
-        val orderInfo: OrderInfo,
+        val shippingOptionId: String?,
+        val orderInfo: OrderInfo?,
         val telegramPaymentChargeId: String,
         val providerPaymentChargeId: String
     ) : MessageContent() {
@@ -4733,7 +4733,7 @@ class TdApi {
      *             As defined by the sender
      */
     class TextEntityTypePreCode(
-        val language: String? = null
+        val language: String
     ) : TextEntityType() {
         override val constructor: Int get() = -945325397
     }
@@ -4744,7 +4744,7 @@ class TdApi {
      * @url - HTTP or tg:// URL to be opened when the link is clicked
      */
     class TextEntityTypeTextUrl(
-        val url: String? = null
+        val url: String
     ) : TextEntityType() {
         override val constructor: Int get() = 445719651
     }
@@ -4779,7 +4779,7 @@ class TdApi {
      *           Use 0 if unknown
      */
     class InputThumbnail(
-        val thumbnail: InputFile? = null,
+        val thumbnail: InputFile,
         val width: Int = 0,
         val height: Int = 0
     ) : Object() {
@@ -4801,7 +4801,7 @@ class TdApi {
      * @clearDraft - True, if a chat message draft should be deleted
      */
     class InputMessageText(
-        val text: FormattedText? = null,
+        val text: FormattedText,
         val disableWebPagePreview: Boolean = false,
         val clearDraft: Boolean = false
     ) : InputMessageContent() {
@@ -4822,12 +4822,12 @@ class TdApi {
      *            0-GetOption("message_caption_length_max") characters
      */
     class InputMessageAnimation(
-        val animation: InputFile? = null,
-        val thumbnail: InputThumbnail? = null,
+        val animation: InputFile,
+        val thumbnail: InputThumbnail,
         val duration: Int = 0,
         val width: Int = 0,
         val height: Int = 0,
-        val caption: FormattedText? = null
+        val caption: FormattedText
     ) : InputMessageContent() {
         override val constructor: Int get() = 926542724
     }
@@ -4846,12 +4846,12 @@ class TdApi {
      *            0-GetOption("message_caption_length_max") characters
      */
     class InputMessageAudio(
-        val audio: InputFile? = null,
-        val albumCoverThumbnail: InputThumbnail? = null,
+        val audio: InputFile,
+        val albumCoverThumbnail: InputThumbnail,
         val duration: Int = 0,
-        val title: String? = null,
-        val performer: String? = null,
-        val caption: FormattedText? = null
+        val title: String,
+        val performer: String,
+        val caption: FormattedText
     ) : InputMessageContent() {
         override val constructor: Int get() = -626786126
     }
@@ -4865,9 +4865,9 @@ class TdApi {
      *            0-GetOption("message_caption_length_max") characters
      */
     class InputMessageDocument(
-        val document: InputFile? = null,
-        val thumbnail: InputThumbnail? = null,
-        val caption: FormattedText? = null
+        val document: InputFile,
+        val thumbnail: InputThumbnail,
+        val caption: FormattedText
     ) : InputMessageContent() {
         override val constructor: Int get() = 937970604
     }
@@ -4886,12 +4886,12 @@ class TdApi {
      *        A non-zero TTL can be specified only in private chats
      */
     class InputMessagePhoto(
-        val photo: InputFile? = null,
-        val thumbnail: InputThumbnail? = null,
+        val photo: InputFile,
+        val thumbnail: InputThumbnail,
         val addedStickerFileIds: IntArray = intArrayOf(),
         val width: Int = 0,
         val height: Int = 0,
-        val caption: FormattedText? = null,
+        val caption: FormattedText,
         val ttl: Int = 0
     ) : InputMessageContent() {
         override val constructor: Int get() = 1926816477
@@ -4906,8 +4906,8 @@ class TdApi {
      * @height - Sticker height
      */
     class InputMessageSticker(
-        val sticker: InputFile? = null,
-        val thumbnail: InputThumbnail? = null,
+        val sticker: InputFile,
+        val thumbnail: InputThumbnail,
         val width: Int = 0,
         val height: Int = 0
     ) : InputMessageContent() {
@@ -4930,14 +4930,14 @@ class TdApi {
      *        A non-zero TTL can be specified only in private chats
      */
     class InputMessageVideo(
-        val video: InputFile? = null,
-        val thumbnail: InputThumbnail? = null,
+        val video: InputFile,
+        val thumbnail: InputThumbnail,
         val addedStickerFileIds: IntArray = intArrayOf(),
         val duration: Int = 0,
         val width: Int = 0,
         val height: Int = 0,
         val supportsStreaming: Boolean = false,
-        val caption: FormattedText? = null,
+        val caption: FormattedText,
         val ttl: Int = 0
     ) : InputMessageContent() {
         override val constructor: Int get() = 2031255985
@@ -4953,8 +4953,8 @@ class TdApi {
      *           Must be positive and not greater than 640
      */
     class InputMessageVideoNote(
-        val videoNote: InputFile? = null,
-        val thumbnail: InputThumbnail? = null,
+        val videoNote: InputFile,
+        val thumbnail: InputThumbnail,
         val duration: Int = 0,
         val length: Int = 0
     ) : InputMessageContent() {
@@ -4971,10 +4971,10 @@ class TdApi {
      *            0-GetOption("message_caption_length_max") characters
      */
     class InputMessageVoiceNote(
-        val voiceNote: InputFile? = null,
+        val voiceNote: InputFile,
         val duration: Int = 0,
         val waveform: ByteArray = byteArrayOf(),
-        val caption: FormattedText? = null
+        val caption: FormattedText
     ) : InputMessageContent() {
         override val constructor: Int get() = 2136519657
     }
@@ -4987,7 +4987,7 @@ class TdApi {
      *               Should bebetween 60 and 86400 for a live location and 0 otherwise
      */
     class InputMessageLocation(
-        val location: Location? = null,
+        val location: Location,
         val livePeriod: Int = 0
     ) : InputMessageContent() {
         override val constructor: Int get() = -1624179655
@@ -4999,7 +4999,7 @@ class TdApi {
      * @venue - Venue to send
      */
     class InputMessageVenue(
-        val venue: Venue? = null
+        val venue: Venue
     ) : InputMessageContent() {
         override val constructor: Int get() = 1447926269
     }
@@ -5010,7 +5010,7 @@ class TdApi {
      * @contact - Contact to send
      */
     class InputMessageContact(
-        val contact: Contact? = null
+        val contact: Contact
     ) : InputMessageContent() {
         override val constructor: Int get() = -982446849
     }
@@ -5024,7 +5024,7 @@ class TdApi {
      */
     class InputMessageGame(
         val botUserId: Int = 0,
-        val gameShortName: String? = null
+        val gameShortName: String
     ) : InputMessageContent() {
         override val constructor: Int get() = -1728000914
     }
@@ -5046,17 +5046,17 @@ class TdApi {
      */
     @BotsOnly
     class InputMessageInvoice(
-        val invoice: Invoice? = null,
-        val title: String? = null,
-        val description: String? = null,
+        val invoice: Invoice,
+        val title: String,
+        val description: String,
         val photoUrl: String? = null,
         val photoSize: Int = 0,
         val photoWidth: Int = 0,
         val photoHeight: Int = 0,
         val payload: ByteArray = byteArrayOf(),
-        val providerToken: String? = null,
-        val providerData: String? = null,
-        val startParameter: String? = null
+        val providerToken: String,
+        val providerData: String,
+        val startParameter: String
     ) : InputMessageContent() {
         override val constructor: Int get() = 1038812175
     }
@@ -5069,7 +5069,7 @@ class TdApi {
      * @options - List of poll answer options, 2-10 strings 1-100 characters each
      */
     class InputMessagePoll(
-        val question: String? = null,
+        val question: String,
         val options: Array<String> = emptyArray()
     ) : InputMessageContent() {
         override val constructor: Int get() = 850845643
@@ -5429,8 +5429,8 @@ class TdApi {
      */
     class StickerSet(
         val id: Long,
-        val title: String?,
-        val name: String?,
+        val title: String,
+        val name: String,
         val thumbnail: PhotoSize?,
         val isInstalled: Boolean,
         val isArchived: Boolean,
@@ -5466,7 +5466,7 @@ class TdApi {
         val id: Long,
         val title: String,
         val name: String,
-        val thumbnail: PhotoSize,
+        val thumbnail: PhotoSize?,
         val isInstalled: Boolean,
         val isArchived: Boolean,
         val isOfficial: Boolean,
@@ -5781,7 +5781,7 @@ class TdApi {
      * @url - The URL
      */
     class HttpUrl(
-        val url: String?
+        val url: String
     ) : Object() {
         override val constructor: Int get() = -2018019930
     }
@@ -5808,15 +5808,15 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageAnimation, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultAnimatedGif(
-        val id: String? = null,
-        val title: String? = null,
-        val thumbnailUrl: String? = null,
-        val gifUrl: String? = null,
+        val id: String,
+        val title: String,
+        val thumbnailUrl: String,
+        val gifUrl: String,
         val gifDuration: Int = 0,
         val gifWidth: Int = 0,
         val gifHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = -891474894
     }
@@ -5838,15 +5838,15 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageAnimation, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultAnimatedMpeg4(
-        val id: String? = null,
-        val title: String? = null,
-        val thumbnailUrl: String? = null,
-        val mpeg4Url: String? = null,
+        val id: String,
+        val title: String,
+        val thumbnailUrl: String,
+        val mpeg4Url: String,
         val mpeg4Duration: Int = 0,
         val mpeg4Width: Int = 0,
         val mpeg4Height: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = -1629529888
     }
@@ -5868,16 +5868,16 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultArticle(
-        val id: String? = null,
-        val url: String? = null,
+        val id: String,
+        val url: String,
         val hideUrl: Boolean = false,
-        val title: String? = null,
-        val description: String? = null,
-        val thumbnailUrl: String? = null,
+        val title: String,
+        val description: String,
+        val thumbnailUrl: String,
         val thumbnailWidth: Int = 0,
         val thumbnailHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 1973670156
     }
@@ -5896,13 +5896,13 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageAudio, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultAudio(
-        val id: String? = null,
-        val title: String? = null,
-        val performer: String? = null,
-        val audioUrl: String? = null,
+        val id: String,
+        val title: String,
+        val performer: String,
+        val audioUrl: String,
         val audioDuration: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 1260139988
     }
@@ -5921,13 +5921,13 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultContact(
-        val id: String? = null,
-        val contact: Contact? = null,
-        val thumbnailUrl: String? = null,
+        val id: String,
+        val contact: Contact,
+        val thumbnailUrl: String,
         val thumbnailWidth: Int = 0,
         val thumbnailHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 1846064594
     }
@@ -5950,16 +5950,16 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageDocument, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultDocument(
-        val id: String? = null,
-        val title: String? = null,
-        val description: String? = null,
-        val documentUrl: String? = null,
-        val mimeType: String? = null,
-        val thumbnailUrl: String? = null,
+        val id: String,
+        val title: String,
+        val description: String,
+        val documentUrl: String,
+        val mimeType: String,
+        val thumbnailUrl: String,
         val thumbnailWidth: Int = 0,
         val thumbnailHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 578801869
     }
@@ -5973,9 +5973,9 @@ class TdApi {
      *                Must be of type replyMarkupInlineKeyboard or null
      */
     class InputInlineQueryResultGame(
-        val id: String? = null,
-        val gameShortName: String? = null,
-        val replyMarkup: ReplyMarkup? = null
+        val id: String,
+        val gameShortName: String,
+        val replyMarkup: ReplyMarkup
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 966074327
     }
@@ -5996,15 +5996,15 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultLocation(
-        val id: String? = null,
-        val location: Location? = null,
+        val id: String,
+        val location: Location,
         val livePeriod: Int = 0,
-        val title: String? = null,
-        val thumbnailUrl: String? = null,
+        val title: String,
+        val thumbnailUrl: String,
         val thumbnailWidth: Int = 0,
         val thumbnailHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = -1887650218
     }
@@ -6025,15 +6025,15 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessagePhoto, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultPhoto(
-        val id: String? = null,
-        val title: String? = null,
-        val description: String? = null,
-        val thumbnailUrl: String? = null,
-        val photoUrl: String? = null,
+        val id: String,
+        val title: String,
+        val description: String,
+        val thumbnailUrl: String,
+        val photoUrl: String,
         val photoWidth: Int = 0,
         val photoHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = -1123338721
     }
@@ -6052,13 +6052,13 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, inputMessageSticker, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultSticker(
-        val id: String? = null,
-        val thumbnailUrl: String? = null,
-        val stickerUrl: String? = null,
+        val id: String,
+        val thumbnailUrl: String,
+        val stickerUrl: String,
         val stickerWidth: Int = 0,
         val stickerHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 274007129
     }
@@ -6077,13 +6077,13 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultVenue(
-        val id: String? = null,
-        val venue: Venue? = null,
-        val thumbnailUrl: String? = null,
+        val id: String,
+        val venue: Venue,
+        val thumbnailUrl: String,
         val thumbnailWidth: Int = 0,
         val thumbnailHeight: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 541704509
     }
@@ -6106,17 +6106,17 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageVideo, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultVideo(
-        val id: String? = null,
-        val title: String? = null,
-        val description: String? = null,
-        val thumbnailUrl: String? = null,
-        val videoUrl: String? = null,
-        val mimeType: String? = null,
+        val id: String,
+        val title: String,
+        val description: String,
+        val thumbnailUrl: String,
+        val videoUrl: String,
+        val mimeType: String,
         val videoWidth: Int = 0,
         val videoHeight: Int = 0,
         val videoDuration: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = 1724073191
     }
@@ -6134,12 +6134,12 @@ class TdApi {
      *                        Must be one of the following types: InputMessageText, InputMessageVoiceNote, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
     class InputInlineQueryResultVoiceNote(
-        val id: String? = null,
-        val title: String? = null,
-        val voiceNoteUrl: String? = null,
+        val id: String,
+        val title: String,
+        val voiceNoteUrl: String,
         val voiceNoteDuration: Int = 0,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : InputInlineQueryResult() {
         override val constructor: Int get() = -1790072503
     }
@@ -6165,7 +6165,7 @@ class TdApi {
         val hideUrl: Boolean,
         val title: String,
         val description: String,
-        val thumbnail: PhotoSize
+        val thumbnail: PhotoSize?
     ) : InlineQueryResult() {
         override val constructor: Int get() = -518366710
     }
@@ -6180,7 +6180,7 @@ class TdApi {
     class InlineQueryResultContact(
         val id: String,
         val contact: Contact,
-        val thumbnail: PhotoSize
+        val thumbnail: PhotoSize?
     ) : InlineQueryResult() {
         override val constructor: Int get() = 410081985
     }
@@ -6197,7 +6197,7 @@ class TdApi {
         val id: String,
         val location: Location,
         val title: String,
-        val thumbnail: PhotoSize
+        val thumbnail: PhotoSize?
     ) : InlineQueryResult() {
         override val constructor: Int get() = -158305341
     }
@@ -6212,7 +6212,7 @@ class TdApi {
     class InlineQueryResultVenue(
         val id: String,
         val venue: Venue,
-        val thumbnail: PhotoSize
+        val thumbnail: PhotoSize?
     ) : InlineQueryResult() {
         override val constructor: Int get() = -1592932211
     }
@@ -6350,10 +6350,10 @@ class TdApi {
      */
     class InlineQueryResults(
         val inlineQueryId: Long,
-        val nextOffset: String?,
+        val nextOffset: String,
         val results: Array<InlineQueryResult>,
-        val switchPmText: String?,
-        val switchPmParameter: String?
+        val switchPmText: String,
+        val switchPmParameter: String
     ) : Object() {
         override val constructor: Int get() = 1858987454
     }
@@ -6380,7 +6380,7 @@ class TdApi {
      * @gameShortName - A short name of the game that was attached to the callback button
      */
     class CallbackQueryPayloadGame(
-        val gameShortName: String? = null
+        val gameShortName: String
     ) : CallbackQueryPayload() {
         override val constructor: Int get() = 1303571512
     }
@@ -6393,9 +6393,9 @@ class TdApi {
      * @url - URL to be opened
      */
     class CallbackQueryAnswer(
-        val text: String?,
+        val text: String,
         val showAlert: Boolean,
-        val url: String?
+        val url: String
     ) : Object() {
         override val constructor: Int get() = 360867933
     }
@@ -6406,7 +6406,7 @@ class TdApi {
      * @result - A JSON-serialized result
      */
     class CustomRequestResult(
-        val result: String?
+        val result: String
     ) : Object() {
         override val constructor: Int get() = -2009960452
     }
@@ -6633,8 +6633,8 @@ class TdApi {
      * @newPhoto - New chat photo value
      */
     class ChatEventPhotoChanged(
-        val oldPhoto: Photo,
-        val newPhoto: Photo
+        val oldPhoto: Photo?,
+        val newPhoto: Photo?
     ) : ChatEventAction() {
         override val constructor: Int get() = 1037662734
     }
@@ -6755,7 +6755,7 @@ class TdApi {
      * @value - String value
      */
     class LanguagePackStringValueOrdinary(
-        val value: String? = null
+        val value: String
     ) : LanguagePackStringValue() {
         override val constructor: Int get() = -249256352
     }
@@ -6772,12 +6772,12 @@ class TdApi {
      * @otherValue - Default value
      */
     class LanguagePackStringValuePluralized(
-        val zeroValue: String? = null,
-        val oneValue: String? = null,
-        val twoValue: String? = null,
-        val fewValue: String? = null,
-        val manyValue: String? = null,
-        val otherValue: String? = null
+        val zeroValue: String,
+        val oneValue: String,
+        val twoValue: String,
+        val fewValue: String,
+        val manyValue: String,
+        val otherValue: String
     ) : LanguagePackStringValue() {
         override val constructor: Int get() = 1906840261
     }
@@ -6796,8 +6796,8 @@ class TdApi {
      * @value - String value
      */
     class LanguagePackString(
-        val key: String? = null,
-        val value: LanguagePackStringValue? = null
+        val key: String,
+        val value: LanguagePackStringValue
     ) : Object() {
         override val constructor: Int get() = 1307632736
     }
@@ -6835,11 +6835,11 @@ class TdApi {
      *                   Empty for custom local language packs
      */
     class LanguagePackInfo(
-        val id: String? = null,
+        val id: String,
         val baseLanguagePackId: String? = null,
-        val name: String? = null,
-        val nativeName: String? = null,
-        val pluralCode: String? = null,
+        val name: String,
+        val nativeName: String,
+        val pluralCode: String,
         val isOfficial: Boolean = false,
         val isRtl: Boolean = false,
         val isBeta: Boolean = false,
@@ -6847,7 +6847,7 @@ class TdApi {
         val totalStringCount: Int = 0,
         val translatedStringCount: Int = 0,
         val localStringCount: Int = 0,
-        val translationUrl: String? = null
+        val translationUrl: String
     ) : Object() {
         override val constructor: Int get() = 542199642
     }
@@ -6959,8 +6959,8 @@ class TdApi {
      */
     class DeviceTokenWebPush(
         val endpoint: String? = null,
-        val p256dhBase64url: String? = null,
-        val authBase64url: String? = null
+        val p256dhBase64url: String,
+        val authBase64url: String
     ) : DeviceToken() {
         override val constructor: Int get() = -1694507273
     }
@@ -7083,9 +7083,9 @@ class TdApi {
         val id: Long,
         val isDefault: Boolean,
         val isDark: Boolean,
-        val name: String?,
+        val name: String,
         val document: Document?,
-        val type: BackgroundType?
+        val type: BackgroundType
     ) : Object() {
         override val constructor: Int get() = -429971172
     }
@@ -7114,7 +7114,7 @@ class TdApi {
      *               The file nust be in JPEG format for wallpapers and in PNG format for patterns
      */
     class InputBackgroundLocal(
-        val background: InputFile? = null
+        val background: InputFile
     ) : InputBackground() {
         override val constructor: Int get() = -1747094364
     }
@@ -7205,7 +7205,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentAnimation(
-        val animation: Animation,
+        val animation: Animation?,
         val caption: String,
         val isPinned: Boolean
     ) : PushMessageContent() {
@@ -7219,7 +7219,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentAudio(
-        val audio: Audio,
+        val audio: Audio?,
         val isPinned: Boolean
     ) : PushMessageContent() {
         override val constructor: Int get() = 381581426
@@ -7252,7 +7252,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentDocument(
-        val document: Document,
+        val document: Document?,
         val isPinned: Boolean
     ) : PushMessageContent() {
         override val constructor: Int get() = -458379775
@@ -7321,7 +7321,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentPhoto(
-        val photo: Photo,
+        val photo: Photo?,
         val caption: String,
         val isSecret: Boolean,
         val isPinned: Boolean
@@ -7357,8 +7357,8 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentSticker(
-        val sticker: Sticker,
-        val emoji: String,
+        val sticker: Sticker?,
+        val emoji: String?,
         val isPinned: Boolean
     ) : PushMessageContent() {
         override val constructor: Int get() = 1553513939
@@ -7386,7 +7386,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentVideo(
-        val video: Video,
+        val video: Video?,
         val caption: String,
         val isSecret: Boolean,
         val isPinned: Boolean
@@ -7401,7 +7401,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentVideoNote(
-        val videoNote: VideoNote,
+        val videoNote: VideoNote?,
         val isPinned: Boolean
     ) : PushMessageContent() {
         override val constructor: Int get() = -1122764417
@@ -7414,7 +7414,7 @@ class TdApi {
      * @isPinned - True, if the message is a pinned message with the specified content
      */
     class PushMessageContentVoiceNote(
-        val voiceNote: VoiceNote,
+        val voiceNote: VoiceNote?,
         val isPinned: Boolean
     ) : PushMessageContent() {
         override val constructor: Int get() = 88910987
@@ -7668,7 +7668,7 @@ class TdApi {
      * @value - The value of the option
      */
     class OptionValueString(
-        val value: String? = null
+        val value: String
     ) : OptionValue() {
         override val constructor: Int get() = 756248212
     }
@@ -7680,8 +7680,8 @@ class TdApi {
      * @value - Member's value
      */
     class JsonObjectMember(
-        val key: String? = null,
-        val value: JsonValue? = null
+        val key: String,
+        val value: JsonValue
     ) : Object() {
         override val constructor: Int get() = -1803309418
     }
@@ -7726,7 +7726,7 @@ class TdApi {
      * @value - The value
      */
     class JsonValueString(
-        val value: String? = null
+        val value: String
     ) : JsonValue() {
         override val constructor: Int get() = 1597947313
     }
@@ -8027,7 +8027,7 @@ class TdApi {
      * @text - Report text
      */
     class ChatReportReasonCustom(
-        val text: String? = null
+        val text: String
     ) : ChatReportReason() {
         override val constructor: Int get() = 544575454
     }
@@ -8039,8 +8039,8 @@ class TdApi {
      * @html - HTML-code for embedding the message
      */
     class PublicMessageLink(
-        val link: String?,
-        val html: String?
+        val link: String,
+        val html: String
     ) : Object() {
         override val constructor: Int get() = -679603433
     }
@@ -8263,7 +8263,7 @@ class TdApi {
      * @statistics - Database statistics in an unspecified human-readable format
      */
     class DatabaseStatistics(
-        val statistics: String?
+        val statistics: String
     ) : Object() {
         override val constructor: Int get() = -1123912880
     }
@@ -8323,8 +8323,8 @@ class TdApi {
      * @receivedBytes - Total number of bytes received
      */
     class NetworkStatisticsEntryFile(
-        val fileType: FileType? = null,
-        val networkType: NetworkType? = null,
+        val fileType: FileType,
+        val networkType: NetworkType,
         val sentBytes: Long = 0L,
         val receivedBytes: Long = 0L
     ) : NetworkStatisticsEntry() {
@@ -8341,7 +8341,7 @@ class TdApi {
      * @duration - Total call duration, in seconds
      */
     class NetworkStatisticsEntryCall(
-        val networkType: NetworkType? = null,
+        val networkType: NetworkType,
         val sentBytes: Long = 0L,
         val receivedBytes: Long = 0L,
         val duration: Double = 0.0
@@ -8396,9 +8396,9 @@ class TdApi {
      *         Supposed to be used by default when connected on Wi-Fi
      */
     class AutoDownloadSettingsPresets(
-        val low: AutoDownloadSettings?,
-        val medium: AutoDownloadSettings?,
-        val high: AutoDownloadSettings?
+        val low: AutoDownloadSettings,
+        val medium: AutoDownloadSettings,
+        val high: AutoDownloadSettings
     ) : Object() {
         override val constructor: Int get() = -782099166
     }
@@ -8581,7 +8581,7 @@ class TdApi {
      * @text - Text
      */
     class Text(
-        val text: String?
+        val text: String
     ) : Object() {
         override val constructor: Int get() = 578181272
     }
@@ -8604,7 +8604,7 @@ class TdApi {
      * @needUpdateApplication - True, if user should be asked to update the application
      */
     class DeepLinkInfo(
-        val text: FormattedText?,
+        val text: FormattedText,
         val needUpdateApplication: Boolean
     ) : Object() {
         override val constructor: Int get() = 1864081662
@@ -8668,7 +8668,7 @@ class TdApi {
      * @secret - The proxy's secret in hexadecimal encoding
      */
     class ProxyTypeMtproto(
-        val secret: String? = null
+        val secret: String
     ) : ProxyType() {
         override val constructor: Int get() = -1964826627
     }
@@ -8686,11 +8686,11 @@ class TdApi {
      */
     class Proxy(
         val id: Int,
-        val server: String?,
+        val server: String,
         val port: Int,
         val lastUsedDate: Int,
         val isEnabled: Boolean,
-        val type: ProxyType?
+        val type: ProxyType
     ) : Object() {
         override val constructor: Int get() = 196049779
     }
@@ -8715,8 +8715,8 @@ class TdApi {
      * @maskPosition - For masks, position where the mask should be placed
      */
     class InputSticker(
-        val pngSticker: InputFile? = null,
-        val emojis: String? = null,
+        val pngSticker: InputFile,
+        val emojis: String,
         val maskPosition: MaskPosition? = null
     ) : Object() {
         override val constructor: Int get() = -1998602205
@@ -8733,7 +8733,7 @@ class TdApi {
      * @authorizationState - New authorization state
      */
     class UpdateAuthorizationState(
-        val authorizationState: AuthorizationState?
+        val authorizationState: AuthorizationState
     ) : Update() {
         override val constructor: Int get() = 1622347490
     }
@@ -8745,7 +8745,7 @@ class TdApi {
      * @message - The new message
      */
     class UpdateNewMessage(
-        val message: Message?
+        val message: Message
     ) : Update() {
         override val constructor: Int get() = -563105266
     }
@@ -8774,7 +8774,7 @@ class TdApi {
      * @oldMessageId - The previous temporary message identifier
      */
     class UpdateMessageSendSucceeded(
-        val message: Message?,
+        val message: Message,
         val oldMessageId: Long
     ) : Update() {
         override val constructor: Int get() = 1815715197
@@ -8790,10 +8790,10 @@ class TdApi {
      * @errorMessage - Error message
      */
     class UpdateMessageSendFailed(
-        val message: Message?,
+        val message: Message,
         val oldMessageId: Long,
         val errorCode: Int,
-        val errorMessage: String?
+        val errorMessage: String
     ) : Update() {
         override val constructor: Int get() = -1032335779
     }
@@ -8808,7 +8808,7 @@ class TdApi {
     class UpdateMessageContent(
         val chatId: Long,
         val messageId: Long,
-        val newContent: MessageContent?
+        val newContent: MessageContent
     ) : Update() {
         override val constructor: Int get() = 506903332
     }
@@ -8883,7 +8883,7 @@ class TdApi {
      * @chat - The chat
      */
     class UpdateNewChat(
-        val chat: Chat?
+        val chat: Chat
     ) : Update() {
         override val constructor: Int get() = 2075757773
     }
@@ -8896,7 +8896,7 @@ class TdApi {
      */
     class UpdateChatTitle(
         val chatId: Long,
-        val title: String?
+        val title: String
     ) : Update() {
         override val constructor: Int get() = -175405660
     }
@@ -8922,7 +8922,7 @@ class TdApi {
      */
     class UpdateChatPermissions(
         val chatId: Long,
-        val permissions: ChatPermissions?
+        val permissions: ChatPermissions
     ) : Update() {
         override val constructor: Int get() = -1622010003
     }
@@ -9063,7 +9063,7 @@ class TdApi {
      */
     class UpdateChatNotificationSettings(
         val chatId: Long,
-        val notificationSettings: ChatNotificationSettings?
+        val notificationSettings: ChatNotificationSettings
     ) : Update() {
         override val constructor: Int get() = -803163050
     }
@@ -9075,8 +9075,8 @@ class TdApi {
      * @notificationSettings - The new notification settings
      */
     class UpdateScopeNotificationSettings(
-        val scope: NotificationSettingsScope?,
-        val notificationSettings: ScopeNotificationSettings?
+        val scope: NotificationSettingsScope,
+        val notificationSettings: ScopeNotificationSettings
     ) : Update() {
         override val constructor: Int get() = -1203975309
     }
@@ -9150,7 +9150,7 @@ class TdApi {
      */
     class UpdateNotification(
         val notificationGroupId: Int,
-        val notification: Notification?
+        val notification: Notification
     ) : Update() {
         override val constructor: Int get() = -1897496876
     }
@@ -9169,7 +9169,7 @@ class TdApi {
      */
     class UpdateNotificationGroup(
         val notificationGroupId: Int,
-        val type: NotificationGroupType?,
+        val type: NotificationGroupType,
         val chatId: Long,
         val notificationSettingsChatId: Long,
         val isSilent: Boolean,
@@ -9234,7 +9234,7 @@ class TdApi {
     class UpdateUserChatAction(
         val chatId: Long,
         val userId: Int,
-        val action: ChatAction?
+        val action: ChatAction
     ) : Update() {
         override val constructor: Int get() = 1444133514
     }
@@ -9247,7 +9247,7 @@ class TdApi {
      */
     class UpdateUserStatus(
         val userId: Int,
-        val status: UserStatus?
+        val status: UserStatus
     ) : Update() {
         override val constructor: Int get() = -1443545195
     }
@@ -9259,7 +9259,7 @@ class TdApi {
      * @user - New data about the user
      */
     class UpdateUser(
-        val user: User?
+        val user: User
     ) : Update() {
         override val constructor: Int get() = 1183394041
     }
@@ -9271,7 +9271,7 @@ class TdApi {
      * @basicGroup - New data about the group
      */
     class UpdateBasicGroup(
-        val basicGroup: BasicGroup?
+        val basicGroup: BasicGroup
     ) : Update() {
         override val constructor: Int get() = -1003239581
     }
@@ -9283,7 +9283,7 @@ class TdApi {
      * @supergroup - New data about the supergroup
      */
     class UpdateSupergroup(
-        val supergroup: Supergroup?
+        val supergroup: Supergroup
     ) : Update() {
         override val constructor: Int get() = -76782300
     }
@@ -9295,7 +9295,7 @@ class TdApi {
      * @secretChat - New data about the secret chat
      */
     class UpdateSecretChat(
-        val secretChat: SecretChat?
+        val secretChat: SecretChat
     ) : Update() {
         override val constructor: Int get() = -1666903253
     }
@@ -9308,7 +9308,7 @@ class TdApi {
      */
     class UpdateUserFullInfo(
         val userId: Int,
-        val userFullInfo: UserFullInfo?
+        val userFullInfo: UserFullInfo
     ) : Update() {
         override val constructor: Int get() = 222103874
     }
@@ -9321,7 +9321,7 @@ class TdApi {
      */
     class UpdateBasicGroupFullInfo(
         val basicGroupId: Int,
-        val basicGroupFullInfo: BasicGroupFullInfo?
+        val basicGroupFullInfo: BasicGroupFullInfo
     ) : Update() {
         override val constructor: Int get() = 924030531
     }
@@ -9334,7 +9334,7 @@ class TdApi {
      */
     class UpdateSupergroupFullInfo(
         val supergroupId: Int,
-        val supergroupFullInfo: SupergroupFullInfo?
+        val supergroupFullInfo: SupergroupFullInfo
     ) : Update() {
         override val constructor: Int get() = 1288828758
     }
@@ -9349,8 +9349,8 @@ class TdApi {
      * @content - Notification content
      */
     class UpdateServiceNotification(
-        val type: String?,
-        val content: MessageContent?
+        val type: String,
+        val content: MessageContent
     ) : Update() {
         override val constructor: Int get() = 1318622637
     }
@@ -9361,7 +9361,7 @@ class TdApi {
      * @file - New data about the file
      */
     class UpdateFile(
-        val file: File?
+        val file: File
     ) : Update() {
         override val constructor: Int get() = 114132831
     }
@@ -9378,8 +9378,8 @@ class TdApi {
     class UpdateFileGenerationStart(
         val generationId: Long,
         val originalPath: String?,
-        val destinationPath: String?,
-        val conversion: String?
+        val destinationPath: String,
+        val conversion: String
     ) : Update() {
         override val constructor: Int get() = 216817388
     }
@@ -9401,7 +9401,7 @@ class TdApi {
      * @call - New data about a call
      */
     class UpdateCall(
-        val call: Call?
+        val call: Call
     ) : Update() {
         override val constructor: Int get() = 1337184477
     }
@@ -9413,8 +9413,8 @@ class TdApi {
      * @rules - New privacy rules
      */
     class UpdateUserPrivacySettingRules(
-        val setting: UserPrivacySetting?,
-        val rules: UserPrivacySettingRules?
+        val setting: UserPrivacySetting,
+        val rules: UserPrivacySettingRules
     ) : Update() {
         override val constructor: Int get() = -912960778
     }
@@ -9459,8 +9459,8 @@ class TdApi {
      * @value - The new option value
      */
     class UpdateOption(
-        val name: String?,
-        val value: OptionValue?
+        val name: String,
+        val value: OptionValue
     ) : Update() {
         override val constructor: Int get() = 900822020
     }
@@ -9484,7 +9484,7 @@ class TdApi {
      * @stickerSets - The new list of trending sticker sets
      */
     class UpdateTrendingStickerSets(
-        val stickerSets: StickerSets?
+        val stickerSets: StickerSets
     ) : Update() {
         override val constructor: Int get() = 450714593
     }
@@ -9545,8 +9545,8 @@ class TdApi {
      * @strings - List of changed language pack strings
      */
     class UpdateLanguagePackStrings(
-        val localizationTarget: String?,
-        val languagePackId: String?,
+        val localizationTarget: String,
+        val languagePackId: String,
         val strings: Array<LanguagePackString>
     ) : Update() {
         override val constructor: Int get() = -1350069857
@@ -9558,7 +9558,7 @@ class TdApi {
      * @state - The new connection state
      */
     class UpdateConnectionState(
-        val state: ConnectionState?
+        val state: ConnectionState
     ) : Update() {
         override val constructor: Int get() = 1469292078
     }
@@ -9571,8 +9571,8 @@ class TdApi {
      * @termsOfService - The new terms of service
      */
     class UpdateTermsOfService(
-        val termsOfServiceId: String?,
-        val termsOfService: TermsOfService?
+        val termsOfServiceId: String,
+        val termsOfService: TermsOfService
     ) : Update() {
         override val constructor: Int get() = -1304640162
     }
@@ -9591,8 +9591,8 @@ class TdApi {
         val id: Long,
         val senderUserId: Int,
         val userLocation: Location?,
-        val query: String?,
-        val offset: String?
+        val query: String,
+        val offset: String
     ) : Update() {
         override val constructor: Int get() = 2064730634
     }
@@ -9610,9 +9610,9 @@ class TdApi {
     class UpdateNewChosenInlineResult(
         val senderUserId: Int,
         val userLocation: Location?,
-        val query: String?,
-        val resultId: String?,
-        val inlineMessageId: String?
+        val query: String,
+        val resultId: String,
+        val inlineMessageId: String
     ) : Update() {
         override val constructor: Int get() = 527526965
     }
@@ -9634,7 +9634,7 @@ class TdApi {
         val chatId: Long,
         val messageId: Long,
         val chatInstance: Long,
-        val payload: CallbackQueryPayload?
+        val payload: CallbackQueryPayload
     ) : Update() {
         override val constructor: Int get() = -2044226370
     }
@@ -9652,9 +9652,9 @@ class TdApi {
     class UpdateNewInlineCallbackQuery(
         val id: Long,
         val senderUserId: Int,
-        val inlineMessageId: String?,
+        val inlineMessageId: String,
         val chatInstance: Long,
-        val payload: CallbackQueryPayload?
+        val payload: CallbackQueryPayload
     ) : Update() {
         override val constructor: Int get() = -1879154829
     }
@@ -9672,8 +9672,8 @@ class TdApi {
     class UpdateNewShippingQuery(
         val id: Long,
         val senderUserId: Int,
-        val invoicePayload: String?,
-        val shippingAddress: Address?
+        val invoicePayload: String,
+        val shippingAddress: Address
     ) : Update() {
         override val constructor: Int get() = -817474682
     }
@@ -9695,7 +9695,7 @@ class TdApi {
     class UpdateNewPreCheckoutQuery(
         val id: Long,
         val senderUserId: Int,
-        val currency: String?,
+        val currency: String,
         val totalAmount: Long,
         val invoicePayload: ByteArray,
         val shippingOptionId: String?,
@@ -9711,7 +9711,7 @@ class TdApi {
      */
     @BotsOnly
     class UpdateNewCustomEvent(
-        val event: String?
+        val event: String
     ) : Update() {
         override val constructor: Int get() = 1994222092
     }
@@ -9726,7 +9726,7 @@ class TdApi {
     @BotsOnly
     class UpdateNewCustomQuery(
         val id: Long,
-        val data: String?,
+        val data: String,
         val timeout: Int
     ) : Update() {
         override val constructor: Int get() = -687670874
@@ -9739,7 +9739,7 @@ class TdApi {
      */
     @BotsOnly
     class UpdatePoll(
-        val poll: Poll?
+        val poll: Poll
     ) : Update() {
         override val constructor: Int get() = -1771342902
     }
@@ -9774,7 +9774,7 @@ class TdApi {
      * @maxFileSize - Maximum size of the file to where the internal TDLib log is written before the file will be auto-rotated
      */
     class LogStreamFile(
-        val path: String? = null,
+        val path: String,
         val maxFileSize: Long = 0L
     ) : LogStream() {
         override val constructor: Int get() = -1880085930
@@ -9828,7 +9828,7 @@ class TdApi {
      */
     @TestingOnly
     class TestString(
-        val value: String? = null
+        val value: String
     ) : Object() {
         override val constructor: Int get() = -27891572
     }
@@ -9910,7 +9910,7 @@ class TdApi {
      * @parameters - Parameters
      */
     class SetTdlibParameters(
-        val parameters: TdlibParameters? = null
+        val parameters: TdlibParameters
     ) : Function() {
         override val constructor: Int get() = -1912557997
     }
@@ -9935,8 +9935,8 @@ class TdApi {
      * @settings - Settings for the authentication of the user's phone number
      */
     class SetAuthenticationPhoneNumber(
-        val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
+        val phoneNumber: String,
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
         override val constructor: Int get() = 868276259
     }
@@ -9956,7 +9956,7 @@ class TdApi {
      * @code - The verification code received via SMS, Telegram message, phone call, or flash call
      */
     class CheckAuthenticationCode(
-        val code: String? = null
+        val code: String
     ) : Function() {
         override val constructor: Int get() = -302103382
     }
@@ -9969,8 +9969,8 @@ class TdApi {
      * @lastName - The last name of the user
      */
     class RegisterUser(
-        val firstName: String? = null,
-        val lastName: String? = null
+        val firstName: String,
+        val lastName: String
     ) : Function() {
         override val constructor: Int get() = -109994467
     }
@@ -9982,7 +9982,7 @@ class TdApi {
      * @password - The password to check
      */
     class CheckAuthenticationPassword(
-        val password: String? = null
+        val password: String
     ) : Function() {
         override val constructor: Int get() = -2025698400
     }
@@ -10002,7 +10002,7 @@ class TdApi {
      * @recoveryCode - Recovery code to check
      */
     class RecoverAuthenticationPassword(
-        val recoveryCode: String? = null
+        val recoveryCode: String
     ) : Function() {
         override val constructor: Int get() = 787436412
     }
@@ -10016,7 +10016,7 @@ class TdApi {
      */
     @BotsOnly
     class CheckAuthenticationBotToken(
-        val token: String? = null
+        val token: String
     ) : Function() {
         override val constructor: Int get() = 639321206
     }
@@ -10092,8 +10092,8 @@ class TdApi {
      * @newRecoveryEmailAddress - New recovery email address
      */
     class SetPassword(
-        val oldPassword: String? = null,
-        val newPassword: String? = null,
+        val oldPassword: String,
+        val newPassword: String,
         val newHint: String? = null,
         val setRecoveryEmailAddress: Boolean = false,
         val newRecoveryEmailAddress: String? = null
@@ -10108,7 +10108,7 @@ class TdApi {
      * @password - The password for the current user
      */
     class GetRecoveryEmailAddress(
-        val password: String? = null
+        val password: String
     ) : Function() {
         override val constructor: Int get() = -1594770947
     }
@@ -10122,8 +10122,8 @@ class TdApi {
      * @newRecoveryEmailAddress - New recovery email address
      */
     class SetRecoveryEmailAddress(
-        val password: String? = null,
-        val newRecoveryEmailAddress: String? = null
+        val password: String,
+        val newRecoveryEmailAddress: String
     ) : Function() {
         override val constructor: Int get() = -1981836385
     }
@@ -10134,7 +10134,7 @@ class TdApi {
      * @code - Verification code
      */
     class CheckRecoveryEmailAddressCode(
-        val code: String? = null
+        val code: String
     ) : Function() {
         override val constructor: Int get() = -1997039589
     }
@@ -10159,7 +10159,7 @@ class TdApi {
      * @recoveryCode - Recovery code to check
      */
     class RecoverPassword(
-        val recoveryCode: String? = null
+        val recoveryCode: String
     ) : Function() {
         override val constructor: Int get() = 1660185903
     }
@@ -10172,7 +10172,7 @@ class TdApi {
      *             Should be between 60 and 86400
      */
     class CreateTemporaryPassword(
-        val password: String? = null,
+        val password: String,
         val validFor: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1626509434
@@ -10373,8 +10373,8 @@ class TdApi {
      * @fileType - File type, if known
      */
     class GetRemoteFile(
-        val remoteFileId: String? = null,
-        val fileType: FileType? = null
+        val remoteFileId: String,
+        val fileType: FileType
     ) : Function() {
         override val constructor: Int get() = 2137204530
     }
@@ -10407,7 +10407,7 @@ class TdApi {
      * @username - Username to be resolved
      */
     class SearchPublicChat(
-        val username: String? = null
+        val username: String
     ) : Function() {
         override val constructor: Int get() = 857135533
     }
@@ -10422,7 +10422,7 @@ class TdApi {
      * @query - Query to search for
      */
     class SearchPublicChats(
-        val query: String? = null
+        val query: String
     ) : Function() {
         override val constructor: Int get() = 970385337
     }
@@ -10436,7 +10436,7 @@ class TdApi {
      * @limit - Maximum number of chats to be returned
      */
     class SearchChats(
-        val query: String? = null,
+        val query: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1879787060
@@ -10450,7 +10450,7 @@ class TdApi {
      * @limit - Maximum number of chats to be returned
      */
     class SearchChatsOnServer(
-        val query: String? = null,
+        val query: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1158402188
@@ -10465,7 +10465,7 @@ class TdApi {
      *          Up to 30
      */
     class GetTopChats(
-        val category: TopChatCategory? = null,
+        val category: TopChatCategory,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = -388410847
@@ -10479,7 +10479,7 @@ class TdApi {
      * @chatId - Chat identifier
      */
     class RemoveTopChat(
-        val category: TopChatCategory? = null,
+        val category: TopChatCategory,
         val chatId: Long = 0L
     ) : Function() {
         override val constructor: Int get() = -1907876267
@@ -10525,7 +10525,7 @@ class TdApi {
      */
     class CheckChatUsername(
         val chatId: Long = 0L,
-        val username: String? = null
+        val username: String
     ) : Function() {
         override val constructor: Int get() = -119119344
     }
@@ -10618,12 +10618,12 @@ class TdApi {
      */
     class SearchChatMessages(
         val chatId: Long = 0L,
-        val query: String? = null,
+        val query: String,
         val senderUserId: Int = 0,
         val fromMessageId: Long = 0L,
         val offset: Int = 0,
         val limit: Int = 0,
-        val filter: SearchMessagesFilter? = null
+        val filter: SearchMessagesFilter
     ) : Function() {
         override val constructor: Int get() = -1528846671
     }
@@ -10642,7 +10642,7 @@ class TdApi {
      *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
      */
     class SearchMessages(
-        val query: String? = null,
+        val query: String,
         val offsetDate: Int = 0,
         val offsetChatId: Long = 0L,
         val offsetMessageId: Long = 0L,
@@ -10667,10 +10667,10 @@ class TdApi {
      */
     class SearchSecretMessages(
         val chatId: Long = 0L,
-        val query: String? = null,
+        val query: String,
         val fromSearchId: Long = 0L,
         val limit: Int = 0,
-        val filter: SearchMessagesFilter? = null
+        val filter: SearchMessagesFilter
     ) : Function() {
         override val constructor: Int get() = -1670627915
     }
@@ -10740,7 +10740,7 @@ class TdApi {
      */
     class GetChatMessageCount(
         val chatId: Long = 0L,
-        val filter: SearchMessagesFilter? = null,
+        val filter: SearchMessagesFilter,
         val returnLocal: Boolean = false
     ) : Function() {
         override val constructor: Int get() = 205435308
@@ -10811,7 +10811,7 @@ class TdApi {
      * @url - The message link in the format "https://t.me/c/...", or "tg://privatepost?...", or "https://t.me/username/...", or "tg://resolve?..."
      */
     class GetMessageLinkInfo(
-        val url: String? = null
+        val url: String
     ) : Function() {
         override val constructor: Int get() = -700533672
     }
@@ -10833,8 +10833,8 @@ class TdApi {
         val replyToMessageId: Long = 0L,
         val disableNotification: Boolean = false,
         val fromBackground: Boolean = false,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        @BotsOnly val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : Function() {
         override val constructor: Int get() = 1694632114
     }
@@ -10874,7 +10874,7 @@ class TdApi {
     class SendBotStartMessage(
         val botUserId: Int = 0,
         val chatId: Long = 0L,
-        val parameter: String? = null
+        val parameter: String
     ) : Function() {
         override val constructor: Int get() = 1112181339
     }
@@ -10900,7 +10900,7 @@ class TdApi {
         val disableNotification: Boolean = false,
         val fromBackground: Boolean = false,
         val queryId: Long = 0L,
-        val resultId: String? = null,
+        val resultId: String,
         val hideViaBot: Boolean = false
     ) : Function() {
         override val constructor: Int get() = 893888200
@@ -10996,7 +10996,7 @@ class TdApi {
         val senderUserId: Int = 0,
         val replyToMessageId: Long = 0L,
         val disableNotification: Boolean = false,
-        val inputMessageContent: InputMessageContent? = null
+        val inputMessageContent: InputMessageContent
     ) : Function() {
         override val constructor: Int get() = -348943149
     }
@@ -11045,8 +11045,8 @@ class TdApi {
     class EditMessageText(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        @BotsOnly val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : Function() {
         override val constructor: Int get() = 196272567
     }
@@ -11065,7 +11065,7 @@ class TdApi {
     class EditMessageLiveLocation(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
+        @BotsOnly val replyMarkup: ReplyMarkup,
         val location: Location? = null
     ) : Function() {
         override val constructor: Int get() = -1146772745
@@ -11087,8 +11087,8 @@ class TdApi {
     class EditMessageMedia(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        @BotsOnly val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : Function() {
         override val constructor: Int get() = -1152678125
     }
@@ -11106,8 +11106,8 @@ class TdApi {
     class EditMessageCaption(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val caption: FormattedText? = null
+        @BotsOnly val replyMarkup: ReplyMarkup,
+        val caption: FormattedText
     ) : Function() {
         override val constructor: Int get() = 1154677038
     }
@@ -11124,7 +11124,7 @@ class TdApi {
     class EditMessageReplyMarkup(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        val replyMarkup: ReplyMarkup? = null
+        val replyMarkup: ReplyMarkup
     ) : Function() {
         override val constructor: Int get() = 332127881
     }
@@ -11139,9 +11139,9 @@ class TdApi {
      */
     @BotsOnly
     class EditInlineMessageText(
-        val inlineMessageId: String? = null,
-        val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val inlineMessageId: String,
+        val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : Function() {
         override val constructor: Int get() = -855457307
     }
@@ -11156,8 +11156,8 @@ class TdApi {
      */
     @BotsOnly
     class EditInlineMessageLiveLocation(
-        val inlineMessageId: String? = null,
-        val replyMarkup: ReplyMarkup? = null,
+        val inlineMessageId: String,
+        val replyMarkup: ReplyMarkup,
         val location: Location? = null
     ) : Function() {
         override val constructor: Int get() = 655046316
@@ -11173,9 +11173,9 @@ class TdApi {
      */
     @BotsOnly
     class EditInlineMessageMedia(
-        val inlineMessageId: String? = null,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
+        val inlineMessageId: String,
+        @BotsOnly val replyMarkup: ReplyMarkup,
+        val inputMessageContent: InputMessageContent
     ) : Function() {
         override val constructor: Int get() = 23553921
     }
@@ -11190,9 +11190,9 @@ class TdApi {
      */
     @BotsOnly
     class EditInlineMessageCaption(
-        val inlineMessageId: String? = null,
-        val replyMarkup: ReplyMarkup? = null,
-        val caption: FormattedText? = null
+        val inlineMessageId: String,
+        val replyMarkup: ReplyMarkup,
+        val caption: FormattedText
     ) : Function() {
         override val constructor: Int get() = -760985929
     }
@@ -11205,8 +11205,8 @@ class TdApi {
      */
     @BotsOnly
     class EditInlineMessageReplyMarkup(
-        val inlineMessageId: String? = null,
-        val replyMarkup: ReplyMarkup? = null
+        val inlineMessageId: String,
+        val replyMarkup: ReplyMarkup
     ) : Function() {
         override val constructor: Int get() = -67565858
     }
@@ -11220,7 +11220,7 @@ class TdApi {
      * @text - The text in which to look for entites
      */
     class GetTextEntities(
-        val text: String? = null
+        val text: String
     ) : Function() {
         override val constructor: Int get() = -341490693
     }
@@ -11235,8 +11235,8 @@ class TdApi {
      * @parseMode - Text parse mode
      */
     class ParseTextEntities(
-        val text: String? = null,
-        val parseMode: TextParseMode? = null
+        val text: String,
+        val parseMode: TextParseMode
     ) : Function() {
         override val constructor: Int get() = -1709194593
     }
@@ -11251,7 +11251,7 @@ class TdApi {
      * @fileName - The name of the file or path to the file
      */
     class GetFileMimeType(
-        val fileName: String? = null
+        val fileName: String
     ) : Function() {
         override val constructor: Int get() = -2073879671
     }
@@ -11266,7 +11266,7 @@ class TdApi {
      * @mimeType - The MIME type of the file
      */
     class GetFileExtension(
-        val mimeType: String? = null
+        val mimeType: String
     ) : Function() {
         override val constructor: Int get() = -106055372
     }
@@ -11282,7 +11282,7 @@ class TdApi {
      * @fileName - File name or path to the file
      */
     class CleanFileName(
-        val fileName: String? = null
+        val fileName: String
     ) : Function() {
         override val constructor: Int get() = 967964667
     }
@@ -11300,10 +11300,10 @@ class TdApi {
      * @key - Language pack key of the string to be returned
      */
     class GetLanguagePackString(
-        val languagePackDatabasePath: String? = null,
-        val localizationTarget: String? = null,
-        val languagePackId: String? = null,
-        val key: String? = null
+        val languagePackDatabasePath: String,
+        val localizationTarget: String,
+        val languagePackId: String,
+        val key: String
     ) : Function() {
         override val constructor: Int get() = 150789747
     }
@@ -11317,7 +11317,7 @@ class TdApi {
      * @json - The JSON-serialized string
      */
     class GetJsonValue(
-        val json: String? = null
+        val json: String
     ) : Function() {
         override val constructor: Int get() = -1829086715
     }
@@ -11331,7 +11331,7 @@ class TdApi {
      * @jsonValue - The JsonValue object
      */
     class GetJsonString(
-        val jsonValue: JsonValue? = null
+        val jsonValue: JsonValue
     ) : Function() {
         override val constructor: Int get() = 663458849
     }
@@ -11363,7 +11363,7 @@ class TdApi {
     class StopPoll(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null
+        @BotsOnly val replyMarkup: ReplyMarkup
     ) : Function() {
         override val constructor: Int get() = 1659374253
     }
@@ -11381,9 +11381,9 @@ class TdApi {
     class GetInlineQueryResults(
         val botUserId: Int = 0,
         val chatId: Long = 0L,
-        val userLocation: Location? = null,
-        val query: String? = null,
-        val offset: String? = null
+        val userLocation: Location,
+        val query: String,
+        val offset: String
     ) : Function() {
         override val constructor: Int get() = -1182511172
     }
@@ -11406,9 +11406,9 @@ class TdApi {
         val isPersonal: Boolean = false,
         val results: Array<InputInlineQueryResult> = emptyArray(),
         val cacheTime: Int = 0,
-        val nextOffset: String? = null,
-        val switchPmText: String? = null,
-        val switchPmParameter: String? = null
+        val nextOffset: String,
+        val switchPmText: String,
+        val switchPmParameter: String
     ) : Function() {
         override val constructor: Int get() = 418142278
     }
@@ -11424,7 +11424,7 @@ class TdApi {
     class GetCallbackQueryAnswer(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        val payload: CallbackQueryPayload? = null
+        val payload: CallbackQueryPayload
     ) : Function() {
         override val constructor: Int get() = 116357727
     }
@@ -11441,9 +11441,9 @@ class TdApi {
     @BotsOnly
     class AnswerCallbackQuery(
         val callbackQueryId: Long = 0L,
-        val text: String? = null,
+        val text: String,
         val showAlert: Boolean = false,
-        val url: String? = null,
+        val url: String,
         val cacheTime: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1153028490
@@ -11460,7 +11460,7 @@ class TdApi {
     class AnswerShippingQuery(
         val shippingQueryId: Long = 0L,
         val shippingOptions: Array<ShippingOption> = emptyArray(),
-        val errorMessage: String? = null
+        val errorMessage: String
     ) : Function() {
         override val constructor: Int get() = 2050761778
     }
@@ -11474,7 +11474,7 @@ class TdApi {
     @BotsOnly
     class AnswerPreCheckoutQuery(
         val preCheckoutQueryId: Long = 0L,
-        val errorMessage: String? = null
+        val errorMessage: String
     ) : Function() {
         override val constructor: Int get() = -1486789653
     }
@@ -11514,7 +11514,7 @@ class TdApi {
      */
     @BotsOnly
     class SetInlineGameScore(
-        val inlineMessageId: String? = null,
+        val inlineMessageId: String,
         val editMessage: Boolean = false,
         val userId: Int = 0,
         val score: Int = 0,
@@ -11547,7 +11547,7 @@ class TdApi {
      */
     @BotsOnly
     class GetInlineGameHighScores(
-        val inlineMessageId: String? = null,
+        val inlineMessageId: String,
         val userId: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1833445800
@@ -11576,7 +11576,7 @@ class TdApi {
      */
     class SendChatAction(
         val chatId: Long = 0L,
-        val action: ChatAction? = null
+        val action: ChatAction
     ) : Function() {
         override val constructor: Int get() = -841357536
     }
@@ -11708,7 +11708,7 @@ class TdApi {
      */
     class CreateNewBasicGroupChat(
         val userIds: IntArray = intArrayOf(),
-        val title: String? = null
+        val title: String
     ) : Function() {
         override val constructor: Int get() = 297091731
     }
@@ -11722,9 +11722,9 @@ class TdApi {
      * @description - Chat description
      */
     class CreateNewSupergroupChat(
-        val title: String? = null,
+        val title: String,
         val isChannel: Boolean = false,
-        val description: String? = null
+        val description: String
     ) : Function() {
         override val constructor: Int get() = 1284982268
     }
@@ -11765,7 +11765,7 @@ class TdApi {
      */
     class SetChatTitle(
         val chatId: Long = 0L,
-        val title: String? = null
+        val title: String
     ) : Function() {
         override val constructor: Int get() = 164282047
     }
@@ -11783,7 +11783,7 @@ class TdApi {
      */
     class SetChatPhoto(
         val chatId: Long = 0L,
-        val photo: InputFile? = null
+        val photo: InputFile
     ) : Function() {
         override val constructor: Int get() = 132244217
     }
@@ -11798,7 +11798,7 @@ class TdApi {
      */
     class SetChatPermissions(
         val chatId: Long = 0L,
-        val permissions: ChatPermissions? = null
+        val permissions: ChatPermissions
     ) : Function() {
         override val constructor: Int get() = 2138507006
     }
@@ -11824,7 +11824,7 @@ class TdApi {
      */
     class SetChatNotificationSettings(
         val chatId: Long = 0L,
-        val notificationSettings: ChatNotificationSettings? = null
+        val notificationSettings: ChatNotificationSettings
     ) : Function() {
         override val constructor: Int get() = 777199614
     }
@@ -11877,7 +11877,7 @@ class TdApi {
      */
     class SetChatClientData(
         val chatId: Long = 0L,
-        val clientData: String? = null
+        val clientData: String
     ) : Function() {
         override val constructor: Int get() = -827119811
     }
@@ -11892,7 +11892,7 @@ class TdApi {
      */
     class SetChatDescription(
         val chatId: Long = 0L,
-        val description: String? = null
+        val description: String
     ) : Function() {
         override val constructor: Int get() = 1957213277
     }
@@ -11997,7 +11997,7 @@ class TdApi {
     class SetChatMemberStatus(
         val chatId: Long = 0L,
         val userId: Int = 0,
-        val status: ChatMemberStatus? = null
+        val status: ChatMemberStatus
     ) : Function() {
         override val constructor: Int get() = -1754439241
     }
@@ -12027,9 +12027,9 @@ class TdApi {
      */
     class SearchChatMembers(
         val chatId: Long = 0L,
-        val query: String? = null,
+        val query: String,
         val limit: Int = 0,
-        val filter: ChatMembersFilter? = null
+        val filter: ChatMembersFilter
     ) : Function() {
         override val constructor: Int get() = -445823291
     }
@@ -12063,7 +12063,7 @@ class TdApi {
      * @compareSound - If true, also chats with non-default sound will be returned
      */
     class GetChatNotificationSettingsExceptions(
-        val scope: NotificationSettingsScope? = null,
+        val scope: NotificationSettingsScope,
         val compareSound: Boolean = false
     ) : Function() {
         override val constructor: Int get() = 201199121
@@ -12075,7 +12075,7 @@ class TdApi {
      * @scope - Types of chats for which to return the notification settings information
      */
     class GetScopeNotificationSettings(
-        val scope: NotificationSettingsScope? = null
+        val scope: NotificationSettingsScope
     ) : Function() {
         override val constructor: Int get() = -995613361
     }
@@ -12087,8 +12087,8 @@ class TdApi {
      * @notificationSettings - The new notification settings for the given scope
      */
     class SetScopeNotificationSettings(
-        val scope: NotificationSettingsScope? = null,
-        val notificationSettings: ScopeNotificationSettings? = null
+        val scope: NotificationSettingsScope,
+        val notificationSettings: ScopeNotificationSettings
     ) : Function() {
         override val constructor: Int get() = -2049984966
     }
@@ -12176,8 +12176,8 @@ class TdApi {
      *             If the priorities of two files are equal, then the first one for which uploadFile was called will be uploaded first
      */
     class UploadFile(
-        val file: InputFile? = null,
-        val fileType: FileType? = null,
+        val file: InputFile,
+        val fileType: FileType,
         val priority: Int = 0
     ) : Function() {
         override val constructor: Int get() = -745597786
@@ -12236,7 +12236,7 @@ class TdApi {
      */
     class FinishFileGeneration(
         val generationId: Long = 0L,
-        val error: Error? = null
+        val error: Error
     ) : Function() {
         override val constructor: Int get() = -1055060835
     }
@@ -12291,7 +12291,7 @@ class TdApi {
      * @inviteLink - Invite link to be checked
      */
     class CheckChatInviteLink(
-        val inviteLink: String? = null
+        val inviteLink: String
     ) : Function() {
         override val constructor: Int get() = -496940997
     }
@@ -12303,7 +12303,7 @@ class TdApi {
      * @inviteLink - Invite link to import
      */
     class JoinChatByInviteLink(
-        val inviteLink: String? = null
+        val inviteLink: String
     ) : Function() {
         override val constructor: Int get() = -1049973882
     }
@@ -12316,7 +12316,7 @@ class TdApi {
      */
     class CreateCall(
         val userId: Int = 0,
-        val protocol: CallProtocol? = null
+        val protocol: CallProtocol
     ) : Function() {
         override val constructor: Int get() = -1742408159
     }
@@ -12329,7 +12329,7 @@ class TdApi {
      */
     class AcceptCall(
         val callId: Int = 0,
-        val protocol: CallProtocol? = null
+        val protocol: CallProtocol
     ) : Function() {
         override val constructor: Int get() = -646618416
     }
@@ -12362,7 +12362,7 @@ class TdApi {
     class SendCallRating(
         val callId: Int = 0,
         val rating: Int = 0,
-        val comment: String? = null,
+        val comment: String,
         val problems: Array<CallProblem> = emptyArray()
     ) : Function() {
         override val constructor: Int get() = -660908180
@@ -12376,7 +12376,7 @@ class TdApi {
      */
     class SendCallDebugInformation(
         val callId: Int = 0,
-        val debugInformation: String? = null
+        val debugInformation: String
     ) : Function() {
         override val constructor: Int get() = 2019243839
     }
@@ -12443,7 +12443,7 @@ class TdApi {
      * @limit - Maximum number of users to be returned
      */
     class SearchContacts(
-        val query: String? = null,
+        val query: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1794690715
@@ -12512,7 +12512,7 @@ class TdApi {
      * @limit - Maximum number of stickers to be returned
      */
     class GetStickers(
-        val emoji: String? = null,
+        val emoji: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = -1594919556
@@ -12525,7 +12525,7 @@ class TdApi {
      * @limit - Maximum number of stickers to be returned
      */
     class SearchStickers(
-        val emoji: String? = null,
+        val emoji: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = 1555771203
@@ -12595,7 +12595,7 @@ class TdApi {
      * @name - Name of the sticker set
      */
     class SearchStickerSet(
-        val name: String? = null
+        val name: String
     ) : Function() {
         override val constructor: Int get() = 1157930222
     }
@@ -12610,7 +12610,7 @@ class TdApi {
      */
     class SearchInstalledStickerSets(
         val isMasks: Boolean = false,
-        val query: String? = null,
+        val query: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = 681171344
@@ -12623,7 +12623,7 @@ class TdApi {
      * @query - Query to search for
      */
     class SearchStickerSets(
-        val query: String? = null
+        val query: String
     ) : Function() {
         override val constructor: Int get() = -1082314629
     }
@@ -12693,7 +12693,7 @@ class TdApi {
      */
     class AddRecentSticker(
         val isAttached: Boolean = false,
-        val sticker: InputFile? = null
+        val sticker: InputFile
     ) : Function() {
         override val constructor: Int get() = -1478109026
     }
@@ -12707,7 +12707,7 @@ class TdApi {
      */
     class RemoveRecentSticker(
         val isAttached: Boolean = false,
-        val sticker: InputFile? = null
+        val sticker: InputFile
     ) : Function() {
         override val constructor: Int get() = 1246577677
     }
@@ -12740,7 +12740,7 @@ class TdApi {
      * @sticker - Sticker file to add
      */
     class AddFavoriteSticker(
-        val sticker: InputFile? = null
+        val sticker: InputFile
     ) : Function() {
         override val constructor: Int get() = 324504799
     }
@@ -12751,7 +12751,7 @@ class TdApi {
      * @sticker - Sticker file to delete from the list
      */
     class RemoveFavoriteSticker(
-        val sticker: InputFile? = null
+        val sticker: InputFile
     ) : Function() {
         override val constructor: Int get() = 1152945264
     }
@@ -12763,7 +12763,7 @@ class TdApi {
      * @sticker - Sticker file identifier
      */
     class GetStickerEmojis(
-        val sticker: InputFile? = null
+        val sticker: InputFile
     ) : Function() {
         override val constructor: Int get() = -1895508665
     }
@@ -12776,7 +12776,7 @@ class TdApi {
      * @exactMatch - True, if only emojis, which exactly match text needs to be returned
      */
     class SearchEmojis(
-        val text: String? = null,
+        val text: String,
         val exactMatch: Boolean = false
     ) : Function() {
         override val constructor: Int get() = 454272250
@@ -12789,7 +12789,7 @@ class TdApi {
      * @languageCode - Language code for which the emoji replacements will be suggested
      */
     class GetEmojiSuggestionsUrl(
-        val languageCode: String? = null
+        val languageCode: String
     ) : Function() {
         override val constructor: Int get() = -1404101841
     }
@@ -12812,7 +12812,7 @@ class TdApi {
      *              Successfully sent via a message) can be added to the list
      */
     class AddSavedAnimation(
-        val animation: InputFile? = null
+        val animation: InputFile
     ) : Function() {
         override val constructor: Int get() = -1538525088
     }
@@ -12823,7 +12823,7 @@ class TdApi {
      * @animation - Animation file to be removed
      */
     class RemoveSavedAnimation(
-        val animation: InputFile? = null
+        val animation: InputFile
     ) : Function() {
         override val constructor: Int get() = -495605479
     }
@@ -12842,7 +12842,7 @@ class TdApi {
      * @limit - Maximum number of hashtags to be returned
      */
     class SearchHashtags(
-        val prefix: String? = null,
+        val prefix: String,
         val limit: Int = 0
     ) : Function() {
         override val constructor: Int get() = 1043637617
@@ -12854,7 +12854,7 @@ class TdApi {
      * @hashtag - Hashtag to delete
      */
     class RemoveRecentHashtag(
-        val hashtag: String? = null
+        val hashtag: String
     ) : Function() {
         override val constructor: Int get() = -1013735260
     }
@@ -12867,7 +12867,7 @@ class TdApi {
      * @text - Message text with formatting
      */
     class GetWebPagePreview(
-        val text: FormattedText? = null
+        val text: FormattedText
     ) : Function() {
         override val constructor: Int get() = 573441580
     }
@@ -12880,7 +12880,7 @@ class TdApi {
      * @forceFull - If true, the full instant view for the web page will be returned
      */
     class GetWebPageInstantView(
-        val url: String? = null,
+        val url: String,
         val forceFull: Boolean = false
     ) : Function() {
         override val constructor: Int get() = -1962649975
@@ -12894,7 +12894,7 @@ class TdApi {
      *          InputFileId and inputFileRemote may still be unsupported
      */
     class SetProfilePhoto(
-        val photo: InputFile? = null
+        val photo: InputFile
     ) : Function() {
         override val constructor: Int get() = 1594734550
     }
@@ -12919,8 +12919,8 @@ class TdApi {
      * @lastName - The new value of the optional last name for the user
      */
     class SetName(
-        val firstName: String? = null,
-        val lastName: String? = null
+        val firstName: String,
+        val lastName: String
     ) : Function() {
         override val constructor: Int get() = 1711693584
     }
@@ -12931,7 +12931,7 @@ class TdApi {
      * @bio - The new value of the user bio
      */
     class SetBio(
-        val bio: String? = null
+        val bio: String
     ) : Function() {
         override val constructor: Int get() = -1619582124
     }
@@ -12944,7 +12944,7 @@ class TdApi {
      *             Use an empty string to remove the username
      */
     class SetUsername(
-        val username: String? = null
+        val username: String
     ) : Function() {
         override val constructor: Int get() = 439901214
     }
@@ -12957,8 +12957,8 @@ class TdApi {
      * @settings - Settings for the authentication of the user's phone number
      */
     class ChangePhoneNumber(
-        val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
+        val phoneNumber: String,
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
         override val constructor: Int get() = -124666973
     }
@@ -12977,7 +12977,7 @@ class TdApi {
      * @code - Verification code received by SMS, phone call or flash call
      */
     class CheckChangePhoneNumberCode(
-        val code: String? = null
+        val code: String
     ) : Function() {
         override val constructor: Int get() = -1720278429
     }
@@ -13041,7 +13041,7 @@ class TdApi {
      */
     class SetSupergroupUsername(
         val supergroupId: Int = 0,
-        val username: String? = null
+        val username: String
     ) : Function() {
         override val constructor: Int get() = -1428333122
     }
@@ -13120,7 +13120,7 @@ class TdApi {
      */
     class GetSupergroupMembers(
         val supergroupId: Int = 0,
-        val filter: SupergroupMembersFilter? = null,
+        val filter: SupergroupMembersFilter,
         val offset: Int = 0,
         val limit: Int = 0
     ) : Function() {
@@ -13171,10 +13171,10 @@ class TdApi {
      */
     class GetChatEventLog(
         val chatId: Long = 0L,
-        val query: String? = null,
+        val query: String,
         val fromEventId: Long = 0L,
         val limit: Int = 0,
-        val filters: ChatEventLogFilters? = null,
+        val filters: ChatEventLogFilters,
         val userIds: IntArray = intArrayOf()
     ) : Function() {
         override val constructor: Int get() = 504477847
@@ -13205,7 +13205,7 @@ class TdApi {
     class ValidateOrderInfo(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        val orderInfo: OrderInfo? = null,
+        val orderInfo: OrderInfo,
         val allowSave: Boolean = false
     ) : Function() {
         override val constructor: Int get() = 9480644
@@ -13223,9 +13223,9 @@ class TdApi {
     class SendPaymentForm(
         val chatId: Long = 0L,
         val messageId: Long = 0L,
-        val orderInfoId: String? = null,
-        val shippingOptionId: String? = null,
-        val credentials: InputCredentials? = null
+        val orderInfoId: String,
+        val shippingOptionId: String,
+        val credentials: InputCredentials
     ) : Function() {
         override val constructor: Int get() = 591581572
     }
@@ -13289,8 +13289,8 @@ class TdApi {
      * @type - Background type
      */
     class GetBackgroundUrl(
-        val name: String? = null,
-        val type: BackgroundType? = null
+        val name: String,
+        val type: BackgroundType
     ) : Function() {
         override val constructor: Int get() = 733769682
     }
@@ -13301,7 +13301,7 @@ class TdApi {
      * @name - The name of the background
      */
     class SearchBackground(
-        val name: String? = null
+        val name: String
     ) : Function() {
         override val constructor: Int get() = -2130996959
     }
@@ -13317,8 +13317,8 @@ class TdApi {
      * @forDarkTheme - True, if the background is chosen for dark theme
      */
     class SetBackground(
-        val background: InputBackground? = null,
-        val type: BackgroundType? = null,
+        val background: InputBackground,
+        val type: BackgroundType,
         val forDarkTheme: Boolean = false
     ) : Function() {
         override val constructor: Int get() = -1035439225
@@ -13363,7 +13363,7 @@ class TdApi {
      * @languagePackId - Language pack identifier
      */
     class GetLanguagePackInfo(
-        val languagePackId: String? = null
+        val languagePackId: String
     ) : Function() {
         override val constructor: Int get() = 2077809320
     }
@@ -13377,7 +13377,7 @@ class TdApi {
      *         Leave empty to request all available strings
      */
     class GetLanguagePackStrings(
-        val languagePackId: String? = null,
+        val languagePackId: String,
         val keys: Array<String> = emptyArray()
     ) : Function() {
         override val constructor: Int get() = -1330092101
@@ -13391,7 +13391,7 @@ class TdApi {
      * @languagePackId - Language pack identifier
      */
     class SynchronizeLanguagePack(
-        val languagePackId: String? = null
+        val languagePackId: String
     ) : Function() {
         override val constructor: Int get() = -2065307858
     }
@@ -13404,7 +13404,7 @@ class TdApi {
      *                   May be different from a name that is used in an "https://t.me/setlanguage/" link
      */
     class AddCustomServerLanguagePack(
-        val languagePackId: String? = null
+        val languagePackId: String
     ) : Function() {
         override val constructor: Int get() = 4492771
     }
@@ -13418,7 +13418,7 @@ class TdApi {
      * @strings - Strings of the new language pack
      */
     class SetCustomLanguagePack(
-        val info: LanguagePackInfo? = null,
+        val info: LanguagePackInfo,
         val strings: Array<LanguagePackString> = emptyArray()
     ) : Function() {
         override val constructor: Int get() = 592119303
@@ -13431,7 +13431,7 @@ class TdApi {
      * @info - New information about the custom local language pack
      */
     class EditCustomLanguagePackInfo(
-        val info: LanguagePackInfo? = null
+        val info: LanguagePackInfo
     ) : Function() {
         override val constructor: Int get() = 1320751257
     }
@@ -13444,8 +13444,8 @@ class TdApi {
      * @newString - New language pack string
      */
     class SetCustomLanguagePackString(
-        val languagePackId: String? = null,
-        val newString: LanguagePackString? = null
+        val languagePackId: String,
+        val newString: LanguagePackString
     ) : Function() {
         override val constructor: Int get() = 1316365592
     }
@@ -13458,7 +13458,7 @@ class TdApi {
      * @languagePackId - Identifier of the language pack to delete
      */
     class DeleteLanguagePack(
-        val languagePackId: String? = null
+        val languagePackId: String
     ) : Function() {
         override val constructor: Int get() = -2108761026
     }
@@ -13471,7 +13471,7 @@ class TdApi {
      * @otherUserIds - List of user identifiers of other users currently using the client
      */
     class RegisterDevice(
-        val deviceToken: DeviceToken? = null,
+        val deviceToken: DeviceToken,
         val otherUserIds: IntArray = intArrayOf()
     ) : Function() {
         override val constructor: Int get() = -1395319781
@@ -13485,7 +13485,7 @@ class TdApi {
      * @payload - JSON-encoded push notification payload with all fields sent by the server, and "google.sent_time" and "google.notification.sound" fields added
      */
     class ProcessPushNotification(
-        val payload: String? = null
+        val payload: String
     ) : Function() {
         override val constructor: Int get() = 786679952
     }
@@ -13499,7 +13499,7 @@ class TdApi {
      * @payload - JSON-encoded push notification payload
      */
     class GetPushReceiverId(
-        val payload: String? = null
+        val payload: String
     ) : Function() {
         override val constructor: Int get() = -286505294
     }
@@ -13510,7 +13510,7 @@ class TdApi {
      * @referrer - Google Play referrer to identify the user
      */
     class GetRecentlyVisitedTMeUrls(
-        val referrer: String? = null
+        val referrer: String
     ) : Function() {
         override val constructor: Int get() = 806754961
     }
@@ -13522,8 +13522,8 @@ class TdApi {
      * @rules - The new privacy rules
      */
     class SetUserPrivacySettingRules(
-        val setting: UserPrivacySetting? = null,
-        val rules: UserPrivacySettingRules? = null
+        val setting: UserPrivacySetting,
+        val rules: UserPrivacySettingRules
     ) : Function() {
         override val constructor: Int get() = -473812741
     }
@@ -13534,7 +13534,7 @@ class TdApi {
      * @setting - The privacy setting
      */
     class GetUserPrivacySettingRules(
-        val setting: UserPrivacySetting? = null
+        val setting: UserPrivacySetting
     ) : Function() {
         override val constructor: Int get() = -2077223311
     }
@@ -13546,7 +13546,7 @@ class TdApi {
      * @name - The name of the option
      */
     class GetOption(
-        val name: String? = null
+        val name: String
     ) : Function() {
         override val constructor: Int get() = -1572495746
     }
@@ -13560,8 +13560,8 @@ class TdApi {
      * @value - The new value of the option
      */
     class SetOption(
-        val name: String? = null,
-        val value: OptionValue? = null
+        val name: String,
+        val value: OptionValue
     ) : Function() {
         override val constructor: Int get() = 2114670322
     }
@@ -13572,7 +13572,7 @@ class TdApi {
      * @ttl - New account TTL
      */
     class SetAccountTtl(
-        val ttl: AccountTtl? = null
+        val ttl: AccountTtl
     ) : Function() {
         override val constructor: Int get() = 701389032
     }
@@ -13634,7 +13634,7 @@ class TdApi {
      */
     class ReportChat(
         val chatId: Long = 0L,
-        val reason: ChatReportReason? = null,
+        val reason: ChatReportReason,
         val messageIds: LongArray = longArrayOf()
     ) : Function() {
         override val constructor: Int get() = -1047462175
@@ -13650,7 +13650,7 @@ class TdApi {
      */
     class GetChatStatisticsUrl(
         val chatId: Long = 0L,
-        val parameters: String? = null,
+        val parameters: String,
         val isDark: Boolean = false
     ) : Function() {
         override val constructor: Int get() = 1114621183
@@ -13730,7 +13730,7 @@ class TdApi {
      *         By default, networkTypeOther
      */
     class SetNetworkType(
-        val type: NetworkType? = null
+        val type: NetworkType
     ) : Function() {
         override val constructor: Int get() = -701635234
     }
@@ -13754,7 +13754,7 @@ class TdApi {
      * @entry - The network statistics entry with the data to be added to statistics
      */
     class AddNetworkStatistics(
-        val entry: NetworkStatisticsEntry? = null
+        val entry: NetworkStatisticsEntry
     ) : Function() {
         override val constructor: Int get() = 1264825305
     }
@@ -13781,8 +13781,8 @@ class TdApi {
      * @type - Type of the network for which the new settings are applied
      */
     class SetAutoDownloadSettings(
-        val settings: AutoDownloadSettings? = null,
-        val type: NetworkType? = null
+        val settings: AutoDownloadSettings,
+        val type: NetworkType
     ) : Function() {
         override val constructor: Int get() = -353671948
     }
@@ -13794,8 +13794,8 @@ class TdApi {
      * @password - Password of the current user
      */
     class GetPassportElement(
-        val type: PassportElementType? = null,
-        val password: String? = null
+        val type: PassportElementType,
+        val password: String
     ) : Function() {
         override val constructor: Int get() = -1882398342
     }
@@ -13806,7 +13806,7 @@ class TdApi {
      * @password - Password of the current user
      */
     class GetAllPassportElements(
-        val password: String? = null
+        val password: String
     ) : Function() {
         override val constructor: Int get() = -2038945045
     }
@@ -13819,8 +13819,8 @@ class TdApi {
      * @password - Password of the current user
      */
     class SetPassportElement(
-        val element: InputPassportElement? = null,
-        val password: String? = null
+        val element: InputPassportElement,
+        val password: String
     ) : Function() {
         override val constructor: Int get() = 2068173212
     }
@@ -13831,7 +13831,7 @@ class TdApi {
      * @type - Element type
      */
     class DeletePassportElement(
-        val type: PassportElementType? = null
+        val type: PassportElementType
     ) : Function() {
         override val constructor: Int get() = -1719555468
     }
@@ -13858,7 +13858,7 @@ class TdApi {
      * @countryCode - A two-letter ISO 3166-1 alpha-2 country code
      */
     class GetPreferredCountryLanguage(
-        val countryCode: String? = null
+        val countryCode: String
     ) : Function() {
         override val constructor: Int get() = -933049386
     }
@@ -13870,8 +13870,8 @@ class TdApi {
      * @settings - Settings for the authentication of the user's phone number
      */
     class SendPhoneNumberVerificationCode(
-        val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
+        val phoneNumber: String,
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
         override val constructor: Int get() = 2081689035
     }
@@ -13889,7 +13889,7 @@ class TdApi {
      * @code - Verification code
      */
     class CheckPhoneNumberVerificationCode(
-        val code: String? = null
+        val code: String
     ) : Function() {
         override val constructor: Int get() = 1497462718
     }
@@ -13900,7 +13900,7 @@ class TdApi {
      * @emailAddress - Email address
      */
     class SendEmailAddressVerificationCode(
-        val emailAddress: String? = null
+        val emailAddress: String
     ) : Function() {
         override val constructor: Int get() = -221621379
     }
@@ -13918,7 +13918,7 @@ class TdApi {
      * @code - Verification code
      */
     class CheckEmailAddressVerificationCode(
-        val code: String? = null
+        val code: String
     ) : Function() {
         override val constructor: Int get() = -426386685
     }
@@ -13933,9 +13933,9 @@ class TdApi {
      */
     class GetPassportAuthorizationForm(
         val botUserId: Int = 0,
-        val scope: String? = null,
-        val publicKey: String? = null,
-        val nonce: String? = null
+        val scope: String,
+        val publicKey: String,
+        val nonce: String
     ) : Function() {
         override val constructor: Int get() = -1468394095
     }
@@ -13949,7 +13949,7 @@ class TdApi {
      */
     class GetPassportAuthorizationFormAvailableElements(
         val autorizationFormId: Int = 0,
-        val password: String? = null
+        val password: String
     ) : Function() {
         override val constructor: Int get() = 1738134754
     }
@@ -13977,9 +13977,9 @@ class TdApi {
      * @settings - Settings for the authentication of the user's phone number
      */
     class SendPhoneNumberConfirmationCode(
-        val hash: String? = null,
-        val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
+        val hash: String,
+        val phoneNumber: String,
+        val settings: PhoneNumberAuthenticationSettings
     ) : Function() {
         override val constructor: Int get() = -1901171495
     }
@@ -13997,7 +13997,7 @@ class TdApi {
      * @code - The phone number confirmation code
      */
     class CheckPhoneNumberConfirmationCode(
-        val code: String? = null
+        val code: String
     ) : Function() {
         override val constructor: Int get() = -1348060966
     }
@@ -14011,7 +14011,7 @@ class TdApi {
     @BotsOnly
     class SetBotUpdatesStatus(
         val pendingUpdateCount: Int = 0,
-        val errorMessage: String? = null
+        val errorMessage: String
     ) : Function() {
         override val constructor: Int get() = -1154926191
     }
@@ -14027,7 +14027,7 @@ class TdApi {
     @BotsOnly
     class UploadStickerFile(
         val userId: Int = 0,
-        val pngSticker: InputFile? = null
+        val pngSticker: InputFile
     ) : Function() {
         override val constructor: Int get() = 1134087551
     }
@@ -14047,8 +14047,8 @@ class TdApi {
     @BotsOnly
     class CreateNewStickerSet(
         val userId: Int = 0,
-        val title: String? = null,
-        val name: String? = null,
+        val title: String,
+        val name: String,
         val isMasks: Boolean = false,
         val stickers: Array<InputSticker> = emptyArray()
     ) : Function() {
@@ -14066,8 +14066,8 @@ class TdApi {
     @BotsOnly
     class AddStickerToSet(
         val userId: Int = 0,
-        val name: String? = null,
-        val sticker: InputSticker? = null
+        val name: String,
+        val sticker: InputSticker
     ) : Function() {
         override val constructor: Int get() = 1422402800
     }
@@ -14081,7 +14081,7 @@ class TdApi {
      */
     @BotsOnly
     class SetStickerPositionInSet(
-        val sticker: InputFile? = null,
+        val sticker: InputFile,
         val position: Int = 0
     ) : Function() {
         override val constructor: Int get() = 2075281185
@@ -14095,7 +14095,7 @@ class TdApi {
      */
     @BotsOnly
     class RemoveStickerFromSet(
-        val sticker: InputFile? = null
+        val sticker: InputFile
     ) : Function() {
         override val constructor: Int get() = 1642196644
     }
@@ -14113,7 +14113,7 @@ class TdApi {
      *           Use 0 if unknown
      */
     class GetMapThumbnailFile(
-        val location: Location? = null,
+        val location: Location,
         val zoom: Int = 0,
         val width: Int = 0,
         val height: Int = 0,
@@ -14129,7 +14129,7 @@ class TdApi {
      * @termsOfServiceId - Terms of service identifier
      */
     class AcceptTermsOfService(
-        val termsOfServiceId: String? = null
+        val termsOfServiceId: String
     ) : Function() {
         override val constructor: Int get() = 2130576356
     }
@@ -14142,8 +14142,8 @@ class TdApi {
      */
     @BotsOnly
     class SendCustomRequest(
-        val method: String? = null,
-        val parameters: String? = null
+        val method: String,
+        val parameters: String
     ) : Function() {
         override val constructor: Int get() = 285045153
     }
@@ -14157,7 +14157,7 @@ class TdApi {
     @BotsOnly
     class AnswerCustomQuery(
         val customQueryId: Long = 0L,
-        val data: String? = null
+        val data: String
     ) : Function() {
         override val constructor: Int get() = -1293603521
     }
@@ -14218,7 +14218,7 @@ class TdApi {
      * @link - The link
      */
     class GetDeepLinkInfo(
-        val link: String? = null
+        val link: String
     ) : Function() {
         override val constructor: Int get() = 680673150
     }
@@ -14240,9 +14240,9 @@ class TdApi {
      * @data - The log event data
      */
     class SaveApplicationLogEvent(
-        val type: String? = null,
+        val type: String,
         val chatId: Long = 0L,
-        val data: JsonValue? = null
+        val data: JsonValue
     ) : Function() {
         override val constructor: Int get() = -811154930
     }
@@ -14257,10 +14257,10 @@ class TdApi {
      * @type - Proxy type
      */
     class AddProxy(
-        val server: String? = null,
+        val server: String,
         val port: Int = 0,
         val enable: Boolean = false,
-        val type: ProxyType? = null
+        val type: ProxyType
     ) : Function() {
         override val constructor: Int get() = 331529432
     }
@@ -14277,10 +14277,10 @@ class TdApi {
      */
     class EditProxy(
         val proxyId: Int = 0,
-        val server: String? = null,
+        val server: String,
         val port: Int = 0,
         val enable: Boolean = false,
-        val type: ProxyType? = null
+        val type: ProxyType
     ) : Function() {
         override val constructor: Int get() = -1605883821
     }
@@ -14361,7 +14361,7 @@ class TdApi {
      * @logStream - New log stream
      */
     class SetLogStream(
-        val logStream: LogStream? = null
+        val logStream: LogStream
     ) : Function() {
         override val constructor: Int get() = -1364199535
     }
@@ -14421,7 +14421,7 @@ class TdApi {
      * @newVerbosityLevel - New verbosity level
      */
     class SetLogTagVerbosityLevel(
-        val tag: String? = null,
+        val tag: String,
         val newVerbosityLevel: Int = 0
     ) : Function() {
         override val constructor: Int get() = -2095589738
@@ -14436,7 +14436,7 @@ class TdApi {
      * @tag - Logging tag to change verbosity level
      */
     class GetLogTagVerbosityLevel(
-        val tag: String? = null
+        val tag: String
     ) : Function() {
         override val constructor: Int get() = 951004547
     }
@@ -14452,7 +14452,7 @@ class TdApi {
      */
     class AddLogMessage(
         val verbosityLevel: Int = 0,
-        val text: String? = null
+        val text: String
     ) : Function() {
         override val constructor: Int get() = 1597427692
     }
@@ -14476,7 +14476,7 @@ class TdApi {
      */
     @TestingOnly
     class TestCallString(
-        val x: String? = null
+        val x: String
     ) : Function() {
         override val constructor: Int get() = -1732818385
     }
@@ -14586,9 +14586,9 @@ class TdApi {
      */
     @TestingOnly
     class TestProxy(
-        val server: String? = null,
+        val server: String,
         val port: Int = 0,
-        val type: ProxyType? = null,
+        val type: ProxyType,
         val dcId: Int = 0,
         val timeout: Double = 0.0
     ) : Function() {
@@ -14623,7 +14623,7 @@ class TdApi {
      */
     @TestingOnly
     class TestReturnError(
-        val error: Error? = null
+        val error: Error
     ) : Function() {
         override val constructor: Int get() = 455179506
     }

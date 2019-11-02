@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @link - The link
  */
 suspend fun TelegramClient.getDeepLinkInfo(
-    link: String? = null
+    link: String
 ): DeepLinkInfo = deep(
     GetDeepLinkInfo(
         link

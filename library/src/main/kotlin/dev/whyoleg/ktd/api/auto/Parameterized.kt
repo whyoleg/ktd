@@ -26,8 +26,8 @@ suspend fun TelegramClient.getAutoDownloadSettingsPresets(): AutoDownloadSetting
  * @type - Type of the network for which the new settings are applied
  */
 suspend fun TelegramClient.setAutoDownloadSettings(
-    settings: AutoDownloadSettings? = null,
-    type: NetworkType? = null
+    settings: AutoDownloadSettings,
+    type: NetworkType
 ): Ok = auto(
     SetAutoDownloadSettings(
         settings,

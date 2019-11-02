@@ -41,9 +41,9 @@ suspend fun TelegramClient.getPaymentForm(
 suspend fun TelegramClient.sendPaymentForm(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    orderInfoId: String? = null,
-    shippingOptionId: String? = null,
-    credentials: InputCredentials? = null
+    orderInfoId: String,
+    shippingOptionId: String,
+    credentials: InputCredentials
 ): PaymentResult = payment(
     SendPaymentForm(
         chatId,

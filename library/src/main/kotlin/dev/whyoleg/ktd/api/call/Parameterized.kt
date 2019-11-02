@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 suspend fun TelegramClient.createCall(
     userId: Int = 0,
-    protocol: CallProtocol? = null
+    protocol: CallProtocol
 ): CallId = call(
     CreateCall(
         userId,
@@ -36,7 +36,7 @@ suspend fun TelegramClient.createCall(
  */
 suspend fun TelegramClient.acceptCall(
     callId: Int = 0,
-    protocol: CallProtocol? = null
+    protocol: CallProtocol
 ): Ok = call(
     AcceptCall(
         callId,
@@ -77,7 +77,7 @@ suspend fun TelegramClient.discardCall(
 suspend fun TelegramClient.sendCallRating(
     callId: Int = 0,
     rating: Int = 0,
-    comment: String? = null,
+    comment: String,
     problems: Array<CallProblem> = emptyArray()
 ): Ok = call(
     SendCallRating(
@@ -96,7 +96,7 @@ suspend fun TelegramClient.sendCallRating(
  */
 suspend fun TelegramClient.sendCallDebugInformation(
     callId: Int = 0,
-    debugInformation: String? = null
+    debugInformation: String
 ): Ok = call(
     SendCallDebugInformation(
         callId,

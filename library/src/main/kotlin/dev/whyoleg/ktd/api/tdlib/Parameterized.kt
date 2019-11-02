@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @parameters - Parameters
  */
 suspend fun TelegramClient.setTdlibParameters(
-    parameters: TdlibParameters? = null
+    parameters: TdlibParameters
 ): Ok = tdlib(
     SetTdlibParameters(
         parameters

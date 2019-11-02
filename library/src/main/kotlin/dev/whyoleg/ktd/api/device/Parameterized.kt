@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @otherUserIds - List of user identifiers of other users currently using the client
  */
 suspend fun TelegramClient.registerDevice(
-    deviceToken: DeviceToken? = null,
+    deviceToken: DeviceToken,
     otherUserIds: IntArray = intArrayOf()
 ): PushReceiverId = device(
     RegisterDevice(

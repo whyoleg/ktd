@@ -30,7 +30,7 @@ suspend fun TelegramClient.getSavedAnimations(): Animations = animation(
  *              Successfully sent via a message) can be added to the list
  */
 suspend fun TelegramClient.addSavedAnimation(
-    animation: InputFile? = null
+    animation: InputFile
 ): Ok = animation(
     AddSavedAnimation(
         animation
@@ -43,7 +43,7 @@ suspend fun TelegramClient.addSavedAnimation(
  * @animation - Animation file to be removed
  */
 suspend fun TelegramClient.removeSavedAnimation(
-    animation: InputFile? = null
+    animation: InputFile
 ): Ok = animation(
     RemoveSavedAnimation(
         animation

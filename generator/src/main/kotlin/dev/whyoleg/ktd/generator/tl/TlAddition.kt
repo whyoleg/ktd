@@ -27,6 +27,8 @@ sealed class TlAddition {
 
     object NonEmpty : TlAddition()
 
+    object Sync : TlAddition()
+
     companion object {
         fun annotations() = listOf<Annotation>(BotsOnly, TestingOnly)
     }

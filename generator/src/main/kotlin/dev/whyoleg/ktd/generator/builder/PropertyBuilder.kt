@@ -8,22 +8,17 @@ fun StringBuilder.buildParameters(parameters: List<String>, addEmptyBrackets: Bo
     } else if (addEmptyBrackets) append("()")
 }
 
-fun TlProperty.toVal(metadata: TlDataMetadata): String {
-    val (withDefault, isNullable) = metadata
+fun TlProperty.toVal(metadata: TlDataMetadata): String = toParameter(metadata, "val ")
+
+fun TlProperty.toParameter(metadata: TlDataMetadata, prefix: String = ""): String {
+    val (withDefault) = metadata
     val propName = name.snakeToCamel()
-
-    val nullableToken = if (type is TlRefType && (isNullable || withDefault)) questionToken else emptyToken
-    val default = if (withDefault) " = ${type.default}" else emptyToken
-    return "${inlineAnnotations()}val $propName: ${type.kotlinType}$nullableToken$default"
-}
-
-fun TlProperty.toParameter(metadata: TlDataMetadata): String {
-    val (withDefault, isNullable) = metadata
-    val propName = name.snakeToCamel()
-
-    val nullableToken = if (type is TlRefType && (isNullable || withDefault)) questionToken else emptyToken
-    val default = if (withDefault) " = ${type.default}" else emptyToken
-    return "${inlineAnnotations()}$propName: ${type.kotlinType}$nullableToken$default"
+    val defaultValue = if (withDefault) " = ${type.default}" else emptyToken
+    val default = if (type is TlRefType) {
+        if (additions.any { it is TlAddition.Nullable }) questionToken + defaultValue
+        else emptyToken
+    } else defaultValue
+    return "${inlineAnnotations()}$prefix$propName: ${type.kotlinType}$default"
 }
 
 fun TlProperty.descriptionLines(): List<String> {

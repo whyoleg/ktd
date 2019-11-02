@@ -5,13 +5,13 @@ readonly DATA=$PWD/td/lib/cmake/Td
 cd ../td || exit
 mkdir -p jnibuild
 cd jnibuild || exit
-cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DTD_ENABLE_JNI=ON -DCMAKE_INSTALL_PREFIX:PATH=../../generated/td ..
+cmake -DCMAKE_BUILD_TYPE=Release -DTD_ENABLE_LTO=ON -DTD_ENABLE_JNI=ON -DCMAKE_INSTALL_PREFIX:PATH=../../generated/td ..
 cmake --build . --target install
 
 cd ../../generated || exit
 mkdir -p build
 cd build || exit
-cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DTd_DIR=$DATA -DCMAKE_INSTALL_PREFIX:PATH=.. ..
+cmake -DCMAKE_BUILD_TYPE=Release -DTd_DIR=$DATA -DCMAKE_INSTALL_PREFIX:PATH=.. ..
 cmake --build . --target install
 
 cd ../bin || exit

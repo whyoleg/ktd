@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(ktd VERSION 1.0 LANGUAGES CXX)
-set(TD_ENABLE_JNI ON)
-set(TD_ENABLE_LTO ON)
 
 find_package(Td REQUIRED)
 

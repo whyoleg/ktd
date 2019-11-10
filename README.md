@@ -81,7 +81,7 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.whyoleg.ktd:ktd:0.3.0"
+    implementation "dev.whyoleg.ktd:ktd:0.3.1"
 }
 ```
 

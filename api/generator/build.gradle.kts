@@ -1,9 +1,10 @@
-import dev.whyoleg.kamp.*
-
-kampJvm {
+configure {
     source {
         main {
-            implementation(Dependencies.kotlin.stdlib)
+            implementation {
+                +Dependencies.kotlin.stdlib
+                +Dependencies.githubApi
+            }
         }
     }
 }

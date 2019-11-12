@@ -33,10 +33,11 @@ fun main(vararg args: String) {
     val apiVersion = args.firstOrNull() ?: "1.5.0"
 
     val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
-    shell(File("")) {
-        "git clone https://github.com/tdlib/td.git"()
-        "cd td"()
-        "git reset --hard $commitSha"()
+    shell(File("mm").apply { mkdirs() }) {
+        call("cd ../").log()
+        call("git clone https://github.com/tdlib/td.git").log()
+        call("cd td").log()
+        call("git reset --hard $commitSha").log()
     }
 
     val buildPath = "td/build-v$apiVersion"

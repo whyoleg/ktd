@@ -1,53 +1,57 @@
 package dev.whyoleg.ktd.generator
 
-import dev.whyoleg.ktd.generator.builder.*
-import dev.whyoleg.ktd.generator.tl.*
-import dev.whyoleg.ktd.generator.tl.parser.*
+import org.kohsuke.github.*
 
-fun generateApi(scheme: ByteArray): Map<String, String> {
-    val tlData = scheme.readTlScheme().parseTlData()
-    val metadata = tlData.extractMetadata()
-    val tlScheme = TlScheme(tlData, metadata)
-    val functionsMap = tlData.groupFunctions()
-    val syncFunctions = tlData.filterIsInstance<TlFunction>().filter { TlAddition.Sync in it.metadata.additions }
-
-    val map = mutableMapOf<String, String>()
-
-    fun String.nested(path: String, block: String.() -> Unit) {
-        ("$this/$path").block()
-    }
-
-    fun String.file(name: String, block: StringBuilder.() -> Unit) {
-        val nested = "$this/$name.kt"
-        map[nested] = buildString(block)
-    }
-
-    with("src/main/kotlin/dev/whyoleg/ktd/api") {
-        file("Experimental") {
-            buildExperimental()
+fun main(vararg args: String) {
+    val (apiVersion, read, write) = when (args.size) {
+        3    -> {
+            val (apiVersion, read, write) = args
+            Triple(apiVersion, read, write)
         }
-        file("TdApi") {
-            buildApi(tlScheme)
+        2    -> {
+            val (apiVersion, read) = args
+            Triple(apiVersion, read, "l")
         }
-        functionsMap.forEach { (type, functions) ->
-            nested(type.decapitalize()) {
-                file("Raw") {
-                    buildRawFunctions(type, functions)
-                }
-                file("Parameterized") {
-                    buildFunctions(type, functions, metadata)
-                }
-            }
+        1    -> {
+            Triple(args.first(), "l", "l")
         }
-        nested("sync") {
-            file("Raw") {
-                buildRawSyncFunctions(syncFunctions)
-            }
-            file("Parameterized") {
-                buildSyncFunctions(syncFunctions, metadata)
-            }
+        else -> {
+            print("Provide api version: ")
+            val apiVersion = readLine()!!
+            print("Provide read flag: ")
+            val read = readLine()!!
+            print("Provide write flag: ")
+            val write = readLine()!!
+            Triple(apiVersion, read, write)
         }
     }
-
-    return map
+    val github by lazy {
+        GitHub.connectAnonymously()
+    }
+    val scheme = when (read) {
+        "l"  -> readLocalScheme(apiVersion)
+        "g"  -> github.downloadScheme(apiVersion)
+        else -> {
+            println("Wrong input")
+            return
+        }
+    }
+    println("Scheme exist")
+    val entities: List<Entity> = generateEntities(scheme, apiVersion)
+    println("Entities generated")
+    when (write) {
+        "l"  -> writeEntitiesLocally(entities)
+        "g"  -> github.commitEntities(entities, apiVersion)
+        else -> {
+            println("Wrong input")
+            return
+        }
+    }
+    println("New api saved")
 }
+
+fun generateEntities(scheme: ByteArray, apiVersion: String): List<Entity> =
+    (generateApi(scheme).toList() + listOf(
+        "td_api.tl" to scheme.toString(Charsets.UTF_8),
+        "build.gradle.kts" to "configureApi(\"$apiVersion\")"
+    )).map { "api/v$apiVersion/${it.first}" to it.second }

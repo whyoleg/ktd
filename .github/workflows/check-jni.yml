@@ -13,6 +13,8 @@ jobs:
           java-version: 1.8
       - name: Install dependencies
         run: sudo apt install make git zlib1g-dev libssl-dev gperf cmake clang libc++abi-dev -y
+      - name: Build
+        run: ./gradlew build
       - name: Generate api 1.5.0
         run: ./gradlew :api:generator:generateApi -PTD_API_VERSION=1.5.0
       - name: Generate jni 1.5.0

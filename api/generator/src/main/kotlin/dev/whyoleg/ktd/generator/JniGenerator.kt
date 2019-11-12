@@ -1,6 +1,7 @@
 package dev.whyoleg.ktd.generator
 
 import kotlinx.coroutines.flow.*
+import org.kohsuke.github.*
 import ru.krikun.kotlin.shell.*
 import java.io.*
 
@@ -30,6 +31,13 @@ suspend fun Call.log() {
 
 fun main(vararg args: String) {
     val apiVersion = args.firstOrNull() ?: "1.5.0"
+
+    val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
+    shell(File("")) {
+        "git clone https://github.com/tdlib/td.git"()
+        "cd td"()
+        "git reset --hard $commitSha"()
+    }
 
     val buildPath = "td/build-v$apiVersion"
     val generatedPath = "api/v$apiVersion/generated"

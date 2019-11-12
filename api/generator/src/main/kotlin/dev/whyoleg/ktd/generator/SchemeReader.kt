@@ -11,7 +11,7 @@ fun GHCommit.downloadScheme(): ByteArray {
     return content.read().readBytes()
 }
 
-fun GitHub.downloadScheme(apiVersion: String): ByteArray {
+fun GitHub.findCommit(apiVersion: String): GHCommit {
     val query = "Update version to $apiVersion."
     val versionCommit =
         searchCommits()
@@ -20,7 +20,9 @@ fun GitHub.downloadScheme(apiVersion: String): ByteArray {
             .list()
             .first { it.commitShortInfo.message.substringBefore("\n") == query }
     println("Commit for version $apiVersion: ${versionCommit.shA1}")
-    return versionCommit.downloadScheme()
+    return versionCommit
 }
+
+fun GitHub.downloadScheme(apiVersion: String): ByteArray = findCommit(apiVersion).downloadScheme()
 
 fun GitHub.downloadLatestScheme(): ByteArray = getRepository("tdlib/td").listCommits().first().downloadScheme()

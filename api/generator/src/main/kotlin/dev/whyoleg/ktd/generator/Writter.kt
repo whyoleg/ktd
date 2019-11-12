@@ -7,6 +7,7 @@ typealias Entity = Pair<String, String>
 
 fun writeEntitiesLocally(entities: List<Entity>) {
     entities.forEach { (path, content) ->
+        println("Create file: $path")
         with(File(path)) {
             parentFile.mkdirs()
             writeText(content)
@@ -38,10 +39,6 @@ fun GitHub.commitEntities(entities: List<Entity>, apiVersion: String) {
             .message("New api version: $apiVersion")
             .create()
     println("Commit created: ${commit.shA1}")
-    val ref = repo.createRef("refs/heads/api-v$apiVersion", commit.shA1)
+    val ref = repo.createRef("refs/heads/api/v$apiVersion", commit.shA1)
     println("Branch '${ref.ref.substringAfter("refs/heads/")}' created: ${ref.`object`.sha}")
-}
-
-fun main() {
-    GitHub.connectUsingPassword("whyoleg", "PASSWORD").commitEntities(emptyList(), "test")
 }

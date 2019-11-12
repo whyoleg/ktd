@@ -3,9 +3,8 @@ package dev.whyoleg.ktd.generator
 import dev.whyoleg.ktd.generator.builder.*
 import dev.whyoleg.ktd.generator.tl.*
 import dev.whyoleg.ktd.generator.tl.parser.*
-import java.io.*
 
-fun generateApi(scheme: InputStream): Map<String, String> {
+fun generateApi(scheme: ByteArray): Map<String, String> {
     val tlData = scheme.readTlScheme().parseTlData()
     val metadata = tlData.extractMetadata()
     val tlScheme = TlScheme(tlData, metadata)

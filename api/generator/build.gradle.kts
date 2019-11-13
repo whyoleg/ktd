@@ -1,5 +1,9 @@
 import kotlinx.atomicfu.plugin.gradle.*
 
+repositories {
+    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+}
+
 configure {
     source {
         main {

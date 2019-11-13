@@ -1,42 +1,38 @@
 package dev.whyoleg.ktd.generator
 
-import kotlinx.coroutines.flow.*
+import eu.jrie.jetbrains.kotlinshell.shell.*
 import org.kohsuke.github.*
-import ru.krikun.kotlin.shell.*
 import java.io.*
 
 const val DCMAKE_BUILD_TYPE = "MinSizeRel"
 
-fun Shell.cmake(vararg commands: String): Call = call(
-    "CC=/usr/bin/clang-6.0 " +
-            "CXX=/usr/bin/clang++-6.0 " +
-            "cmake " +
+suspend fun Shell.cmake(vararg commands: String) =
+    ("cmake " +
             "-DCMAKE_BUILD_TYPE=$DCMAKE_BUILD_TYPE " +
             "-DCMAKE_AR=/usr/bin/llvm-ar-6.0 " +
             "-DCMAKE_NM=/usr/bin/llvm-nm-6.0 " +
             "-DCMAKE_OBJDUMP=/usr/bin/llvm-objdump-6.0 " +
             "-DCMAKE_RANLIB=/usr/bin/llvm-ranlib-6.0 " +
             commands.joinToString(" ") +
-            " .."
-)
+            " ..")()
 
-fun Shell.install(): Call = call("cmake --build . --target install")
+suspend fun Shell.install() = "cmake --build . --target install"()
 
-suspend fun Call.log() {
-    output().collect {
-        if (it is Output.Line) println(it.data)
-        else println(it)
-    }
-}
+//suspend fun Call.log() {
+//    output().collect {
+//        if (it is Output.Line) println(it.data)
+//        else println(it)
+//    }
+//}
 
-fun main(vararg args: String) {
+suspend fun main(vararg args: String) {
     val apiVersion = args.firstOrNull() ?: "1.5.0"
 
     val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
-    shell(File("td")) {
-        call("echo 123").log()
+    shell(dir = File("td")) {
+        "echo 123"()
         println("Reset td to commit")
-        call("git reset --hard $commitSha").log()
+        "git reset --hard $commitSha"()
         println("td reseted")
     }
 
@@ -45,13 +41,13 @@ fun main(vararg args: String) {
     val buildDir = File(buildPath)
     println("Build dir: ${buildDir.absolutePath}")
     buildDir.mkdirs()
-    shell(buildDir) {
+    shell(dir = buildDir, env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")) {
         cmake(
             "-DCMAKE_INSTALL_PREFIX:PATH=../../$generatedPath/td",
             "-DTD_ENABLE_LTO=ON",
             "-DTD_ENABLE_JNI=ON"
-        ).log()
-        install().log()
+        )
+        install()
     }
     val generatedDir = File(generatedPath)
     val generatedBuildDir = generatedDir.resolve("build")
@@ -65,12 +61,12 @@ fun main(vararg args: String) {
                 .copyTo(generatedDir.resolve(it).also { println(" to ${it.absolutePath}") })
         }
     }
-    shell(generatedBuildDir) {
+    shell(dir = generatedBuildDir, env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")) {
         cmake(
             "-DTd_DIR=${generatedDir.absolutePath}/td/lib/cmake/Td",
             "-DCMAKE_INSTALL_PREFIX:PATH=.."
-        ).log()
-        install().log()
+        )
+        install()
     }
     generatedDir
         .resolve("bin")

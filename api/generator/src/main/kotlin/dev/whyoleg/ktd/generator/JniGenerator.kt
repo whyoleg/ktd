@@ -34,6 +34,7 @@ fun main(vararg args: String) {
 
     val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
     shell(File("td")) {
+        call("echo 123").log()
         println("Reset td to commit")
         call("git reset --hard $commitSha").log()
         println("td reseted")

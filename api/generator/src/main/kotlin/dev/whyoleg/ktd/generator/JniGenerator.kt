@@ -4,7 +4,8 @@ import eu.jrie.jetbrains.kotlinshell.shell.*
 import org.kohsuke.github.*
 import java.io.*
 
-const val DCMAKE_BUILD_TYPE = "MinSizeRel"
+const val DCMAKE_BUILD_TYPE = "Release"
+val env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")
 
 suspend fun Shell.cmake(vararg commands: String) =
     ("cmake " +
@@ -14,65 +15,68 @@ suspend fun Shell.cmake(vararg commands: String) =
             "-DCMAKE_OBJDUMP=/usr/bin/llvm-objdump-6.0 " +
             "-DCMAKE_RANLIB=/usr/bin/llvm-ranlib-6.0 " +
             commands.joinToString(" ") +
-            " ..")()
+            " ..").invoke()
 
-suspend fun Shell.install() = "cmake --build . --target install"()
+suspend fun Shell.install() = "cmake --build . --target install".invoke()
 
-//suspend fun Call.log() {
-//    output().collect {
-//        if (it is Output.Line) println(it.data)
-//        else println(it)
-//    }
-//}
+suspend fun build(dir: File, vararg commands: String) {
+    shell(dir = dir, env = env) {
+        cmake(*commands)
+        install()
+    }
+}
 
 suspend fun main(vararg args: String) {
+    val arch = System.getProperty("os.arch").toLowerCase()
+    val os = System.getProperty("os.name").toLowerCase()
+    val some = System.getProperty("sun.arch.data.model").toLowerCase()
+    println("Start build on $os $arch [$some]")
     val apiVersion = args.firstOrNull() ?: "1.5.0"
 
     val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
-    shell(dir = File("td")) {
-        "echo 123"()
-        println("Reset td to commit")
-        "git reset --hard $commitSha"()
-        println("td reseted")
-    }
+    shell(dir = File("td")) { "git reset --hard $commitSha"() }
 
-    val buildPath = "td/build-v$apiVersion"
     val generatedPath = "api/v$apiVersion/generated"
-    val buildDir = File(buildPath)
-    println("Build dir: ${buildDir.absolutePath}")
-    buildDir.mkdirs()
-    shell(dir = buildDir, env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")) {
-        cmake(
-            "-DCMAKE_INSTALL_PREFIX:PATH=../../$generatedPath/td",
-            "-DTD_ENABLE_LTO=ON",
-            "-DTD_ENABLE_JNI=ON"
-        )
-        install()
-    }
+    val buildDir = File("td/build-v$apiVersion")
     val generatedDir = File(generatedPath)
     val generatedBuildDir = generatedDir.resolve("build")
+    buildDir.mkdirs()
+    generatedBuildDir.mkdirs()
+
+    File("api/generator/jni").copyFilesTo(generatedDir, "td_jni.cpp", "CMakeLists.txt")
+
+    println("Build dir: ${buildDir.absolutePath}")
     println("Generated dir: ${generatedDir.absolutePath}")
     println("Generated build dir: ${generatedBuildDir.absolutePath}")
-    generatedBuildDir.mkdirs()
-    with(File("api/generator/jni")) {
-        listOf("td_jni.cpp", "CMakeLists.txt").forEach {
-            print("Copy '$it'")
-            resolve(it).also { print(" from ${it.absolutePath}") }
-                .copyTo(generatedDir.resolve(it).also { println(" to ${it.absolutePath}") })
-        }
-    }
-    shell(dir = generatedBuildDir, env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")) {
-        cmake(
-            "-DTd_DIR=${generatedDir.absolutePath}/td/lib/cmake/Td",
-            "-DCMAKE_INSTALL_PREFIX:PATH=.."
-        )
-        install()
-    }
-    generatedDir
-        .resolve("bin")
-        .copyFileTo("libtdjni.so", File("api/v$apiVersion/src/main/libs/linux/amd64"))
+
+    println("Build tdlib")
+    build(
+        buildDir,
+        "-DCMAKE_INSTALL_PREFIX:PATH=../../$generatedPath/td",
+        "-DTD_ENABLE_LTO=ON",
+        "-DTD_ENABLE_JNI=ON"
+    )
+    println("Generate tdlib")
+    build(
+        generatedBuildDir,
+        "-DTd_DIR=${generatedDir.absolutePath}/td/lib/cmake/Td",
+        "-DCMAKE_INSTALL_PREFIX:PATH=.."
+    )
+    val size = generatedDir.resolve("bin/libtdjni.so").readBytes().size
+
+    println("Generated tdlib size: $size b")
+    println("Generated tdlib size: ${size / 1024} mb")
+
+    //    generatedDir
+    //        .resolve("bin")
+    //        .copyFilesTo(File("api/v$apiVersion/src/main/libs/linux/amd64"), "libtdjni.so")
 }
 
-fun File.copyFileTo(name: String, path: File) {
-    resolve(name).copyTo(path.resolve(name))
+fun File.copyFilesTo(path: File, vararg names: String) {
+    names.forEach {
+        val from = resolve(it)
+        val to = path.resolve(it)
+        println("Copy '$it' from ${from.absolutePath} to ${to.absolutePath}")
+        from.copyTo(to)
+    }
 }

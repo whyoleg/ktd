@@ -5,7 +5,11 @@ on:
       - github-fetching
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x64, x86]
+        os: [ubuntu-16.04, ubuntu-18.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v1
         with:
@@ -13,8 +17,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
+          architecture: matrix.arch
       - name: Install dependencies
-        run: sudo apt install make git zlib1g-dev libssl-dev gperf cmake clang libc++abi-dev -y
+        run: sudo apt install make git zlib1g-dev libssl-dev gperf cmake clang libc++abi-dev ccache -y
       - name: Build
         run: ./gradlew build
       - name: Generate api 1.5.0

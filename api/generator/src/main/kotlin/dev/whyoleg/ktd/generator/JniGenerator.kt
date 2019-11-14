@@ -60,12 +60,19 @@ val target by lazy {
 
 fun main(vararg args: String) {
     val apiVersion = args.first()
-    val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
+    println("Start with: $apiVersion")
     System
         .getProperties()
         .toList()
         .sortedBy { it.first?.toString() }
         .forEach { (key, value) -> println("$key: $value") }
+    val commitSha =
+        GitHub
+            .connectAnonymously()
+            .also { println("Connected with: $it") }
+            .findCommit(apiVersion)
+            .shA1
+    println("tdlib commit: $commitSha")
     runBlocking {
         delay(500)
         target

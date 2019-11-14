@@ -12,5 +12,4 @@ classes
 build/
 *.log
 build-cache
-generated/bin
-generated/td
+*generated

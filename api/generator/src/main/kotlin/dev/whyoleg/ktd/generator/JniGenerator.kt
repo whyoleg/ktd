@@ -1,10 +1,11 @@
 package dev.whyoleg.ktd.generator
 
 import eu.jrie.jetbrains.kotlinshell.shell.*
+import kotlinx.coroutines.*
 import org.kohsuke.github.*
 import java.io.*
 
-const val DCMAKE_BUILD_TYPE = "Release"
+const val DCMAKE_BUILD_TYPE = "MinSizeRel"
 val env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")
 
 suspend fun Shell.cmake(vararg commands: String) =
@@ -26,19 +27,26 @@ suspend fun build(dir: File, vararg commands: String) {
     }
 }
 
-suspend fun main(vararg args: String) {
-    val arch = System.getProperty("os.arch").toLowerCase()
-    val os = System.getProperty("os.name").toLowerCase()
-    val some = System.getProperty("sun.arch.data.model").toLowerCase()
-    println("Start build on $os $arch [$some]")
-    val apiVersion = args.firstOrNull() ?: "1.5.0"
+enum class Target { Linux, Win32, Win64, Mac }
 
-    val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
-    println("HELLO322")
-    shell(dir = File("td")) {
-        "echo HELLO111"()
-        "git reset --hard $commitSha"()
+val target by lazy {
+    val os = System.getProperty("os.name").toLowerCase()
+    val target = when {
+        os.contains("linux")   -> Target.Linux
+        os.contains("mac")     -> Target.Mac
+        os.contains("windows") -> if (System.getProperty("WINDOWS_ARCH").toLowerCase().contains("32")) Target.Win32
+        else Target.Win64
+        else                   -> error("Target is not supported")
     }
+    println("Start build on $target")
+    target
+}
+
+suspend fun main(vararg args: String) {
+    target
+    val apiVersion = args.firstOrNull() ?: "1.5.0"
+    val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
+    shell(dir = File("td")) { "git reset --hard $commitSha"() }
 
     val generatedPath = "api/v$apiVersion/generated"
     val buildDir = File("td/build-v$apiVersion")
@@ -66,6 +74,16 @@ suspend fun main(vararg args: String) {
         "-DTd_DIR=${generatedDir.absolutePath}/td/lib/cmake/Td",
         "-DCMAKE_INSTALL_PREFIX:PATH=.."
     )
+    delay(2000)
+    generatedDir.listFiles().orEmpty().forEach {
+        println(it.absolutePath)
+        if (!it.isFile) {
+            println("DIRECTORY")
+            it.listFiles().orEmpty().forEach {
+                println(it.absolutePath)
+            }
+        }
+    }
     val size = generatedDir.resolve("bin/libtdjni.so").readBytes().size
 
     println("Generated tdlib size: $size b")
@@ -81,6 +99,7 @@ fun File.copyFilesTo(path: File, vararg names: String) {
         val from = resolve(it)
         val to = path.resolve(it)
         println("Copy '$it' from ${from.absolutePath} to ${to.absolutePath}")
+        if (to.exists()) to.delete()
         from.copyTo(to)
     }
 }

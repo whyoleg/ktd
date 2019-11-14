@@ -1,6 +1,5 @@
 package dev.whyoleg.ktd.generator
 
-import kotlinx.coroutines.*
 import org.kohsuke.github.*
 import java.io.*
 
@@ -14,21 +13,12 @@ fun GHCommit.downloadScheme(): ByteArray {
 
 fun GitHub.findCommit(apiVersion: String): GHCommit {
     val query = "Update version to $apiVersion."
-    GlobalScope.launch {
-        val it = getRepository("tdlib/td").listCommits().first()
-        println("LAST found: ${it.commitShortInfo.message}")
-        println("LAST sha: ${it.shA1}")
-    }
     val versionCommit =
         searchCommits()
             .q(query)
             .repo("tdlib/td")
             .list()
-            .first {
-                println("Commit found: ${it.commitShortInfo.message}")
-                println("sha: ${it.shA1}")
-                it.commitShortInfo.message.substringBefore("\n") == query
-            }
+            .first { it.commitShortInfo.message.substringBefore("\n") == query }
     println("Commit for version $apiVersion: ${versionCommit.shA1}")
     return versionCommit
 }

@@ -74,6 +74,7 @@ suspend fun TelegramClient.showMeAndContacts() {
     println("Users:")
     users.userIds.forEach {
         val user: User = getUser(it)
-        if (!user.username.isNullOrBlank()) println(user.username)
+        if (!user.username.isBlank()) println(user.username)
     }
 }
+

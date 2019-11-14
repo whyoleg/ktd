@@ -23,15 +23,15 @@ jobs:
       - name: Build
         uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: {{ env.GRADLE_VERSION }}
+          gradle-version: ${{ GRADLE_VERSION }}
           arguments: build
       - name: Generate api 1.5.0
         uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: {{ env.GRADLE_VERSION }}
+          gradle-version: ${{ GRADLE_VERSION }}
           arguments: :api:generator:generateApi -PTD_API_VERSION=1.5.0
       - name: Generate jni 1.5.0
         uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: {{ env.GRADLE_VERSION }}
+          gradle-version: ${{ GRADLE_VERSION }}
           arguments: :api:generator:generateJni -PTD_API_VERSION=1.5.0

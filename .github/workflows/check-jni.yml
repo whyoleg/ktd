@@ -39,21 +39,17 @@ jobs:
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
           brew install gperf coreutils
 
-      - name: Checkout Windows vcpkg
-        if: matrix.os == 'windows-latest'
-        uses: actions/checkout@v1
-        with:
-          repository: Microsoft/vcpkg
-          ref: refs/heads/master
       - name: Install Windows 64 dependencies
         if: matrix.os == 'windows-latest' && matrix.arch == 64
         run: |
+          git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install openssl:x86-windows zlib:x86-windows
       - name: Install Windows 32 dependencies
         if: matrix.os == 'windows-latest' && matrix.arch == 32
         run: |
+          git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install openssl:x64-windows zlib:x64-windows

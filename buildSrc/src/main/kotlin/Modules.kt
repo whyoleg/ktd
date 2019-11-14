@@ -11,6 +11,7 @@ object Modules : RootModule() {
         val stub by named()
 
         val apis = listOf(
+            "1.5.0",
             "1.5.1"
         ).map { named("v$it") }
 

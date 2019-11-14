@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.3.1
+## 0.x.y
 > Unreleased
-- Split into client and api
+- Split modules into client and api
 - Api versioning based on tdlib version: 1.5.0 and 1.5.1
 - From now `ktd` dependency will provide latest tdlib api version
 

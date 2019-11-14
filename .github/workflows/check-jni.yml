@@ -5,6 +5,9 @@ on:
       - github-fetching
 jobs:
   build:
+    env:
+      TD_API_VERSION: 1.5.0
+      GRADLE_VERSION: 5.6.4
     strategy:
       fail-fast: false
       matrix:
@@ -20,25 +23,15 @@ jobs:
       - name: Build
         uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: 5.6.4
+          gradle-version: {{ GRADLE_VERSION }}
           arguments: build
       - name: Generate api 1.5.0
         uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: 5.6.4
+          gradle-version: {{ GRADLE_VERSION }}
           arguments: :api:generator:generateApi -PTD_API_VERSION=1.5.0
-      - uses: eskatos/gradle-command-action@v1
+      - name: Generate jni 1.5.0
+        uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: 5.6.4
+          gradle-version: {{ GRADLE_VERSION }}
           arguments: :api:generator:generateJni -PTD_API_VERSION=1.5.0
-
-#      - name: Install dependencies
-#        run: sudo apt install make git zlib1g-dev libssl-dev gperf cmake clang libc++abi-dev ccache -y
-#      - name: Build
-#        run: ./gradlew build
-#      - name: Generate api 1.5.0
-#        run: ./gradlew
-#      - name: Generate jni 1.5.0
-#        run: ./gradlew :api:generator:generateJni -PTD_API_VERSION=1.5.0
-#      - name: Build
-#        run: ./gradlew build

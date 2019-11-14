@@ -74,4 +74,4 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateJni -PTD_API_VERSION=${{ env.TD_API_VERSION }}
+          arguments: :api:generator:generateJni -PTD_API_VERSION=${{ env.TD_API_VERSION }} -PARCH=${{ matrix.arch }}

@@ -34,7 +34,11 @@ suspend fun main(vararg args: String) {
     val apiVersion = args.firstOrNull() ?: "1.5.0"
 
     val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
-    shell(dir = File("td")) { "git reset --hard $commitSha"() }
+    println("HELLO322")
+    shell(dir = File("td")) {
+        "echo HELLO111"()
+        "git reset --hard $commitSha"()
+    }
 
     val generatedPath = "api/v$apiVersion/generated"
     val buildDir = File("td/build-v$apiVersion")

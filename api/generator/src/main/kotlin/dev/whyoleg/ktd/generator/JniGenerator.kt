@@ -59,9 +59,13 @@ val target by lazy {
 }
 
 suspend fun main(vararg args: String) {
-    println(System.getProperty("ARCH"))
+    System
+        .getProperties()
+        .toList()
+        .sortedBy { it.first.toString() }
+        .forEach { (key, value) -> println("$key: $value") }
     target
-    val apiVersion = args.firstOrNull() ?: "1.5.0"
+    val apiVersion = args.first()
     val commitSha = GitHub.connectAnonymously().findCommit(apiVersion).shA1
     println("Check chell")
     shell(dir = File("td")) {

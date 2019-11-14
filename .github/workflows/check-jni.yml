@@ -9,13 +9,13 @@ jobs:
       TD_API_VERSION: 1.5.0
       GRADLE_VERSION: 5.6.4
       WINDOWS_ARCH: ${{ matrix.arch }}
-    if: matrix.os == 'windows-latest' || arch == 64
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         arch: [32, 64]
     runs-on: ${{ matrix.os }}
+    if: matrix.os == 'windows-latest' || arch == 64
 
     steps:
       - uses: actions/checkout@v1

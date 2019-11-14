@@ -38,7 +38,6 @@ suspend fun Shell.install() {
 suspend fun build(dir: File, vararg commands: String) {
     dir.deleteRecursively()
     dir.mkdirs()
-    if (target == Target.Win32 || target == Target.Win64) shell { "Remove-Item build -Force -Recurse -ErrorAction SilentlyContinue"() }
     shell(dir = dir, env = if (target == Target.Linux) env else null) {
         cmake(*commands)
         install()

@@ -31,13 +31,13 @@ jobs:
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt install make git zlib1g-dev libssl-dev gperf cmake clang libc++abi-dev ccache -y
+        run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
 
       - name: Install MacOS dependencies
         if: matrix.os == 'macos-latest'
         run: |
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-          brew install gperf cmake openssl coreutils
+          brew install gperf coreutils
 
       - name: Build
         uses: eskatos/gradle-command-action@v1

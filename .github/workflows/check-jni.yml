@@ -8,7 +8,7 @@ jobs:
     env:
       TD_API_VERSION: 1.5.0
       GRADLE_VERSION: 5.6.4
-      WINDOWS_ARCH: ${{ matrix.arch }}
+      ARCH: ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -29,9 +29,17 @@ jobs:
         with:
           java-version: 11
 
-      - name: Install dependencies
+      - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install make git zlib1g-dev libssl-dev gperf cmake clang libc++abi-dev ccache -y
+
+      - name: Install MacOS dependencies
+        if: matrix.os == 'macos-latest'
+        run: |
+          xcode-select --install
+          /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+          brew install gperf cmake openssl coreutils
+          brew cask install java
 
       - name: Build
         uses: eskatos/gradle-command-action@v1
@@ -40,6 +48,7 @@ jobs:
           arguments: build
 
       - name: Generate api 1.5.0
+        if: false
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}

@@ -51,11 +51,11 @@ jobs:
           ./vcpkg.exe install openssl:x86-windows zlib:x86-windows
         working-directory: vcpkg
       - name: Install Windows 32 dependencies
-      if: matrix.os == 'windows-latest' && matrix.arch == 32
-      run: |
-        ./bootstrap-vcpkg.bat
-        ./vcpkg.exe install openssl:x64-windows zlib:x64-windows
-      working-directory: vcpkg
+        if: matrix.os == 'windows-latest' && matrix.arch == 32
+        run: |
+          ./bootstrap-vcpkg.bat
+          ./vcpkg.exe install openssl:x64-windows zlib:x64-windows
+        working-directory: vcpkg
 
       - name: Build
         uses: eskatos/gradle-command-action@v1

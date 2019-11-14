@@ -44,6 +44,7 @@ jobs:
         uses: actions/checkout@v1
         with:
           repository: Microsoft/vcpkg
+          ref: refs/heads/master
       - name: Install Windows 64 dependencies
         if: matrix.os == 'windows-latest' && matrix.arch == 64
         run: |

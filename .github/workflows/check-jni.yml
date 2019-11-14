@@ -36,10 +36,8 @@ jobs:
       - name: Install MacOS dependencies
         if: matrix.os == 'macos-latest'
         run: |
-          xcode-select --install
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
           brew install gperf cmake openssl coreutils
-          brew cask install java
 
       - name: Build
         uses: eskatos/gradle-command-action@v1

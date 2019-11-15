@@ -1,6 +1,7 @@
 name: Build JNI
 on:
-  create:
+  pull_request:
+    types: opened
     branches:
       - fetch-tdlib-[0-9]+.[0.9]+.[0.9]+
 
@@ -125,3 +126,7 @@ jobs:
         with:
           args: s3 cp libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
 
+      - name: Approve PR
+      - uses: hmarr/auto-approve-action@v2.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

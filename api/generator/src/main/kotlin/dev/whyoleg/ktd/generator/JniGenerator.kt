@@ -61,6 +61,7 @@ val target by lazy {
 
 fun main(vararg args: String) {
     val apiVersion = args.first()
+    System.setProperty("ARCH", args.getOrElse(1) { "64" })
     println("Start with: $apiVersion")
     System
         .getProperties()

@@ -22,9 +22,8 @@ tasks.register<JavaExec>("generateJni") {
     description = "Generate tdlib with JNI"
     classpath = sourceSets["main"].runtimeClasspath
     main = "dev.whyoleg.ktd.generator.JniGeneratorKt"
-    args = listOf(properties["TD_API_VERSION"].toString())
+    args = listOf(properties["TD_API_VERSION"].toString(), properties["ARCH"].toString())
     workingDir = rootDir
-    environment("ARCH", properties["ARCH"])
 }
 
 tasks.register<JavaExec>("generateApi") {

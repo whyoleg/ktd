@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      #        with:
-      #          ref: develop
       - name: Set TD_API_VERSION env
         run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:22})
 
@@ -42,7 +40,7 @@ jobs:
           author-name: whyoleg
           author-email: whyoleg@gmail.com
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: develop
+          base: tdlib-last
           branch: tdlib-auto/${{ env.TD_API_VERSION }}
           branch-suffix: none
 

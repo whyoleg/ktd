@@ -34,13 +34,13 @@ jobs:
           gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: build
 
-      - name: Create PR
-        uses: peter-evans/create-pull-request@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: prtest-${{ env.TD_API_VERSION }}
-          base: develop
-          commit-message: New api ${{ env.TD_API_VERSION }}
-          author-email: whyoleg@gmail.com
-          author-name: whyoleg
-          title: New api ${{ env.TD_API_VERSION }}
+#      - name: Create PR
+#        uses: peter-evans/create-pull-request@v1
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          branch: prtest-${{ env.TD_API_VERSION }}
+#          base: develop
+#          commit-message: New api ${{ env.TD_API_VERSION }}
+#          author-email: whyoleg@gmail.com
+#          author-name: whyoleg
+#          title: New api ${{ env.TD_API_VERSION }}

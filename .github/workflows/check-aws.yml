@@ -10,7 +10,8 @@ jobs:
       ENDPOINT: ${{ secrets.scaleway_endpoint }}
       AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
-      SCALEWAY_CONFIG: ${{ join(['--bucket', secrets.scaleway_bucket]) }}
+      #TODO join([]) doesn't work
+      SCALEWAY_CONFIG: ${{ join(join('--bucket', secrets.scaleway_bucket), join('--endpoint-url', secrets.scaleway_endpoint)) }}
 
     runs-on: ubuntu-latest
     steps:

@@ -8,7 +8,7 @@ import java.io.*
 const val DCMAKE_BUILD_TYPE = "MinSizeRel"
 val env = mapOf("CC" to "/usr/bin/clang-6.0", "CXX" to "/usr/bin/clang++-6.0")
 
-suspend fun Shell.cmake(vararg commands: String) {
+suspend fun Shell.cmake(step: Int, vararg commands: String) {
     val cmd = when (target) {
         Target.Linux -> listOf(
             "-DCMAKE_BUILD_TYPE=$DCMAKE_BUILD_TYPE",
@@ -21,11 +21,14 @@ suspend fun Shell.cmake(vararg commands: String) {
             "-DCMAKE_BUILD_TYPE=$DCMAKE_BUILD_TYPE",
             "-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/"
         )
-        else         -> listOf(
-            if (target == Target.Win32) "-A Win32" else "-A x64",
-            "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../vcpkg/scripts/buildsystems/vcpkg.cmake",
-            "-DGPERF_EXECUTABLE=../../gperf-win/bin/gperf.exe"
-        )
+        else         -> listOf(if (target == Target.Win32) "-A Win32" else "-A x64") +
+                if (step == 0) listOf(
+                    "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../vcpkg/scripts/buildsystems/vcpkg.cmake",
+                    "-DGPERF_EXECUTABLE=../../gperf-win/bin/gperf.exe"
+                ) else listOf(
+                    "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../../vcpkg/scripts/buildsystems/vcpkg.cmake",
+                    "-DGPERF_EXECUTABLE=../../../gperf-win/bin/gperf.exe"
+                )
     }
 
     ("cmake ${cmd.joinToString(" ")} ${commands.joinToString(" ")} ..").invoke()
@@ -36,11 +39,11 @@ suspend fun Shell.install() {
     "cmake --build . --target install$addition".invoke()
 }
 
-suspend fun build(dir: File, vararg commands: String) {
+suspend fun build(step: Int, dir: File, vararg commands: String) {
     dir.deleteRecursively()
     dir.mkdirs()
     shell(dir = dir, env = if (target == Target.Linux) env else null) {
-        cmake(*commands)
+        cmake(step, *commands)
         install()
     }
 }
@@ -98,6 +101,7 @@ fun main(vararg args: String) {
 
         println("Build tdlib")
         build(
+            0,
             buildDir,
             "-DCMAKE_INSTALL_PREFIX:PATH=../../$generatedPath/td",
             "-DTD_ENABLE_LTO=ON",
@@ -105,6 +109,7 @@ fun main(vararg args: String) {
         )
         println("Generate tdlib")
         build(
+            1,
             generatedBuildDir,
             "-DTd_DIR=${generatedDir.absolutePath}/td/lib/cmake/Td",
             "-DCMAKE_INSTALL_PREFIX:PATH=.."

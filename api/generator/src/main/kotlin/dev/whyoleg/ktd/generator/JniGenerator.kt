@@ -24,7 +24,7 @@ suspend fun Shell.cmake(vararg commands: String) {
         else         -> listOf(
             if (target == Target.Win32) "-A Win32" else "-A x64",
             "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../vcpkg/scripts/buildsystems/vcpkg.cmake",
-            "-DGPERF_EXECUTABLE=../../gperf-win/bin"
+            "-DGPERF_EXECUTABLE=../../gperf-win/bin/gperf.exe"
         )
     }
 

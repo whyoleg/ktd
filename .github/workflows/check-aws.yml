@@ -16,12 +16,12 @@ jobs:
       - name: Check file exists
         uses: actions/aws/cli@master
         with:
-          args: aws s3api wait object-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe
+          args: s3api wait object-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe
 
       - name: Check file not exists
         uses: actions/aws/cli@master
         with:
-          args: aws s3api wait object-not-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe1
+          args: s3api wait object-not-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe1
 
       - name: Download file
         uses: actions/aws/cli@master

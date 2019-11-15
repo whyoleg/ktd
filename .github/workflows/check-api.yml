@@ -43,5 +43,4 @@ jobs:
           author-email: whyoleg@gmail.com
           token: ${{ secrets.GITHUB_TOKEN }}
           base: develop
-          branch: tdlib-test/${{ env.TD_API_VERSION }}
           branch-suffix: none

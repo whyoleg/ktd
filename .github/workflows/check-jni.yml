@@ -27,6 +27,18 @@ jobs:
         with:
           java-version: 11
 
+      - name: Build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: build
+
+      - name: Generate api 1.5.0
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: :api:generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
+
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
@@ -44,18 +56,6 @@ jobs:
           cd vcpkg
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
-
-      - name: Build
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
-
-      - name: Generate api 1.5.0
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
 
       - name: Generate jni 1.5.0
         uses: eskatos/gradle-command-action@v1

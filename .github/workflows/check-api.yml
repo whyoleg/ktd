@@ -37,10 +37,11 @@ jobs:
       - name: Create PR
         uses: peter-evans/create-pull-request@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: tdlib-test/${{ env.TD_API_VERSION }}
-          base: develop
           commit-message: New api ${{ env.TD_API_VERSION }}
-          author-email: whyoleg@gmail.com
-          author-name: whyoleg
           title: New api ${{ env.TD_API_VERSION }}
+          author-name: whyoleg
+          author-email: whyoleg@gmail.com
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: tdlib-test/${{ env.TD_API_VERSION }}
+          branch-suffix: none

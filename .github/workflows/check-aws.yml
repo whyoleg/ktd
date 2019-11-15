@@ -14,25 +14,28 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Check file exists
-        uses: actions/aws/cli@master
-        with:
-          args: s3api wait object-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe
-
-      - name: Check file not exists
-        uses: actions/aws/cli@master
-        with:
-          args: s3api wait object-not-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe1
-
       - name: Download file
         uses: actions/aws/cli@master
         with:
           args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe gperf.exe
 
-      - name: Show files
-        run: ls
+      - name: Copy file
+        run: |
+          mkdir folder
+          cp gperf.exe folder/gperf.exe
+          cp gperf.exe gperf1.exe
+
+      - name: Copy files
+        uses: actions/aws/cli@master
+        with:
+          args: s3 cp . s3://${{ env.BUCKET }}/build/test --recursive --endpoint-url ${{ env.ENDPOINT }}
 
       - name: Show AWS files
         uses: actions/aws/cli@master
         with:
-          args: s3 ls s3://${{ env.BUCKET }}/build/gperf-win/ --endpoint-url ${{ env.ENDPOINT }}
+          args: s3 ls s3://${{ env.BUCKET }}/build/test/ --endpoint-url ${{ env.ENDPOINT }}
+
+      - name: Show AWS files
+        uses: actions/aws/cli@master
+        with:
+          args: s3 ls s3://${{ env.BUCKET }}/build/test/folder/ --endpoint-url ${{ env.ENDPOINT }}

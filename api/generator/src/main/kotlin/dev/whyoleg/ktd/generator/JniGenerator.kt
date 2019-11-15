@@ -93,4 +93,8 @@ suspend fun main(vararg args: String) {
     println("Generated tdlib size: $size b")
     println("Generated tdlib size: ${size / 1024} kb")
     println("Generated tdlib size: ${size / 1024 / 1024} mb")
+
+    val libDir = generatedDir.resolve("libs")
+    libDir.mkdirs()
+    lib.copyTo(libDir.resolve(target.name).resolve(lib.name))
 }

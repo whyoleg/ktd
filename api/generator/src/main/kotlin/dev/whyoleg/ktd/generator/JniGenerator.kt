@@ -23,7 +23,8 @@ suspend fun Shell.cmake(vararg commands: String) {
         )
         else         -> listOf(
             if (target == Target.Win32) "-A Win32" else "-A x64",
-            "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake"
+            "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake",
+            "-DGPERF_EXECUTABLE=../gperf-win/bin"
         )
     }
 
@@ -118,7 +119,8 @@ fun main(vararg args: String) {
                 println("END   DIRECTORY")
             }
         }
-        val size = generatedDir.resolve("bin/libtdjni.so").readBytes().size
+        val lib = generatedDir.resolve("bin").listFiles().orEmpty().first { "tdjni" in it.name }
+        val size = lib.readBytes().size
 
         println("Generated tdlib size: $size b")
         println("Generated tdlib size: ${size / 1024} mb")

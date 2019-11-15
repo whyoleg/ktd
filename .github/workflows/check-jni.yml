@@ -127,6 +127,6 @@ jobs:
           args: s3 cp libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
 
       - name: Approve PR
-      - uses: hmarr/auto-approve-action@v2.0.0
+        uses: hmarr/auto-approve-action@v2.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

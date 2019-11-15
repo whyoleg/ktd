@@ -156,7 +156,7 @@ jobs:
           name: windows-latest-x86
 
       - name: Upload libs
-          uses: actions/aws/cli@master
-          with:
-            args: s3 cp ./api/generator/jni/libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+        uses: actions/aws/cli@master
+        with:
+          args: s3 cp ./api/generator/jni/libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
 

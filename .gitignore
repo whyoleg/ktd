@@ -11,5 +11,4 @@ syntax: glob
 classes
 build/
 *.log
-build-cache
-*generated
+api/generator/jni/*/

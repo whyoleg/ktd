@@ -51,7 +51,5 @@ fun main(vararg args: String) {
 }
 
 fun generateEntities(scheme: ByteArray, apiVersion: String): List<Entity> =
-    (generateApi(scheme).toList() + listOf(
-        "td_api.tl" to scheme.toString(Charsets.UTF_8),
-        "build.gradle.kts" to "configureApi(\"$apiVersion\")"
-    )).map { "api/v$apiVersion/${it.first}" to it.second }
+    (generateApi(scheme).toList() + ("build.gradle.kts" to "configureApi(\"$apiVersion\")"))
+        .map { "api/v$apiVersion/${it.first}" to it.second }

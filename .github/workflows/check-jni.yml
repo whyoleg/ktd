@@ -31,17 +31,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Build generator
+      - name: Build
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:build
+          arguments: build
       - name: Generate api ${{ env.TD_API_VERSION }}
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: :api:generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
-      - name: Build
+      - name: Build with generated api
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
@@ -72,11 +72,11 @@ jobs:
         with:
           java-version: 11
 
-      - name: Build generator
+      - name: Build
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:build
+          arguments: build
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -155,4 +155,8 @@ jobs:
         with:
           name: windows-latest-x86
 
+      - name: Upload libs
+          uses: actions/aws/cli@master
+          with:
+            args: s3 cp ./api/generator/jni/libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
 

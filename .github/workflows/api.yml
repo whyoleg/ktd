@@ -1,15 +1,15 @@
-name: GenApi
+name: Generate api
 on: push
 
 jobs:
-  push:
+  generate:
     env:
       GRADLE_VERSION: 5.6.4
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:23})
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:24})
 
       - name: Build
         uses: eskatos/gradle-command-action@v1
@@ -39,4 +39,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: fetch-tdlib-api-${{ env.TD_API_VERSION }}
+          branch: fetch-tdlib--${{ env.TD_API_VERSION }}

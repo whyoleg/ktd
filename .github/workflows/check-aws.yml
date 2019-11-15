@@ -10,25 +10,23 @@ jobs:
       ENDPOINT: ${{ secrets.scaleway_endpoint }}
       AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
-      #TODO join([]) doesn't work
-      SCALEWAY_CONFIG: ${{ join(join('--bucket', secrets.scaleway_bucket), join('--endpoint-url', secrets.scaleway_endpoint)) }}
 
     runs-on: ubuntu-latest
     steps:
       - name: Check file exists
         uses: actions/aws/cli@master
         with:
-          args: aws s3api wait object-exists ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe
+          args: aws s3api wait object-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe
 
       - name: Check file not exists
         uses: actions/aws/cli@master
         with:
-          args: aws s3api wait object-not-exists ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe1
+          args: aws s3api wait object-not-exists --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe1
 
       - name: Download file
         uses: actions/aws/cli@master
         with:
-          args: s3api get-object ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe gperf.exe
+          args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe gperf.exe
 
       - name: Show files
         run: ls

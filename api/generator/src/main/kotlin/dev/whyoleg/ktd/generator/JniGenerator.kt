@@ -91,5 +91,6 @@ suspend fun main(vararg args: String) {
     val size = lib.readBytes().size
 
     println("Generated tdlib size: $size b")
-    println("Generated tdlib size: ${size / 1024} mb")
+    println("Generated tdlib size: ${size / 1024} kb")
+    println("Generated tdlib size: ${size / 1024 / 1024} mb")
 }

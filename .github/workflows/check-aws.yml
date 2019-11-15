@@ -10,25 +10,29 @@ jobs:
       ENDPOINT: ${{ secrets.scaleway_endpoint }}
       AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
-      SCALEWAY_CONFIG: ${{ join(['--bucket', env.BUCKET, '--endpoint-url', env.ENDPOINT]) }}
+      SCALEWAY_CONFIG: ${{ join('--bucket', env.BUCKET) }}
 
     runs-on: ubuntu-latest
     steps:
       - name: Check file exists
         uses: actions/aws/cli@master
-        args: aws s3api wait object-exists ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe
+        with:
+          args: aws s3api wait object-exists ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe
 
       - name: Check file not exists
         uses: actions/aws/cli@master
-        args: aws s3api wait object-not-exists ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe1
+        with:
+          args: aws s3api wait object-not-exists ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe1
 
       - name: Download file
         uses: actions/aws/cli@master
-        args: s3api get-object ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe gperf.exe
+        with:
+          args: s3api get-object ${{ env.SCALEWAY_CONFIG }} --key build/gperf-win/gperf.exe gperf.exe
 
       - name: Show files
         run: ls
 
       - name: Show AWS files
         uses: actions/aws/cli@master
-        args: s3 ls s3://${{ env.BUCKET }}/build/gperf-win/ --endpoint-url ${{ env.ENDPOINT }}
+        with:
+          args: s3 ls s3://${{ env.BUCKET }}/build/gperf-win/ --endpoint-url ${{ env.ENDPOINT }}

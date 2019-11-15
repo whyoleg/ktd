@@ -33,7 +33,7 @@ jobs:
           gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: build
 
-      - name: Generate api 1.5.0
+      - name: Generate api ${{ env.TD_API_VERSION }}
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
@@ -57,7 +57,7 @@ jobs:
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
 
-      - name: Generate jni 1.5.0
+      - name: Generate jni ${{ env.TD_API_VERSION }}
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}

@@ -1,11 +1,8 @@
-name: Generate api
-on:
-  push:
-    branches:
-      - fetch-tdlib-api-[0-9]+.[0.9]+.[0.9]+
+name: GenApi
+on: push
 
 jobs:
-  generate-api:
+  push:
     env:
       GRADLE_VERSION: 5.6.4
     runs-on: ubuntu-latest

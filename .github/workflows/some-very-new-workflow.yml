@@ -1,8 +1,8 @@
 name: WORK
-on: push
-#  push:
-#    branches:
-#      - prtest-[0-9]+.[0.9]+.[0.9]+
+on:
+  push:
+    branches:
+      - 'prtest-[0-9]+.[0.9]+.[0.9]+'
 
 jobs:
   pr-create:

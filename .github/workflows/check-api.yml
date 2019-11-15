@@ -43,4 +43,12 @@ jobs:
           author-email: whyoleg@gmail.com
           token: ${{ secrets.GITHUB_TOKEN }}
           base: develop
+          branch: tdlib-auto/${{ env.TD_API_VERSION }}
           branch-suffix: none
+
+      - name: Delete branch
+        uses: dawidd6/action-delete-branch@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: tdlib-test/${{ env.TD_API_VERSION }}
+

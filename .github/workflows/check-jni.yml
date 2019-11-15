@@ -88,19 +88,22 @@ jobs:
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
           brew install gperf coreutils
 
+      - name: Download gperf
+          if: matrix.os == 'windows-latest'
+          uses: actions/download-artifact@v1
+          with:
+            name: gperf
+
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
         run: |
+          dir
           git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
 
-      - name: Download gperf
-        if: matrix.os == 'windows-latest'
-        uses: actions/download-artifact@v1
-        with:
-          name: gperf
+
 
       - name: Generate jni ${{ env.TD_API_VERSION }}
         uses: eskatos/gradle-command-action@v1

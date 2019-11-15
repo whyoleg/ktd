@@ -2,7 +2,7 @@ name: Generate api and create PR
 on:
   push:
     branches:
-      - fetch-tdlib-[0-9]+.[0.9]+.[0.9]+
+      - ftd-[0-9]+.[0.9]+.[0.9]+
 
 jobs:
   generate:
@@ -14,7 +14,7 @@ jobs:
       #        with:
       #          ref: develop
       - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:23})
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:15})
 
       - name: Build
         uses: eskatos/gradle-command-action@v1
@@ -38,7 +38,7 @@ jobs:
         uses: peter-evans/create-pull-request@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: fetch-tdlib-${{ env.TD_API_VERSION }}
+          branch: ftd-${{ env.TD_API_VERSION }}
           base: develop
           commit-message: New api ${{ env.TD_API_VERSION }}
           author-email: whyoleg@gmail.com

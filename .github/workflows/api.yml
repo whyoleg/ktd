@@ -1,0 +1,45 @@
+name: Generate api
+on:
+  push:
+    branches:
+      - fetch-tdlib-[0-9]+.[0.9]+.[0.9]+
+
+jobs:
+  generate-api:
+    env:
+      GRADLE_VERSION: 5.6.4
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set TD_API_VERSION env
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:23})
+
+      - name: Build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: build
+
+      - name: Generate api ${{ env.TD_API_VERSION }}
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: :api:generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
+
+      - name: Build with generated api
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: build
+
+      - name: Commit api ${{ env.TD_API_VERSION }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "New api ${{ env.TD_API_VERSION }}" -a
+
+      - name: Push api
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: fetch-tdlib-${{ env.TD_API_VERSION }}

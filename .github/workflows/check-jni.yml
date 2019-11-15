@@ -26,28 +26,6 @@ jobs:
           name: gperf
           path: gperf.exe
 
-  generate-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:23})
-      - name: Build
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
-      - name: Generate api ${{ env.TD_API_VERSION }}
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
-      - name: Build with generated api
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
-
   generate-jni:
     runs-on: ${{ matrix.os }}
     needs: download-gperf

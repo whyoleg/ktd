@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:22})
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:23})
       - name: Build
         uses: eskatos/gradle-command-action@v1
         with:

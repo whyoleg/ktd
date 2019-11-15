@@ -1,4 +1,4 @@
-name: Generate api and create PR
+name: GenPR
 on:
   push:
     branches:

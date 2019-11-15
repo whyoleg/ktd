@@ -8,6 +8,12 @@ jobs:
     env:
       TD_API_VERSION: 1.5.0
       GRADLE_VERSION: 5.6.4
+      BUCKET: ${{ secrets.scaleway_bucket }}
+      ENDPOINT: ${{ secrets.scaleway_endpoint }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
+      AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
+
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -49,6 +55,16 @@ jobs:
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
           brew install gperf coreutils
 
+      - name: Download gperf
+        if: matrix.os == 'windows-latest'
+        uses: actions/aws/cli@master
+        with:
+          args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe gperf.exe
+
+      - name: Show files
+        if: matrix.os == 'windows-latest'
+        run: ls
+
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
         run: |
@@ -68,3 +84,18 @@ jobs:
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: build
+
+      - name: Show files
+        if: matrix.os == 'windows-latest'
+        run: |
+          dir
+          cd api/generator/jni/bin
+          dir
+
+      - name: Show files
+        if: matrix.os != 'windows-latest'
+        run: |
+          ls
+          cd api/generator/jni/bin
+          ls
+

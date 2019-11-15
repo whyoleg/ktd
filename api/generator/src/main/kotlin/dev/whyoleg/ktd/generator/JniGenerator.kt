@@ -21,11 +21,11 @@ val linuxConfig = listOf(
 val macConfig = listOf(DCMAKE_BUILD_TYPE, "-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/")
 val windowsBuildConfig = listOf(
     "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../vcpkg/scripts/buildsystems/vcpkg.cmake",
-    "-DGPERF_EXECUTABLE=../../gperf-win/bin/gperf.exe"
+    "-DGPERF_EXECUTABLE=../../gperf.exe"
 )
 val windowsLibConfig = listOf(
     "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../../vcpkg/scripts/buildsystems/vcpkg.cmake",
-    "-DGPERF_EXECUTABLE=../../../gperf-win/bin/gperf.exe"
+    "-DGPERF_EXECUTABLE=../../../gperf.exe"
 )
 
 sealed class Step(val commands: List<String>) {

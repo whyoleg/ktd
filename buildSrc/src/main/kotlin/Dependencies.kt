@@ -15,4 +15,10 @@ object Dependencies : BuiltInDependencies() {
     )
 
     val githubApi = RawDependency("org.kohsuke", "github-api", { Versions.githubApi }, DependencyProviders.mavenCentral)(jvm())
+    val kotlinShell = RawDependency(
+        "eu.jrie.jetbrains",
+        "kotlin-shell-core",
+        { Versions.kotlinShell },
+        DependencyProviders.maven("https://dl.bintray.com/jakubriegel/kotlin-shell")
+    )(jvm())
 }

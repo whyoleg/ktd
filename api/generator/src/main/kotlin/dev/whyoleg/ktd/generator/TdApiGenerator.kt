@@ -3,34 +3,34 @@ package dev.whyoleg.ktd.generator
 import dev.whyoleg.ktd.generator.builder.*
 import dev.whyoleg.ktd.generator.tl.*
 import dev.whyoleg.ktd.generator.tl.parser.*
-import java.io.*
 
-fun main(vararg args: String) {
-    val apiVersion = if (args.isEmpty()) readLine()!!
-    else {
-        require(args.size == 1)
-        args.first()
-    }
-    val apiDir = File("api/v${apiVersion}")
-    val schemeFile = apiDir.resolve("td_api.tl")
-    val outputDir = apiDir.resolve("src/main/kotlin/dev/whyoleg/ktd/api")
-    val tlData = schemeFile.readTlScheme().parseTlData()
+fun generateApi(scheme: ByteArray): Map<String, String> {
+    val tlData = scheme.readTlScheme().parseTlData()
     val metadata = tlData.extractMetadata()
-    val scheme = TlScheme(tlData, metadata)
+    val tlScheme = TlScheme(tlData, metadata)
     val functionsMap = tlData.groupFunctions()
     val syncFunctions = tlData.filterIsInstance<TlFunction>().filter { TlAddition.Sync in it.metadata.additions }
-    with(outputDir) {
-        deleteRecursively()
-        mkdirs()
+
+    val map = mutableMapOf<String, String>()
+
+    fun String.nested(path: String, block: String.() -> Unit) {
+        ("$this/$path").block()
+    }
+
+    fun String.file(name: String, block: StringBuilder.() -> Unit) {
+        val nested = "$this/$name.kt"
+        map[nested] = buildString(block)
+    }
+
+    with("src/main/kotlin/dev/whyoleg/ktd/api") {
         file("Experimental") {
             buildExperimental()
         }
         file("TdApi") {
-            buildApi(scheme)
+            buildApi(tlScheme)
         }
         functionsMap.forEach { (type, functions) ->
-            with(resolve(type.decapitalize())) {
-                mkdirs()
+            nested(type.decapitalize()) {
                 file("Raw") {
                     buildRawFunctions(type, functions)
                 }
@@ -39,8 +39,7 @@ fun main(vararg args: String) {
                 }
             }
         }
-        with(resolve("sync")) {
-            mkdirs()
+        nested("sync") {
             file("Raw") {
                 buildRawSyncFunctions(syncFunctions)
             }
@@ -49,8 +48,6 @@ fun main(vararg args: String) {
             }
         }
     }
-}
 
-fun File.file(name: String, block: StringBuilder.() -> Unit) {
-    resolve("$name.kt").writeText(buildString(block))
+    return map
 }

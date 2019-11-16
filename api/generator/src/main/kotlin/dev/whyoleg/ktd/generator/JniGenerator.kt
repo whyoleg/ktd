@@ -61,7 +61,7 @@ suspend fun build(target: Target, step: Step, dir: File) {
 }
 
 suspend fun main(vararg args: String) {
-    val apiVersion = args.firstOrNull() ?: "1.5.1"
+    val apiVersion = args.first().substringAfterLast("/")
     println("Start with tdlib $apiVersion")
     val os = System.getProperty("os.name").toLowerCase()
     val target = when {
@@ -96,5 +96,5 @@ suspend fun main(vararg args: String) {
 
     val libDir = generatedDir.resolve("libs")
     libDir.mkdirs()
-    lib.copyTo(libDir.resolve(target.name).resolve(lib.name))
+    lib.copyTo(libDir.resolve(apiVersion).resolve(target.name).resolve(lib.name))
 }

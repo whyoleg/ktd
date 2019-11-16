@@ -1,8 +1,9 @@
 name: Build JNI
-on:
-  push:
-    branches:
-      - tdlib-auto/[0-9]+.[0-9]+.[0-9]+
+on: push
+#on:
+#  push:
+#    branches:
+#      - tdlib-auto/[0-9]+.[0-9]+.[0-9]+
 
 env:
   GRADLE_VERSION: 5.6.4
@@ -46,8 +47,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:22})
 
       - name: Build
         uses: eskatos/gradle-command-action@v1
@@ -80,11 +79,11 @@ jobs:
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
           brew install gperf coreutils
 
-      - name: Generate jni ${{ env.TD_API_VERSION }}
+      - name: Generate jni
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateJni -PTD_API_VERSION=${{ env.TD_API_VERSION }} -PARCH=${{ matrix.arch }}
+          arguments: :api:generator:generateJni -PGITHUB_REF=${{ github.ref }} -PARCH=${{ matrix.arch }}
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1

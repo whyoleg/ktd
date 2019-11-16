@@ -22,7 +22,7 @@ tasks.register<JavaExec>("generateJni") {
     description = "Generate tdlib with JNI"
     classpath = sourceSets["main"].runtimeClasspath
     main = "dev.whyoleg.ktd.generator.JniGeneratorKt"
-    args = listOf(properties["TD_API_VERSION"].toString(), properties["ARCH"].toString())
+    args = listOf(properties["GITHUB_REF"].toString(), properties["ARCH"].toString())
     workingDir = rootDir
 }
 
@@ -31,6 +31,6 @@ tasks.register<JavaExec>("generateApi") {
     description = "Generate API based on tdlib api scheme"
     classpath = sourceSets["main"].runtimeClasspath
     main = "dev.whyoleg.ktd.generator.ApiGeneratorKt"
-    args = listOf(properties["TD_API_VERSION"].toString(), "g", "l")
+    args = listOf(properties["GITHUB_REF"].toString(), "g", "l")
     workingDir = rootDir
 }

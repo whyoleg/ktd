@@ -6,7 +6,7 @@ import java.io.*
 
 enum class Target { Linux, Win32, Win64, MacOS }
 
-const val BUILD_TYPE = "Release"
+const val BUILD_TYPE = "MinSizeRel"
 const val DCMAKE_BUILD_TYPE = "-DCMAKE_BUILD_TYPE=$BUILD_TYPE"
 const val WINDOWS_BUILD_TYPE_CONFIG = " --config $BUILD_TYPE"
 

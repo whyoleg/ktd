@@ -139,7 +139,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :generator:generateApi
+          arguments: :generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
 
       - name: Build with generated api
         uses: eskatos/gradle-command-action@v1

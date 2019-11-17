@@ -31,6 +31,6 @@ tasks.register<JavaExec>("generateApi") {
     description = "Generate API based on tdlib api scheme"
     classpath = sourceSets["main"].runtimeClasspath
     main = "dev.whyoleg.ktd.generator.ApiGeneratorKt"
-    args = listOf(System.getProperty("TD_API_VERSION") ?: "")
+    args = listOf(properties["TD_API_VERSION"].toString())
     workingDir = rootDir
 }

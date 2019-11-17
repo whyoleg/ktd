@@ -13,8 +13,128 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
 
 jobs:
+  download-gperf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download gperf
+        uses: actions/aws/cli@master
+        with:
+          args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe gperf.exe
+      - name: Save gperf
+        uses: actions/upload-artifact@v1
+        with:
+          name: gperf
+          path: gperf.exe
+
+  generate-jni:
+    runs-on: ${{ matrix.os }}
+    needs: download-gperf
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x86, x64]
+        exclude:
+          - os: macos-latest
+            arch: x86
+          - os: ubuntu-latest
+            arch: x86
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: build
+
+      - name: Download gperf
+        if: matrix.os == 'windows-latest'
+        uses: actions/download-artifact@v1
+        with:
+          name: gperf
+
+      - name: Cache Windows dependencies
+        if: matrix.os == 'windows-latest'
+        id: win-cache
+        uses: actions/cache@v1
+        with:
+          path: vcpkg
+          key: vcpkg-${{ matrix.arch }}
+
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest' && !steps.vcpkg-cache.outputs.cache-hit
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git
+          cd vcpkg
+          ./bootstrap-vcpkg.bat
+          ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
+          dir
+          cd ..
+          dir
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
+
+      - name: Install MacOS dependencies
+        if: matrix.os == 'macos-latest'
+        run: |
+          /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+          brew install gperf coreutils
+
+      - name: Generate jni
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: :api:generator:generateJni -PGITHUB_REF=${{ github.ref }} -PARCH=${{ matrix.arch }}
+
+      - name: Save tdlib
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}
+          path: api/generator/jni/libs
+
+  upload-tdlib:
+    runs-on: ubuntu-latest
+    needs: generate-jni
+    steps:
+      - uses: actions/download-artifact@v1
+        with:
+          name: ubuntu-latest-x64
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: macos-latest-x64
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows-latest-x64
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows-latest-x86
+
+      - name: Copy libs
+        run: |
+          mkdir libs
+          cp -R ubuntu-latest-x64/* libs
+          cp -R macos-latest-x64/* libs
+          cp -R windows-latest-x64/* libs
+          cp -R windows-latest-x86/* libs
+
+      - name: Upload libs
+        uses: actions/aws/cli@master
+        with:
+          args: s3 cp libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+
   generate-api:
     runs-on: ubuntu-latest
+    needs: upload-tdlib
     steps:
       - uses: actions/checkout@v1
       - name: Set TD_API_VERSION env
@@ -49,118 +169,3 @@ jobs:
           base: tdlib-last
           branch: tdlib/${{ env.TD_API_VERSION }}
           branch-suffix: none
-
-  download-gperf:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download gperf
-        uses: actions/aws/cli@master
-        with:
-          args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe gperf.exe
-      - name: Save gperf
-        uses: actions/upload-artifact@v1
-        with:
-          name: gperf
-          path: gperf.exe
-
-  generate-jni:
-    runs-on: ${{ matrix.os }}
-    needs: download-gperf
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        arch: [x86, x64]
-        exclude:
-          - os: macos-latest
-            arch: x86
-          - os: ubuntu-latest
-            arch: x86
-
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          submodules: true
-      - uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: Build
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
-
-      - name: Download gperf
-        if: matrix.os == 'windows-latest'
-        uses: actions/download-artifact@v1
-        with:
-          name: gperf
-
-      - name: Install Windows dependencies
-        if: matrix.os == 'windows-latest'
-        run: |
-          dir
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          ./bootstrap-vcpkg.bat
-          ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
-
-      - name: Install Linux dependencies
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
-
-      - name: Install MacOS dependencies
-        if: matrix.os == 'macos-latest'
-        run: |
-          /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-          brew install gperf coreutils
-
-      - name: Generate jni
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateJni -PGITHUB_REF=${{ github.ref }} -PARCH=${{ matrix.arch }}
-
-      - name: Save tdlib
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ matrix.os }}-${{ matrix.arch }}
-          path: api/generator/jni/libs
-
-  upload-tdlib:
-    runs-on: ubuntu-latest
-    needs: [generate-jni, generate-api]
-    steps:
-      - uses: actions/download-artifact@v1
-        with:
-          name: ubuntu-latest-x64
-
-      - uses: actions/download-artifact@v1
-        with:
-          name: macos-latest-x64
-
-      - uses: actions/download-artifact@v1
-        with:
-          name: windows-latest-x64
-
-      - uses: actions/download-artifact@v1
-        with:
-          name: windows-latest-x86
-
-      - name: Copy libs
-        run: |
-          mkdir libs
-          cp -R ubuntu-latest-x64/* libs
-          cp -R macos-latest-x64/* libs
-          cp -R windows-latest-x64/* libs
-          cp -R windows-latest-x86/* libs
-
-      - name: Upload libs
-        uses: actions/aws/cli@master
-        with:
-          args: s3 cp libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
-
-      - name: Approve PR
-        uses: hmarr/auto-approve-action@v2.0.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}

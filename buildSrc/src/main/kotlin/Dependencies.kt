@@ -10,6 +10,15 @@ object Dependencies : BuiltInDependencies() {
     val immutableCollections = kotlinx.dependency(
         name = "kotlinx-collections-immutable",
         version = { Versions.immutableCollections },
-        target = jvm("jvm")
+        target = jvm("jvm"),
+        provider = DependencyProviders.maven("https://kotlin.bintray.com/kotlinx") //TODO move it to kamp
     )
+
+    val githubApi = RawDependency("org.kohsuke", "github-api", { Versions.githubApi }, DependencyProviders.mavenCentral)(jvm())
+    val kotlinShell = RawDependency(
+        "eu.jrie.jetbrains",
+        "kotlin-shell-core",
+        { Versions.kotlinShell },
+        DependencyProviders.maven("https://dl.bintray.com/jakubriegel/kotlin-shell")
+    )(jvm())
 }

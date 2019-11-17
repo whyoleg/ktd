@@ -1,9 +1,8 @@
 package dev.whyoleg.ktd.generator.tl.parser
 
 import dev.whyoleg.ktd.generator.tl.*
-import java.io.*
 
-internal fun File.readTlScheme(): List<String> = steps.fold(readLines()) { list, step -> step(list) }
+internal fun ByteArray.readTlScheme(): List<String> = steps.fold(inputStream().reader().readLines()) { list, step -> step(list) }
 
 private typealias ParseStep = List<String>.() -> List<String>
 

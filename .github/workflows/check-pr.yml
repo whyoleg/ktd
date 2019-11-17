@@ -25,8 +25,7 @@ jobs:
               repo: context.repo.repo,
               head: context.repo.owner + ":pr/" + "${{ env.TD_API_VERSION }}"
             });
-            console.log(prs);
-            var prNumber = prs[0].number;
+            var prNumber = prs.data[0].number;
             await github.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,

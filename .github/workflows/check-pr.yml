@@ -15,23 +15,15 @@ jobs:
       - name: Set TD_API_VERSION env
         run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:14})
 
-      - uses: actions/github-script@0.2.0
+      - name: Approve PR
+        uses: actions/github-script@0.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          debug: true
           script: |
-            var prs = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: context.repo.owner + ":pr/" + "${{ env.TD_API_VERSION }}"
-            });
-            var prNumber = prs.data[0].number;
-            await github.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-              event: "APPROVE"
-            });
+            const { repo: { repo, owner } } = context;
+            const head = owner + ":pr/" + "${{ env.TD_API_VERSION }}"
+            const { data: [ { number: pull_number } ] } = await github.pulls.list({ owner, repo, head });
+            await github.pulls.createReview({ owner, repo, pull_number, event: "APPROVE" });
 
       - name: Build
         uses: eskatos/gradle-command-action@v1

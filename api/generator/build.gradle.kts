@@ -17,7 +17,7 @@ configure {
     }
 }
 
-tasks.register<JavaExec>("generateJni") {
+tasks.register<JavaExec>("generateTdlib") {
     group = "generation"
     description = "Generate tdlib with JNI"
     classpath = sourceSets["main"].runtimeClasspath

@@ -20,16 +20,17 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           debug: true
           script: |
-            var prs = github.pulls.list({
+            var prs = await github.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
               head: context.repo.owner + ":pr/" + "${{ env.TD_API_VERSION }}"
             });
             console.log(prs);
-            github.pulls.createReview({
+            var prNumber = prs[0].number;
+            await github.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: 22,
+              pull_number: prNumber,
               event: "APPROVE"
             });
 

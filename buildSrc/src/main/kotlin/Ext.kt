@@ -8,7 +8,7 @@ import org.gradle.api.tasks.bundling.*
 
 private const val jdk = "1.6"
 
-private val defaultConfiguration = ProjectConfiguration("dev.whyoleg.ktd", "", "0.3.1")
+private val defaultConfiguration = ProjectConfiguration("dev.whyoleg.ktd", "", "0.4.0")
 
 private val defaultPublication = Publication(
     name = "ktd",
@@ -52,27 +52,42 @@ fun PublishersBuilder.bintray(artifact: String) {
     }
 }
 
-fun Project.configureApi(version: String) {
-    configure("ktd-v$version") {
+fun Project.configureCoroutinesApi(version: String) {
+    configure("ktd-coroutines-api-v$version") {
         source {
             main {
                 api {
                     +Dependencies.kotlin.stdlib
                     +Dependencies.coroutines.core
-                    +Dependencies.tdlib
-                    +Modules.client
+                    +Modules.Client.coroutines
+                    +Modules.Api[version].raw
                 }
-                compileOnly(Modules.Api.stub)
             }
         }
-        if (version == Versions.latestTdVersion) publishing {
-            bintray("ktd")
+        if (version == Versions.tdLatest) publishing {
+            bintray("ktd-coroutines-api-latest")
+        }
+    }
+}
+
+fun Project.configureRawApi(version: String) {
+    configure("ktd-raw-api-v$version") {
+        source {
+            main {
+                api {
+                    +Dependencies.kotlin.stdlib
+                    +Modules.Client.raw
+                }
+            }
+        }
+        if (version == Versions.tdLatest) publishing {
+            bintray("ktd-raw-api-latest")
         }
     }
     //TODO move it to kamp
     tasks.named("jar", Jar::class.java) {
-        from("src/main/libs") {
-            include("**/**/libtdjni.so")
+        from(rootDir.resolve("generator/jni/libs/$version")) {
+            include("**/*tdjni*")
         }
     }
 }

@@ -73,9 +73,8 @@ jobs:
           cd vcpkg
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
-          dir /a/s
           cd ..
-          dir /a/s
+          dir /a/s 'vcpkg'
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'

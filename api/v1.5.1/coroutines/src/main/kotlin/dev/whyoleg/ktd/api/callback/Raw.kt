@@ -1,0 +1,29 @@
+@file:Suppress(
+    "unused"
+)
+@file:UseExperimental(
+    BotsOnly::class,
+    TestingOnly::class
+)
+
+package dev.whyoleg.ktd.api.callback
+
+import dev.whyoleg.ktd.*
+import dev.whyoleg.ktd.api.*
+import dev.whyoleg.ktd.api.TdApi.*
+
+/**
+ * Sends a callback query to a bot and returns an answer
+ * Returns an error with code 502 if the bot fails to answer the query before the query timeout expires
+ */
+suspend fun TelegramClient.callback(
+    f: GetCallbackQueryAnswer
+): CallbackQueryAnswer = exec(f) as CallbackQueryAnswer
+
+/**
+ * Sets the result of a callback query
+ */
+@BotsOnly
+suspend fun TelegramClient.callback(
+    f: AnswerCallbackQuery
+): Ok = exec(f) as Ok

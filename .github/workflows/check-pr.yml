@@ -1,0 +1,57 @@
+name: Check PR
+on:
+  push:
+    branches:
+      - pr/[0-9]+.[0-9]+.[0-9]+
+
+env:
+  GRADLE_VERSION: 5.6.4
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set TD_API_VERSION env
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:17})
+
+      - uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          debug: true
+          script: |
+            var pulls = github.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: context.repo.owner + "pr/" + "${{ env.TD_API_VERSION }}"
+            });
+            github.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: 15,
+              event: "APPROVE"
+            });
+
+      - name: Build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: build
+
+      - name: Generate api ${{ env.TD_API_VERSION }}
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: :api:generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v1
+        with:
+          commit-message: New api ${{ env.TD_API_VERSION }}
+          title: New api ${{ env.TD_API_VERSION }}
+          author-name: whyoleg
+          author-email: whyoleg@gmail.com
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: tdlib-last
+          branch: tdlib/${{ env.TD_API_VERSION }}
+          branch-suffix: none

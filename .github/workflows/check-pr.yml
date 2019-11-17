@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:17})
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:14})
 
       - uses: actions/github-script@0.2.0
         with:

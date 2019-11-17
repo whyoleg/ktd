@@ -71,8 +71,6 @@ client.updates.filterIsInstance<UpdateChatLastMessage>()
 
 ## Gradle build setup
 
-Now library published only in bintray, it will change in future.
-
 ```gradle
 repositories {
     maven { 
@@ -81,9 +79,25 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.whyoleg.ktd:ktd:0.3.1"
+    implementation "dev.whyoleg.ktd:ktd-coroutines-api-latest:0.4.0"
 }
 ```
+
+Available dependencies:
+  - `ktd-raw-client` - raw client contains bindings for interaction with `tdlib`
+  - `ktd-raw-api-*` - raw api contains generated kotlin classes and built-in `tdlib` library for specific `tdlib` version
+    - `ktd-raw-api-v1.5.0` 
+    - `ktd-raw-api-v1.5.1`
+    - `ktd-raw-api-latest` - for now latest = 1.5.1
+  - `ktd-coroutines-client` - client with support of `suspend` and `Flow`
+  - `ktd-coroutines-api-*` - contains generated fast accessors for api classes
+    - `ktd-coroutines-api-v1.5.0` 
+    - `ktd-coroutines-api-v1.5.1` 
+    - `ktd-coroutines-api-latest`  - for now latest = 1.5.1
+  - `ktd-api-stub` - api stub that can be used in `compileOnly` scope with `ktd-*-client` dependency
+  
+Now library published only to bintray, it will change in future.
+
 
 ## Status
 

@@ -80,13 +80,13 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateTdlib -PGITHUB_REF=${{ github.ref }} -PARCH=${{ matrix.arch }}
+          arguments: :generator:generateTdlib -PGITHUB_REF=${{ github.ref }} -PARCH=${{ matrix.arch }}
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}
-          path: api/generator/jni/libs
+          path: generator/jni/libs
 
   upload-tdlib:
     runs-on: ubuntu-latest
@@ -139,7 +139,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:generator:generateApi
+          arguments: :generator:generateApi
 
       - name: Build with generated api
         uses: eskatos/gradle-command-action@v1

@@ -3,18 +3,28 @@
 import dev.whyoleg.kamp.module.*
 
 object Modules : RootModule() {
-    val client by named()
-    val example by named()
+
+    object Client : Module by named("client") {
+        val raw = named("raw", "client/raw")
+        val coroutines = named("coroutines", "client/coroutines")
+    }
 
     object Api : Module by named("api") {
-        val generator by named()
         val stub by named()
-
-        val apis = listOf(
-            "1.5.0",
-            "1.5.1"
-        ).map { named("v$it") }
-
-        val latest = apis.first { it.name.contains(Versions.latestTdVersion) }
+        private val apis = Versions.td.associateWith { ApiModule(it, this) }
+        val latest = apis[Versions.tdLatest] ?: error("Wrong latest td version")
+        operator fun get(version: String): ApiModule = apis[version] ?: error("Wrong td version")
     }
+
+    val generator by named()
+    val example by named()
+
+    init {
+        example.i
+    }
+}
+
+class ApiModule(version: String, rootModule: Module) : Module by rootModule.named("v$version") {
+    val raw by named()
+    val coroutines by named()
 }

@@ -4,7 +4,7 @@ configure {
             implementation {
                 +Dependencies.kotlin.stdlib
                 +Dependencies.coroutines.core
-                +Modules.Api.latest
+                +Modules.Api.latest.coroutines
             }
         }
     }

@@ -1,10 +1,7 @@
-configure {
+configure("ktd-api-stub") {
     source {
         main {
-            implementation {
-                +Dependencies.kotlin.stdlib
-                +Dependencies.coroutines.core
-            }
+            implementation(Dependencies.kotlin.stdlib)
         }
     }
 }

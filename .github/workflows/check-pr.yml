@@ -23,7 +23,7 @@ jobs:
             var pulls = github.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head: context.repo.owner + "pr/" + "${{ env.TD_API_VERSION }}"
+              head: context.repo.owner + ":pr/" + "${{ env.TD_API_VERSION }}"
             });
             github.pulls.createReview({
               owner: context.repo.owner,

@@ -22,8 +22,13 @@ jobs:
       - name: Download libs
         uses: actions/aws/cli@master
         with:
-          args: s3 cp s3://${{ env.BUCKET }}/libs/${{ env.TD_API_VERSION }} client/raw --recursive --endpoint-url ${{ env.ENDPOINT }}
-      - run: ls
+          args: s3 cp s3://${{ env.BUCKET }}/libs/${{ env.TD_API_VERSION }} client/raw/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+      - run: |
+          ls
+          cd client/raw
+          ls
+          cd libs/linux
+          ls
       - name: Build and run tests
         uses: eskatos/gradle-command-action@v1
         with:

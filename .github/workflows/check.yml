@@ -40,20 +40,7 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: libs
-          path: client/raw
-      - name: LS
-        if: matrix.os != 'windows-latest'
-        run: |
-          ls
-          cd client/raw
-          ls
-          cd libs
-          ls
-          cd linux
-          ls
-          cd ../macos
-          ls
-
+          path: client/raw/libs
 
       - name: Build and run tests
         uses: eskatos/gradle-command-action@v1

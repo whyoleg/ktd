@@ -23,9 +23,9 @@ jobs:
         uses: actions/aws/cli@master
         with:
           args: s3 cp s3://${{ env.BUCKET }}/libs/${{ env.TD_API_VERSION }} client/raw --recursive --endpoint-url ${{ env.ENDPOINT }}
-
+      - run: ls
       - name: Build and run tests
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: check
+          arguments: check --info

@@ -7,13 +7,14 @@ enum class NativeTarget(val lib: String, val ext: String) {
     Win64("tdjni", "dll");
 
     companion object {
-        fun current(): NativeTarget {
-            val os = System.getProperty("os.name").toLowerCase()
+        fun current(): NativeTarget = target(System.getProperty("os.name"), System.getProperty("os.arch"))
+        internal fun target(os: String, arch: String): NativeTarget {
+            val osLowerCase = os.toLowerCase()
             return when {
-                "linux" in os   -> Linux
-                "mac" in os     -> MacOS
-                "windows" in os -> if (System.getProperty("os.arch").contains("64")) Win64 else Win32
-                else            -> error("Target is not supported")
+                "linux" in osLowerCase   -> Linux
+                "mac" in osLowerCase     -> MacOS
+                "windows" in osLowerCase -> if ("64" in arch.toLowerCase()) Win64 else Win32
+                else                     -> error("Target is not supported")
             }
         }
     }

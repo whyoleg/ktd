@@ -9,7 +9,7 @@ internal class TdClientTest {
     @BeforeTest
     fun init() {
         //TODO remove hack, somehow java.library.path doesn't set in tests
-        System.setProperty("java.library.path", java.io.File("").absolutePath + "/libs/${NativeTarget.current().name.toLowerCase()}")
+        System.setProperty("java.library.path", java.io.File("").absolutePath + "/libs/1.5.1/${NativeTarget.current().name.toLowerCase()}")
         ClassLoader::class.java.getDeclaredField("sys_paths").apply {
             isAccessible = true
             set(null, null)

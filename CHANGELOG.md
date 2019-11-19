@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.4.0
-> Unreleased
+> Published 19 Nov 2019
 - Support Linux, MacOS, Win32 and Win64 using JVM
 - Split modules into raw/coroutines client and raw/coroutines api
   - api dependency provide client dependency

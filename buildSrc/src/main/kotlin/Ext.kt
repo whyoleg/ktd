@@ -5,6 +5,10 @@ import dev.whyoleg.kamp.publishing.*
 import dev.whyoleg.kamp.settings.*
 import org.gradle.api.*
 import org.gradle.api.tasks.bundling.*
+import java.net.*
+import java.net.http.*
+import java.util.*
+import java.util.concurrent.*
 
 private const val jdk = "1.6"
 
@@ -17,9 +21,9 @@ private val defaultPublication = Publication(
     developers = listOf(Developer("whyoleg", "Oleg", "whyoleg@gmail.com")),
     labels = listOf("Kotlin", "Telegram"),
     scmConnections = "scm:git:git@github.com:whyoleg/ktd.git",
-    vcsUrl = "git@github.com:whyoleg/ktd.git",
+    vcsUrl = "https://github.com/whyoleg/ktd",
     websiteUrl = "https://github.com/whyoleg/ktd",
-    githubUrl = "https://github.com/whyoleg/ktd"
+    githubUrl = ""
 )
 
 @KampDSL
@@ -49,6 +53,7 @@ fun Project.configure(artifact: String, block: KampJvmExtension.() -> Unit) =
 fun PublishersBuilder.bintray(artifact: String) {
     bintray(defaultPublication.copy(name = artifact)) {
         repo = "ktd"
+        autoPublish = false
     }
 }
 
@@ -89,6 +94,33 @@ fun Project.configureRawApi(version: String) {
         from(rootDir.resolve("libs/$version")) {
             include("**/*tdjni*")
             into("libs")
+        }
+    }
+}
+
+fun Project.registerTasks() {
+    tasks.register("publishBintrayRelease") {
+        doLast {
+            val client = HttpClient.newHttpClient()
+            val bintrayUser = System.getenv("bintray_user")
+            val bintrayKey = System.getenv("bintray_key")
+            val version = defaultConfiguration.version(this@registerTasks)
+            val basic = "Basic " + Base64.getEncoder().encodeToString("$bintrayUser:$bintrayKey".toByteArray())
+            val builder = HttpRequest.newBuilder().header("Authorization", basic).POST(HttpRequest.BodyPublishers.noBody())
+            subprojects
+                .flatMap { project ->
+                    project.tasks.mapNotNull {
+                        if (
+                            it.name.startsWith("publish") &&
+                            it.name.endsWith("PublicationToMavenLocal")
+                        ) it.name.substringAfter("publish").substringBefore("PublicationToMavenLocal").toLowerCase()
+                        else null
+                    }
+                }
+                .map { builder.uri(URI.create("https://api.bintray.com/content/whyoleg/ktd/$it/$version/publish")).build() }
+                .map { client.sendAsync(it, HttpResponse.BodyHandlers.discarding()) }.toTypedArray()
+                .let { CompletableFuture.allOf(*it) }
+                .get()
         }
     }
 }

@@ -1,5 +1,5 @@
 name: Check build
-on: push
+on: [push, pull_request]
 
 env:
   GRADLE_VERSION: 5.6.4

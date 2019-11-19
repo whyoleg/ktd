@@ -4,5 +4,10 @@ configure("ktd-raw-client") {
             api(Dependencies.kotlin.stdlib)
             compileOnly(Modules.Api.stub)
         }
+        test {
+            implementation(Dependencies.kotlin.test)
+            implementation(Dependencies.kotlin.annotations)
+            implementation(Modules.Api.latest.raw)
+        }
     }
 }

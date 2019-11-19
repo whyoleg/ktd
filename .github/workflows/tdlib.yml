@@ -50,7 +50,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
+          arguments: build --info
 
       - name: Download gperf
         if: matrix.os == 'windows-latest'
@@ -133,19 +133,19 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
+          arguments: build --info
 
       - name: Generate api ${{ env.TD_API_VERSION }}
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }}
+          arguments: :generator:generateApi -PTD_API_VERSION=${{ env.TD_API_VERSION }} --info
 
       - name: Build with generated api
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: build
+          arguments: build --info
 
       - name: Create PR
         uses: peter-evans/create-pull-request@v1

@@ -2,6 +2,7 @@
 
 ## 0.4.0
 > Unreleased
+- Support Linux, MacOS, Win32 and Win64 using JVM
 - Split modules into raw/coroutines client and raw/coroutines api
   - api dependency provide client dependency
 - Api versioning based on tdlib version: 1.5.0 and 1.5.1 supported now

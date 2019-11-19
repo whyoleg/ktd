@@ -17,7 +17,7 @@ object TdClient {
         runCatching {
             val target = NativeTarget.current()
             val file = File.createTempFile(target.lib, ".${target.ext}")
-            val path = "/${target.name.toLowerCase()}/${target.lib}.${target.ext}"
+            val path = "libs/${target.name.toLowerCase()}/${target.lib}.${target.ext}"
             TdClient::class.java.getResourceAsStream(path).copyTo(file.outputStream())
             System.load(file.absolutePath)
         }.recover {

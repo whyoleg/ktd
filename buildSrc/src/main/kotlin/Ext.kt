@@ -86,8 +86,9 @@ fun Project.configureRawApi(version: String) {
     }
     //TODO move it to kamp
     tasks.named("jar", Jar::class.java) {
-        from(rootDir.resolve("generator/jni/libs/$version")) {
+        from(rootDir.resolve("libs/$version")) {
             include("**/*tdjni*")
+            into("libs")
         }
     }
 }

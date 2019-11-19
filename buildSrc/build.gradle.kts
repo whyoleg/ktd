@@ -5,7 +5,7 @@ plugins { `kotlin-dsl` }
 
 buildscript {
     repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.13") }
+    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.15") }
 }
 
 kampBuild {

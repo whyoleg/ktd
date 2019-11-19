@@ -18,10 +18,6 @@ object Modules : RootModule() {
 
     val generator by named()
     val example by named()
-
-    init {
-        example.i
-    }
 }
 
 class ApiModule(version: String, rootModule: Module) : Module by rootModule.named("v$version") {

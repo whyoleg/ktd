@@ -1,9 +1,9 @@
-name: Check build
+name: Upload artifacts to bintray
 on:
   pull_request:
     types: [opened]
     branches:
-      - develop
+      - master
 
 env:
   GRADLE_VERSION: 5.6.4

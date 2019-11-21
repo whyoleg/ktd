@@ -79,7 +79,7 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.whyoleg.ktd:ktd-coroutines-api-latest:0.4.0"
+    implementation "dev.whyoleg.ktd:ktd-coroutines-api-latest:0.5.0"
 }
 ```
 

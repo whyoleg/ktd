@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.generator.builder
+package dev.whyoleg.ktd.generator.api.builder
 
-import dev.whyoleg.ktd.generator.tl.*
+import dev.whyoleg.ktd.generator.api.tl.*
 
 fun StringBuilder.buildParameters(parameters: List<String>, addEmptyBrackets: Boolean = false) {
     if (parameters.isNotEmpty()) withRoundBrackets {

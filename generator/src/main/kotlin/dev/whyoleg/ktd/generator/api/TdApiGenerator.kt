@@ -1,8 +1,8 @@
-package dev.whyoleg.ktd.generator
+package dev.whyoleg.ktd.generator.api
 
-import dev.whyoleg.ktd.generator.builder.*
-import dev.whyoleg.ktd.generator.tl.*
-import dev.whyoleg.ktd.generator.tl.parser.*
+import dev.whyoleg.ktd.generator.api.builder.*
+import dev.whyoleg.ktd.generator.api.tl.*
+import dev.whyoleg.ktd.generator.api.tl.parser.*
 
 fun generateApi(scheme: ByteArray): Map<String, String> {
     val tlData = scheme.readTlScheme().parseTlData()

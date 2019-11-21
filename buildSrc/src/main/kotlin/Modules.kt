@@ -23,4 +23,5 @@ object Modules : RootModule() {
 class ApiModule(version: String, rootModule: Module) : Module by rootModule.named("v$version") {
     val raw by named()
     val coroutines by named()
+    val lib by named()
 }

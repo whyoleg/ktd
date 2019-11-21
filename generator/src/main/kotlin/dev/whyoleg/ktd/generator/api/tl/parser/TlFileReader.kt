@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.generator.tl.parser
+package dev.whyoleg.ktd.generator.api.tl.parser
 
-import dev.whyoleg.ktd.generator.tl.*
+import dev.whyoleg.ktd.generator.api.tl.*
 
 internal fun ByteArray.readTlScheme(): List<String> = steps.fold(inputStream().reader().readLines()) { list, step -> step(list) }
 

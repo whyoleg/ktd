@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.generator.tl.parser
+package dev.whyoleg.ktd.generator.api.tl.parser
 
-import dev.whyoleg.ktd.generator.tl.*
+import dev.whyoleg.ktd.generator.api.tl.*
 import java.util.zip.*
 
 fun List<String>.parseTlData(): List<TlData> = parseRawTlData().map(RawTlData::toTlData)

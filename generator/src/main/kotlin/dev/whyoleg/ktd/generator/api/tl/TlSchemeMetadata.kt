@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.generator.tl
+package dev.whyoleg.ktd.generator.api.tl
 
 data class TlScheme(
     val data: List<TlData>,

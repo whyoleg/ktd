@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.generator.tl
+package dev.whyoleg.ktd.generator.api.tl
 
 data class RawTlData(val type: RawTlDataType, val list: List<String>, val expression: String)
 

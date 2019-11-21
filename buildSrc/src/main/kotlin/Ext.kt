@@ -12,7 +12,7 @@ import java.util.concurrent.*
 
 private const val jdk = "1.6"
 
-private val defaultConfiguration = ProjectConfiguration("dev.whyoleg.ktd", "", "0.4.1")
+private val defaultConfiguration = ProjectConfiguration("dev.whyoleg.ktd", "", "0.5.0")
 
 private val defaultPublication = Publication(
     name = "ktd",
@@ -27,38 +27,46 @@ private val defaultPublication = Publication(
 )
 
 @KampDSL
-fun Project.configure(configuration: ProjectConfiguration? = null, block: KampJvmExtension.() -> Unit) = kampJvm(configuration) {
-    options {
-        jvmTarget = jdk
-        sourceCompatibility = jdk
-        targetCompatibility = jdk
+fun Project.configure(configuration: ProjectConfiguration? = null, block: KampJvmExtension.() -> Unit = {}) {
+    kampJvm(configuration) {
+        options {
+            jvmTarget = jdk
+            sourceCompatibility = jdk
+            targetCompatibility = jdk
+        }
+        languageSettings {
+            progressiveMode = true
+            languageFeatures += LanguageFeature.values()
+            experimentalAnnotations += ExperimentalAnnotation.values()
+        }
+        apply(block)
     }
-    languageSettings {
-        progressiveMode = true
-        languageFeatures += LanguageFeature.values()
-        experimentalAnnotations += ExperimentalAnnotation.values()
-    }
-    apply(block)
 }
 
 @KampDSL
-fun Project.configure(artifact: String, block: KampJvmExtension.() -> Unit) =
-    configure(defaultConfiguration.copy(artifact = artifact)) {
+fun Project.configure(artifact: String, block: KampJvmExtension.() -> Unit = {}) {
+    configure(defaultConfiguration.copy(artifact = "ktd-$artifact")) {
         apply(block)
-        publishing {
-            bintray(artifact)
-        }
+        publishing { bintray(artifact) }
     }
+}
 
 fun PublishersBuilder.bintray(artifact: String) {
-    bintray(defaultPublication.copy(name = artifact)) {
+    bintray(defaultPublication.copy(name = "ktd-$artifact")) {
         repo = "ktd"
         autoPublish = false
     }
 }
 
+private fun Project.configureVersion(artifact: String, version: String, block: KampJvmExtension.() -> Unit = {}) {
+    configure("$artifact-v$version") {
+        apply(block)
+        if (version == Versions.tdLatest) publishing { bintray("$artifact-latest") }
+    }
+}
+
 fun Project.configureCoroutinesApi(version: String) {
-    configure("ktd-coroutines-api-v$version") {
+    configureVersion("coroutines-api", version) {
         source {
             main {
                 api {
@@ -69,26 +77,25 @@ fun Project.configureCoroutinesApi(version: String) {
                 }
             }
         }
-        if (version == Versions.tdLatest) publishing {
-            bintray("ktd-coroutines-api-latest")
-        }
     }
 }
 
 fun Project.configureRawApi(version: String) {
-    configure("ktd-raw-api-v$version") {
+    configureVersion("raw-api", version) {
         source {
             main {
                 api {
                     +Dependencies.kotlin.stdlib
                     +Modules.Client.raw
+                    +Modules.Api[version].lib
                 }
             }
         }
-        if (version == Versions.tdLatest) publishing {
-            bintray("ktd-raw-api-latest")
-        }
     }
+}
+
+fun Project.configureLib(version: String) {
+    configureVersion("lib", version)
     //TODO move it to kamp
     tasks.named("jar", Jar::class.java) {
         from(rootDir.resolve("libs/$version")) {

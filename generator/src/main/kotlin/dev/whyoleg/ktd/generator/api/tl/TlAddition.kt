@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.generator.tl
+package dev.whyoleg.ktd.generator.api.tl
 
-import dev.whyoleg.ktd.generator.tl.TlAddition.*
+import dev.whyoleg.ktd.generator.api.tl.TlAddition.*
 
 sealed class TlAddition {
     interface WithMessage {

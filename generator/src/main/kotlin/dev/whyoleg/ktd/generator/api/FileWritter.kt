@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.generator
+package dev.whyoleg.ktd.generator.api
 
 import org.kohsuke.github.*
 import java.io.*

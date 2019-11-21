@@ -11,6 +11,7 @@ env:
 
 jobs:
   download-tdlib:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Download libs

@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.generator.builder
+package dev.whyoleg.ktd.generator.api.builder
 
-import dev.whyoleg.ktd.generator.tl.*
+import dev.whyoleg.ktd.generator.api.tl.*
 
 fun StringBuilder.buildRawSyncFunction(function: TlFunction) {
     buildDescription(function.descriptions())

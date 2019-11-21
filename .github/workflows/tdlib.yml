@@ -19,7 +19,7 @@ jobs:
       - name: Download gperf
         uses: actions/aws/cli@master
         with:
-          args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/gperf-win/gperf.exe gperf.exe
+          args: s3api get-object --bucket ${{ env.BUCKET }} --endpoint-url ${{ env.ENDPOINT }} --key build/windows/gperf/gperf.exe gperf.exe
       - name: Save gperf
         uses: actions/upload-artifact@v1
         with:

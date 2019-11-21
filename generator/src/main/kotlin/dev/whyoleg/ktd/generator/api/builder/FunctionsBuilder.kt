@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.generator.builder
+package dev.whyoleg.ktd.generator.api.builder
 
-import dev.whyoleg.ktd.generator.tl.*
+import dev.whyoleg.ktd.generator.api.tl.*
 
 private val customMapping = mapOf(
     "SetName" to "User",

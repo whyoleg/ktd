@@ -1,5 +1,6 @@
-package dev.whyoleg.ktd.generator
+package dev.whyoleg.ktd.generator.api
 
+import dev.whyoleg.ktd.generator.*
 import org.kohsuke.github.*
 
 fun main(vararg args: String) {
@@ -16,6 +17,7 @@ fun main(vararg args: String) {
 
 fun generateEntities(scheme: ByteArray, apiVersion: String): List<Entity> =
     (generateApi(scheme).toList() + listOf(
-        "raw/build.gradle.kts" to "configureRawApi(\"$apiVersion\")\n",
-        "coroutines/build.gradle.kts" to "configureCoroutinesApi(\"$apiVersion\")\n"
+        "coroutines/build.gradle.kts" to "configureCoroutinesApi(\"$apiVersion\")\n",
+        "lib/build.gradle.kts" to "configureLib(\"$apiVersion\")\n",
+        "raw/build.gradle.kts" to "configureRawApi(\"$apiVersion\")\n"
     )).map { "api/v$apiVersion/${it.first}" to it.second }

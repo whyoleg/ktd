@@ -3,7 +3,12 @@ repositories {
     maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
 }
 
-configure {
+configure("cli") {
+    packagers {
+        jar {
+            useVersion = false
+        }
+    }
     source {
         main {
             implementation {

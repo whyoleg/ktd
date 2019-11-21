@@ -1,0 +1,40 @@
+name: Publish artifacts and upload cli
+on:
+  release:
+    types: [published]
+
+env:
+  GRADLE_VERSION: 5.6.4
+  BUCKET: ${{ secrets.scaleway_bucket }}
+  ENDPOINT: ${{ secrets.scaleway_endpoint }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
+  AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
+  bintray_user: ${{secrets.bintray_user}}
+  bintray_key: ${{secrets.bintray_key}}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build and upload to bintray
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: publishBintrayRelease --info
+
+      - name: Build cli
+          uses: eskatos/gradle-command-action@v1
+          with:
+            gradle-version: ${{ env.GRADLE_VERSION }}
+            arguments: :cli:shadowJar --info
+
+      - name: Upload cli
+          uses: actions/aws/cli@master
+          with:
+            args: s3 cp cli/build/libs/cli.jar s3://${{ env.BUCKET }}/cli/cli.jar --endpoint-url ${{ env.ENDPOINT }}

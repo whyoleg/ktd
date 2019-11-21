@@ -11,4 +11,4 @@ syntax: glob
 classes
 build/
 *.log
-api/generator/jni/*/
+config/tdlib/jni/*/

@@ -14,7 +14,7 @@ suspend fun buildJni(execution: CmakeExecution): CmakeExecutionResult {
     println("Prepare build folders")
 
     val buildDir = File("td/build")
-    val generatedDir = File("cli/jni")
+    val generatedDir = File("config/tdlib/jni")
     val generatedBuildDir = generatedDir.resolve("build")
     val installDir = generatedDir.resolve("td")
     val libDir = generatedDir.resolve("bin")

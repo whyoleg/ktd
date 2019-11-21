@@ -10,6 +10,6 @@ interface TelegramClient : Job {
     suspend fun exec(function: TelegramFunction): TelegramObject
 
     companion object {
-        fun exec(function: TelegramFunction): TelegramObject = TdClient.execute(function)
+        fun exec(function: TelegramFunction): TelegramObject = TelegramRawClient.execute(function)
     }
 }

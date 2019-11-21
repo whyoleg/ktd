@@ -16,7 +16,7 @@ object Modules : RootModule() {
         operator fun get(version: String): ApiModule = apis[version] ?: error("Wrong td version")
     }
 
-    val generator by named()
+    val cli by named()
     val example by named()
 }
 

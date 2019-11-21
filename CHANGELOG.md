@@ -7,9 +7,10 @@
   - `ktd-lib-v1.5.0` 
   - `ktd-lib-v1.5.1`
   - `ktd-lib-latest` - for now latest = 1.5.1
-- [TODO] Rename `TdClient` to `TelegramRawClient`
+- Rename `TdClient` to `TelegramRawClient`
 - [TODO] Rename `TelegramClient` to `TelegramCoroutinesClient` 
-- [TODO] Split JVM `tdlib` dependency into artifacts per platform 
+- [TODO] Split JVM `tdlib` dependency into artifacts per platform
+- [TODO] Introduce cli for building tdlib and generating api
 
 ## 0.4.1
 > Released November 27, 2019

@@ -1,9 +1,12 @@
 package dev.whyoleg.ktd
 
 import dev.whyoleg.ktd.api.*
-import java.io.*
 
 object TelegramRawClient {
+
+    init {
+        link()
+    }
 
     external fun create(): Long
     external fun destroy(clientId: Long)
@@ -13,18 +16,4 @@ object TelegramRawClient {
 
     external fun execute(function: TelegramFunction): TelegramObject
 
-    init {
-        runCatching {
-            val target = NativeTarget.current()
-            val file = File.createTempFile(target.lib, ".${target.ext}")
-            val path = "libs/${target.name.toLowerCase()}/${target.lib}.${target.ext}"
-            TelegramRawClient::class.java.getResourceAsStream(path).copyTo(file.outputStream())
-            System.load(file.absolutePath)
-        }.recover {
-            System.loadLibrary("tdjni") //if no lib in jar - find on local machine
-        }.onFailure {
-            println("Can't load td library")
-            throw it
-        }
-    }
 }

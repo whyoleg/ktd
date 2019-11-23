@@ -10,7 +10,8 @@
 - Rename `TdClient` to `TelegramRawClient`
 - [TODO] Rename `TelegramClient` to `TelegramCoroutinesClient` 
 - [TODO] Split JVM `tdlib` dependency into artifacts per platform
-- [TODO] Introduce cli for building tdlib and generating api
+- Introduce `cli` for building `tdlib` and generating api
+  - [TODO] setup paths for dependencies thorough .env
 
 ## 0.4.1
 > Released November 27, 2019

@@ -1,4 +1,4 @@
-configure("ktd-api-stub") {
+configure("api-stub") {
     source {
         main {
             implementation(Dependencies.kotlin.stdlib)

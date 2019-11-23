@@ -28,13 +28,12 @@ jobs:
           gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: publishBintrayRelease --info
 
+      #TODO add cli.jar to release page
       - name: Build cli
-          uses: eskatos/gradle-command-action@v1
-          with:
-            gradle-version: ${{ env.GRADLE_VERSION }}
-            arguments: :cli:shadowJar --info
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: :cli:shadowJar --info
 
       - name: Upload cli
-          uses: actions/aws/cli@master
-          with:
-            args: s3 cp cli/build/libs/cli.jar s3://${{ env.BUCKET }}/cli/cli.jar --endpoint-url ${{ env.ENDPOINT }}
+        run: aws s3 cp cli/build/libs/cli.jar s3://${{ env.BUCKET }}/cli/cli.jar --endpoint-url ${{ env.ENDPOINT }}

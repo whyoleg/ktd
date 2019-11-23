@@ -1,0 +1,29 @@
+name: Build tdlib
+on:
+  push:
+    branches:
+      - tdlib/[0-9]+.[0-9]+.[0-9]+
+
+jobs:
+  generate-api:
+    runs-on: ubuntu-latest
+    needs: upload-tdlib
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set TD_API_VERSION env
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:17})
+
+      - name: Generate api ${{ env.TD_API_VERSION }}
+        run: java -jar cli.jar api -v ${{ env.TD_API_VERSION }} -e config/api
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v1
+        with:
+          commit-message: New api ${{ env.TD_API_VERSION }}
+          title: New api ${{ env.TD_API_VERSION }}
+          author-name: whyoleg
+          author-email: whyoleg@gmail.com
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: tdlib/${{ env.TD_API_VERSION }}
+          branch-suffix: none

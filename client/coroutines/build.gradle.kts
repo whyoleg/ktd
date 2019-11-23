@@ -1,4 +1,4 @@
-configure("ktd-coroutines-client") {
+configure("coroutines-client") {
     plugins(Plugins.atomicfu)
     source {
         main {

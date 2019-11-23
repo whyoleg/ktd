@@ -16,7 +16,7 @@ interface BuildTarget {
 
     object MacOS : BuildTarget {
         override val targetName: String = "mac"
-        override fun toString(): String = Linux.targetName
+        override fun toString(): String = targetName
     }
 
     enum class Windows(val arch: String) : BuildTarget {
@@ -24,7 +24,7 @@ interface BuildTarget {
         X64("X64");
 
         override val targetName: String = "win-$name"
-        override fun toString(): String = Linux.targetName
+        override fun toString(): String = targetName
     }
 
     enum class Android(val archName: String, val ndkName: String, val toolChainName: String, val stripName: String) : BuildTarget {
@@ -34,6 +34,6 @@ interface BuildTarget {
         X64("x86_64", "x86_64", "x86_64", "x86_64-linux-android");
 
         override val targetName: String = "android-$name"
-        override fun toString(): String = Linux.targetName
+        override fun toString(): String = targetName
     }
 }

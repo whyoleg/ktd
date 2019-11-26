@@ -12,7 +12,7 @@ import java.util.concurrent.*
 
 private const val jdk = "1.6"
 
-private val defaultConfiguration = ProjectConfiguration("dev.whyoleg.ktd", "", "0.5.0")
+private val defaultConfiguration = ProjectConfiguration("dev.whyoleg.ktd", "", "0.5.0-pre-android-1")
 
 private val defaultPublication = Publication(
     name = "ktd",
@@ -87,7 +87,7 @@ fun Project.configureRawApi(version: String) {
                 api {
                     +Dependencies.kotlin.stdlib
                     +Modules.Client.raw
-                    +Modules.Api[version].lib
+//                    +Modules.Api[version].lib
                 }
             }
         }

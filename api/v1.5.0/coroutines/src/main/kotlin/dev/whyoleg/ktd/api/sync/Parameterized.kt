@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @text - The text in which to look for entites
  */
 fun TelegramClient.Companion.getTextEntities(
-    text: String
+    text: String? = null
 ): TextEntities = execute(
     GetTextEntities(
         text
@@ -38,8 +38,8 @@ fun TelegramClient.Companion.getTextEntities(
  * @parseMode - Text parse mode
  */
 fun TelegramClient.Companion.parseTextEntities(
-    text: String,
-    parseMode: TextParseMode
+    text: String? = null,
+    parseMode: TextParseMode? = null
 ): FormattedText = execute(
     ParseTextEntities(
         text,
@@ -57,7 +57,7 @@ fun TelegramClient.Companion.parseTextEntities(
  * @fileName - The name of the file or path to the file
  */
 fun TelegramClient.Companion.getFileMimeType(
-    fileName: String
+    fileName: String? = null
 ): Text = execute(
     GetFileMimeType(
         fileName
@@ -74,7 +74,7 @@ fun TelegramClient.Companion.getFileMimeType(
  * @mimeType - The MIME type of the file
  */
 fun TelegramClient.Companion.getFileExtension(
-    mimeType: String
+    mimeType: String? = null
 ): Text = execute(
     GetFileExtension(
         mimeType
@@ -92,7 +92,7 @@ fun TelegramClient.Companion.getFileExtension(
  * @fileName - File name or path to the file
  */
 fun TelegramClient.Companion.cleanFileName(
-    fileName: String
+    fileName: String? = null
 ): Text = execute(
     CleanFileName(
         fileName
@@ -112,10 +112,10 @@ fun TelegramClient.Companion.cleanFileName(
  * @key - Language pack key of the string to be returned
  */
 fun TelegramClient.Companion.getLanguagePackString(
-    languagePackDatabasePath: String,
-    localizationTarget: String,
-    languagePackId: String,
-    key: String
+    languagePackDatabasePath: String? = null,
+    localizationTarget: String? = null,
+    languagePackId: String? = null,
+    key: String? = null
 ): LanguagePackStringValue = execute(
     GetLanguagePackString(
         languagePackDatabasePath,
@@ -134,7 +134,7 @@ fun TelegramClient.Companion.getLanguagePackString(
  * @json - The JSON-serialized string
  */
 fun TelegramClient.Companion.getJsonValue(
-    json: String
+    json: String? = null
 ): JsonValue = execute(
     GetJsonValue(
         json
@@ -150,7 +150,7 @@ fun TelegramClient.Companion.getJsonValue(
  * @jsonValue - The JsonValue object
  */
 fun TelegramClient.Companion.getJsonString(
-    jsonValue: JsonValue
+    jsonValue: JsonValue? = null
 ): Text = execute(
     GetJsonString(
         jsonValue
@@ -166,7 +166,7 @@ fun TelegramClient.Companion.getJsonString(
  * @payload - JSON-encoded push notification payload
  */
 fun TelegramClient.Companion.getPushReceiverId(
-    payload: String
+    payload: String? = null
 ): PushReceiverId = execute(
     GetPushReceiverId(
         payload
@@ -182,7 +182,7 @@ fun TelegramClient.Companion.getPushReceiverId(
  * @logStream - New log stream
  */
 fun TelegramClient.Companion.setLogStream(
-    logStream: LogStream
+    logStream: LogStream? = null
 ): Ok = execute(
     SetLogStream(
         logStream
@@ -246,7 +246,7 @@ fun TelegramClient.Companion.getLogTags(): LogTags = execute(
  * @newVerbosityLevel - New verbosity level
  */
 fun TelegramClient.Companion.setLogTagVerbosityLevel(
-    tag: String,
+    tag: String? = null,
     newVerbosityLevel: Int = 0
 ): Ok = execute(
     SetLogTagVerbosityLevel(
@@ -264,7 +264,7 @@ fun TelegramClient.Companion.setLogTagVerbosityLevel(
  * @tag - Logging tag to change verbosity level
  */
 fun TelegramClient.Companion.getLogTagVerbosityLevel(
-    tag: String
+    tag: String? = null
 ): LogVerbosityLevel = execute(
     GetLogTagVerbosityLevel(
         tag
@@ -282,7 +282,7 @@ fun TelegramClient.Companion.getLogTagVerbosityLevel(
  */
 fun TelegramClient.Companion.addLogMessage(
     verbosityLevel: Int = 0,
-    text: String
+    text: String? = null
 ): Ok = execute(
     AddLogMessage(
         verbosityLevel,

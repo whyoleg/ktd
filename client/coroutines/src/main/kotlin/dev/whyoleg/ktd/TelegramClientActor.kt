@@ -47,6 +47,7 @@ private fun handle(job: Job, channel: ReceiveChannel<Action>) {
 internal class TelegramClientActor(private val nativeClient: NativeClient, job: Job) : TelegramClient, Job by job {
     private val channel = Channel<Action>(Channel.UNLIMITED)
     private val updatesChannel = UpdatesChannel(this)
+    private val functionsJob = SupervisorJob(this)
     override val updates: Flow<TelegramUpdate> = updatesChannel.flow
 
     init {
@@ -63,7 +64,7 @@ internal class TelegramClientActor(private val nativeClient: NativeClient, job: 
 
     override suspend fun exec(function: TelegramFunction): TelegramObject {
         val eventId = nativeClient.send(function)
-        val deferred = CompletableDeferred<TelegramObject>(this)
+        val deferred = CompletableDeferred<TelegramObject>(functionsJob)
         channel.offer(Action.Handler(eventId, deferred))
         return deferred.await()
     }

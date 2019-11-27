@@ -21,7 +21,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @limit - Maximum number of stickers to be returned
  */
 suspend fun TelegramClient.getStickers(
-    emoji: String,
+    emoji: String? = null,
     limit: Int = 0
 ): Stickers = sticker(
     GetStickers(
@@ -37,7 +37,7 @@ suspend fun TelegramClient.getStickers(
  * @limit - Maximum number of stickers to be returned
  */
 suspend fun TelegramClient.searchStickers(
-    emoji: String,
+    emoji: String? = null,
     limit: Int = 0
 ): Stickers = sticker(
     SearchStickers(
@@ -120,7 +120,7 @@ suspend fun TelegramClient.getStickerSet(
  * @name - Name of the sticker set
  */
 suspend fun TelegramClient.searchStickerSet(
-    name: String
+    name: String? = null
 ): StickerSet = sticker(
     SearchStickerSet(
         name
@@ -137,7 +137,7 @@ suspend fun TelegramClient.searchStickerSet(
  */
 suspend fun TelegramClient.searchInstalledStickerSets(
     isMasks: Boolean = false,
-    query: String,
+    query: String? = null,
     limit: Int = 0
 ): StickerSets = sticker(
     SearchInstalledStickerSets(
@@ -154,7 +154,7 @@ suspend fun TelegramClient.searchInstalledStickerSets(
  * @query - Query to search for
  */
 suspend fun TelegramClient.searchStickerSets(
-    query: String
+    query: String? = null
 ): StickerSets = sticker(
     SearchStickerSets(
         query
@@ -237,7 +237,7 @@ suspend fun TelegramClient.getRecentStickers(
  */
 suspend fun TelegramClient.addRecentSticker(
     isAttached: Boolean = false,
-    sticker: InputFile
+    sticker: InputFile? = null
 ): Stickers = sticker(
     AddRecentSticker(
         isAttached,
@@ -254,7 +254,7 @@ suspend fun TelegramClient.addRecentSticker(
  */
 suspend fun TelegramClient.removeRecentSticker(
     isAttached: Boolean = false,
-    sticker: InputFile
+    sticker: InputFile? = null
 ): Ok = sticker(
     RemoveRecentSticker(
         isAttached,
@@ -292,7 +292,7 @@ suspend fun TelegramClient.getFavoriteStickers(): Stickers = sticker(
  * @sticker - Sticker file to add
  */
 suspend fun TelegramClient.addFavoriteSticker(
-    sticker: InputFile
+    sticker: InputFile? = null
 ): Ok = sticker(
     AddFavoriteSticker(
         sticker
@@ -305,7 +305,7 @@ suspend fun TelegramClient.addFavoriteSticker(
  * @sticker - Sticker file to delete from the list
  */
 suspend fun TelegramClient.removeFavoriteSticker(
-    sticker: InputFile
+    sticker: InputFile? = null
 ): Ok = sticker(
     RemoveFavoriteSticker(
         sticker
@@ -327,8 +327,8 @@ suspend fun TelegramClient.removeFavoriteSticker(
 @BotsOnly
 suspend fun TelegramClient.createNewStickerSet(
     userId: Int = 0,
-    title: String,
-    name: String,
+    title: String? = null,
+    name: String? = null,
     isMasks: Boolean = false,
     stickers: Array<InputSticker> = emptyArray()
 ): StickerSet = sticker(
@@ -352,8 +352,8 @@ suspend fun TelegramClient.createNewStickerSet(
 @BotsOnly
 suspend fun TelegramClient.addStickerToSet(
     userId: Int = 0,
-    name: String,
-    sticker: InputSticker
+    name: String? = null,
+    sticker: InputSticker? = null
 ): StickerSet = sticker(
     AddStickerToSet(
         userId,
@@ -371,7 +371,7 @@ suspend fun TelegramClient.addStickerToSet(
  */
 @BotsOnly
 suspend fun TelegramClient.setStickerPositionInSet(
-    sticker: InputFile,
+    sticker: InputFile? = null,
     position: Int = 0
 ): Ok = sticker(
     SetStickerPositionInSet(
@@ -388,7 +388,7 @@ suspend fun TelegramClient.setStickerPositionInSet(
  */
 @BotsOnly
 suspend fun TelegramClient.removeStickerFromSet(
-    sticker: InputFile
+    sticker: InputFile? = null
 ): Ok = sticker(
     RemoveStickerFromSet(
         sticker

@@ -24,7 +24,7 @@ private fun List<String>.parseRawTlData(): List<RawTlData> {
     return data
 }
 
-private fun String.crc(): Int = CRC32().apply { update(toByteArray()) }.value.toInt()
+private fun String.crc(): Int = CRC32().apply { update(replace("<", " ").replace(">", "").toByteArray()) }.value.toInt()
 
 private fun RawTlData.toTlData(): TlData = when (type) {
     RawTlDataType.Object   -> when (expression.contains(spaceToken)) {

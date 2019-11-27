@@ -33,7 +33,7 @@ suspend fun TelegramClient.checkDatabaseEncryptionKey(
  * @code - The verification code received via SMS, Telegram message, phone call, or flash call
  */
 suspend fun TelegramClient.checkAuthenticationCode(
-    code: String
+    code: String? = null
 ): Ok = check(
     CheckAuthenticationCode(
         code
@@ -47,7 +47,7 @@ suspend fun TelegramClient.checkAuthenticationCode(
  * @password - The password to check
  */
 suspend fun TelegramClient.checkAuthenticationPassword(
-    password: String
+    password: String? = null
 ): Ok = check(
     CheckAuthenticationPassword(
         password
@@ -63,7 +63,7 @@ suspend fun TelegramClient.checkAuthenticationPassword(
  */
 @BotsOnly
 suspend fun TelegramClient.checkAuthenticationBotToken(
-    token: String
+    token: String? = null
 ): Ok = check(
     CheckAuthenticationBotToken(
         token
@@ -79,7 +79,7 @@ suspend fun TelegramClient.checkAuthenticationBotToken(
  */
 suspend fun TelegramClient.checkChatUsername(
     chatId: Long = 0L,
-    username: String
+    username: String? = null
 ): CheckChatUsernameResult = check(
     CheckChatUsername(
         chatId,
@@ -96,7 +96,7 @@ suspend fun TelegramClient.checkChatUsername(
 @BotsOnly
 suspend fun TelegramClient.answerPreCheckoutQuery(
     preCheckoutQueryId: Long = 0L,
-    errorMessage: String
+    errorMessage: String? = null
 ): Ok = check(
     AnswerPreCheckoutQuery(
         preCheckoutQueryId,
@@ -110,7 +110,7 @@ suspend fun TelegramClient.answerPreCheckoutQuery(
  * @code - Verification code received by SMS, phone call or flash call
  */
 suspend fun TelegramClient.checkChangePhoneNumberCode(
-    code: String
+    code: String? = null
 ): Ok = check(
     CheckChangePhoneNumberCode(
         code
@@ -123,7 +123,7 @@ suspend fun TelegramClient.checkChangePhoneNumberCode(
  * @code - Verification code
  */
 suspend fun TelegramClient.checkPhoneNumberVerificationCode(
-    code: String
+    code: String? = null
 ): Ok = check(
     CheckPhoneNumberVerificationCode(
         code
@@ -136,7 +136,7 @@ suspend fun TelegramClient.checkPhoneNumberVerificationCode(
  * @code - Verification code
  */
 suspend fun TelegramClient.checkEmailAddressVerificationCode(
-    code: String
+    code: String? = null
 ): Ok = check(
     CheckEmailAddressVerificationCode(
         code
@@ -149,7 +149,7 @@ suspend fun TelegramClient.checkEmailAddressVerificationCode(
  * @code - The phone number confirmation code
  */
 suspend fun TelegramClient.checkPhoneNumberConfirmationCode(
-    code: String
+    code: String? = null
 ): Ok = check(
     CheckPhoneNumberConfirmationCode(
         code

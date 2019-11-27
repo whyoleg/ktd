@@ -19,8 +19,8 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @password - Password of the current user
  */
 suspend fun TelegramClient.getPassportElement(
-    type: PassportElementType,
-    password: String
+    type: PassportElementType? = null,
+    password: String? = null
 ): PassportElement = passport(
     GetPassportElement(
         type,
@@ -34,7 +34,7 @@ suspend fun TelegramClient.getPassportElement(
  * @password - Password of the current user
  */
 suspend fun TelegramClient.getAllPassportElements(
-    password: String
+    password: String? = null
 ): PassportElements = passport(
     GetAllPassportElements(
         password
@@ -49,8 +49,8 @@ suspend fun TelegramClient.getAllPassportElements(
  * @password - Password of the current user
  */
 suspend fun TelegramClient.setPassportElement(
-    element: InputPassportElement,
-    password: String
+    element: InputPassportElement? = null,
+    password: String? = null
 ): PassportElement = passport(
     SetPassportElement(
         element,
@@ -64,7 +64,7 @@ suspend fun TelegramClient.setPassportElement(
  * @type - Element type
  */
 suspend fun TelegramClient.deletePassportElement(
-    type: PassportElementType
+    type: PassportElementType? = null
 ): Ok = passport(
     DeletePassportElement(
         type
@@ -99,9 +99,9 @@ suspend fun TelegramClient.setPassportElementErrors(
  */
 suspend fun TelegramClient.getPassportAuthorizationForm(
     botUserId: Int = 0,
-    scope: String,
-    publicKey: String,
-    nonce: String
+    scope: String? = null,
+    publicKey: String? = null,
+    nonce: String? = null
 ): PassportAuthorizationForm = passport(
     GetPassportAuthorizationForm(
         botUserId,
@@ -120,7 +120,7 @@ suspend fun TelegramClient.getPassportAuthorizationForm(
  */
 suspend fun TelegramClient.getPassportAuthorizationFormAvailableElements(
     autorizationFormId: Int = 0,
-    password: String
+    password: String? = null
 ): PassportElementsWithErrors = passport(
     GetPassportAuthorizationFormAvailableElements(
         autorizationFormId,

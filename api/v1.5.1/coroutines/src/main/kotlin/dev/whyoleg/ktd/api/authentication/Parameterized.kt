@@ -20,8 +20,8 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.setAuthenticationPhoneNumber(
-    phoneNumber: String,
-    settings: PhoneNumberAuthenticationSettings
+    phoneNumber: String? = null,
+    settings: PhoneNumberAuthenticationSettings? = null
 ): Ok = authentication(
     SetAuthenticationPhoneNumber(
         phoneNumber,
@@ -52,7 +52,7 @@ suspend fun TelegramClient.requestAuthenticationPasswordRecovery(): Ok = authent
  * @recoveryCode - Recovery code to check
  */
 suspend fun TelegramClient.recoverAuthenticationPassword(
-    recoveryCode: String
+    recoveryCode: String? = null
 ): Ok = authentication(
     RecoverAuthenticationPassword(
         recoveryCode
@@ -67,8 +67,8 @@ suspend fun TelegramClient.recoverAuthenticationPassword(
  * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.changePhoneNumber(
-    phoneNumber: String,
-    settings: PhoneNumberAuthenticationSettings
+    phoneNumber: String? = null,
+    settings: PhoneNumberAuthenticationSettings? = null
 ): AuthenticationCodeInfo = authentication(
     ChangePhoneNumber(
         phoneNumber,
@@ -91,8 +91,8 @@ suspend fun TelegramClient.resendChangePhoneNumberCode(): AuthenticationCodeInfo
  * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.sendPhoneNumberVerificationCode(
-    phoneNumber: String,
-    settings: PhoneNumberAuthenticationSettings
+    phoneNumber: String? = null,
+    settings: PhoneNumberAuthenticationSettings? = null
 ): AuthenticationCodeInfo = authentication(
     SendPhoneNumberVerificationCode(
         phoneNumber,
@@ -116,9 +116,9 @@ suspend fun TelegramClient.resendPhoneNumberVerificationCode(): AuthenticationCo
  * @settings - Settings for the authentication of the user's phone number
  */
 suspend fun TelegramClient.sendPhoneNumberConfirmationCode(
-    hash: String,
-    phoneNumber: String,
-    settings: PhoneNumberAuthenticationSettings
+    hash: String? = null,
+    phoneNumber: String? = null,
+    settings: PhoneNumberAuthenticationSettings? = null
 ): AuthenticationCodeInfo = authentication(
     SendPhoneNumberConfirmationCode(
         hash,

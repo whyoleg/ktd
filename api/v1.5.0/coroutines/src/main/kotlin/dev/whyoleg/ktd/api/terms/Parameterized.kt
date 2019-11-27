@@ -18,7 +18,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @termsOfServiceId - Terms of service identifier
  */
 suspend fun TelegramClient.acceptTermsOfService(
-    termsOfServiceId: String
+    termsOfServiceId: String? = null
 ): Ok = terms(
     AcceptTermsOfService(
         termsOfServiceId

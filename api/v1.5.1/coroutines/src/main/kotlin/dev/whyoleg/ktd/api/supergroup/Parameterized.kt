@@ -48,7 +48,7 @@ suspend fun TelegramClient.getSupergroupFullInfo(
  */
 suspend fun TelegramClient.setSupergroupUsername(
     supergroupId: Int = 0,
-    username: String
+    username: String? = null
 ): Ok = supergroup(
     SetSupergroupUsername(
         supergroupId,

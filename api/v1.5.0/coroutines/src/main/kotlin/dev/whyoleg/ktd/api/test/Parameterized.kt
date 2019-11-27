@@ -31,7 +31,7 @@ suspend fun TelegramClient.testCallEmpty(): Ok = test(
  */
 @TestingOnly
 suspend fun TelegramClient.testCallString(
-    x: String
+    x: String? = null
 ): TestString = test(
     TestCallString(
         x
@@ -153,9 +153,9 @@ suspend fun TelegramClient.testNetwork(): Ok = test(
  */
 @TestingOnly
 suspend fun TelegramClient.testProxy(
-    server: String,
+    server: String? = null,
     port: Int = 0,
-    type: ProxyType
+    type: ProxyType? = null
 ): Ok = test(
     TestProxy(
         server,
@@ -192,7 +192,7 @@ suspend fun TelegramClient.testUseUpdate(): Update = test(
  */
 @TestingOnly
 suspend fun TelegramClient.testReturnError(
-    error: Error
+    error: Error? = null
 ): Error = test(
     TestReturnError(
         error

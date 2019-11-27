@@ -22,7 +22,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  *         By default, networkTypeOther
  */
 suspend fun TelegramClient.setNetworkType(
-    type: NetworkType
+    type: NetworkType? = null
 ): Ok = network(
     SetNetworkType(
         type
@@ -50,7 +50,7 @@ suspend fun TelegramClient.getNetworkStatistics(
  * @entry - The network statistics entry with the data to be added to statistics
  */
 suspend fun TelegramClient.addNetworkStatistics(
-    entry: NetworkStatisticsEntry
+    entry: NetworkStatisticsEntry? = null
 ): Ok = network(
     AddNetworkStatistics(
         entry

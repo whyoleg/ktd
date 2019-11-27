@@ -23,7 +23,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 suspend fun TelegramClient.answerShippingQuery(
     shippingQueryId: Long = 0L,
     shippingOptions: Array<ShippingOption> = emptyArray(),
-    errorMessage: String
+    errorMessage: String? = null
 ): Ok = shipping(
     AnswerShippingQuery(
         shippingQueryId,

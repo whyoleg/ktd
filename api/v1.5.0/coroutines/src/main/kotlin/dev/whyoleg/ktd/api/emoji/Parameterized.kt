@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @sticker - Sticker file identifier
  */
 suspend fun TelegramClient.getStickerEmojis(
-    sticker: InputFile
+    sticker: InputFile? = null
 ): Emojis = emoji(
     GetStickerEmojis(
         sticker
@@ -34,7 +34,7 @@ suspend fun TelegramClient.getStickerEmojis(
  * @exactMatch - True, if only emojis, which exactly match text needs to be returned
  */
 suspend fun TelegramClient.searchEmojis(
-    text: String,
+    text: String? = null,
     exactMatch: Boolean = false
 ): Emojis = emoji(
     SearchEmojis(
@@ -50,7 +50,7 @@ suspend fun TelegramClient.searchEmojis(
  * @languageCode - Language code for which the emoji replacements will be suggested
  */
 suspend fun TelegramClient.getEmojiSuggestionsUrl(
-    languageCode: String
+    languageCode: String? = null
 ): HttpUrl = emoji(
     GetEmojiSuggestionsUrl(
         languageCode

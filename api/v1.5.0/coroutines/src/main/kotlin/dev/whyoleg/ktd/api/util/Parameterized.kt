@@ -37,7 +37,7 @@ suspend fun TelegramClient.destroy(): Ok = util(
  * @referrer - Google Play referrer to identify the user
  */
 suspend fun TelegramClient.getRecentlyVisitedTMeUrls(
-    referrer: String
+    referrer: String? = null
 ): TMeUrls = util(
     GetRecentlyVisitedTMeUrls(
         referrer

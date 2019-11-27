@@ -35,8 +35,8 @@ suspend fun TelegramClient.getFile(
  * @fileType - File type, if known
  */
 suspend fun TelegramClient.getRemoteFile(
-    remoteFileId: String,
-    fileType: FileType
+    remoteFileId: String? = null,
+    fileType: FileType? = null
 ): File = file(
     GetRemoteFile(
         remoteFileId,
@@ -120,8 +120,8 @@ suspend fun TelegramClient.cancelDownloadFile(
  *             If the priorities of two files are equal, then the first one for which uploadFile was called will be uploaded first
  */
 suspend fun TelegramClient.uploadFile(
-    file: InputFile,
-    fileType: FileType,
+    file: InputFile? = null,
+    fileType: FileType? = null,
     priority: Int = 0
 ): File = file(
     UploadFile(
@@ -194,7 +194,7 @@ suspend fun TelegramClient.setFileGenerationProgress(
  */
 suspend fun TelegramClient.finishFileGeneration(
     generationId: Long = 0L,
-    error: Error
+    error: Error? = null
 ): Ok = file(
     FinishFileGeneration(
         generationId,
@@ -249,7 +249,7 @@ suspend fun TelegramClient.deleteFile(
 @BotsOnly
 suspend fun TelegramClient.uploadStickerFile(
     userId: Int = 0,
-    pngSticker: InputFile
+    pngSticker: InputFile? = null
 ): File = file(
     UploadStickerFile(
         userId,
@@ -270,7 +270,7 @@ suspend fun TelegramClient.uploadStickerFile(
  *           Use 0 if unknown
  */
 suspend fun TelegramClient.getMapThumbnailFile(
-    location: Location,
+    location: Location? = null,
     zoom: Int = 0,
     width: Int = 0,
     height: Int = 0,

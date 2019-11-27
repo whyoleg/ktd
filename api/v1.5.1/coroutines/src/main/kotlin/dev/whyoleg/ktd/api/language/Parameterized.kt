@@ -25,10 +25,10 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @key - Language pack key of the string to be returned
  */
 suspend fun TelegramClient.getLanguagePackString(
-    languagePackDatabasePath: String,
-    localizationTarget: String,
-    languagePackId: String,
-    key: String
+    languagePackDatabasePath: String? = null,
+    localizationTarget: String? = null,
+    languagePackId: String? = null,
+    key: String? = null
 ): LanguagePackStringValue = language(
     GetLanguagePackString(
         languagePackDatabasePath,
@@ -46,7 +46,7 @@ suspend fun TelegramClient.getLanguagePackString(
  * @languagePackId - Language pack identifier
  */
 suspend fun TelegramClient.getLanguagePackInfo(
-    languagePackId: String
+    languagePackId: String? = null
 ): LanguagePackInfo = language(
     GetLanguagePackInfo(
         languagePackId
@@ -62,7 +62,7 @@ suspend fun TelegramClient.getLanguagePackInfo(
  *         Leave empty to request all available strings
  */
 suspend fun TelegramClient.getLanguagePackStrings(
-    languagePackId: String,
+    languagePackId: String? = null,
     keys: Array<String> = emptyArray()
 ): LanguagePackStrings = language(
     GetLanguagePackStrings(
@@ -79,7 +79,7 @@ suspend fun TelegramClient.getLanguagePackStrings(
  * @languagePackId - Language pack identifier
  */
 suspend fun TelegramClient.synchronizeLanguagePack(
-    languagePackId: String
+    languagePackId: String? = null
 ): Ok = language(
     SynchronizeLanguagePack(
         languagePackId
@@ -94,7 +94,7 @@ suspend fun TelegramClient.synchronizeLanguagePack(
  * @languagePackId - Identifier of the language pack to delete
  */
 suspend fun TelegramClient.deleteLanguagePack(
-    languagePackId: String
+    languagePackId: String? = null
 ): Ok = language(
     DeleteLanguagePack(
         languagePackId

@@ -22,9 +22,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  */
 @BotsOnly
 suspend fun TelegramClient.editInlineMessageText(
-    inlineMessageId: String,
-    replyMarkup: ReplyMarkup,
-    inputMessageContent: InputMessageContent
+    inlineMessageId: String? = null,
+    replyMarkup: ReplyMarkup? = null,
+    inputMessageContent: InputMessageContent? = null
 ): Ok = inline(
     EditInlineMessageText(
         inlineMessageId,
@@ -43,8 +43,8 @@ suspend fun TelegramClient.editInlineMessageText(
  */
 @BotsOnly
 suspend fun TelegramClient.editInlineMessageLiveLocation(
-    inlineMessageId: String,
-    replyMarkup: ReplyMarkup,
+    inlineMessageId: String? = null,
+    replyMarkup: ReplyMarkup? = null,
     location: Location? = null
 ): Ok = inline(
     EditInlineMessageLiveLocation(
@@ -64,9 +64,9 @@ suspend fun TelegramClient.editInlineMessageLiveLocation(
  */
 @BotsOnly
 suspend fun TelegramClient.editInlineMessageMedia(
-    inlineMessageId: String,
-    @BotsOnly replyMarkup: ReplyMarkup,
-    inputMessageContent: InputMessageContent
+    inlineMessageId: String? = null,
+    @BotsOnly replyMarkup: ReplyMarkup? = null,
+    inputMessageContent: InputMessageContent? = null
 ): Ok = inline(
     EditInlineMessageMedia(
         inlineMessageId,
@@ -85,9 +85,9 @@ suspend fun TelegramClient.editInlineMessageMedia(
  */
 @BotsOnly
 suspend fun TelegramClient.editInlineMessageCaption(
-    inlineMessageId: String,
-    replyMarkup: ReplyMarkup,
-    caption: FormattedText
+    inlineMessageId: String? = null,
+    replyMarkup: ReplyMarkup? = null,
+    caption: FormattedText? = null
 ): Ok = inline(
     EditInlineMessageCaption(
         inlineMessageId,
@@ -104,8 +104,8 @@ suspend fun TelegramClient.editInlineMessageCaption(
  */
 @BotsOnly
 suspend fun TelegramClient.editInlineMessageReplyMarkup(
-    inlineMessageId: String,
-    replyMarkup: ReplyMarkup
+    inlineMessageId: String? = null,
+    replyMarkup: ReplyMarkup? = null
 ): Ok = inline(
     EditInlineMessageReplyMarkup(
         inlineMessageId,
@@ -126,9 +126,9 @@ suspend fun TelegramClient.editInlineMessageReplyMarkup(
 suspend fun TelegramClient.getInlineQueryResults(
     botUserId: Int = 0,
     chatId: Long = 0L,
-    userLocation: Location,
-    query: String,
-    offset: String
+    userLocation: Location? = null,
+    query: String? = null,
+    offset: String? = null
 ): InlineQueryResults = inline(
     GetInlineQueryResults(
         botUserId,
@@ -157,9 +157,9 @@ suspend fun TelegramClient.answerInlineQuery(
     isPersonal: Boolean = false,
     results: Array<InputInlineQueryResult> = emptyArray(),
     cacheTime: Int = 0,
-    nextOffset: String,
-    switchPmText: String,
-    switchPmParameter: String
+    nextOffset: String? = null,
+    switchPmText: String? = null,
+    switchPmParameter: String? = null
 ): Ok = inline(
     AnswerInlineQuery(
         inlineQueryId,
@@ -184,7 +184,7 @@ suspend fun TelegramClient.answerInlineQuery(
  */
 @BotsOnly
 suspend fun TelegramClient.setInlineGameScore(
-    inlineMessageId: String,
+    inlineMessageId: String? = null,
     editMessage: Boolean = false,
     userId: Int = 0,
     score: Int = 0,

@@ -12,12 +12,12 @@ data class TlSchemeMetadata(
 
 data class TlDataMetadata(
     val withDefault: Boolean,
-    val isNullable: Boolean
+    val withNullables: Boolean
 )
 
 operator fun TlSchemeMetadata.get(data: TlData): TlDataMetadata = TlDataMetadata(
     withDefault = data.type.toLowerCase() in typesWithDefaultsProperties,
-    isNullable = data.type.toLowerCase() in typesWithNullableProperties
+    withNullables = data.type.toLowerCase() in typesWithNullableProperties
 )
 
 fun List<TlData>.extractMetadata(): TlSchemeMetadata {
@@ -42,7 +42,7 @@ fun List<TlData>.extractMetadata(): TlSchemeMetadata {
 
     val typesWithDefaultsProperties = getAll(functions) + functions.map(TlFunction::type).map(String::toLowerCase)
 
-    return TlSchemeMetadata(typesWithNullableProperties, typesWithDefaultsProperties)
+    return TlSchemeMetadata(functions.map { it.type.toLowerCase() }.toSet(), typesWithDefaultsProperties)
 }
 
 

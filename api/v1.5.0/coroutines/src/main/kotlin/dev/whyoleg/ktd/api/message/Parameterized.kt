@@ -145,12 +145,12 @@ suspend fun TelegramClient.getChatHistory(
  */
 suspend fun TelegramClient.searchChatMessages(
     chatId: Long = 0L,
-    query: String,
+    query: String? = null,
     senderUserId: Int = 0,
     fromMessageId: Long = 0L,
     offset: Int = 0,
     limit: Int = 0,
-    filter: SearchMessagesFilter
+    filter: SearchMessagesFilter? = null
 ): Messages = message(
     SearchChatMessages(
         chatId,
@@ -177,7 +177,7 @@ suspend fun TelegramClient.searchChatMessages(
  *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
  */
 suspend fun TelegramClient.searchMessages(
-    query: String,
+    query: String? = null,
     offsetDate: Int = 0,
     offsetChatId: Long = 0L,
     offsetMessageId: Long = 0L,
@@ -208,10 +208,10 @@ suspend fun TelegramClient.searchMessages(
  */
 suspend fun TelegramClient.searchSecretMessages(
     chatId: Long = 0L,
-    query: String,
+    query: String? = null,
     fromSearchId: Long = 0L,
     limit: Int = 0,
-    filter: SearchMessagesFilter
+    filter: SearchMessagesFilter? = null
 ): FoundMessages = message(
     SearchSecretMessages(
         chatId,
@@ -331,7 +331,7 @@ suspend fun TelegramClient.getMessageLink(
  * @url - The message link in the format "https://t.me/c/...", or "tg://privatepost?...", or "https://t.me/username/...", or "tg://resolve?..."
  */
 suspend fun TelegramClient.getMessageLinkInfo(
-    url: String
+    url: String? = null
 ): MessageLinkInfo = message(
     GetMessageLinkInfo(
         url
@@ -355,8 +355,8 @@ suspend fun TelegramClient.sendMessage(
     replyToMessageId: Long = 0L,
     disableNotification: Boolean = false,
     fromBackground: Boolean = false,
-    @BotsOnly replyMarkup: ReplyMarkup,
-    inputMessageContent: InputMessageContent
+    @BotsOnly replyMarkup: ReplyMarkup? = null,
+    inputMessageContent: InputMessageContent? = null
 ): Message = message(
     SendMessage(
         chatId,
@@ -409,7 +409,7 @@ suspend fun TelegramClient.sendMessageAlbum(
 suspend fun TelegramClient.sendBotStartMessage(
     botUserId: Int = 0,
     chatId: Long = 0L,
-    parameter: String
+    parameter: String? = null
 ): Message = message(
     SendBotStartMessage(
         botUserId,
@@ -439,7 +439,7 @@ suspend fun TelegramClient.sendInlineQueryResultMessage(
     disableNotification: Boolean = false,
     fromBackground: Boolean = false,
     queryId: Long = 0L,
-    resultId: String,
+    resultId: String? = null,
     hideViaBot: Boolean = false
 ): Message = message(
     SendInlineQueryResultMessage(
@@ -546,7 +546,7 @@ suspend fun TelegramClient.addLocalMessage(
     senderUserId: Int = 0,
     replyToMessageId: Long = 0L,
     disableNotification: Boolean = false,
-    inputMessageContent: InputMessageContent
+    inputMessageContent: InputMessageContent? = null
 ): Message = message(
     AddLocalMessage(
         chatId,
@@ -590,8 +590,8 @@ suspend fun TelegramClient.deleteMessages(
 suspend fun TelegramClient.editMessageText(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    @BotsOnly replyMarkup: ReplyMarkup,
-    inputMessageContent: InputMessageContent
+    @BotsOnly replyMarkup: ReplyMarkup? = null,
+    inputMessageContent: InputMessageContent? = null
 ): Message = message(
     EditMessageText(
         chatId,
@@ -615,7 +615,7 @@ suspend fun TelegramClient.editMessageText(
 suspend fun TelegramClient.editMessageLiveLocation(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    @BotsOnly replyMarkup: ReplyMarkup,
+    @BotsOnly replyMarkup: ReplyMarkup? = null,
     location: Location? = null
 ): Message = message(
     EditMessageLiveLocation(
@@ -642,8 +642,8 @@ suspend fun TelegramClient.editMessageLiveLocation(
 suspend fun TelegramClient.editMessageMedia(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    @BotsOnly replyMarkup: ReplyMarkup,
-    inputMessageContent: InputMessageContent
+    @BotsOnly replyMarkup: ReplyMarkup? = null,
+    inputMessageContent: InputMessageContent? = null
 ): Message = message(
     EditMessageMedia(
         chatId,
@@ -666,8 +666,8 @@ suspend fun TelegramClient.editMessageMedia(
 suspend fun TelegramClient.editMessageCaption(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    @BotsOnly replyMarkup: ReplyMarkup,
-    caption: FormattedText
+    @BotsOnly replyMarkup: ReplyMarkup? = null,
+    caption: FormattedText? = null
 ): Message = message(
     EditMessageCaption(
         chatId,
@@ -689,7 +689,7 @@ suspend fun TelegramClient.editMessageCaption(
 suspend fun TelegramClient.editMessageReplyMarkup(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    replyMarkup: ReplyMarkup
+    replyMarkup: ReplyMarkup? = null
 ): Message = message(
     EditMessageReplyMarkup(
         chatId,

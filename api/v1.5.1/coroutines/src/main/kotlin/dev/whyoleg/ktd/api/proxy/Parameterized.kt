@@ -22,10 +22,10 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @type - Proxy type
  */
 suspend fun TelegramClient.addProxy(
-    server: String,
+    server: String? = null,
     port: Int = 0,
     enable: Boolean = false,
-    type: ProxyType
+    type: ProxyType? = null
 ): Proxy = proxy(
     AddProxy(
         server,
@@ -47,10 +47,10 @@ suspend fun TelegramClient.addProxy(
  */
 suspend fun TelegramClient.editProxy(
     proxyId: Int = 0,
-    server: String,
+    server: String? = null,
     port: Int = 0,
     enable: Boolean = false,
-    type: ProxyType
+    type: ProxyType? = null
 ): Proxy = proxy(
     EditProxy(
         proxyId,

@@ -23,7 +23,7 @@ import dev.whyoleg.ktd.api.TdApi.*
 suspend fun TelegramClient.getCallbackQueryAnswer(
     chatId: Long = 0L,
     messageId: Long = 0L,
-    payload: CallbackQueryPayload
+    payload: CallbackQueryPayload? = null
 ): CallbackQueryAnswer = callback(
     GetCallbackQueryAnswer(
         chatId,
@@ -44,9 +44,9 @@ suspend fun TelegramClient.getCallbackQueryAnswer(
 @BotsOnly
 suspend fun TelegramClient.answerCallbackQuery(
     callbackQueryId: Long = 0L,
-    text: String,
+    text: String? = null,
     showAlert: Boolean = false,
-    url: String,
+    url: String? = null,
     cacheTime: Int = 0
 ): Ok = callback(
     AnswerCallbackQuery(

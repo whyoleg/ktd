@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  *          InputFileId and inputFileRemote may still be unsupported
  */
 suspend fun TelegramClient.setProfilePhoto(
-    photo: InputFile
+    photo: InputFile? = null
 ): Ok = profile(
     SetProfilePhoto(
         photo

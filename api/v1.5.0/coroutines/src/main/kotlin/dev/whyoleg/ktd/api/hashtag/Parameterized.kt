@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @limit - Maximum number of hashtags to be returned
  */
 suspend fun TelegramClient.searchHashtags(
-    prefix: String,
+    prefix: String? = null,
     limit: Int = 0
 ): Hashtags = hashtag(
     SearchHashtags(
@@ -34,7 +34,7 @@ suspend fun TelegramClient.searchHashtags(
  * @hashtag - Hashtag to delete
  */
 suspend fun TelegramClient.removeRecentHashtag(
-    hashtag: String
+    hashtag: String? = null
 ): Ok = hashtag(
     RemoveRecentHashtag(
         hashtag

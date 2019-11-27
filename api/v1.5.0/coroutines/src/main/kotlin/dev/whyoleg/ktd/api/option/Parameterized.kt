@@ -19,7 +19,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @name - The name of the option
  */
 suspend fun TelegramClient.getOption(
-    name: String
+    name: String? = null
 ): OptionValue = option(
     GetOption(
         name
@@ -35,8 +35,8 @@ suspend fun TelegramClient.getOption(
  * @value - The new value of the option
  */
 suspend fun TelegramClient.setOption(
-    name: String,
-    value: OptionValue
+    name: String? = null,
+    value: OptionValue? = null
 ): Ok = option(
     SetOption(
         name,

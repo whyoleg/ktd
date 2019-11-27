@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  *                   May be different from a name that is used in an "https://t.me/setlanguage/" link
  */
 suspend fun TelegramClient.addCustomServerLanguagePack(
-    languagePackId: String
+    languagePackId: String? = null
 ): Ok = custom(
     AddCustomServerLanguagePack(
         languagePackId
@@ -36,7 +36,7 @@ suspend fun TelegramClient.addCustomServerLanguagePack(
  * @strings - Strings of the new language pack
  */
 suspend fun TelegramClient.setCustomLanguagePack(
-    info: LanguagePackInfo,
+    info: LanguagePackInfo? = null,
     strings: Array<LanguagePackString> = emptyArray()
 ): Ok = custom(
     SetCustomLanguagePack(
@@ -52,7 +52,7 @@ suspend fun TelegramClient.setCustomLanguagePack(
  * @info - New information about the custom local language pack
  */
 suspend fun TelegramClient.editCustomLanguagePackInfo(
-    info: LanguagePackInfo
+    info: LanguagePackInfo? = null
 ): Ok = custom(
     EditCustomLanguagePackInfo(
         info
@@ -67,8 +67,8 @@ suspend fun TelegramClient.editCustomLanguagePackInfo(
  * @newString - New language pack string
  */
 suspend fun TelegramClient.setCustomLanguagePackString(
-    languagePackId: String,
-    newString: LanguagePackString
+    languagePackId: String? = null,
+    newString: LanguagePackString? = null
 ): Ok = custom(
     SetCustomLanguagePackString(
         languagePackId,
@@ -84,8 +84,8 @@ suspend fun TelegramClient.setCustomLanguagePackString(
  */
 @BotsOnly
 suspend fun TelegramClient.sendCustomRequest(
-    method: String,
-    parameters: String
+    method: String? = null,
+    parameters: String? = null
 ): CustomRequestResult = custom(
     SendCustomRequest(
         method,
@@ -102,7 +102,7 @@ suspend fun TelegramClient.sendCustomRequest(
 @BotsOnly
 suspend fun TelegramClient.answerCustomQuery(
     customQueryId: Long = 0L,
-    data: String
+    data: String? = null
 ): Ok = custom(
     AnswerCustomQuery(
         customQueryId,

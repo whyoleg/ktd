@@ -11,11 +11,11 @@ fun StringBuilder.buildParameters(parameters: List<String>, addEmptyBrackets: Bo
 fun TlProperty.toVal(metadata: TlDataMetadata): String = toParameter(metadata, "val ")
 
 fun TlProperty.toParameter(metadata: TlDataMetadata, prefix: String = ""): String {
-    val (withDefault) = metadata
+    val (withDefault, withNullables) = metadata
     val propName = name.snakeToCamel()
     val defaultValue = if (withDefault) " = ${type.default}" else emptyToken
     val default = if (type is TlRefType) {
-        if (additions.any { it is TlAddition.Nullable }) questionToken + defaultValue
+        if (additions.any { it is TlAddition.Nullable } || withNullables) questionToken + defaultValue
         else emptyToken
     } else defaultValue
     return "${inlineAnnotations()}$prefix$propName: ${type.kotlinType}$default"

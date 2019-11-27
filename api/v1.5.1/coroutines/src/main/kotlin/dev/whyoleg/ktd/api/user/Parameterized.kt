@@ -20,8 +20,8 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @lastName - The last name of the user
  */
 suspend fun TelegramClient.registerUser(
-    firstName: String,
-    lastName: String
+    firstName: String? = null,
+    lastName: String? = null
 ): Ok = user(
     RegisterUser(
         firstName,
@@ -133,7 +133,7 @@ suspend fun TelegramClient.getContacts(): Users = user(
  * @limit - Maximum number of users to be returned
  */
 suspend fun TelegramClient.searchContacts(
-    query: String,
+    query: String? = null,
     limit: Int = 0
 ): Users = user(
     SearchContacts(
@@ -177,8 +177,8 @@ suspend fun TelegramClient.getRecentInlineBots(): Users = user(
  * @lastName - The new value of the optional last name for the user
  */
 suspend fun TelegramClient.setName(
-    firstName: String,
-    lastName: String
+    firstName: String? = null,
+    lastName: String? = null
 ): Ok = user(
     SetName(
         firstName,
@@ -192,7 +192,7 @@ suspend fun TelegramClient.setName(
  * @bio - The new value of the user bio
  */
 suspend fun TelegramClient.setBio(
-    bio: String
+    bio: String? = null
 ): Ok = user(
     SetBio(
         bio
@@ -207,7 +207,7 @@ suspend fun TelegramClient.setBio(
  *             Use an empty string to remove the username
  */
 suspend fun TelegramClient.setUsername(
-    username: String
+    username: String? = null
 ): Ok = user(
     SetUsername(
         username
@@ -228,8 +228,8 @@ suspend fun TelegramClient.getSupportUser(): User = user(
  * @rules - The new privacy rules
  */
 suspend fun TelegramClient.setUserPrivacySettingRules(
-    setting: UserPrivacySetting,
-    rules: UserPrivacySettingRules
+    setting: UserPrivacySetting? = null,
+    rules: UserPrivacySettingRules? = null
 ): Ok = user(
     SetUserPrivacySettingRules(
         setting,
@@ -243,7 +243,7 @@ suspend fun TelegramClient.setUserPrivacySettingRules(
  * @setting - The privacy setting
  */
 suspend fun TelegramClient.getUserPrivacySettingRules(
-    setting: UserPrivacySetting
+    setting: UserPrivacySetting? = null
 ): UserPrivacySettingRules = user(
     GetUserPrivacySettingRules(
         setting

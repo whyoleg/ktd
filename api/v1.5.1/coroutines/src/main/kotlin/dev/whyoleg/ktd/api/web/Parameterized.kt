@@ -20,7 +20,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @text - Message text with formatting
  */
 suspend fun TelegramClient.getWebPagePreview(
-    text: FormattedText
+    text: FormattedText? = null
 ): WebPage = web(
     GetWebPagePreview(
         text
@@ -35,7 +35,7 @@ suspend fun TelegramClient.getWebPagePreview(
  * @forceFull - If true, the full instant view for the web page will be returned
  */
 suspend fun TelegramClient.getWebPageInstantView(
-    url: String,
+    url: String? = null,
     forceFull: Boolean = false
 ): WebPageInstantView = web(
     GetWebPageInstantView(

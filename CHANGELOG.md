@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+> Published 27 Nov 2019
+- Functions now have nullable `Ref` parameters
+- Fix constructors counting of tl-scheme for `vector`
+- Fix requests cancellation
+
 ## 0.4.0
 > Published 19 Nov 2019
 - Support Linux, MacOS, Win32 and Win64 using JVM

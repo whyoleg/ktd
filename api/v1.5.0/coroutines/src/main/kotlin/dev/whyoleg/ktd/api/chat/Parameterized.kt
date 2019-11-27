@@ -57,7 +57,7 @@ suspend fun TelegramClient.getChats(
  * @username - Username to be resolved
  */
 suspend fun TelegramClient.searchPublicChat(
-    username: String
+    username: String? = null
 ): Chat = chat(
     SearchPublicChat(
         username
@@ -74,7 +74,7 @@ suspend fun TelegramClient.searchPublicChat(
  * @query - Query to search for
  */
 suspend fun TelegramClient.searchPublicChats(
-    query: String
+    query: String? = null
 ): Chats = chat(
     SearchPublicChats(
         query
@@ -90,7 +90,7 @@ suspend fun TelegramClient.searchPublicChats(
  * @limit - Maximum number of chats to be returned
  */
 suspend fun TelegramClient.searchChats(
-    query: String,
+    query: String? = null,
     limit: Int = 0
 ): Chats = chat(
     SearchChats(
@@ -107,7 +107,7 @@ suspend fun TelegramClient.searchChats(
  * @limit - Maximum number of chats to be returned
  */
 suspend fun TelegramClient.searchChatsOnServer(
-    query: String,
+    query: String? = null,
     limit: Int = 0
 ): Chats = chat(
     SearchChatsOnServer(
@@ -125,7 +125,7 @@ suspend fun TelegramClient.searchChatsOnServer(
  *          Up to 30
  */
 suspend fun TelegramClient.getTopChats(
-    category: TopChatCategory,
+    category: TopChatCategory? = null,
     limit: Int = 0
 ): Chats = chat(
     GetTopChats(
@@ -142,7 +142,7 @@ suspend fun TelegramClient.getTopChats(
  * @chatId - Chat identifier
  */
 suspend fun TelegramClient.removeTopChat(
-    category: TopChatCategory,
+    category: TopChatCategory? = null,
     chatId: Long = 0L
 ): Ok = chat(
     RemoveTopChat(
@@ -244,7 +244,7 @@ suspend fun TelegramClient.deleteChatHistory(
  */
 suspend fun TelegramClient.getChatMessageCount(
     chatId: Long = 0L,
-    filter: SearchMessagesFilter,
+    filter: SearchMessagesFilter? = null,
     returnLocal: Boolean = false
 ): Count = chat(
     GetChatMessageCount(
@@ -312,7 +312,7 @@ suspend fun TelegramClient.deleteChatReplyMarkup(
  */
 suspend fun TelegramClient.sendChatAction(
     chatId: Long = 0L,
-    action: ChatAction
+    action: ChatAction? = null
 ): Ok = chat(
     SendChatAction(
         chatId,
@@ -434,7 +434,7 @@ suspend fun TelegramClient.createSecretChat(
  */
 suspend fun TelegramClient.createNewBasicGroupChat(
     userIds: IntArray = intArrayOf(),
-    title: String
+    title: String? = null
 ): Chat = chat(
     CreateNewBasicGroupChat(
         userIds,
@@ -451,9 +451,9 @@ suspend fun TelegramClient.createNewBasicGroupChat(
  * @description - Chat description
  */
 suspend fun TelegramClient.createNewSupergroupChat(
-    title: String,
+    title: String? = null,
     isChannel: Boolean = false,
-    description: String
+    description: String? = null
 ): Chat = chat(
     CreateNewSupergroupChat(
         title,
@@ -502,7 +502,7 @@ suspend fun TelegramClient.upgradeBasicGroupChatToSupergroupChat(
  */
 suspend fun TelegramClient.setChatTitle(
     chatId: Long = 0L,
-    title: String
+    title: String? = null
 ): Ok = chat(
     SetChatTitle(
         chatId,
@@ -523,7 +523,7 @@ suspend fun TelegramClient.setChatTitle(
  */
 suspend fun TelegramClient.setChatPhoto(
     chatId: Long = 0L,
-    photo: InputFile
+    photo: InputFile? = null
 ): Ok = chat(
     SetChatPhoto(
         chatId,
@@ -541,7 +541,7 @@ suspend fun TelegramClient.setChatPhoto(
  */
 suspend fun TelegramClient.setChatPermissions(
     chatId: Long = 0L,
-    permissions: ChatPermissions
+    permissions: ChatPermissions? = null
 ): Ok = chat(
     SetChatPermissions(
         chatId,
@@ -573,7 +573,7 @@ suspend fun TelegramClient.setChatDraftMessage(
  */
 suspend fun TelegramClient.setChatNotificationSettings(
     chatId: Long = 0L,
-    notificationSettings: ChatNotificationSettings
+    notificationSettings: ChatNotificationSettings? = null
 ): Ok = chat(
     SetChatNotificationSettings(
         chatId,
@@ -638,7 +638,7 @@ suspend fun TelegramClient.toggleChatDefaultDisableNotification(
  */
 suspend fun TelegramClient.setChatClientData(
     chatId: Long = 0L,
-    clientData: String
+    clientData: String? = null
 ): Ok = chat(
     SetChatClientData(
         chatId,
@@ -656,7 +656,7 @@ suspend fun TelegramClient.setChatClientData(
  */
 suspend fun TelegramClient.setChatDescription(
     chatId: Long = 0L,
-    description: String
+    description: String? = null
 ): Ok = chat(
     SetChatDescription(
         chatId,
@@ -781,7 +781,7 @@ suspend fun TelegramClient.addChatMembers(
 suspend fun TelegramClient.setChatMemberStatus(
     chatId: Long = 0L,
     userId: Int = 0,
-    status: ChatMemberStatus
+    status: ChatMemberStatus? = null
 ): Ok = chat(
     SetChatMemberStatus(
         chatId,
@@ -818,9 +818,9 @@ suspend fun TelegramClient.getChatMember(
  */
 suspend fun TelegramClient.searchChatMembers(
     chatId: Long = 0L,
-    query: String,
+    query: String? = null,
     limit: Int = 0,
-    filter: ChatMembersFilter
+    filter: ChatMembersFilter? = null
 ): ChatMembers = chat(
     SearchChatMembers(
         chatId,
@@ -837,7 +837,7 @@ suspend fun TelegramClient.searchChatMembers(
  * @compareSound - If true, also chats with non-default sound will be returned
  */
 suspend fun TelegramClient.getChatNotificationSettingsExceptions(
-    scope: NotificationSettingsScope,
+    scope: NotificationSettingsScope? = null,
     compareSound: Boolean = false
 ): Chats = chat(
     GetChatNotificationSettingsExceptions(
@@ -881,7 +881,7 @@ suspend fun TelegramClient.generateChatInviteLink(
  * @inviteLink - Invite link to be checked
  */
 suspend fun TelegramClient.checkChatInviteLink(
-    inviteLink: String
+    inviteLink: String? = null
 ): ChatInviteLinkInfo = chat(
     CheckChatInviteLink(
         inviteLink
@@ -895,7 +895,7 @@ suspend fun TelegramClient.checkChatInviteLink(
  * @inviteLink - Invite link to import
  */
 suspend fun TelegramClient.joinChatByInviteLink(
-    inviteLink: String
+    inviteLink: String? = null
 ): Chat = chat(
     JoinChatByInviteLink(
         inviteLink
@@ -916,7 +916,7 @@ suspend fun TelegramClient.joinChatByInviteLink(
  */
 suspend fun TelegramClient.getSupergroupMembers(
     supergroupId: Int = 0,
-    filter: SupergroupMembersFilter,
+    filter: SupergroupMembersFilter? = null,
     offset: Int = 0,
     limit: Int = 0
 ): ChatMembers = chat(
@@ -947,10 +947,10 @@ suspend fun TelegramClient.getSupergroupMembers(
  */
 suspend fun TelegramClient.getChatEventLog(
     chatId: Long = 0L,
-    query: String,
+    query: String? = null,
     fromEventId: Long = 0L,
     limit: Int = 0,
-    filters: ChatEventLogFilters,
+    filters: ChatEventLogFilters? = null,
     userIds: IntArray = intArrayOf()
 ): ChatEvents = chat(
     GetChatEventLog(
@@ -1005,7 +1005,7 @@ suspend fun TelegramClient.changeChatReportSpamState(
  */
 suspend fun TelegramClient.reportChat(
     chatId: Long = 0L,
-    reason: ChatReportReason,
+    reason: ChatReportReason? = null,
     messageIds: LongArray = longArrayOf()
 ): Ok = chat(
     ReportChat(
@@ -1025,7 +1025,7 @@ suspend fun TelegramClient.reportChat(
  */
 suspend fun TelegramClient.getChatStatisticsUrl(
     chatId: Long = 0L,
-    parameters: String,
+    parameters: String? = null,
     isDark: Boolean = false
 ): HttpUrl = chat(
     GetChatStatisticsUrl(

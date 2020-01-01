@@ -11,23 +11,39 @@ sealed class TlAddition {
         val annotation: String
     }
 
-    data class Nullable(override val message: String? = null) : TlAddition(), WithMessage
+    data class Nullable(override val message: String? = null) : TlAddition(), WithMessage {
+        override fun toString(): String = "Nullable" + (message?.let { " - $it" } ?: "")
+    }
 
     object BotsOnly : TlAddition(), Annotation {
         override val annotation: String = "BotsOnly"
+        override fun toString(): String = "BotsOnly"
     }
 
     object TestingOnly : TlAddition(), Annotation {
         override val annotation: String = "TestingOnly"
+        override fun toString(): String = "TestingOnly"
     }
 
-    data class Other(override val message: String? = null) : TlAddition(), WithMessage
-    data class SizeRequired(val min: Int, val max: Int) : TlAddition()
-    data class StartWithRequired(val list: List<String>) : TlAddition()
+    data class Other(override val message: String) : TlAddition(), WithMessage {
+        override fun toString(): String = "Other - ${message.capitalize()}"
+    }
 
-    object NonEmpty : TlAddition()
+    data class SizeRequired(val min: Int, val max: Int) : TlAddition() {
+        override fun toString(): String = "SizeRequired - must be in range [$min, $max]"
+    }
 
-    object Sync : TlAddition()
+    data class StartWithRequired(val list: List<String>) : TlAddition() {
+        override fun toString(): String = "StartWithRequired - should begin with one of $list"
+    }
+
+    object NonEmpty : TlAddition() {
+        override fun toString(): String = "NonEmpty - must be non-empty"
+    }
+
+    object Sync : TlAddition() {
+        override fun toString(): String = "Sync - can be called synchronously"
+    }
 
     companion object {
         fun annotations() = listOf<Annotation>(BotsOnly, TestingOnly)

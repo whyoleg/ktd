@@ -43,25 +43,22 @@ object TdlibCommand : DotenvCommand("tdlib") {
     override suspend fun execute(dotenv: Dotenv) {
         println("Start build tdlib $version for $platform/$target ")
         checkoutVersion(version)
+        if (target !in platform.targets) error("Can't build tdlib for $platform/$target")
         val result = when (platform) {
             BuildPlatform.Jvm    -> {
-                when (target) {
-                    !in platform.targets -> error("Can't build tdlib for $platform/$target")
-                    else                 -> when (val t =
-                        target) {
-                        BuildTarget.Linux      -> buildLinuxJni()
-                        BuildTarget.MacOS      -> buildMacOSJni()
-                        is BuildTarget.Windows -> buildWindowsJni(t)
-                        is BuildTarget.Android -> {
-                            val home = File("/home/whyme")
-                            buildAndroid(
-                                androidSdkPath = home.resolve("Android/Sdk"),
-                                opensslPath = home.resolve("IdeaProjects/ktd/android-openssl"),
-                                target = t
-                            )
-                        }
-                        else                   -> null
+                when (val t = target) {
+                    BuildTarget.Linux      -> buildLinuxJni()
+                    BuildTarget.MacOS      -> buildMacOSJni()
+                    is BuildTarget.Windows -> buildWindowsJni(t)
+                    is BuildTarget.Android -> {
+                        val home = File("/home/whyme")
+                        buildAndroid(
+                            androidSdkPath = home.resolve("Android/Sdk"),
+                            opensslPath = home.resolve("IdeaProjects/ktd/android-openssl"),
+                            target = t
+                        )
                     }
+                    else                   -> null
                 }
             }
             BuildPlatform.Js     -> TODO()

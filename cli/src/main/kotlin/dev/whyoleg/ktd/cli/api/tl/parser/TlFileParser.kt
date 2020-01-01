@@ -16,7 +16,7 @@ private fun List<String>.parseRawTlData(): List<RawTlData> {
             val lastList = accumulator.last()
             if (it.first().isLetter()) {
                 val type = if (isFunction) RawTlDataType.Function else RawTlDataType.Object
-                data += RawTlData(type, lastList, it)
+                data += RawTlData(type, lastList, it.capitalize())
                 accumulator += mutableListOf<String>()
             } else lastList += it.substringAfter(addressToken)
         }

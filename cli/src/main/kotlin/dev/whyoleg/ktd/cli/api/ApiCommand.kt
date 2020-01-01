@@ -11,8 +11,7 @@ object ApiCommand : DotenvCommand("api") {
 
     override suspend fun execute(dotenv: Dotenv) {
         println("Generate api for tdlib $version")
-        val github = GitHub.connectAnonymously()
-        val scheme = github.downloadScheme(version)
+        val scheme = GitHub.connectAnonymously().downloadScheme(version)
         println("Scheme downloaded")
         val apiEntities: List<Entity> = generateApi(scheme).toList()
         val buildEntities: List<Entity> = listOf(

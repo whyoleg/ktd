@@ -6,4 +6,3 @@ data class TlProperty(
     val descriptions: List<String>,
     val additions: List<TlAddition>
 )
-

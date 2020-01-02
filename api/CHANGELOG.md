@@ -1,5 +1,4 @@
 # TD API Changelog (from 1.5.0)
-
 ## API Versions supported
 - [1.5.4](#154)
 - [1.5.3](#153)

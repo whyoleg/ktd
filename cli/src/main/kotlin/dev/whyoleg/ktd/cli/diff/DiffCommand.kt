@@ -17,12 +17,23 @@ object DiffCommand : DotenvCommand("diff") {
         val gitHub = gitHub()
         val previousScheme = gitHub.scheme(previousVersion)
         val currentScheme = gitHub.scheme(newVersion)
+
         val file = File("api/CHANGELOG.md")
-        val fileText = file.readText()
+        val fileLines = file.readText().lines()
+
         val newText = previousScheme stringDiff currentScheme
-        val version = "\n\n## $newVersion\n\n"
-        val header = fileText.substringBefore("\n")
-        val newFileText = header + version + newText!! + fileText.substringAfter("\n")
+
+        val versionSectionHeader = "\n## $newVersion\n\n"
+        val versionsSectionLine = "- [$newVersion](#${newVersion.filter(Char::isDigit)})"
+
+        val section = fileLines.takeWhile { it.isNotBlank() }
+        val start = section.take(2)
+        val end = section.drop(2)
+
+        val header = (start + versionsSectionLine + end + versionSectionHeader).joinToString("\n")
+        val other = fileLines.drop(section.size).joinToString("\n")
+        val newFileText = header + newText!! + other
+
         file.writeText(newFileText)
     }
 

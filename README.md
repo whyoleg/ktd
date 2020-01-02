@@ -39,7 +39,7 @@ val telegram = Telegram(
 )
 ```
 
-`TelegramClient` can be created from `Telegram` and closed or independent by calling `cancel()` or by canceling `Telegram` object
+`TelegramClient` can be created from `Telegram` and closed or independent by calling `cancel()` or by canceling `Telegram` object.
 Using of client can be checked in [examples](https://github.com/whyoleg/ktd/tree/master/example/src/main/kotlin).
 `TelegramClient` - main interface to interact with library. 
 
@@ -53,9 +53,9 @@ suspend fun TelegramClient.chat(f: GetChat): Chat
 ```kotlin
 suspend fun TelegramClient.getChat(chatId: Long): Chat
 ```
-Result of calling this 2 functions fully the same. Parameterized functions just more easy to use and find.
+Result of calling this 2 functions will be the same. Parameterized functions just more easy to use and find.
  
-Also `sync` package exists which contains functions which can be called synchronously using `TelegramClient` companion.
+Also `sync` package exists which contains functions which can be called synchronously using `TelegramClient` companion object.
  ```kotlin
 fun TelegramClient.Companion.setLogVerbosityLevel(newVerbosityLevel: Int): Ok
 ``` 
@@ -79,23 +79,37 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.whyoleg.ktd:ktd-coroutines-api-latest:0.5.0"
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines-v1.5.4-jvm:0.5.0"
 }
 ```
 
-Available dependencies:
-  - `ktd-raw-client` - raw client contains bindings for interaction with `tdlib`
-  - `ktd-raw-api-*` - raw api contains generated kotlin classes and built-in `tdlib` library for specific `tdlib` version
-    - `ktd-raw-api-v1.5.0` 
-    - `ktd-raw-api-v1.5.1`
-    - `ktd-raw-api-latest` - for now latest = 1.5.1
-  - `ktd-coroutines-client` - client with support of `suspend` and `Flow`
-  - `ktd-coroutines-api-*` - contains generated fast accessors for api classes
-    - `ktd-coroutines-api-v1.5.0` 
-    - `ktd-coroutines-api-v1.5.1` 
-    - `ktd-coroutines-api-latest`  - for now latest = 1.5.1
-  - `ktd-api-stub` - api stub that can be used in `compileOnly` scope with `ktd-*-client` dependency
-  
+- Available artifacts:
+  - Library: `dev.whyoleg.ktd:ktd-lib-[tdlib-version]-[platform]:[version]` - prebuilt tdlib
+  - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings
+  - API: `dev.whyoleg.ktd:ktd-api-[type]-[tdlib-version]-[platform]:[version]` - generated API accessors
+  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - use it with client as `compileOnly` 
+  to create new abstraction independent to API
+- [TODO] Supported configurations:
+    - `version` - ktd version, ex: 0.5.0
+    - `type` - level of abstraction
+      - `raw` - simple client with low-level bindings
+      - `corotutines` - standard client with `suspend` functions for execution and `updates` Flow for consuming updates
+      - `flow` - [TODO] will be available later
+    - `platform`
+      - android 
+      - jvm
+      - jvm-linux
+      - jvm-macos
+      - jvm-win32
+      - jvm-win64
+      - omit for kotlin multi-platform metadata dependency
+    - `tdlib-version`
+      - v1.5.4
+      - v1.5.3
+      - v1.5.2
+      - v1.5.1
+      - v1.5.0
+
 Now library published only to bintray, it will change in future.
 
 

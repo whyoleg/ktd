@@ -20,15 +20,6 @@
 - Generate changelog for `v1.5.1` - `v.1.5.4` 
 - Changed dependencies structure
 
-[TODO] Available dependencies:
-
-    dev.whyoleg.ktd:ktd-| lib                  | v1.5.1 |jvm
-                        | client  | raw        | v1.5.2 |jvm-linux
-                        | api     | coroutines | v1.5.3 |jvm-macos
-                        |         | flow       | v1.5.4 |jvm-win64
-                        |         |            | v1.5.0 |jvm-win32
-                        |         |            |        |android
-                        |         |            |        |(common)
 
 ## 0.4.1
 > Released November 27, 2019

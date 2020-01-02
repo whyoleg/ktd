@@ -1,6 +1,7 @@
 package dev.whyoleg.ktd.cli.api.builder
 
-import dev.whyoleg.ktd.cli.api.tl.*
+import dev.whyoleg.ktd.cli.builder.*
+import dev.whyoleg.ktd.cli.tl.*
 
 fun StringBuilder.buildParameters(parameters: List<String>, addEmptyBrackets: Boolean = false) {
     if (parameters.isNotEmpty()) withRoundBrackets {

@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.cli.api.tl
+package dev.whyoleg.ktd.cli.tl
 
-import dev.whyoleg.ktd.cli.api.tl.TlAddition.*
+import dev.whyoleg.ktd.cli.tl.TlAddition.*
 
 sealed class TlAddition {
     interface WithMessage {
@@ -25,8 +25,8 @@ sealed class TlAddition {
         override fun toString(): String = "TestingOnly"
     }
 
-    data class Other(override val message: String) : TlAddition(), WithMessage {
-        override fun toString(): String = "Other - ${message.capitalize()}"
+    data class Documentation(override val message: String) : TlAddition(), WithMessage {
+        override fun toString(): String = "Documentation - ${message.capitalize()}"
     }
 
     data class SizeRequired(val min: Int, val max: Int) : TlAddition() {
@@ -52,19 +52,20 @@ sealed class TlAddition {
 
 @Suppress("FunctionName")
 fun TlAddition(addition: String): TlAddition = when (addition.toLowerCase()) {
-    "must be non-empty"                                                                                                    -> NonEmpty
+    "can be called synchronously"                 -> Sync
+    "must be non-empty"                           -> NonEmpty
     "may be null",
     "optional",
-    "may be empty"                                                                                                         -> Nullable()
+    "may be empty"                                -> Nullable()
     "may be empty to de-register a device",
     "may be empty if not applicable",
-    "pass null to stop sharing the live location"                                                                          ->
+    "pass null to stop sharing the live location" ->
         Nullable(addition)
-    "for testing only"                                                                                                     -> TestingOnly
+    "for testing only"                            -> TestingOnly
     "for bots only",
     "can be used only by bots and only in private chats",
     "only available to bots",
-    "to log in as a bot"                                                                                                   -> BotsOnly
+    "to log in as a bot"                          -> BotsOnly
     """should begin with "https://t.me/joinchat/", "https://telegram.me/joinchat/", or "https://telegram.dog/joinchat/"""" ->
         StartWithRequired(listOf("https://t.me/joinchat/", "https://telegram.me/joinchat/", "https://telegram.dog/joinchat/"))
     "up to 100"                                                                                                            ->
@@ -73,13 +74,13 @@ fun TlAddition(addition: String): TlAddition = when (addition.toLowerCase()) {
         SizeRequired(65, 65)
     "must be non-negative"                                                                                                 ->
         SizeRequired(0, Int.MAX_VALUE)
-    else                                                                                                                   -> {
+    else                                          -> {
         val splitted = addition.substringBefore(spaceToken).split(dashToken).mapNotNull(String::toIntOrNull)
         if (splitted.size > 1) {
             val (min, max) = splitted
             SizeRequired(min, max)
         } else {
-            Other(addition)
+            Documentation(addition)
         }
     }
 }

@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.cli.api.tl.parser
+package dev.whyoleg.ktd.cli.tl.parser
 
-import dev.whyoleg.ktd.cli.api.tl.*
+import dev.whyoleg.ktd.cli.tl.*
 
 internal fun ByteArray.readTlScheme(): List<String> = steps.fold(inputStream().reader().readLines()) { list, step -> step(list) }
 
@@ -51,7 +51,7 @@ private val splitAdditions: ParseStep = {
         val first = splitted.first().trim()
         val prefix = first.substringBefore(spaceToken)
         val other = splitted.drop(1)
-        val otherPrefixed = other.map { "$prefix$questionToken$spaceToken${it.capitalize().trim()}" }
+        val otherPrefixed = other.map { "$prefix$spaceToken${it.trim()}" }
         listOf(first) + otherPrefixed
     }
 }

@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.cli.api.tl.parser
+package dev.whyoleg.ktd.cli.tl.parser
 
-import dev.whyoleg.ktd.cli.api.tl.*
+import dev.whyoleg.ktd.cli.tl.*
 import java.util.zip.*
 
 fun List<String>.parseTlData(): List<TlData> = parseRawTlData().map(RawTlData::toTlData)
@@ -16,7 +16,7 @@ private fun List<String>.parseRawTlData(): List<RawTlData> {
             val lastList = accumulator.last()
             if (it.first().isLetter()) {
                 val type = if (isFunction) RawTlDataType.Function else RawTlDataType.Object
-                data += RawTlData(type, lastList, it.capitalize())
+                data += RawTlData(type, lastList, it)
                 accumulator += mutableListOf<String>()
             } else lastList += it.substringAfter(addressToken)
         }
@@ -42,15 +42,15 @@ private fun RawTlData.toAbstract(): TlAbstract {
 }
 
 private fun RawTlData.toObject(): TlObject {
-    val type = expression.substringBefore(spaceToken).trim()
+    val type = expression.substringBefore(spaceToken).trim().capitalize()
     val expressionParentType = expression.substringAfter(equalToken).trim()
-    val parentType = if (expressionParentType == type.capitalize()) "Object" else expressionParentType
+    val parentType = if (expressionParentType == type) "Object" else expressionParentType
     val metadata = extractMetadata()
     return TlObject(type, parentType, metadata, expression.crc())
 }
 
 private fun RawTlData.toFunction(): TlFunction {
-    val type = expression.substringBefore(spaceToken).trim()
+    val type = expression.substringBefore(spaceToken).trim().capitalize()
     val returnType = expression.substringAfter(equalToken).trim()
     val metadata = extractMetadata()
     return TlFunction(type, returnType, metadata, expression.crc())
@@ -75,11 +75,9 @@ private fun RawTlData.groupLines() =
         .groupBy { it.substringBefore(spaceToken) }
         .mapValues { (_, value) -> value.map { it.substringAfter(spaceToken).capitalize() } }
 
-private fun Map<String, List<String>>.splitByKey(key: String) = run {
-    val descriptions = this[key] ?: error("No $key in lines")
-    val additions = this[key + questionToken]?.map(::TlAddition) ?: emptyList()
-    val additionsWithSync = if (descriptions.any { it.toLowerCase() == "can be called synchronously" }) {
-        additions + TlAddition.Sync
-    } else additions
-    descriptions to additionsWithSync
+private fun Map<String, List<String>>.splitByKey(key: String): Pair<List<String>, List<TlAddition>> {
+    val lines = this[key] ?: error("No $key in lines")
+    val additions = lines.map(::TlAddition)
+    val documentations = additions.filterIsInstance<TlAddition.Documentation>()
+    return documentations.map(TlAddition.Documentation::message) to additions - documentations
 }

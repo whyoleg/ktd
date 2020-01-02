@@ -1,6 +1,6 @@
-package dev.whyoleg.ktd.cli.api.builder
+package dev.whyoleg.ktd.cli.builder
 
-import dev.whyoleg.ktd.cli.api.tl.*
+import dev.whyoleg.ktd.cli.tl.*
 
 const val group = "dev.whyoleg.ktd"
 const val tabIndent = "  "

@@ -1,14 +1,7 @@
 package dev.whyoleg.ktd.cli.api
 
 import dev.whyoleg.ktd.cli.api.builder.*
-import dev.whyoleg.ktd.cli.api.tl.*
-import dev.whyoleg.ktd.cli.api.tl.parser.*
-
-fun ByteArray.parseScheme(): TlScheme {
-    val tlData = readTlScheme().parseTlData()
-    val metadata = tlData.extractMetadata()
-    return TlScheme(tlData, metadata)
-}
+import dev.whyoleg.ktd.cli.tl.*
 
 fun generateApi(scheme: ByteArray): Map<String, String> {
     val tlScheme = scheme.parseScheme()

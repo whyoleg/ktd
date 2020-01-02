@@ -3,7 +3,7 @@ package dev.whyoleg.ktd.cli.api
 import dev.whyoleg.ktd.cli.*
 import io.github.cdimascio.dotenv.*
 import kotlinx.cli.*
-import org.kohsuke.github.*
+import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
 object ApiCommand : DotenvCommand("api") {
@@ -11,20 +11,30 @@ object ApiCommand : DotenvCommand("api") {
 
     override suspend fun execute(dotenv: Dotenv) {
         println("Generate api for tdlib $version")
-        val scheme = GitHub.connectAnonymously().downloadScheme(version)
+        val scheme = gitHub().downloadScheme(version)
         println("Scheme downloaded")
-        val apiEntities: List<Entity> = generateApi(scheme).toList()
-        val buildEntities: List<Entity> = listOf(
+        val apiEntities = generateApi(scheme).toList()
+        val buildEntities = listOf(
             buildEntity("coroutines", "CoroutinesApi"),
             buildEntity("lib", "Lib"),
             buildEntity("raw", "RawApi")
         )
-        val entities: List<Entity> = (apiEntities + buildEntities).map { "api/v$version/${it.first}" to it.second }
+        val entities = (apiEntities + buildEntities).map { "api/v$version/${it.first}" to it.second }
         println("Entities generated")
         writeEntitiesLocally(entities)
         println("New api saved")
     }
 
-    private fun buildEntity(dir: String, configuration: String): Entity =
-        "$dir/build.gradle.kts" to "configure$configuration(\"$version\")\n"
+    private fun buildEntity(dir: String, configuration: String) = "$dir/build.gradle.kts" to "configure$configuration(\"$version\")\n"
+
+    private fun writeEntitiesLocally(entities: List<Pair<String, String>>) {
+        entities.forEach { (path, content) ->
+            println("Create file: $path")
+            with(File(path)) {
+                parentFile.mkdirs()
+                writeText(content)
+            }
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.tl
+package dev.whyoleg.ktd.cli.tl
 
 sealed class TlType(open val default: String) {
     abstract val kotlinType: String

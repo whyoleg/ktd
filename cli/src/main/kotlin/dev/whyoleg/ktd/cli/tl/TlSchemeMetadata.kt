@@ -1,4 +1,6 @@
-package dev.whyoleg.ktd.cli.api.tl
+package dev.whyoleg.ktd.cli.tl
+
+import dev.whyoleg.ktd.cli.tl.parser.*
 
 data class TlScheme(
     val data: List<TlData>,
@@ -56,3 +58,9 @@ private fun List<TlData>.propertyTypes(): Set<String> =
         .filter { it != "String" }
         .map(String::toLowerCase)
         .toSet()
+
+fun ByteArray.parseScheme(): TlScheme {
+    val tlData = readTlScheme().parseTlData()
+    val metadata = tlData.extractMetadata()
+    return TlScheme(tlData, metadata)
+}

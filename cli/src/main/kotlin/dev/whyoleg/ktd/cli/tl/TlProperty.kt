@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.tl
+package dev.whyoleg.ktd.cli.tl
 
 data class TlProperty(
     val name: String,

@@ -1,6 +1,7 @@
 package dev.whyoleg.ktd.cli.api.builder
 
-import dev.whyoleg.ktd.cli.api.tl.*
+import dev.whyoleg.ktd.cli.builder.*
+import dev.whyoleg.ktd.cli.tl.*
 
 private val customMapping = mapOf(
     "SetName" to "User",

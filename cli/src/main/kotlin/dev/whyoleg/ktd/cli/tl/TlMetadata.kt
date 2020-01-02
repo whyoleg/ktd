@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.tl
+package dev.whyoleg.ktd.cli.tl
 
 data class TlMetadata(
     val descriptions: List<String>,

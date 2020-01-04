@@ -14,9 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download libs
-        uses: actions/aws/cli@master
-        with:
-          args: s3 cp s3://${{ env.BUCKET }}/libs libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+        run: aws s3 cp s3://${{ env.BUCKET }}/libs libs --recursive --endpoint-url ${{ env.ENDPOINT }}
       - name: Save libs
         uses: actions/upload-artifact@v1
         with:

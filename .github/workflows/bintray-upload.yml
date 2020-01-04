@@ -25,9 +25,7 @@ jobs:
           java-version: 11
 
       - name: Download libs
-        uses: actions/aws/cli@master
-        with:
-          args: s3 cp s3://${{ env.BUCKET }}/libs/${{ env.TD_API_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+        run: aws s3 cp s3://${{ env.BUCKET }}/libs/${{ env.TD_API_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
 
       # TODO hack for tests
       - run: cp -R libs client/raw/libs

@@ -16,11 +16,12 @@ object Modules : RootModule() {
         operator fun get(version: String): ApiModule = apis[version] ?: error("Wrong td version")
     }
 
-    val generator by named()
+    val cli by named()
     val example by named()
 }
 
 class ApiModule(version: String, rootModule: Module) : Module by rootModule.named("v$version") {
     val raw by named()
     val coroutines by named()
+    val lib by named()
 }

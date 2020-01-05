@@ -1,13 +1,16 @@
-configure("raw-client") {
-    source {
-        main {
+plugins {
+    use(Plugins.mppModule)
+}
+kotlin {
+    default()
+    jvm {
+        dependenciesMain {
             api(Dependencies.kotlin.stdlib)
-            compileOnly(Modules.Api.stub)
+            compileOnly(ProjectModules.Api.stub)
         }
-        test {
+        dependenciesTest {
             implementation(Dependencies.kotlin.test)
             implementation(Dependencies.kotlin.annotations)
-            implementation(Modules.Api.latest.raw)
         }
     }
 }

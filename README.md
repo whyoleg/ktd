@@ -84,10 +84,10 @@ dependencies {
 ```
 
 - Available artifacts:
-  - Library: `dev.whyoleg.ktd:ktd-lib-[tdlib-version]-[platform]:[version]` - prebuilt tdlib
-  - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings
-  - API: `dev.whyoleg.ktd:ktd-api-[type]-[tdlib-version]-[platform]:[version]` - generated API accessors
-  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - use it with client as `compileOnly` 
+  - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings [3*7]
+  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - use it with client as `compileOnly` [7]
+  - API: `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[version]-[tdlib-version]` - generated API accessors [3*7*5]
+  - Lib(internal): `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[lib-version]-[tdlib-version]`
   to create new abstraction independent to API
 - [TODO] Supported configurations:
     - `version` - ktd version, ex: 0.5.0

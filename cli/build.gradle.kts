@@ -1,23 +1,19 @@
-repositories {
-    //TODO needed by kotlin shell
-    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+import dev.whyoleg.kamp.modules.*
+
+plugins {
+    use(Plugins.cliModule)
 }
 
-configure("cli") {
-    packagers {
-        jar {
-            useVersion = false
-        }
-    }
-    source {
-        main {
-            implementation {
-                +Dependencies.kotlin.stdlib
-                +Dependencies.githubApi
-                +Dependencies.kotlinShell
-                +Dependencies.cli
-                +Dependencies.dotenv
-            }
+kotlin {
+    default()
+    target {
+        dependenciesMain {
+            implementation(Dependencies.kotlin.stdlib)
+            implementation(Dependencies.kotlinx.cli)
+            implementation(Dependencies.githubApi)
+            implementation(Dependencies.kotlinShell)
+            implementation(Dependencies.dotenv)
         }
     }
 }
+//shadow

@@ -1,11 +1,12 @@
 plugins {
     use(Plugins.mppModule)
 }
+
+android { default() }
+
 kotlin {
-    default()
-    jvm {
-        dependenciesMain {
-            api(Dependencies.kotlin.stdlib)
-        }
+    default(project)
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
     }
 }

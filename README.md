@@ -79,15 +79,17 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.whyoleg.ktd:ktd-api-coroutines-v1.5.4-jvm:0.5.0"
+    implementation "dev.whyoleg.ktd:ktd-client-coroutines-jvm:0.5.0"
+    //or
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.4"
+    //or
 }
 ```
 
 - Available artifacts:
-  - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings [3*7]
-  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - use it with client as `compileOnly` [7]
-  - API: `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[version]-[tdlib-version]` - generated API accessors [3*7*5]
-  - Lib(internal): `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[lib-version]-[tdlib-version]`
+  - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings
+  - API: `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[version]-[tdlib-version]` - generated API accessors
+  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - use it with client as `compileOnly`
   to create new abstraction independent to API
 - [TODO] Supported configurations:
     - `version` - ktd version, ex: 0.5.0
@@ -96,13 +98,9 @@ dependencies {
       - `corotutines` - standard client with `suspend` functions for execution and `updates` Flow for consuming updates
       - `flow` - [TODO] will be available later
     - `platform`
-      - android 
       - jvm
-      - jvm-linux
-      - jvm-macos
-      - jvm-win32
-      - jvm-win64
-      - omit for kotlin multi-platform metadata dependency
+      - android 
+      - metadata [TODO]
     - `tdlib-version`
       - v1.5.4
       - v1.5.3

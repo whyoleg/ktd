@@ -9,24 +9,21 @@ object ProjectModules {
         val raw = ProjectModule(":client-raw")
         val coroutines = ProjectModule(":client-coroutines")
     }
-
     val api = ProjectModule(":api")
 
     object Api {
-        val stub = ProjectModule(":api:stub")
+        val stub = ProjectModule(":api-stub")
         val raw = ProjectModule(":api:raw")
 
         object Raw {
             val v1_5_0 = ProjectModule(":api:raw-v1.5.0")
         }
-
         val coroutines = ProjectModule(":api:coroutines")
 
         object Coroutines {
             val v1_5_0 = ProjectModule(":api:coroutines-v1.5.0")
         }
     }
-
     val cli = ProjectModule(":cli")
     val examples = ProjectModule(":examples")
 }

@@ -5,7 +5,7 @@ import dev.whyoleg.ktd.api.*
 object TelegramRawClient {
 
     init {
-        link()
+        loadTdlib()
     }
 
     external fun create(): Long

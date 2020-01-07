@@ -1,5 +1,3 @@
-import dev.whyoleg.kamp.modules.*
-
 plugins {
     use(Plugins.cliModule)
 }
@@ -9,7 +7,7 @@ kotlin {
     target {
         dependenciesMain {
             implementation(Dependencies.kotlin.stdlib)
-            implementation(Dependencies.kotlinx.cli)
+            implementation(Dependencies.kotlinx.cli.jvm)
             implementation(Dependencies.githubApi)
             implementation(Dependencies.kotlinShell)
             implementation(Dependencies.dotenv)

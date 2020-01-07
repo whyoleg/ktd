@@ -1,5 +1,3 @@
-import dev.whyoleg.kamp.modules.*
-
 val tdVersions = listOf(
     "1.5.0"
 )
@@ -11,20 +9,20 @@ val types = listOf(
 
 modules {
     "client" {
-        types.forEach { it("client/$it") }
+        types.forEach {
+            it("client/$it")
+        }
     }
     "api" {
-        "stub"()
+        "stub"("api/stub")
         types.forEach { type ->
             type {
-                tdVersions.forEach { "v$it"("api/$type/v$it") }
+                tdVersions.forEach {
+                    "v$it"("api/$type/v$it")
+                }
             }
         }
     }
     "cli"()
     "examples"()
 }
-
-//resolvePlugins(
-//    KotlinxPlugins.Stable.atomicfu
-//)

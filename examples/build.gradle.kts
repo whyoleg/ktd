@@ -1,14 +1,13 @@
 plugins {
-    use(Plugins.mppModule)
+    use(Plugins.exampleModule)
 }
 
 kotlin {
-    default()
     jvm {
         dependenciesMain {
             implementation(Dependencies.kotlin.stdlib)
             implementation(Dependencies.kotlinx.coroutines.core)
-            compileOnly(ProjectModules.Api.Coroutines.v1_5_0)
+            implementation(ProjectModules.Api.Coroutines.v1_5_0)
         }
     }
 }

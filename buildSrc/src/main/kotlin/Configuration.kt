@@ -1,8 +1,10 @@
 import dev.whyoleg.kamp.modules.*
 import dev.whyoleg.kamp.publication.*
+import org.gradle.api.*
+import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.config.*
 import org.jetbrains.kotlin.gradle.dsl.*
-import org.jetbrains.kotlin.gradle.targets.jvm.*
+import org.jetbrains.kotlin.gradle.plugin.*
 
 val publication = Publication(
     name = "ktd",
@@ -22,16 +24,16 @@ private fun KotlinCommonOptions.default() {
     useExperimentalAnnotations(KotlinExperimentalAnnotations.All + KotlinxExperimentalAnnotations.All)
 }
 
-private fun KotlinJvmOptions.default() {
-    jvmTarget = "1.6"
+private fun LanguageSettingsBuilder.default() {
+    progressiveMode = true
+    languageVersion = "1.3"
+    apiVersion = "1.3"
+    enableLanguageFeatures(listOf(LanguageFeature.InlineClasses, LanguageFeature.NewInference))
+    useExperimentalAnnotations(KotlinExperimentalAnnotations.All + KotlinxExperimentalAnnotations.All)
 }
 
-fun KotlinMultiplatformExtension.default() {
-//    android().compilations["main"].defaultSourceSet.dependsOn(jvm().compilations["main"].defaultSourceSet)
-    targets.all {
-        commonOptions(KotlinCommonOptions::default)
-        if (this is KotlinJvmTarget) options { default() }
-    }
+private fun KotlinJvmOptions.default() {
+    jvmTarget = "1.6"
 }
 
 fun KotlinJvmProjectExtension.default() {
@@ -39,4 +41,50 @@ fun KotlinJvmProjectExtension.default() {
         commonOptions(KotlinCommonOptions::default)
         options { default() }
     }
+}
+
+fun KotlinMultiplatformExtension.apiPublication(project: Project) {
+    targets.all {
+        mavenPublication {
+            val apiVersion = project.name.substringAfterLast("v", "")
+            if (apiVersion.isNotBlank() && apiVersion.split('.').size == 3) {
+                artifactId = artifactId.replace("-v$apiVersion", "")
+                version = "$version-$apiVersion"
+            }
+            println(artifactId)
+        }
+    }
+}
+
+fun KotlinMultiplatformExtension.defaultPublication() {
+    targets.all {
+        mavenPublication {
+            artifactId = "ktd-$artifactId"
+        }
+    }
+}
+
+fun KotlinMultiplatformExtension.default(project: Project) {
+    jvm {
+        options { default() }
+    }
+    android {
+        publishLibraryVariants("release")
+    }
+
+    defaultPublication()
+    apiPublication(project)
+
+    sourceSets {
+        val androidMain by getting
+        val jvmMain by getting
+        androidMain.dependsOn(jvmMain)
+    }
+
+    project.afterEvaluate { defaultOptions() }
+}
+
+private fun KotlinMultiplatformExtension.defaultOptions() {
+    targets.all { commonOptions(KotlinCommonOptions::default) }
+    sourceSets.all { languageSettings.apply(LanguageSettingsBuilder::default) }
 }

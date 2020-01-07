@@ -2,12 +2,16 @@ plugins {
     use(Plugins.mppModule)
 }
 
+android { default() }
+
 kotlin {
-    default()
-    jvm {
+    default(project)
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
+        api(Dependencies.kotlinx.coroutines.core)
+    }
+    metadata {
         dependenciesMain {
-            api(Dependencies.kotlin.stdlib)
-            api(Dependencies.kotlinx.coroutines.core)
             api(ProjectModules.Client.coroutines)
             api(ProjectModules.Api.Raw.v1_5_0)
         }

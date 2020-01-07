@@ -12,10 +12,7 @@ private sealed class Action {
 }
 
 private inline fun launchOnSingleThread(job: Job, clientId: Long, crossinline block: () -> Unit) {
-    val singleThread = newSingleThreadContext("TelegramClient[$clientId]")
-    CoroutineScope(singleThread + job)
-        .launch { while (isActive) block() }
-        .invokeOnCompletion { singleThread.close() }
+    launchOnSingleThread(job, "TelegramClient[$clientId]", block)
 }
 
 private fun CompletableDeferred<TelegramObject>.completeWith(obj: TelegramObject): Boolean = when (obj) {

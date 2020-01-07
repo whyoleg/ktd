@@ -1,18 +1,19 @@
-import dev.whyoleg.kamp.modules.*
-import org.jetbrains.kotlin.config.*
-
 plugins {
-    use(Plugins.mppModule + Plugins.atomicfuModule)
+    use(Plugins.mppModule)
 }
 
+android { default() }
+
 kotlin {
-    default()
-    jvm {
+    default(project)
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
+        api(Dependencies.kotlinx.coroutines.core)
+        api(Dependencies.kotlinx.atomicfu.runtime)
+    }
+    metadata {
         dependenciesMain {
-            api(Dependencies.kotlin.stdlib)
-            api(Dependencies.kotlinx.coroutines.core)
-            api(Dependencies.kotlinx.atomicfu.atomicfu)
-            api(Dependencies.kotlinx.immutableCollections)
+            api(Dependencies.kotlinx.immutableCollections.metadata)
             api(ProjectModules.Client.raw)
             compileOnly(ProjectModules.Api.stub)
         }

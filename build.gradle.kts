@@ -5,3 +5,11 @@
 //}
 //
 //registerTasks()
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+}

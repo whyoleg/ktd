@@ -13,15 +13,15 @@ object ProjectModules {
 
     object Api {
         val stub = ProjectModule(":api-stub")
-        val raw = ProjectModule(":api:raw")
+        val raw = ProjectModule(":api-raw")
 
         object Raw {
-            val v1_5_0 = ProjectModule(":api:raw-v1.5.0")
+            val v1_5_0 = ProjectModule(":api-raw-v1.5.0")
         }
-        val coroutines = ProjectModule(":api:coroutines")
+        val coroutines = ProjectModule(":api-coroutines")
 
         object Coroutines {
-            val v1_5_0 = ProjectModule(":api:coroutines-v1.5.0")
+            val v1_5_0 = ProjectModule(":api-coroutines-v1.5.0")
         }
     }
     val cli = ProjectModule(":cli")

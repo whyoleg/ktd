@@ -43,23 +43,19 @@ fun KotlinJvmProjectExtension.default() {
     }
 }
 
-fun KotlinMultiplatformExtension.apiPublication(project: Project) {
+fun KotlinMultiplatformExtension.defaultPublication(project: Project) {
     targets.all {
         mavenPublication {
+            if ("metadata" in artifactId) {
+                artifactId = artifactId.replace("-metadata", "")
+            }
             val apiVersion = project.name.substringAfterLast("v", "")
-            if (apiVersion.isNotBlank() && apiVersion.split('.').size == 3) {
+            if (artifactId.startsWith("api") && apiVersion.isNotBlank() && apiVersion.split('.').size == 3) {
                 artifactId = artifactId.replace("-v$apiVersion", "")
                 version = "$version-$apiVersion"
             }
-            println(artifactId)
-        }
-    }
-}
-
-fun KotlinMultiplatformExtension.defaultPublication() {
-    targets.all {
-        mavenPublication {
             artifactId = "ktd-$artifactId"
+            println(artifactId)
         }
     }
 }
@@ -72,8 +68,7 @@ fun KotlinMultiplatformExtension.default(project: Project) {
         publishLibraryVariants("release")
     }
 
-    defaultPublication()
-    apiPublication(project)
+    defaultPublication(project)
 
     sourceSets {
         val androidMain by getting

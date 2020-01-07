@@ -16,7 +16,7 @@ modules {
     "api" {
         "stub"("api/stub")
         types.forEach { type ->
-            type {
+            type("api/$type") {
                 tdVersions.forEach {
                     "v$it"("api/$type/v$it")
                 }

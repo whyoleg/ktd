@@ -5,9 +5,9 @@ plugins {
 android { default() }
 
 kotlin {
-    default(project)
+    configureMultiplatform()
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
-        //            compileOnly(ProjectModules.Lib.v1_5_0)
+        api(ProjectModules.Lib.v1_5_0)
     }
 }

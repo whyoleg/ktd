@@ -13,3 +13,7 @@ allprojects {
         mavenCentral()
     }
 }
+
+createBintrayPublishTask(ktdPublisher)
+createBintrayPublishTask(cliPublisher)
+createBintrayPublishTask(libPublisher)

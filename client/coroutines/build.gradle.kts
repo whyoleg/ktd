@@ -5,7 +5,7 @@ plugins {
 android { default() }
 
 kotlin {
-    default(project)
+    configureMultiplatform()
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
         api(Dependencies.kotlinx.coroutines.core)

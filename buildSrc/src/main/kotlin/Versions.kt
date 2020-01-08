@@ -12,3 +12,9 @@ object Versions {
     const val kotlinShell = "0.2"
     const val dotenv = "5.1.3"
 }
+
+object ProjectVersions {
+    val ktd = "0.5.0-mpp"
+    val cli = "0.1.0"
+    val lib = "1"
+}

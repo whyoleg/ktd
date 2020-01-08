@@ -23,6 +23,13 @@ modules {
             }
         }
     }
+    "lib" {
+        tdVersions.forEach {
+            "v$it"("lib/v$it")
+        }
+    }
     "cli"()
     "examples"()
 }
+
+enableFeaturePreview("GRADLE_METADATA")

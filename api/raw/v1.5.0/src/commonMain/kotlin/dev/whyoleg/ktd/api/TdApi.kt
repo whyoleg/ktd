@@ -11169,7 +11169,6 @@ class TdApi {
      * Returns all entities (mentions, hashtags, cashtags, bot commands, URLs, and email addresses) contained in the text
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @text - The text in which to look for entites
      */
@@ -11183,7 +11182,6 @@ class TdApi {
      * Parses Bold, Italic, Code, Pre, PreCode and TextUrl entities contained in the text
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @text - The text which should be parsed
      * @parseMode - Text parse mode
@@ -11200,7 +11198,6 @@ class TdApi {
      * Returns an empty string on failure
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @fileName - The name of the file or path to the file
      */
@@ -11215,7 +11212,6 @@ class TdApi {
      * Returns an empty string on failure
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @mimeType - The MIME type of the file
      */
@@ -11231,7 +11227,6 @@ class TdApi {
      * Returns an empty string on failure
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @fileName - File name or path to the file
      */
@@ -11246,7 +11241,6 @@ class TdApi {
      * Returns a 404 error if the string is not found
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @languagePackDatabasePath - Path to the language pack database in which strings are stored
      * @localizationTarget - Localization target to which the language pack belongs
@@ -11266,7 +11260,6 @@ class TdApi {
      * Converts a JSON-serialized string to corresponding JsonValue object
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @json - The JSON-serialized string
      */
@@ -11280,7 +11273,6 @@ class TdApi {
      * Converts a JsonValue object to corresponding JSON-serialized string
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @jsonValue - The JsonValue object
      */
@@ -13448,7 +13440,6 @@ class TdApi {
      * Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @payload - JSON-encoded push notification payload
      */
@@ -14292,7 +14283,6 @@ class TdApi {
      * Sets new log stream for internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @logStream - New log stream
      */
@@ -14306,7 +14296,6 @@ class TdApi {
      * Returns information about currently used log stream for internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      */
     class GetLogStream : Function() {
         override val constructor: Int get() = 1167608667
@@ -14316,7 +14305,6 @@ class TdApi {
      * Sets the verbosity level of the internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @newVerbosityLevel - New value of the verbosity level for logging
      *                      Value 0 corresponds to fatal errors, value 1 corresponds to errors, value 2 corresponds to warnings and debug warnings, value 3 corresponds to informational, value 4 corresponds to debug, value 5 corresponds to verbose debug, value greater than 5 and up to 1023 can be used to enable even more logging
@@ -14331,7 +14319,6 @@ class TdApi {
      * Returns current verbosity level of the internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      */
     class GetLogVerbosityLevel : Function() {
         override val constructor: Int get() = 594057956
@@ -14341,7 +14328,6 @@ class TdApi {
      * Returns list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      */
     class GetLogTags : Function() {
         override val constructor: Int get() = -254449190
@@ -14351,7 +14337,6 @@ class TdApi {
      * Sets the verbosity level for a specified TDLib internal log tag
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @tag - Logging tag to change verbosity level
      * @newVerbosityLevel - New verbosity level
@@ -14367,7 +14352,6 @@ class TdApi {
      * Returns current verbosity level for a specified TDLib internal log tag
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @tag - Logging tag to change verbosity level
      */
@@ -14381,7 +14365,6 @@ class TdApi {
      * Adds a message to TDLib internal log
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @verbosityLevel - Minimum verbosity level needed for the message to be logged, 0-1023
      * @text - Text of a message to log
@@ -14549,7 +14532,6 @@ class TdApi {
      * Returns the specified error and ensures that the Error object is used
      * This is an offline method
      * Can be called before authorization
-     * Can be called synchronously
      *
      * @error - The error to be returned
      */

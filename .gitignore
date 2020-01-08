@@ -12,3 +12,4 @@ classes
 build/
 *.log
 config/tdlib/jni/*/
+/local.properties

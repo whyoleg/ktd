@@ -1,7 +1,11 @@
-configure("api-stub") {
-    source {
-        main {
-            implementation(Dependencies.kotlin.stdlib)
-        }
+plugins {
+    use(Plugins.mppModule)
+}
+
+configureMultiplatform()
+
+kotlin {
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
     }
 }

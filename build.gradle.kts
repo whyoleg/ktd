@@ -1,7 +1,19 @@
-import dev.whyoleg.kamp.*
+//import dev.whyoleg.kamp.*
+//
+//kampRoot {
+//    plugins(Plugins.updates)
+//}
+//
+//registerTasks()
 
-kampRoot {
-    plugins(Plugins.updates)
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
 }
 
-registerTasks()
+createBintrayPublishTask(ktdPublisher)
+createBintrayPublishTask(cliPublisher)
+createBintrayPublishTask(libPublisher)

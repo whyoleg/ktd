@@ -1,15 +1,20 @@
-configure("coroutines-client") {
-    plugins(Plugins.atomicfu)
-    source {
-        main {
-            implementation(Dependencies.kotlinx.atomicfu)
-            api {
-                +Dependencies.kotlin.stdlib
-                +Dependencies.coroutines.core
-                +Dependencies.immutableCollections
-                +Modules.Client.raw
-            }
-            compileOnly(Modules.Api.stub)
+plugins {
+    use(Plugins.mppModule + Plugins.atomicfuModule)
+}
+
+configureMultiplatform()
+
+kotlin {
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
+        api(Dependencies.kotlinx.coroutines.core)
+        api(Dependencies.kotlinx.immutableCollections.metadata)
+        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
+    }
+    metadata {
+        dependenciesMain {
+            api(ProjectModules.Client.raw)
+            compileOnly(ProjectModules.Api.stub)
         }
     }
 }

@@ -21,25 +21,26 @@ val libPublisher = ktdPublisher.copy(name = "lib")
 
 fun Project.configurePublishing() = afterEvaluate {
     val publisher = when {
-        name.startsWith("lib-") -> {
+        name.startsWith("api-lib-") -> {
             version = ProjectVersions.lib
             libPublisher
         }
-        name == "cli"           -> {
+        name == "cli"               -> {
             version = ProjectVersions.cli
             cliPublisher
         }
-        else                    -> {
+        else                        -> {
             version = ProjectVersions.ktd
             ktdPublisher
         }
     }
 
     val props = (properties["publishOnly"] as String?)?.split(",")
-    val needToPublish = props == null || when {
-        project.name.startsWith("lib-") -> "lib" in props
-        project.name == "cli"           -> "cli" in props
-        else                            -> "ktd" in props
+    val needToPublish = when {
+        props == null                       -> true
+        project.name.startsWith("api-lib-") -> "lib" in props
+        project.name == "cli"               -> "cli" in props
+        else                                -> "ktd" in props
     }
 
     extensions.configure<PublishingExtension> {

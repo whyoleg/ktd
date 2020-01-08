@@ -3,6 +3,7 @@ import dev.whyoleg.kamp.publication.Publication
 import org.gradle.api.*
 import org.gradle.api.publish.*
 import org.gradle.api.publish.maven.*
+import org.gradle.kotlin.dsl.*
 
 val publication = Publication(
     name = "ktd",
@@ -41,12 +42,8 @@ fun Project.configurePublishing() = afterEvaluate {
         else                            -> "ktd" in props
     }
 
-    extensions.configure<PublishingExtension>("publishing") {
-        val apiVersion =
-            name
-                .substringAfterLast("v", "")
-                .takeIf(String::isNotBlank)
-                ?.takeIf { it.split('.').size == 3 }
+    extensions.configure<PublishingExtension> {
+        val apiVersion = project.apiVersion
         if (needToPublish) {
             repositories {
                 publisher.provider()(this)

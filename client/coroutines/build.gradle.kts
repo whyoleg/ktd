@@ -1,19 +1,18 @@
 plugins {
-    use(Plugins.mppModule)
+    use(Plugins.mppModule + Plugins.atomicfuModule)
 }
 
-android { default() }
+configureMultiplatform()
 
 kotlin {
-    configureMultiplatform()
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
         api(Dependencies.kotlinx.coroutines.core)
-        api(Dependencies.kotlinx.atomicfu.runtime)
+        api(Dependencies.kotlinx.immutableCollections.metadata)
+        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
     }
     metadata {
         dependenciesMain {
-            api(Dependencies.kotlinx.immutableCollections.metadata)
             api(ProjectModules.Client.raw)
             compileOnly(ProjectModules.Api.stub)
         }

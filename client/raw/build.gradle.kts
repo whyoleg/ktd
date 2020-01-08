@@ -2,10 +2,9 @@ plugins {
     use(Plugins.mppModule)
 }
 
-android { default() }
+configureMultiplatform()
 
 kotlin {
-    configureMultiplatform()
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
     }

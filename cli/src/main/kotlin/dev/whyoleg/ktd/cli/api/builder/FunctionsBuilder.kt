@@ -38,7 +38,8 @@ private val ignoredTypes = setOf(
     "Backgrounds",
     "Draft",
     "Emojis",
-    "Hashtags"
+    "Hashtags",
+    "Send"
 )
 
 private val additionalTypes = setOf("Emoji", "Group", "Hashtag")
@@ -88,7 +89,7 @@ fun StringBuilder.buildRawFunction(rawType: String, function: TlFunction) {
     append("\n")
 }
 
-fun StringBuilder.buildFunction(rawType: String, function: TlFunction, metadata: TlDataMetadata) {
+fun StringBuilder.buildFunctionWithParams(rawType: String, function: TlFunction, metadata: TlDataMetadata) {
     buildDescription(function.descriptionsWithProperties())
     buildAnnotations(function.metadata.additions)
     append("suspend fun TelegramClient.").append(function.type.decapitalize())
@@ -114,19 +115,10 @@ fun StringBuilder.buildHeader(type: String) {
     buildImport("api", "TdApi")
 }
 
-fun StringBuilder.buildRawFunctions(type: String, functions: List<TlFunction>) {
+fun StringBuilder.buildFunction(type: String, function: TlFunction, metadata: TlSchemeMetadata) {
     buildHeader(type)
-    functions.forEach {
-        append("\n")
-        buildRawFunction(type, it)
-    }
-}
-
-
-fun StringBuilder.buildFunctions(type: String, functions: List<TlFunction>, metadata: TlSchemeMetadata) {
-    buildHeader(type)
-    functions.forEach {
-        append("\n")
-        buildFunction(type, it, metadata[it])
-    }
+    append("\n")
+    buildFunctionWithParams(type, function, metadata[function])
+    append("\n")
+    buildRawFunction(type, function)
 }

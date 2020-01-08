@@ -18,16 +18,18 @@ object ProjectModules {
         object Raw {
             val v1_5_0 = ProjectModule(":api-raw-v1.5.0")
         }
+
         val coroutines = ProjectModule(":api-coroutines")
 
         object Coroutines {
             val v1_5_0 = ProjectModule(":api-coroutines-v1.5.0")
         }
-    }
-    val lib = ProjectModule(":lib")
 
-    object Lib {
-        val v1_5_0 = ProjectModule(":lib-v1.5.0")
+        val lib = ProjectModule(":api-lib")
+
+        object Lib {
+            val v1_5_0 = ProjectModule(":api-lib-v1.5.0")
+        }
     }
     val cli = ProjectModule(":cli")
     val examples = ProjectModule(":examples")

@@ -15,17 +15,12 @@ modules {
     }
     "api" {
         "stub"("api/stub")
-        types.forEach { type ->
+        (types + "lib").forEach { type ->
             type("api/$type") {
                 tdVersions.forEach {
                     "v$it"("api/$type/v$it")
                 }
             }
-        }
-    }
-    "lib" {
-        tdVersions.forEach {
-            "v$it"("lib/v$it")
         }
     }
     "cli"()

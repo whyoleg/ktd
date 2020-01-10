@@ -107,8 +107,8 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
         ),
         before = {
             //            runCatching {
-            ndkLibsPath.resolve("openssl").deleteRecursively()
-            opensslTargetPath.copyRecursively(ndkLibsPath, overwrite = true)
+//            ndkLibsPath.resolve("openssl").deleteRecursively()
+//            opensslTargetPath.copyRecursively(ndkLibsPath, overwrite = true)
 //            }.also(::println)
 //            ndkLibsPath.copyRecursively(opensslTargetPath, overwrite = true)
 
@@ -129,12 +129,21 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
             }
         }
     )
-
+    //OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
+    //OPENSSL_SSL_LIBRARY=$OPENSSL_ROOT/lib/libssl.a
+    //
+    //OPENSSL_OPTIONS="-DOPENSSL_FOUND=1 \
+    //  -DOPENSSL_ROOT_DIR=\"$OPENSSL_ROOT\" \
+    //  -DOPENSSL_INCLUDE_DIR=\"$OPENSSL_ROOT/include\" \
+    //  -DOPENSSL_CRYPTO_LIBRARY=\"$OPENSSL_CRYPTO_LIBRARY\" \
+    //  -DOPENSSL_SSL_LIBRARY=\"$OPENSSL_SSL_LIBRARY\" \
     val customExecution = CmakeExecution(
         build = CmakeConfig(
             configureParams = listOf(
-                prop("-DOPENSSL_ROOT_DIR", ndkLibsPath),
-                prop("-DOPENSSL_INCLUDE_DIR", ndkLibsPath)
+                prop("-DOPENSSL_ROOT_DIR", opensslTargetPath),
+                prop("-DOPENSSL_INCLUDE_DIR", opensslTargetPath),
+                prop("-DOPENSSL_CRYPTO_LIBRARY", opensslTargetPath.resolve("libcrypto.a")),
+                prop("-DOPENSSL_SSL_LIBRARY", opensslTargetPath.resolve("libssl.a"))
             )
         ),
         lib = CmakeConfig(

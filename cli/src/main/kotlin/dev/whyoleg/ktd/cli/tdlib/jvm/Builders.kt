@@ -90,7 +90,7 @@ fun WindowsJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Windo
 )
 
 fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Android): CmakeExecution {
-    val ndkPath = androidSdkPath.resolve("ndk/$ndkVersion")
+    val ndkPath = if (ndkVersion != null) androidSdkPath.resolve("../ndk/$ndkVersion") else androidSdkPath.resolve("ndk-bundle")
     val ndkLibsPath = ndkPath.resolve("platforms/android-$apiLevel/arch-${target.ndkName}/usr/lib")
 
     val commonExecution = CmakeExecution(

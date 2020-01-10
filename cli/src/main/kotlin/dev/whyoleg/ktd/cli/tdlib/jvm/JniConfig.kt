@@ -57,7 +57,7 @@ data class AndroidJniConfig(
     val opensslPath: File,
     val apiLevel: Int,
     val jdkPath: File,
-    val ndkVersion: String
+    val ndkVersion: String?
 )
 
 @Serializer(File::class)

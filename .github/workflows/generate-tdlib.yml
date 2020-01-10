@@ -40,7 +40,7 @@ jobs:
           name: cli
           path: cli.jar
 
-  generate-macos:
+  generate-mac:
     needs: [download-cli]
     runs-on: macos-latest
     steps:

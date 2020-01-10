@@ -36,18 +36,7 @@ jobs:
       - run: ls
       - run: printenv
       - run: |
-          ls
-          echo 0
-          cd ../
-          ls
-          echo 0
-          cd ../
-          ls
-          echo 0
-          cd ../
-          ls
-          echo 0
-          cd ../
+          cd /usr/local/lib/android/sdk
           ls
       #      - name: Download libs
       #        uses: actions/download-artifact@v1

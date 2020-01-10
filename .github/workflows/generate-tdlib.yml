@@ -59,7 +59,7 @@ jobs:
           name: cli
       - run: ls
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -c cli/config/tdlib.default.conf
 
       - uses: actions/upload-artifact@v1
         with:
@@ -89,13 +89,13 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: windows-dependencies
-      - run: 7z windows-dependencies.7z #TODO
+      - run: 7z e windows-dependencies.7z -y
       - uses: actions/download-artifact@v1
         with:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
@@ -123,7 +123,7 @@ jobs:
 
       - run: ls
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t linux -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t linux -c cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
@@ -156,7 +156,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1

@@ -53,14 +53,13 @@ jobs:
         with:
           java-version: 11
 
-      #      - run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
       - run: brew install gperf coreutils
       - uses: actions/download-artifact@v1
         with:
           name: cli
-
+      - run: ls
       - name: Generate tdlib
-        run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -e cli/config/tdlib.default.conf
 
       - uses: actions/upload-artifact@v1
         with:
@@ -96,7 +95,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -e cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
@@ -109,8 +108,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
@@ -124,8 +121,9 @@ jobs:
         with:
           name: cli
 
+      - run: ls
       - name: Generate tdlib
-        run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t linux -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t linux -e cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
@@ -158,7 +156,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -e cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -e cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1

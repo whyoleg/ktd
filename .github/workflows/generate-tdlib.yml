@@ -16,11 +16,11 @@ jobs:
   download-android-openssl:
     runs-on: ubuntu-latest
     steps:
-      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl . --endpoint-url ${{ env.ENDPOINT }}
       - uses: actions/upload-artifact@v1
         with:
           name: android-openssl
-          path: openssl.7z
+          path: openssl
 
   download-windows-dependencies:
     runs-on: ubuntu-latest
@@ -159,9 +159,9 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: cli
-      - run: |
-          cd android-openssl
-          7z x openssl.7z -y
+      #      - run: |
+      #          cd android-openssl
+      #          7z x openssl.7z -y
 
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf

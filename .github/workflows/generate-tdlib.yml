@@ -53,7 +53,7 @@ jobs:
         with:
           java-version: 11
 
-      - run: brew install gperf coreutils
+      - run: brew install gperf coreutils ninja
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -89,7 +89,9 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: windows-dependencies
-      - run: 7z e windows-dependencies.7z -y
+      - run: |
+          copy windows-dependencies\dependencies.7z dependencies.7z
+          7z e dependencies.7z -y
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -116,7 +118,7 @@ jobs:
         with:
           java-version: 11
 
-      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1
         with:
           name: cli

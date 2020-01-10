@@ -57,7 +57,7 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: cli
-      - run: ls
+
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -c cli/config/tdlib.default.conf
 
@@ -85,20 +85,16 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
-      - run: dir
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
       - uses: actions/download-artifact@v1
         with:
           name: windows-dependencies
-      - run: dir
       - run: |
           cd windows-dependencies
           7z x dependencies.7z -y
           xcopy /S dependencies ..\
-          dir
-      - run: dir
-      - uses: actions/download-artifact@v1
-        with:
-          name: cli
 
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -c cli/config/tdlib.default.conf
@@ -127,7 +123,6 @@ jobs:
         with:
           name: cli
 
-      - run: ls
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t linux -c cli/config/tdlib.default.conf
 
@@ -161,15 +156,9 @@ jobs:
         with:
           name: cli
       - run: |
-          ls
-          mkdir openssl
           cd android-openssl
           7z x openssl.7z -y
-          ls
-          echo 0
-          ls openssl
-          cp -r openssl ../openssl
-          ls
+          cp -r openssl ..
       - run: |
           ls
           echo 0

@@ -161,10 +161,20 @@ jobs:
         with:
           name: cli
       - run: |
+          ls
           mkdir openssl
           cd android-openssl
           7z x openssl.7z -y
+          ls
+          echo 0
+          ls openssl
           cp -r openssl ../openssl
+          ls
+      - run: |
+          ls
+          echo 0
+          cd openssl
+          ls
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 

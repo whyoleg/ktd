@@ -107,7 +107,9 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
         ),
         before = {
             ndkLibsPath.resolve("openssl").deleteRecursively()
-            File("$opensslPath/${target.archName}").copyRecursively(ndkLibsPath, overwrite = true)
+            File("$opensslPath/${target.archName}")
+                .also { println(it.absolutePath) }
+                .copyRecursively(ndkLibsPath, overwrite = true)
         },
         after = {
             val strip =

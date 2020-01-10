@@ -160,10 +160,10 @@ jobs:
           7z x openssl.7z -y
           cp -r openssl ..
       - run: |
-          ls
-          echo 0
-          cd openssl
-          ls
+          mkdir android-sdk
+          cd android-sdk
+          mkdir ndk-bundle
+          cp -r /usr/local/lib/android/sdk/ndk-bundle ndk-bundle
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 

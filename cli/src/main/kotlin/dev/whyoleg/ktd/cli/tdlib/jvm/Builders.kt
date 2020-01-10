@@ -92,7 +92,7 @@ fun WindowsJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Windo
 fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Android): CmakeExecution {
     val ndkPath = if (ndkVersion != null) androidSdkPath.resolve("../ndk/$ndkVersion") else androidSdkPath.resolve("ndk-bundle")
     val ndkLibsPath = ndkPath.resolve("platforms/android-$apiLevel/arch-${target.ndkName}/usr/lib")
-
+    val opensslTargetPath = opensslPath.resolve(target.archName)
     val commonExecution = CmakeExecution(
         config = CmakeConfig(
             configureParams = ninjaConfig + listOf(
@@ -106,10 +106,18 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
             )
         ),
         before = {
+            //            runCatching {
             ndkLibsPath.resolve("openssl").deleteRecursively()
-            File("$opensslPath/${target.archName}")
-                .also { println(it.absolutePath) }
-                .copyRecursively(ndkLibsPath, overwrite = true)
+            opensslTargetPath.copyRecursively(ndkLibsPath, overwrite = true)
+//            }.also(::println)
+//            ndkLibsPath.copyRecursively(opensslTargetPath, overwrite = true)
+
+//            opensslTargetPath.listFiles()?.forEach {
+//                println("FOLDER!!!${it.absolutePath}")
+//                it.listFiles()?.forEach {
+//                    println("SUBFOLDER!!!${it.absolutePath}")
+//                }
+//            }
         },
         after = {
             val strip =

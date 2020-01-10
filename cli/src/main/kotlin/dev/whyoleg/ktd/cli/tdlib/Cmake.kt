@@ -63,10 +63,16 @@ class CmakeExecutionResult(
 
 data class CmakeExecution(
     val build: CmakeConfig,
-    val lib: CmakeConfig
+    val lib: CmakeConfig,
+    val before: suspend () -> Unit = {},
+    val after: suspend CmakeExecutionResult.() -> Unit = {}
 )
 
-fun CmakeExecution(config: CmakeConfig): CmakeExecution = CmakeExecution(config, config)
+fun CmakeExecution(
+    config: CmakeConfig,
+    before: suspend () -> Unit = {},
+    after: suspend CmakeExecutionResult.() -> Unit = {}
+): CmakeExecution = CmakeExecution(config, config, before, after)
 
 operator fun CmakeExecution.plus(other: CmakeExecution) = CmakeExecution(
     build = CmakeConfig(
@@ -78,7 +84,15 @@ operator fun CmakeExecution.plus(other: CmakeExecution) = CmakeExecution(
         env = lib.env + other.lib.env,
         configureParams = lib.configureParams + other.lib.configureParams,
         installParams = lib.installParams + other.lib.installParams
-    )
+    ),
+    before = {
+        before()
+        other.before()
+    },
+    after = {
+        after(this)
+        other.after(this)
+    }
 )
 
 data class CmakeConfig(

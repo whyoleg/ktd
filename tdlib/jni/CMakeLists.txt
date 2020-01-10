@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-project(ktd VERSION 1.0.0 LANGUAGES CXX)
+project(ktd VERSION 1 LANGUAGES CXX)
 
 string(APPEND CMAKE_CXX_FLAGS " -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti")
 string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,--gc-sections -Wl,--exclude-libs,ALL")

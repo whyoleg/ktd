@@ -1,12 +1,11 @@
 package dev.whyoleg.ktd.cli.api
 
 import dev.whyoleg.ktd.cli.*
-import io.github.cdimascio.dotenv.*
 import kotlinx.cli.*
 import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
-object ApiCommand : DotenvCommand("api") {
+object ApiCommand : ConfigCommand("api") {
     private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
 
     private val androidManifest = """
@@ -16,7 +15,7 @@ object ApiCommand : DotenvCommand("api") {
 
     private val dirs = listOf("coroutines", "lib", "raw")
 
-    override suspend fun execute(dotenv: Dotenv) {
+    override fun execute() {
         println("Generate api for tdlib $version")
         val scheme = gitHub().downloadScheme(version)
         println("Scheme downloaded")

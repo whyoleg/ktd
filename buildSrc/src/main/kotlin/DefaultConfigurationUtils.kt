@@ -33,7 +33,7 @@ fun KotlinMultiplatformExtension.default() {
         androidMain.dependsOn(jvmMain)
     }
 
-    targets.first().project.run { configurePublishing() }
+    targets.first().project.run(Project::configurePublishing)
     defaultOptions()
 }
 

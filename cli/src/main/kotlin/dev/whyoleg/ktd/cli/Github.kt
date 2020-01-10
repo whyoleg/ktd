@@ -1,7 +1,6 @@
 package dev.whyoleg.ktd.cli
 
 import eu.jrie.jetbrains.kotlinshell.shell.*
-import kotlinx.coroutines.*
 import org.kohsuke.github.*
 import java.io.*
 
@@ -15,15 +14,15 @@ val versionCommits = mapOf(
 
 val versions = versionCommits.keys.sorted()
 
-suspend fun gitHub(): GitHub = withContext(Dispatchers.IO) { GitHub.connectAnonymously() }
+fun gitHub(): GitHub = GitHub.connectAnonymously()
 
-suspend fun GitHub.downloadScheme(version: String): ByteArray = withContext(Dispatchers.IO) {
+fun GitHub.downloadScheme(version: String): ByteArray {
     val commitSha = versionCommits[version] ?: error("There is no '$version' version of tdlib")
     println("Downloading scheme for tdlib version '$version' with sha '$commitSha'")
     val content = getRepository("tdlib/td").getFileContent("td/generate/scheme/td_api.tl", commitSha)
     val scheme = content.read().readBytes()
     println("Scheme '$version' downloaded")
-    scheme
+    return scheme
 }
 
 //TODO remove it, use workflow

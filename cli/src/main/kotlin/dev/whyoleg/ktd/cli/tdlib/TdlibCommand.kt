@@ -2,22 +2,8 @@ package dev.whyoleg.ktd.cli.tdlib
 
 import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.tdlib.jvm.*
-import io.github.cdimascio.dotenv.*
 import kotlinx.cli.*
-import java.io.*
-
-//object Env {
-//    val env: Map<String, String> = System.getenv()
-//    val BUILD_TYPE by env.
-//}
-
-//BUILD_TYPE
-//cmake
-//ninja
-//tdrepo
-//jnidir
-//output
-//
+import kotlinx.coroutines.*
 
 object BuildPlatformArgType : ArgType<BuildPlatform>(true) {
     override val description: kotlin.String = "{ PlatformTarget }"
@@ -35,35 +21,31 @@ object BuildTargetArgType : ArgType<BuildTarget>(true) {
 }
 
 @UseExperimental(ExperimentalCli::class)
-object TdlibCommand : DotenvCommand("tdlib") {
+object TdlibCommand : ConfigCommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
     private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
 
-    override suspend fun execute(dotenv: Dotenv) {
+    override fun execute(): Unit = runBlocking {
         println("Start build tdlib $version for $platform/$target ")
         checkoutVersion(version)
         if (target !in platform.targets) error("Can't build tdlib for $platform/$target")
-        val result = when (platform) {
+        when (platform) {
             BuildPlatform.Jvm    -> {
-                when (val t = target) {
-                    BuildTarget.Linux      -> buildLinuxJni()
-                    BuildTarget.MacOS      -> buildMacOSJni()
-                    is BuildTarget.Windows -> buildWindowsJni(t)
-                    is BuildTarget.Android -> {
-                        val home = File("/home/whyme")
-                        buildAndroid(
-                            androidSdkPath = home.resolve("Android/Sdk"),
-                            opensslPath = home.resolve("IdeaProjects/ktd/android-openssl"),
-                            target = t
-                        )
-                    }
+                val config = config<JniConfig>("jni").also(::println)
+                val execution = when (val t = target) {
+                    BuildTarget.Linux      -> config.linux?.execution(config.td.buildType)
+                    BuildTarget.MacOS      -> config.macos?.execution(config.td.buildType)
+                    is BuildTarget.Windows -> config.windows?.execution(config.td.buildType, t)
+                    is BuildTarget.Android -> config.android?.execution(config.td.buildType, t)
                     else                   -> null
                 }
+                requireNotNull(execution) { "No config for $platform/$target" }
+                val result = config.buildJni(execution)
+                result.toString(target).also(::println)
             }
             BuildPlatform.Js     -> TODO()
             BuildPlatform.Native -> TODO()
         }
-        result?.toString(target)?.also(::println)
     }
 }

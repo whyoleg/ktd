@@ -2,7 +2,7 @@ name: Build tdlib
 on:
   push:
     branches:
-      - tdlib/[0-9]+.[0-9]+.[0-9]+
+      - tdlib-api/[0-9]+.[0-9]+.[0-9]+
 
 jobs:
   generate-api:

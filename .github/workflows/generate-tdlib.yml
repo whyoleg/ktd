@@ -166,8 +166,7 @@ jobs:
       - run: |
           mkdir android-sdk
           cd android-sdk
-          mkdir ndk-bundle
-          cp -r /usr/local/lib/android/sdk/ndk-bundle ..
+          cp -r /usr/local/lib/android/sdk/ndk-bundle .
           ls
           echo 0
           cd ndk-bundle

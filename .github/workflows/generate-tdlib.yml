@@ -140,8 +140,9 @@ jobs:
     needs: [download-cli, download-android-openssl]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        arch: [armv7] #, armv8, x86, x64]
+        arch: [armv7, armv8, x86, x64]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2

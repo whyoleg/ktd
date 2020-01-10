@@ -163,8 +163,11 @@ jobs:
       - run: |
           cd android-openssl
           7z x openssl.7z -y
-          xcopy /S openssl .
+          cp -r openssl .
       - run: |
+          ls
+          echo 0
+          cd ../
           ls
           echo 0
           cd ../

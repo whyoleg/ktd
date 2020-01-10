@@ -93,8 +93,8 @@ jobs:
       - run: |
           cd windows-dependencies
           7z x dependencies.7z -y
-          copy dependencies\gperf ..\gperf
-          copy dependencies\vcpkg ..\vcpkg
+          xcopy dependencies\gperf ..\gperf\
+          xcopy dependencies\vcpkg ..\vcpkg\
           dir
       - run: dir
       - uses: actions/download-artifact@v1
@@ -161,9 +161,12 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: cli
-      #      - run: |
-      #          cd android-openssl
-      #          7z x openssl.7z -y
+      - run: |
+          ls
+          cd android-openssl
+          ls
+          cd openssl
+          ls
 
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf

@@ -101,7 +101,7 @@ jobs:
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
-          name: win-${{ matrix-arch }}
+          name: win-${{ matrix.arch }}
           path: tdlib/jni/bin
 
   generate-linux:

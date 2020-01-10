@@ -16,7 +16,7 @@ jobs:
   download-android-openssl:
     runs-on: ubuntu-latest
     steps:
-      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl . --endpoint-url ${{ env.ENDPOINT }}
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl . --recursive --endpoint-url ${{ env.ENDPOINT }}
       - uses: actions/upload-artifact@v1
         with:
           name: android-openssl
@@ -91,8 +91,10 @@ jobs:
           name: windows-dependencies
       - run: dir
       - run: |
-          copy windows-dependencies\dependencies.7z dependencies.7z
+          cd windows-dependencies
           7z x dependencies.7z -y
+          copy dependencies\gperf ..\gperf
+          copy dependencies\vcpkg ..\vcpkg
           dir
       - run: dir
       - uses: actions/download-artifact@v1

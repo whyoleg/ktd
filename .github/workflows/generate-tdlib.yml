@@ -85,13 +85,16 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
-
+      - run: dir
       - uses: actions/download-artifact@v1
         with:
           name: windows-dependencies
+      - run: dir
       - run: |
           copy windows-dependencies\dependencies.7z dependencies.7z
           7z e dependencies.7z -y
+          dir
+      - run: dir
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -149,13 +152,16 @@ jobs:
         with:
           java-version: 11
 
-      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1
         with:
           name: android-openssl
       - uses: actions/download-artifact@v1
         with:
           name: cli
+      - run: |
+          cd android-openssl
+          7z e openssl.7z -y
 
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf

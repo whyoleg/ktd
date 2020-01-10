@@ -16,7 +16,7 @@ jobs:
   download-android-openssl:
     runs-on: ubuntu-latest
     steps:
-      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --recursive --endpoint-url ${{ env.ENDPOINT }}
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
       - uses: actions/upload-artifact@v1
         with:
           name: android-openssl

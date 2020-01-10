@@ -27,10 +27,10 @@ enum class TdBuildType() {
 data class JniConfig(
     val cmakePath: String,
     val td: TdConfig,
-    val linux: LinuxJniConfig?,
-    val macos: MacosJniConfig?,
-    val windows: WindowsJniConfig?,
-    val android: AndroidJniConfig?
+    val linux: LinuxJniConfig? = null,
+    val macos: MacosJniConfig? = null,
+    val windows: WindowsJniConfig? = null,
+    val android: AndroidJniConfig? = null
 )
 
 @Serializable
@@ -57,7 +57,7 @@ data class AndroidJniConfig(
     val opensslPath: File,
     val apiLevel: Int,
     val jdkPath: File,
-    val ndkVersion: String?
+    val ndkVersion: String? = null
 )
 
 @Serializer(File::class)

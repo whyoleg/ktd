@@ -164,6 +164,18 @@ jobs:
           cd android-sdk
           mkdir ndk-bundle
           cp -r /usr/local/lib/android/sdk/ndk-bundle ndk-bundle
+          ls
+          echo 0
+          cd ndk-bundle
+          ls
+          echo 0
+          cd build
+          ls
+          echo 0
+          cd cmake
+          ls
+          echo 0
+
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 

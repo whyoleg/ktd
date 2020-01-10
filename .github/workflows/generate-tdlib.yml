@@ -60,7 +60,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-          run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -e cli/config/tdlib.default.conf
+        run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t mac -e cli/config/tdlib.default.conf
 
       - uses: actions/upload-artifact@v1
         with:
@@ -96,7 +96,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-          run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -e cli/config/tdlib.default.conf
+        run: java -jar cli.jar tdlib -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -e cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1

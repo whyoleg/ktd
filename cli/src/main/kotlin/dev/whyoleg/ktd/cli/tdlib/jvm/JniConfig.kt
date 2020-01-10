@@ -14,7 +14,7 @@ data class TdConfig(
     val jniPath: File
 )
 
-enum class TdBuildType() {
+enum class TdBuildType {
     MinSizeRel,
     Release,
     Debug;

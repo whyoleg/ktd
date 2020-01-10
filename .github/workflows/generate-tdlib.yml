@@ -23,6 +23,7 @@ jobs:
           path: openssl.7z
 
   download-windows-dependencies:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/dependencies.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -41,6 +42,7 @@ jobs:
           path: cli.jar
 
   generate-mac:
+    if: false
     needs: [download-cli]
     runs-on: macos-latest
     steps:
@@ -67,6 +69,7 @@ jobs:
           path: tdlib/jni/bin
 
   generate-win:
+    if: false
     needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
@@ -106,6 +109,7 @@ jobs:
           path: tdlib/jni/bin
 
   generate-linux:
+    if: false
     needs: [download-cli]
     runs-on: ubuntu-latest
     steps:
@@ -137,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [armv7, armv8, x86, x64]
+        arch: [armv7] #, armv8, x86, x64]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
@@ -163,7 +167,7 @@ jobs:
           mkdir android-sdk
           cd android-sdk
           mkdir ndk-bundle
-          cp -r /usr/local/lib/android/sdk/ndk-bundle ndk-bundle
+          cp -r /usr/local/lib/android/sdk/ndk-bundle ..
           ls
           echo 0
           cd ndk-bundle

@@ -3,7 +3,7 @@ project(ktd VERSION 1 LANGUAGES CXX)
 
 string(APPEND CMAKE_CXX_FLAGS " -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti")
 if (APPLE)
-  string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,-dead_strip -Wl,--exclude-libs,ALL")
+  string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,-dead_strip")
 else()
   string(APPEND CMAKE_SHARED_LINKER_FLAGS " -Wl,--gc-sections -Wl,--exclude-libs,ALL")
 endif()

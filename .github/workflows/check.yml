@@ -22,6 +22,7 @@ jobs:
   #          path: libs
 
   check:
+    if: false
     runs-on: ${{ matrix.os }}
     #    needs: download-tdlib
     strategy:

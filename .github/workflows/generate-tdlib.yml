@@ -153,13 +153,12 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          java-package: jre
 
       - run: ls /usr/lib/jvm/
-
-      - run: ls /usr/lib/jvm/default-java
-      - run: ls /usr/lib/jvm/java-1.11.0-openjdk-amd64
-      - run: ls /usr/lib/jvm/java-11-openjdk-amd64
-      - run: ls /usr/lib/jvm/zulu-11-azure-amd64
 
       - run: ls /usr/lib/jvm/default-java
       - run: ls /usr/lib/jvm/java-1.11.0-openjdk-amd64

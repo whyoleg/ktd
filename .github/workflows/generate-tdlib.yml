@@ -143,7 +143,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [armv7, armv8, x86, x64]
+        arch: [armv7] #, armv8, x86, x64]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
@@ -155,6 +155,16 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
 
       - run: ls /usr/lib/jvm/
+
+      - run: ls /usr/lib/jvm/default-java
+      - run: ls /usr/lib/jvm/java-1.11.0-openjdk-amd64
+      - run: ls /usr/lib/jvm/java-11-openjdk-amd64
+      - run: ls /usr/lib/jvm/zulu-11-azure-amd64
+
+      - run: ls /usr/lib/jvm/default-java
+      - run: ls /usr/lib/jvm/java-1.11.0-openjdk-amd64
+      - run: ls /usr/lib/jvm/java-11-openjdk-amd64
+      - run: ls /usr/lib/jvm/zulu-11-azure-amd64
 
       - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1

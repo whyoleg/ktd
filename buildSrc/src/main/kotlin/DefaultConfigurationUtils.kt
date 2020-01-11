@@ -13,6 +13,8 @@ fun KotlinJvmProjectExtension.default() {
     target {
         commonOptions(KotlinCommonOptions::default)
         options { default() }
+        project.configurePublishing()
+        project.jvmPublication(publication, cliPublisher.provider()) { artifactId = "cli" }
     }
     sourceSets.all {
         languageSettings.apply(LanguageSettingsBuilder::default)

@@ -137,8 +137,8 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
         ),
         lib = commonConfig + CmakeConfig(
             configureParams = listOf(
-                prop("-DJAVA_AWT_LIBRARY", jdkPath.resolve("jre/lib/amd64")),
-                prop("-DJAVA_JVM_LIBRARY", jdkPath.resolve("jre/lib/amd64")),
+                prop("-DJAVA_AWT_LIBRARY", jdkPath.resolve("lib")),
+                prop("-DJAVA_JVM_LIBRARY", jdkPath.resolve("lib")),
                 prop("-DJAVA_INCLUDE_PATH2", jdkPath.resolve("include/linux")),
                 prop("-DJAVA_AWT_INCLUDE_PATH", jdkPath.resolve("include"))
             )

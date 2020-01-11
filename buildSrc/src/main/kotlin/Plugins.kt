@@ -8,6 +8,7 @@ object Plugins {
         KotlinPlugins.Stable.kotlinJvm,
         KotlinPlugins.Stable.serialization,
         BuiltInPlugins.Stable.shadow,
-        GradleBuiltInPlugins.application
+        GradleBuiltInPlugins.application,
+        GradleBuiltInPlugins.mavenPublish
     )
 }

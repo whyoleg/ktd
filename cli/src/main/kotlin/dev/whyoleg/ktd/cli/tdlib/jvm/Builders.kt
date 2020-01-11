@@ -124,9 +124,20 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
         )
     )
     val opensslTargetPath = opensslPath.resolve(target.archName)
+    val jdkLibPath = jdkPath.resolve("lib")
+    val jdkIncludePath = jdkPath.resolve("include")
 
     return CmakeExecution(
-        crossCompile = linuxConfig?.execution(buildType)?.build ?: CmakeConfig(),
+        crossCompile = (linuxConfig?.execution(buildType)?.build ?: CmakeConfig()) + CmakeConfig(
+            configureParams = listOf(
+                "-DTD_ENABLE_JNI=ON",
+                prop("-DJAVA_AWT_LIBRARY", jdkLibPath),
+                prop("-DJAVA_JVM_LIBRARY", jdkLibPath),
+                prop("-DJAVA_INCLUDE_PATH2", jdkIncludePath.resolve("linux")),
+                prop("-DJAVA_INCLUDE_PATH", jdkIncludePath),
+                prop("-DJAVA_AWT_INCLUDE_PATH", jdkIncludePath)
+            )
+        ),
         build = commonConfig + CmakeConfig(
             configureParams = listOf(
                 prop("-DOPENSSL_ROOT_DIR", opensslTargetPath),
@@ -137,10 +148,10 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
         ),
         lib = commonConfig + CmakeConfig(
             configureParams = listOf(
-                prop("-DJAVA_AWT_LIBRARY", jdkPath.resolve("lib")),
-                prop("-DJAVA_JVM_LIBRARY", jdkPath.resolve("lib")),
-                prop("-DJAVA_INCLUDE_PATH2", jdkPath.resolve("include/linux")),
-                prop("-DJAVA_AWT_INCLUDE_PATH", jdkPath.resolve("include"))
+                prop("-DJAVA_AWT_LIBRARY", jdkLibPath),
+                prop("-DJAVA_JVM_LIBRARY", jdkLibPath),
+                prop("-DJAVA_INCLUDE_PATH2", jdkIncludePath.resolve("linux")),
+                prop("-DJAVA_AWT_INCLUDE_PATH", jdkIncludePath)
             )
         ),
         after = {

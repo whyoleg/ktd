@@ -183,44 +183,44 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: linux
-          path: libs
+          path: tdlib/linux
 
       - uses: actions/download-artifact@v1
         with:
           name: mac
-          path: libs
+          path: tdlib/mac
 
       - uses: actions/download-artifact@v1
         with:
           name: win-x64
-          path: libs
+          path: tdlib/win-x64
 
       - uses: actions/download-artifact@v1
         with:
           name: win-x86
-          path: libs
+          path: tdlib/win-x86
 
       - uses: actions/download-artifact@v1
         with:
           name: android-armv7
-          path: libs
+          path: tdlib/android-armv7
 
       - uses: actions/download-artifact@v1
         with:
           name: android-armv8
-          path: libs
+          path: tdlib/android-armv8
 
       - uses: actions/download-artifact@v1
         with:
           name: android-x86
-          path: libs
+          path: tdlib/android-x86
 
       - uses: actions/download-artifact@v1
         with:
           name: android-x64
-          path: libs
+          path: tdlib/android-x64
 
       - run: ls -lahR
-      - run: ls libs -lahR
+      - run: ls tdlib -lahR
 #      - name: Upload libs
 #        run: aws s3 cp libs s3://${{ env.BUCKET }}/tdlib/${{ env.TD_API_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}

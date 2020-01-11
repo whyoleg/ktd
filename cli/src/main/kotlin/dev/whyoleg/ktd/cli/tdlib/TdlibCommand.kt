@@ -37,7 +37,7 @@ object TdlibCommand : ConfigCommand("tdlib") {
                     BuildTarget.Linux      -> config.linux?.execution(config.td.buildType)
                     BuildTarget.MacOS      -> config.macos?.execution(config.td.buildType)
                     is BuildTarget.Windows -> config.windows?.execution(config.td.buildType, t)
-                    is BuildTarget.Android -> config.android?.execution(config.td.buildType, t)
+                    is BuildTarget.Android -> config.android?.execution(config.td.buildType, t, config.linux)
                     else                   -> null
                 }
                 requireNotNull(execution) { "No config for $platform/$target" }

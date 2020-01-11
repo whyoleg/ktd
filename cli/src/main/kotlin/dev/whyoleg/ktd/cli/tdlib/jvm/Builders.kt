@@ -1,6 +1,7 @@
 package dev.whyoleg.ktd.cli.tdlib.jvm
 
 import dev.whyoleg.ktd.cli.tdlib.*
+import dev.whyoleg.ktd.cli.tdlib.cmake.*
 import eu.jrie.jetbrains.kotlinshell.shell.*
 import java.io.*
 
@@ -11,22 +12,26 @@ fun prop(cmd: String, file: File): String = "$cmd=${file.absolutePath}"
 suspend fun JniConfig.buildJni(execution: CmakeExecution): CmakeExecutionResult {
     println("Prepare build folders")
 
-    val buildDir = td.buildPath
+    val buildDir = td.tdPath.resolve("build")
+    val crossCompileDir = td.tdPath.resolve("crossCompile")
+
     val generatedDir = td.jniPath
     val generatedBuildDir = generatedDir.resolve("build")
     val installDir = generatedDir.resolve("td")
     val libDir = generatedDir.resolve("bin")
 
-    listOf(buildDir, generatedBuildDir, installDir, libDir).forEach(File::deleteRecursively)
-    listOf(buildDir, generatedBuildDir).forEach(File::mkdirs)
+    listOf(buildDir, generatedBuildDir, installDir, libDir, crossCompileDir).forEach(File::deleteRecursively)
+    listOf(buildDir, generatedBuildDir, crossCompileDir).forEach(File::mkdirs)
 
     println("Build dir:           ${buildDir.absolutePath}")
+    println("Cross compile dir:   ${libDir.absolutePath}")
     println("Generated dir:       ${generatedDir.absolutePath}")
     println("Generated build dir: ${generatedBuildDir.absolutePath}")
     println("Install dir:         ${installDir.absolutePath}")
     println("Lib dir:             ${libDir.absolutePath}")
 
     val jniExecution = execution + CmakeExecution(
+        crossCompile = null,
         build = CmakeConfig(
             configureParams = listOf(
                 "-DTD_ENABLE_JNI=ON",
@@ -44,21 +49,30 @@ suspend fun JniConfig.buildJni(execution: CmakeExecution): CmakeExecutionResult 
     jniExecution.before()
 
     val cmake = Cmake(cmakePath)
-    val (buildConfiguration, buildInstallation) = cmake.run(buildDir, jniExecution.build)
-    val (libConfiguration, libInstallation) = cmake.run(generatedBuildDir, jniExecution.lib)
+    val (crossCompileConfiguration, crossCompileInstallation) =
+        jniExecution.crossCompile?.let { cmake.run(crossCompileDir, it, "prepare_cross_compiling") } ?: null to null
+    val (buildConfiguration, buildInstallation) = cmake.run(buildDir, jniExecution.build, "install")
+    val (libConfiguration, libInstallation) = cmake.run(generatedBuildDir, jniExecution.lib, "install")
 
     val lib = libDir.listFiles { _, name -> "tdjni" in name }!!.first()
 
-    val result = CmakeExecutionResult(buildConfiguration, buildInstallation, libConfiguration, libInstallation, lib)
+    val result = CmakeExecutionResult(
+        crossCompileConfiguration,
+        crossCompileInstallation,
+        buildConfiguration,
+        buildInstallation,
+        libConfiguration,
+        libInstallation,
+        lib
+    )
 
     jniExecution.after(result)
 
-    println("Generated tdlib size: ${lib.mbSize()} mb")
     return result
 }
 
-fun LinuxJniConfig.execution(buildType: TdBuildType): CmakeExecution = CmakeExecution(
-    CmakeConfig(
+fun LinuxJniConfig.execution(buildType: TdBuildType): CmakeExecution {
+    val config = CmakeConfig(
         env = mapOf(
             "CC" to clangPath.absolutePath,
             "CXX" to clangPlusPlusPath.absolutePath
@@ -71,15 +85,22 @@ fun LinuxJniConfig.execution(buildType: TdBuildType): CmakeExecution = CmakeExec
             prop("-DCMAKE_RANLIB", llvmPath.resolve("llvm-ranlib-6.0"))
         )
     )
-)
+    return CmakeExecution(null, config, config)
+}
 
 fun MacosJniConfig.execution(buildType: TdBuildType): CmakeExecution = CmakeExecution(
-    build = CmakeConfig(configureParams = ninjaConfig + listOf(buildType.dCmake(), prop("-DOPENSSL_ROOT_DIR", opensslPath))),
+    crossCompile = null,
+    build = CmakeConfig(
+        configureParams = ninjaConfig + listOf(
+            buildType.dCmake(),
+            prop("-DOPENSSL_ROOT_DIR", opensslPath)
+        )
+    ),
     lib = CmakeConfig(configureParams = ninjaConfig + listOf(buildType.dCmake()))
 )
 
-fun WindowsJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Windows): CmakeExecution = CmakeExecution(
-    CmakeConfig(
+fun WindowsJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Windows): CmakeExecution {
+    val config = CmakeConfig(
         configureParams = listOf(
             prop("-DCMAKE_TOOLCHAIN_FILE:FILEPATH", vcpkgPath.resolve("scripts/buildsystems/vcpkg.cmake")),
             prop("-DGPERF_EXECUTABLE", gperfPath.resolve("gperf.exe")),
@@ -87,38 +108,41 @@ fun WindowsJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Windo
         ),
         installParams = listOf(buildType.windowsCmake())
     )
-)
+    return CmakeExecution(null, config, config)
+}
 
-fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Android): CmakeExecution {
-    val ndkPath = if (ndkVersion != null) androidSdkPath.resolve("../ndk/$ndkVersion") else androidSdkPath.resolve("ndk-bundle")
-    val ndkLibsPath = ndkPath.resolve("platforms/android-$apiLevel/arch-${target.ndkName}/usr/lib")
+fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Android, linuxConfig: LinuxJniConfig?): CmakeExecution {
+    val commonConfig = CmakeConfig(
+        configureParams = ninjaConfig + listOf(
+            buildType.dCmake(),
+            prop("-DANDROID_NDK", ndkPath),
+            prop("-DCMAKE_TOOLCHAIN_FILE", ndkPath.resolve("build/cmake/android.toolchain.cmake")),
+            "-DANDROID_ABI=${target.archName}",
+            "-DANDROID_NATIVE_API_LEVEL=$apiLevel",
+            "-DANDROID_TOOLCHAIN=clang",
+            "-DANDROID_STL=c++_static"
+        )
+    )
     val opensslTargetPath = opensslPath.resolve(target.archName)
-    val commonExecution = CmakeExecution(
-        config = CmakeConfig(
-            configureParams = ninjaConfig + listOf(
-                buildType.dCmake(),
-                prop("-DANDROID_NDK", ndkPath),
-                prop("-DCMAKE_TOOLCHAIN_FILE", ndkPath.resolve("build/cmake/android.toolchain.cmake")),
-                "-DANDROID_ABI=${target.archName}",
-                "-DANDROID_NATIVE_API_LEVEL=$apiLevel",
-                "-DANDROID_TOOLCHAIN=clang",
-                "-DANDROID_STL=c++_static"
+
+    return CmakeExecution(
+        crossCompile = linuxConfig?.execution(buildType)?.build ?: CmakeConfig(),
+        build = commonConfig + CmakeConfig(
+            configureParams = listOf(
+                prop("-DOPENSSL_ROOT_DIR", opensslTargetPath),
+                prop("-DOPENSSL_INCLUDE_DIR", opensslTargetPath),
+                prop("-DOPENSSL_CRYPTO_LIBRARY", opensslTargetPath.resolve("libcrypto.a")),
+                prop("-DOPENSSL_SSL_LIBRARY", opensslTargetPath.resolve("libssl.a"))
             )
         ),
-        before = {
-            //            runCatching {
-//            ndkLibsPath.resolve("openssl").deleteRecursively()
-//            opensslTargetPath.copyRecursively(ndkLibsPath, overwrite = true)
-//            }.also(::println)
-//            ndkLibsPath.copyRecursively(opensslTargetPath, overwrite = true)
-
-//            opensslTargetPath.listFiles()?.forEach {
-//                println("FOLDER!!!${it.absolutePath}")
-//                it.listFiles()?.forEach {
-//                    println("SUBFOLDER!!!${it.absolutePath}")
-//                }
-//            }
-        },
+        lib = commonConfig + CmakeConfig(
+            configureParams = listOf(
+                prop("-DJAVA_AWT_LIBRARY", jdkPath.resolve("jre/lib/amd64")),
+                prop("-DJAVA_JVM_LIBRARY", jdkPath.resolve("jre/lib/amd64")),
+                prop("-DJAVA_INCLUDE_PATH2", jdkPath.resolve("include/linux")),
+                prop("-DJAVA_AWT_INCLUDE_PATH", jdkPath.resolve("include"))
+            )
+        ),
         after = {
             val strip =
                 ndkPath
@@ -129,32 +153,4 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
             }
         }
     )
-    //OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
-    //OPENSSL_SSL_LIBRARY=$OPENSSL_ROOT/lib/libssl.a
-    //
-    //OPENSSL_OPTIONS="-DOPENSSL_FOUND=1 \
-    //  -DOPENSSL_ROOT_DIR=\"$OPENSSL_ROOT\" \
-    //  -DOPENSSL_INCLUDE_DIR=\"$OPENSSL_ROOT/include\" \
-    //  -DOPENSSL_CRYPTO_LIBRARY=\"$OPENSSL_CRYPTO_LIBRARY\" \
-    //  -DOPENSSL_SSL_LIBRARY=\"$OPENSSL_SSL_LIBRARY\" \
-    val customExecution = CmakeExecution(
-        build = CmakeConfig(
-            configureParams = listOf(
-                prop("-DOPENSSL_ROOT_DIR", opensslTargetPath),
-                prop("-DOPENSSL_INCLUDE_DIR", opensslTargetPath),
-                prop("-DOPENSSL_CRYPTO_LIBRARY", opensslTargetPath.resolve("libcrypto.a")),
-                prop("-DOPENSSL_SSL_LIBRARY", opensslTargetPath.resolve("libssl.a"))
-            )
-        ),
-        lib = CmakeConfig(
-            configureParams = listOf(
-                prop("-DJAVA_AWT_LIBRARY", jdkPath.resolve("jre/lib/amd64")),
-                prop("-DJAVA_JVM_LIBRARY", jdkPath.resolve("jre/lib/amd64")),
-                prop("-DJAVA_INCLUDE_PATH2", jdkPath.resolve("include/linux")),
-                prop("-DJAVA_AWT_INCLUDE_PATH", jdkPath.resolve("include"))
-            )
-        )
-    )
-
-    return commonExecution + customExecution
 }

@@ -10,7 +10,7 @@ import java.io.*
 @Serializable
 data class TdConfig(
     val buildType: TdBuildType,
-    val buildPath: File,
+    val tdPath: File,
     val jniPath: File
 )
 
@@ -53,11 +53,10 @@ data class WindowsJniConfig(
 
 @Serializable
 data class AndroidJniConfig(
-    val androidSdkPath: File,
+    val ndkPath: File,
     val opensslPath: File,
     val apiLevel: Int,
-    val jdkPath: File,
-    val ndkVersion: String? = null
+    val jdkPath: File
 )
 
 @Serializer(File::class)

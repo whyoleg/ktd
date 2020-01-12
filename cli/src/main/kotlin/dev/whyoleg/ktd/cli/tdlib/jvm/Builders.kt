@@ -100,11 +100,20 @@ fun MacosJniConfig.execution(buildType: TdBuildType): CmakeExecution = CmakeExec
 )
 
 fun WindowsJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Windows): CmakeExecution {
+    val opensslTargetPath = File("../windeps/windows")
     val config = CmakeConfig(
-        configureParams = listOf(
-            prop("-DCMAKE_TOOLCHAIN_FILE:FILEPATH", vcpkgPath.resolve("scripts/buildsystems/vcpkg.cmake")),
-            prop("-DGPERF_EXECUTABLE", gperfPath.resolve("gperf.exe")),
-            "-A ${target.arch}"
+        env = mapOf(
+            "CC" to "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\Llvm\\bin\\clang",
+            "CXX" to "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\Llvm\\bin\\clang++"
+        ),
+        configureParams = ninjaConfig + listOf(
+//            prop("-DCMAKE_TOOLCHAIN_FILE:FILEPATH", vcpkgPath.resolve("scripts/buildsystems/vcpkg.cmake")),
+//            "-A ${target.arch}",
+            prop("-DGPERF_EXECUTABLE", gperfPath),
+            prop("-DOPENSSL_ROOT_DIR", opensslTargetPath.resolve("lib")),
+            prop("-DOPENSSL_INCLUDE_DIR", opensslTargetPath.resolve("include")),
+            prop("-DZLIB_LIBRARY", opensslTargetPath.resolve("lib")),
+            prop("-DZLIB_INCLUDE_DIR", opensslTargetPath.resolve("include"))
         ),
         installParams = listOf(buildType.windowsCmake())
     )

@@ -8,12 +8,12 @@ import java.io.*
 object ApiCommand : ConfigCommand("api") {
     private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
 
-    private val androidManifest = """
+    private fun getAndroidManifest(type: String) = """
         <?xml version="1.0" encoding="utf-8"?>
-        <manifest package="dev.whyoleg.ktd"/>
+        <manifest package="dev.whyoleg.ktd.api.$type"/>
     """.trimIndent()
 
-    private val dirs = listOf("coroutines", "lib", "raw")
+    private val types = listOf("coroutines", "lib", "raw")
 
     override fun execute() {
         println("Generate api for tdlib $version")
@@ -21,8 +21,8 @@ object ApiCommand : ConfigCommand("api") {
         println("Scheme downloaded")
         val apiEntities = generateApi(scheme, version).toList()
 
-        val buildEntities = dirs.map(this::buildEntity)
-        val androidEntities = dirs.map(this::androidEntity)
+        val buildEntities = types.map(this::buildEntity)
+        val androidEntities = types.map(this::androidEntity)
 
         val entities = apiEntities + buildEntities + androidEntities
         println("Entities generated")
@@ -30,14 +30,14 @@ object ApiCommand : ConfigCommand("api") {
         println("New api saved")
     }
 
-    private fun buildEntity(dir: String) =
-        apiPath(dir, version, "build.gradle.kts") to "configure${dir.capitalize()}Api()\n"
+    private fun buildEntity(type: String) =
+        apiPath(type, version, "build.gradle.kts") to "configure${type.capitalize()}Api()\n"
 
-    private fun androidEntity(dir: String) =
-        apiPath(dir, version, "src/androidMain/AndroidManifest.xml") to androidManifest
+    private fun androidEntity(type: String) =
+        apiPath(type, version, "src/androidMain/AndroidManifest.xml") to getAndroidManifest(type)
 
     private fun cleanupFiles() {
-        dirs.forEach {
+        types.forEach {
             File(apiPath(it, version, "src")).also { println(it.absolutePath) }.deleteRecursively()
         }
     }

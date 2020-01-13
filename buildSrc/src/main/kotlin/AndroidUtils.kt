@@ -1,6 +1,7 @@
 import com.android.build.gradle.*
 
 fun LibraryExtension.default() {
+    defaultPublishConfig = "debug"
     compileSdkVersion(29)
     defaultConfig {
         minSdkVersion(21)

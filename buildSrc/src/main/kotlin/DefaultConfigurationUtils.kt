@@ -13,8 +13,8 @@ fun KotlinJvmProjectExtension.default() {
     target {
         commonOptions(KotlinCommonOptions::default)
         options { default() }
-        project.configurePublishing()
-        project.jvmPublication(publication, cliPublisher.provider()) { artifactId = "cli" }
+        //        project.configurePublishing()
+        //        project.jvmPublication(publication, cliPublisher.provider()) { artifactId = "cli" }
     }
     sourceSets.all {
         languageSettings.apply(LanguageSettingsBuilder::default)
@@ -26,7 +26,10 @@ fun KotlinMultiplatformExtension.default() {
         options { default() }
     }
     android {
-        publishLibraryVariants("release")
+        publishLibraryVariants("debug")
+        mavenPublication {
+            artifactId = artifactId.substringBeforeLast("-debug")
+        }
     }
 
     sourceSets {

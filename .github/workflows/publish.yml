@@ -22,11 +22,15 @@ jobs:
         with:
           java-version: 11
 
-      - name: Build and upload to bintray
-        uses: eskatos/gradle-command-action@v1
+      - uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: publishBintrayRelease --info
+          arguments: publishLibOnBintray --info
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          arguments: publishKtdOnBintray --info
 
       #TODO add cli.jar to release page
       - name: Build cli

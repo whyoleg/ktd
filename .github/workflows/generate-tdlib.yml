@@ -2,7 +2,8 @@ name: Build tdlib
 on:
   push:
     branches:
-      - tdlib/[0-9]+.[0-9]+.[0-9]+
+#      - tdlib/[0-9]+.[0-9]+.[0-9]+
+      - tdlib-build
 
 env:
   BUCKET: ${{ secrets.scaleway_bucket }}
@@ -14,7 +15,21 @@ env:
   JAVA_VERSION: 11.0.5
 
 jobs:
+
+  extract-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            console.log(process.env);
+            const fs = require('fs');
+            const versions = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+            const versions = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+
   download-android-openssl:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -24,6 +39,7 @@ jobs:
           path: openssl.7z
 
   download-windows-dependencies:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/dependencies.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -33,6 +49,7 @@ jobs:
           path: dependencies.7z
 
   download-cli:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}

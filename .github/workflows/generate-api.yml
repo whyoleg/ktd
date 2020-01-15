@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set TD_API_VERSION env
-        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:17})
+        run: echo ::set-env name=TD_API_VERSION::$(echo ${GITHUB_REF:21})
 
       - name: Generate api ${{ env.TD_API_VERSION }}
         run: java -jar cli.jar api -v ${{ env.TD_API_VERSION }} -e config/api

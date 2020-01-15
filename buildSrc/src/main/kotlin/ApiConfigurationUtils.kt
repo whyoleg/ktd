@@ -6,8 +6,8 @@ import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
 fun Project.configureRawApi() {
-    Plugins.mppModule.forEach { (name) -> plugins.apply(name) }
-    configureMultiplatform()
+    Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
+    configureMultiplatform(true)
     extensions.configure<KotlinMultiplatformExtension> {
         dependenciesMain {
             api(Dependencies.kotlin.stdlib)
@@ -21,8 +21,8 @@ fun Project.configureRawApi() {
 }
 
 fun Project.configureCoroutinesApi() {
-    Plugins.mppModule.forEach { (name) -> plugins.apply(name) }
-    configureMultiplatform()
+    Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
+    configureMultiplatform(true)
     extensions.configure<KotlinMultiplatformExtension> {
         dependenciesMain {
             api(Dependencies.kotlin.stdlib)
@@ -38,8 +38,8 @@ fun Project.configureCoroutinesApi() {
 }
 
 fun Project.configureLibApi() {
-    Plugins.mppModule.forEach { (name) -> plugins.apply(name) }
-    configureMultiplatform()
+    Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
+    configureMultiplatform(true)
 
     extensions.configure<LibraryExtension> {
         sourceSets["main"].jniLibs.srcDir("src/androidMain/jniLibs")

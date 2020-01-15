@@ -100,25 +100,22 @@ dependencies {
 - Available artifacts:
   - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings
   - API: `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[version]-[tdlib-version]` - generated API accessors
-  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - [will be replaced or removed] use it with client as `compileOnly`
-  to create new abstraction independent to API
 - Supported configurations:
     - `version` - ktd version, f.e. 0.5.0
     - `type` - level of abstraction
       - `raw` - simple client with low-level bindings
       - `corotutines` - standard client with `suspend` functions for execution and `updates` Flow for consuming updates
-      - `flow` - [will be available later]
     - `platform`
       - jvm
-      - android 
+      - android (only for api, for client `jvm` can be used instead)
       - metadata (common)
       - omit `platfrom` to use GRADLE_METADATA dependency
     - `tdlib-version`
-      - v1.5.4
-      - v1.5.3
-      - v1.5.2
-      - v1.5.1
-      - v1.5.0
+      - 1.5.4
+      - 1.5.3
+      - 1.5.2
+      - 1.5.1
+      - 1.5.0
 
 Now library published only to bintray, it will change in future.
 

@@ -1,11 +1,3 @@
-//import dev.whyoleg.kamp.*
-//
-//kampRoot {
-//    plugins(Plugins.updates)
-//}
-//
-//registerTasks()
-
 allprojects {
     repositories {
         google()
@@ -15,5 +7,4 @@ allprojects {
 }
 
 createBintrayPublishTask(ktdPublisher)
-createBintrayPublishTask(cliPublisher)
 createBintrayPublishTask(libPublisher)

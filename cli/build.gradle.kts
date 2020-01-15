@@ -2,6 +2,8 @@ plugins {
     use(Plugins.cliModule)
 }
 
+version = properties["cliVersion"]!!
+
 kotlin {
     default()
     target {

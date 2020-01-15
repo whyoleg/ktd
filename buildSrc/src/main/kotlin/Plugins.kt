@@ -1,7 +1,8 @@
 import dev.whyoleg.kamp.modules.*
 
 object Plugins {
-    val mppModule = listOf(BuiltInPlugins.Stable.androidLib, KotlinPlugins.Stable.kotlinMpp, GradleBuiltInPlugins.mavenPublish)
+    val mppModule = listOf(KotlinPlugins.Stable.kotlinMpp, GradleBuiltInPlugins.mavenPublish)
+    val mppAndroidModule = mppModule + BuiltInPlugins.Stable.androidLib
     val exampleModule = listOf(KotlinPlugins.Stable.kotlinMpp)
     val atomicfuModule = listOf(KotlinxPlugins.Stable.atomicfu)
     val cliModule = listOf(

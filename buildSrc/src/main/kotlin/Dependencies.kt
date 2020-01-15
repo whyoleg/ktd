@@ -12,7 +12,4 @@ object Dependencies {
     val kotlinShell =
         group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
             .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
-    val dotenv =
-        group("io.github.cdimascio", RepositoryProviders.mavenCentral)
-            .artifact("java-dotenv").version(Versions.dotenv).jvm
 }

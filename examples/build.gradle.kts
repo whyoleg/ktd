@@ -7,7 +7,7 @@ kotlin {
         dependenciesMain {
             implementation(Dependencies.kotlin.stdlib)
             implementation(Dependencies.kotlinx.coroutines.core)
-            implementation(ProjectModules.Api.Coroutines.v1_5_0)
+            implementation(ProjectModules.Api.Coroutines.v1_5_4)
         }
     }
 }

@@ -16,31 +16,18 @@ val publication = Publication(
 )
 
 val ktdPublisher = BintrayPublisher("whyoleg", "ktd", "ktd")
-val cliPublisher = ktdPublisher.copy(name = "cli")
 val libPublisher = ktdPublisher.copy(name = "lib")
 
 fun Project.configurePublishing() = afterEvaluate {
     val publisher = when {
-        name.startsWith("api-lib-") -> {
-            version = ProjectVersions.lib
-            libPublisher
-        }
-        name == "cli"               -> {
-            version = ProjectVersions.cli
-            cliPublisher
-        }
-        else                        -> {
-            version = ProjectVersions.ktd
-            ktdPublisher
-        }
+        name.startsWith("api-lib-") -> libPublisher
+        else                        -> ktdPublisher
     }
-
-    val props = (properties["publishOnly"] as String?)?.split(",")
+    val publishOnly = (properties["publishOnly"] as String?)?.split(",")
     val needToPublish = when {
-        props == null                       -> true
-        project.name.startsWith("api-lib-") -> "lib" in props
-        project.name == "cli"               -> "cli" in props
-        else                                -> "ktd" in props
+        publishOnly == null                 -> true
+        project.name.startsWith("api-lib-") -> "lib" in publishOnly
+        else                                -> "ktd" in publishOnly
     }
 
     extensions.configure<PublishingExtension> {

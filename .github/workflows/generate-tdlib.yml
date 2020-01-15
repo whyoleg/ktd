@@ -10,153 +10,239 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
+  JAVA_VERSION: 11.0.5
 
 jobs:
-  download-openssl:
+
+  extract-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Download android openssl
-        run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl . --endpoint-url ${{ env.ENDPOINT }}
-      - run: ls
-
-      - name: Save openssl
-        uses: actions/upload-artifact@v1
+      - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
         with:
-          name: openssl
-          path: openssl
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;
+
+  download-android-openssl:
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: android-openssl
+          path: openssl.7z
+
+  download-windows-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/dependencies.7z . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: windows-dependencies
+          path: dependencies.7z
 
   download-cli:
     runs-on: ubuntu-latest
     steps:
-      - name: Download cli
-        run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
-      - name: Save cli
-        uses: actions/upload-artifact@v1
+      - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
         with:
           name: cli
           path: cli.jar
 
-  download-gperf:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download gperf
-        run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/gperf/gperf.exe . --endpoint-url ${{ env.ENDPOINT }}
-      - name: Save gperf
-        uses: actions/upload-artifact@v1
-        with:
-          name: gperf
-          path: gperf.exe
-
-  generate-macos:
+  generate-mac:
     needs: [download-cli]
     runs-on: macos-latest
     steps:
-      #TODO checkout tdlib/td
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
         with:
-          submodules: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Install MacOS dependencies
-        run: |
-          /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-          brew install gperf coreutils
+      - run: brew install gperf coreutils ninja
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
 
       - name: Generate tdlib
-          run: java -jar cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t mac -e config/tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t mac -c cli/config/tdlib.default.conf
 
-      - name: Save tdlib
-        uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v1
         with:
           name: mac
-          path: libs
+          path: tdlib/jni/bin
 
   generate-win:
-    needs: [download-gperf, download-cli]
+    needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
       matrix:
         arch: [x86, x64]
     steps:
-      #TODO checkout tdlib/td
-      #TODO checkout vcpkg
-      - uses: actions/checkout@v1
-          with:
-            submodules: true
+      - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;      
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
+      - uses: actions/checkout@v2
+        with:
+          repository: Microsoft/vcpkg
+          path: vcpkg
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
-      - name: Download gperf
-        uses: actions/download-artifact@v1
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/download-artifact@v1
         with:
-          name: gperf
-
-      - name: Install Windows dependencies
-        run: |
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          ./bootstrap-vcpkg.bat
-          ./vcpkg.exe install openssl:${{ matrix.arch }}-windows zlib:${{ matrix.arch }}-windows
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows-dependencies
+      - run: |
+          cd windows-dependencies
+          7z x dependencies.7z -y
+          xcopy /S dependencies ..\
 
       - name: Generate tdlib
-          run: java -jar cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t win-${{ matrix.arch }} -e config/tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t win-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
-          name: win-${{ matrix-arch }}
-          path: libs
+          name: win-${{ matrix.arch }}
+          path: tdlib/jni/bin
 
   generate-linux:
     needs: [download-cli]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
         with:
-          submodules: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Install Linux dependencies
-        run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
 
       - name: Generate tdlib
-        run: java -jar cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t linux -e config/tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t linux -c cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
           name: linux
-          path: libs
+          path: tdlib/jni/bin
 
   generate-android:
-    needs: [download-cli, download-openssl]
+    needs: [download-cli, download-android-openssl]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         arch: [armv7, armv8, x86, x64]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
         with:
-          submodules: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;      
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          java-package: jre
 
-      - name: Install Linux dependencies
-        run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - uses: actions/download-artifact@v1
+        with:
+          name: android-openssl
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - run: |
+          cd android-openssl
+          7z x openssl.7z -y
+          cp -r openssl ..
 
       - name: Generate tdlib
-        run: java -jar cli.jar tdlib  -v ${{ env.TD_API_VERSION }} -p jvm -t android-${{ matrix.arch }} -e config/tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
           name: android-${{ matrix.arch }}
-          path: libs
+          path: tdlib/jni/bin
 
   #TODO create action to iterate over platforms/targets
   upload-tdlib:
@@ -166,42 +252,44 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: linux
-          path: libs
+          path: tdlib/linux
 
       - uses: actions/download-artifact@v1
         with:
           name: mac
-          path: libs
+          path: tdlib/mac
 
       - uses: actions/download-artifact@v1
         with:
           name: win-x64
-          path: libs
+          path: tdlib/win-x64
 
       - uses: actions/download-artifact@v1
         with:
           name: win-x86
-          path: libs
+          path: tdlib/win-x86
 
       - uses: actions/download-artifact@v1
         with:
           name: android-armv7
-          path: libs
+          path: tdlib/android-armv7
 
       - uses: actions/download-artifact@v1
         with:
           name: android-armv8
-          path: libs
+          path: tdlib/android-armv8
 
       - uses: actions/download-artifact@v1
         with:
           name: android-x86
-          path: libs
+          path: tdlib/android-x86
 
       - uses: actions/download-artifact@v1
         with:
           name: android-x64
-          path: libs
+          path: tdlib/android-x64
 
-      - name: Upload libs
-        run: aws cp libs s3://${{ env.BUCKET }}/libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+      - run: ls -lahR
+      - run: ls tdlib -lahR
+#      - name: Upload libs
+#        run: aws s3 cp libs s3://${{ env.BUCKET }}/tdlib/${{ env.TD_API_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}

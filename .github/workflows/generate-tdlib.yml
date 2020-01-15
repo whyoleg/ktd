@@ -32,7 +32,7 @@ jobs:
             return tdRef;
 
   download-android-openssl:
-    #    if: false
+#    if: false
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -62,15 +62,27 @@ jobs:
           path: cli.jar
 
   generate-mac:
-    needs: [download-cli, extract-version]
+    needs: [download-cli]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
           path: td
-          ref: ${{ jobs.extract-version.steps.version.outputs.result }}
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}
@@ -89,18 +101,30 @@ jobs:
           path: tdlib/jni/bin
 
   generate-win:
-    needs: [download-cli, extract-version, download-windows-dependencies]
+    needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
       matrix:
         arch: [x86, x64]
     steps:
       - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;      
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
           path: td
-          ref: ${{ jobs.extract-version.steps.version.outputs.result }}
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/checkout@v2
         with:
           repository: Microsoft/vcpkg
@@ -129,15 +153,27 @@ jobs:
           path: tdlib/jni/bin
 
   generate-linux:
-    needs: [download-cli, extract-version]
+    needs: [download-cli]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
           path: td
-          ref: ${{ jobs.extract-version.steps.version.outputs.result }}
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}
@@ -157,7 +193,7 @@ jobs:
           path: tdlib/jni/bin
 
   generate-android:
-    needs: [download-cli, extract-version, download-android-openssl]
+    needs: [download-cli, download-android-openssl]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -165,11 +201,23 @@ jobs:
         arch: [armv7, armv8, x86, x64]
     steps:
       - uses: actions/checkout@v2
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const version = context.ref.slice(17);
+            const tdRef = versions[version];
+            return tdRef;      
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
           path: td
-          ref: ${{ jobs.extract-version.steps.version.outputs.result }}
+          ref: ${{ steps.version.outputs.result }}
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}

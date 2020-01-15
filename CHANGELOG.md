@@ -4,16 +4,15 @@
 > Unreleased
 - Support Android: armeabi-v7a, arm64-v8a, x86, x86_64
 - Support of tdlib `v1.5.2` - `v1.5.4`
-- Remove dependencies with latest postfix
+- Remove dependencies with latest suffix
 - Rename `TdClient` to `TelegramRawClient`
-- [TODO] Rename `TelegramClient` to `TelegramCoroutinesClient` 
 - Introduce `cli`
   - Build `tdlib` for supported platform/target
   - Generate kotlin api
   - Generate api changelog
-  - [TODO] Configured paths for dependencies and files thorough .env
+  - Configured paths for dependencies and files through HOCON configuration
 - Generate changelog for `v1.5.1` - `v.1.5.4` 
-- Changed dependencies structure
+- Changed dependencies structure to make it easy to use and support multiplatform
 
 
 ## 0.4.1

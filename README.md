@@ -81,14 +81,18 @@ repositories {
 dependencies {
     //just client independent on td api version
     implementation "dev.whyoleg.ktd:ktd-client-coroutines-jvm:0.5.0"
+    //or for android
+    implementation "dev.whyoleg.ktd:ktd-client-coroutines-android:0.5.0"
     //or for mpp common sourcSet
     implementation "dev.whyoleg.ktd:ktd-client-coroutines:0.5.0"
     
     //td api by version
     implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.4"
+    //or for android
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines-android:0.5.0-1.5.4"
     //or for another td api version
     implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.0"
-    //or for mpp common sourcSet
+    //or for mpp common sourceSet
     implementation "dev.whyoleg.ktd:ktd-api-coroutines:0.5.0-1.5.4"
 }
 ```
@@ -96,19 +100,19 @@ dependencies {
 - Available artifacts:
   - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings
   - API: `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[version]-[tdlib-version]` - generated API accessors
-  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - [TODO check it] use it with client as `compileOnly`
+  - API stub: `dev.whyoleg.ktd:ktd-api-stub-[platform]:[version]` - [will be replaced or removed] use it with client as `compileOnly`
   to create new abstraction independent to API
-- [TODO] Supported configurations:
+- Supported configurations:
     - `version` - ktd version, f.e. 0.5.0
     - `type` - level of abstraction
       - `raw` - simple client with low-level bindings
       - `corotutines` - standard client with `suspend` functions for execution and `updates` Flow for consuming updates
-      - `flow` - [TODO] will be available later
+      - `flow` - [will be available later]
     - `platform`
       - jvm
       - android 
       - metadata (common)
-      - omit `platfrom` to use GRADLE_METADATA
+      - omit `platfrom` to use GRADLE_METADATA dependency
     - `tdlib-version`
       - v1.5.4
       - v1.5.3
@@ -117,7 +121,6 @@ dependencies {
       - v1.5.0
 
 Now library published only to bintray, it will change in future.
-
 
 ## Status
 

@@ -5,6 +5,11 @@ import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 
 fun Project.configureMultiplatform() {
+    version = properties[when {
+        name.startsWith("api-lib-") -> "libVersion"
+        name == "cli"               -> "cliVersion"
+        else                        -> "version"
+    }]!!
     extensions.configure(LibraryExtension::default)
     extensions.configure(KotlinMultiplatformExtension::default)
 }
@@ -13,8 +18,6 @@ fun KotlinJvmProjectExtension.default() {
     target {
         commonOptions(KotlinCommonOptions::default)
         options { default() }
-        //        project.configurePublishing()
-        //        project.jvmPublication(publication, cliPublisher.provider()) { artifactId = "cli" }
     }
     sourceSets.all {
         languageSettings.apply(LanguageSettingsBuilder::default)

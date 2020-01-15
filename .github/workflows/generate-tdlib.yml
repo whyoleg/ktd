@@ -23,13 +23,12 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const log = require('loglevel')
-            log.info(process.env);
+            console.log(process.env);
             const fs = require('fs');
             const versions = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
             const versions2 = JSON.parse(fs.readFileSync('tdVersions.json', 'utf8'));
-            log.info(versions);
-            log.info(versions2);
+            console.log(versions);
+            console.log(versions2);
 
   download-android-openssl:
     if: false

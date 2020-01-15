@@ -24,8 +24,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             console.log(process.env);
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            console.log(path);
             const fs = require('fs');
-            const versions = JSON.parse(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/tdVersions.json', 'utf8'));
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
             console.log(versions);
 
   download-android-openssl:

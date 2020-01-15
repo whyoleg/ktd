@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
 
 fun main2() {
     //example commands
-    val api = arrayOf("api", "-v", "1.5.4", "-e", "config/api")
+    val api = arrayOf("api", "-v", "1.5.4", "-c", "config/api")
     val tdlibAndroid = arrayOf("tdlib", "-v", "1.5.1", "-p", "jvm", "-t", "android-armv7", "-c", "config/tdlib")
     val tdlibLinux = arrayOf("tdlib", "-v", "1.5.1", "-p", "jvm", "-t", "linux", "-c", "config/tdlib")
     val diff154 = arrayOf("diff", "-pv", "1.5.3", "-nv", "1.5.4", "-c", "config/tdlib")

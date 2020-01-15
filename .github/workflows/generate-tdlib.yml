@@ -23,6 +23,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const log = require('loglevel')
             log.info(process.env);
             const fs = require('fs');
             const versions = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));

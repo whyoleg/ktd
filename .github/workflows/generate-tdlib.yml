@@ -2,8 +2,7 @@ name: Build tdlib
 on:
   push:
     branches:
-#      - tdlib/[0-9]+.[0-9]+.[0-9]+
-      - tdlib-build
+      - tdlib/[0-9]+.[0-9]+.[0-9]+
 
 env:
   BUCKET: ${{ secrets.scaleway_bucket }}
@@ -19,6 +18,7 @@ jobs:
   extract-version:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/github-script@0.4.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -29,6 +29,11 @@ jobs:
             const fs = require('fs');
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
             console.log(versions);
+            const version = context.ref.slice(17);
+            console.log(version);
+            const tdRef = versions[version];
+            console.log(tdRef);
+            return tdRef;
 
   download-android-openssl:
     if: false

@@ -24,11 +24,11 @@ object BuildTargetArgType : ArgType<BuildTarget>(true) {
 object TdlibCommand : ConfigCommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
-    private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
+    private val version by option(ArgType.String, "version", "v", "Version of tdlib")
 
     override fun execute(): Unit = runBlocking {
         println("Start build tdlib $version for $platform/$target ")
-        checkoutVersion(version)
+        version?.let { checkoutVersion(it) }
         if (target !in platform.targets) error("Can't build tdlib for $platform/$target")
         when (platform) {
             BuildPlatform.Jvm    -> {

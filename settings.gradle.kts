@@ -1,4 +1,6 @@
-val tdVersions = listOf(
+val tdOnlyVersion = startParameter.projectProperties["tdOnlyVersion"]
+
+val tdVersions = tdOnlyVersion?.let(::listOf) ?: listOf(
     "1.5.0",
     "1.5.1",
     "1.5.2",
@@ -19,6 +21,7 @@ modules {
     }
     "api" {
         "stub"("api/stub")
+        "integration"()
         (types + "lib").forEach { type ->
             type("api/$type") {
                 tdVersions.forEach {
@@ -28,7 +31,7 @@ modules {
         }
     }
     "cli"()
-    "examples"()
+    if (tdOnlyVersion == null) "examples"()
 }
 
 enableFeaturePreview("GRADLE_METADATA")

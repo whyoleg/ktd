@@ -6,7 +6,7 @@ import kotlin.test.*
 internal class NativeTargetTest {
     @Test
     fun `win32`() {
-        assertEquals(NativeTarget.Win32, NativeTarget.target("windows server 2018", "x86"))
+        assertEquals(NativeTarget.Win86, NativeTarget.target("windows server 2018", "x86"))
     }
 
     @Test

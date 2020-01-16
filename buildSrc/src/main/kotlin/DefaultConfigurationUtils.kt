@@ -4,14 +4,14 @@ import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.*
 
-fun Project.configureMultiplatform(useAndroidLibrary: Boolean = false) {
+fun Project.configureMultiplatform(useAndroidLibrary: Boolean = false, publishable: Boolean = true) {
     version = properties[when {
         name.startsWith("api-lib-") -> "libVersion"
         else                        -> "version"
     }]!!
 
     extensions.configure<KotlinMultiplatformExtension> {
-        default(useAndroidLibrary)
+        default(useAndroidLibrary, publishable)
     }
     if (useAndroidLibrary) {
         extensions.configure(LibraryExtension::default)
@@ -41,14 +41,12 @@ fun KotlinMultiplatformExtension.defaultTargets(useAndroidLibrary: Boolean) {
             }
         }
         sourceSets {
-            val androidMain by getting
-            val jvmMain by getting
-            androidMain.dependsOn(jvmMain)
+            getByName("androidMain").dependsOn(getByName("jvmMain"))
         }
     }
 }
 
-fun KotlinMultiplatformExtension.default(useAndroidLibrary: Boolean = false) {
+fun KotlinMultiplatformExtension.default(useAndroidLibrary: Boolean = false, publishable: Boolean = true) {
     defaultTargets(useAndroidLibrary)
 
     targets.first().project.run(Project::configurePublishing)

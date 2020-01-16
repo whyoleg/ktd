@@ -29,24 +29,24 @@ fun Project.configurePublishing() = afterEvaluate {
         project.name.startsWith("api-lib-") -> "lib" in publishOnly
         else                                -> "ktd" in publishOnly
     }
-
-    extensions.configure<PublishingExtension> {
-        val apiVersion = project.apiVersion
-        if (needToPublish) {
+    if (needToPublish) {
+        extensions.configure<PublishingExtension> {
             repositories {
                 publisher.provider()(this)
             }
-        }
-        publications.all {
-            this as MavenPublication
-            pom(publication)
+            val apiVersion = project.apiVersion
+            publications.all {
+                this as MavenPublication
+                pom(publication)
 
-            artifactId = "ktd-$artifactId"
+                artifactId = "ktd-$artifactId"
 
-            if (apiVersion != null) {
-                artifactId = artifactId.replace("-v$apiVersion", "")
-                version = "$version-$apiVersion"
+                if (apiVersion != null) {
+                    artifactId = artifactId.replace("-v$apiVersion", "")
+                    version = "$version-$apiVersion"
+                }
             }
         }
+
     }
 }

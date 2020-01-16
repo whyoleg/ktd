@@ -12,4 +12,9 @@ object Dependencies {
     val kotlinShell =
         group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
             .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
+
+
+    fun ktdApiCoroutines(tdVersion: String) =
+        group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
+            .artifact("ktd-api-coroutines").version("${Versions.ktdVersion}-$tdVersion").common
 }

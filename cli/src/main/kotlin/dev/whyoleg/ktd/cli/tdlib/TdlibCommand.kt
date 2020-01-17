@@ -5,21 +5,6 @@ import dev.whyoleg.ktd.cli.tdlib.jvm.*
 import kotlinx.cli.*
 import kotlinx.coroutines.*
 
-object BuildPlatformArgType : ArgType<BuildPlatform>(true) {
-    override val description: kotlin.String = "{ PlatformTarget }"
-    override val conversion: (value: kotlin.String, name: kotlin.String) -> BuildPlatform = { value, _ ->
-        BuildPlatform.values().find { it.name.contains(value, ignoreCase = true) } ?: error("Platform '$value' isn't supported")
-    }
-}
-
-object BuildTargetArgType : ArgType<BuildTarget>(true) {
-    private val allTargets = BuildPlatform.values().flatMap(BuildPlatform::targets).distinct()
-    override val description: kotlin.String = "{ BuildTarget }"
-    override val conversion: (value: kotlin.String, name: kotlin.String) -> BuildTarget = { value, _ ->
-        allTargets.find { it.targetName.contains(value, ignoreCase = true) } ?: error("Target '$value' isn't supported")
-    }
-}
-
 @UseExperimental(ExperimentalCli::class)
 object TdlibCommand : ConfigCommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
@@ -47,5 +32,20 @@ object TdlibCommand : ConfigCommand("tdlib") {
             BuildPlatform.Js     -> TODO()
             BuildPlatform.Native -> TODO()
         }
+    }
+}
+
+object BuildPlatformArgType : ArgType<BuildPlatform>(true) {
+    override val description: kotlin.String = "{ PlatformTarget }"
+    override val conversion: (value: kotlin.String, name: kotlin.String) -> BuildPlatform = { value, _ ->
+        BuildPlatform.values().find { it.name.contains(value, ignoreCase = true) } ?: error("Platform '$value' isn't supported")
+    }
+}
+
+object BuildTargetArgType : ArgType<BuildTarget>(true) {
+    private val allTargets = BuildPlatform.values().flatMap(BuildPlatform::targets).distinct()
+    override val description: kotlin.String = "{ BuildTarget }"
+    override val conversion: (value: kotlin.String, name: kotlin.String) -> BuildTarget = { value, _ ->
+        allTargets.find { it.targetName.contains(value, ignoreCase = true) } ?: error("Target '$value' isn't supported")
     }
 }

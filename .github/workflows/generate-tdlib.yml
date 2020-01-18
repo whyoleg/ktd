@@ -1,8 +1,5 @@
 name: Build tdlib
-on:
-  push:
-    branches:
-      - tdlib/[0-9]+.[0-9]+.[0-9]+
+on: repository_dispatch
 
 env:
   BUCKET: ${{ secrets.scaleway_bucket }}
@@ -14,8 +11,12 @@ env:
   LIB_VERSION: 1
 
 jobs:
+  check:
+    if: github.event.action == "generate_tdlib"
+    runs-on: ubuntu-latest
 
   download-android-openssl:
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -24,6 +25,7 @@ jobs:
           name: android-openssl
           path: openssl.7z
   download-windows-dependencies:
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/dependencies.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -32,6 +34,7 @@ jobs:
           name: windows-dependencies
           path: dependencies.7z
   download-cli:
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}

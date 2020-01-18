@@ -283,7 +283,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/gradle.properties`;
             const properties = fs.readFileSync(path, 'utf8');
-            const libVersion = properties.split('\n').find(line => line.includes('libVersion=').slice(11);
+            const libVersion = properties.split('\n').find(line => line.includes('libVersion=')).slice(11);
             return libVersion;
 
       - id: version

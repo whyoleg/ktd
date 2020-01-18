@@ -4,7 +4,7 @@ import kotlinx.cli.*
 import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
-object CopyLibsCommand : Subcommand("copyLibs") {
+class CopyLibsCommand : Subcommand("copyLibs") {
     private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
     private val libsFolder by option(ArgType.String, "libsFolder", "lf", "Folder with generated libs").default("libs")
 

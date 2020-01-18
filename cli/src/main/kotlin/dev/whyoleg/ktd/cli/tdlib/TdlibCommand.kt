@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.serialization.config.*
 import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
-object TdlibCommand : Subcommand("tdlib") {
+class TdlibCommand : Subcommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
     private val version by option(ArgType.String, "version", "v", "Version of tdlib")

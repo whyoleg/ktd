@@ -9,7 +9,7 @@ import org.kohsuke.github.*
 import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
-object DiffCommand : Subcommand("diff") {
+class DiffCommand : Subcommand("diff") {
     private val previousVersion by option(ArgType.String, "previousVersion", "pv", "A previous version of tdlib").required()
     private val newVersion by option(ArgType.String, "newVersion", "nv", "A new version of tdlib").required()
 

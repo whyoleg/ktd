@@ -12,17 +12,17 @@ env:
   LIB_VERSION: 1
 
 jobs:
-  test-client:
+  test-jvm-client:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :client-raw:check :client-coroutines:check --info
+          arguments: :client-raw:jvmTest :client-coroutines:jvmTest --info
 
   download-tdlib:
-    needs: [test-client]
+    needs: [test-jvm-client]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
@@ -32,7 +32,7 @@ jobs:
           name: libs
           path: libs
   download-cli:
-    needs: [test-client]
+    needs: [test-jvm-client]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}

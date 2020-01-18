@@ -7,15 +7,15 @@ import kotlinx.cli.*
 
 @UseExperimental(ExperimentalCli::class)
 fun main(args: Array<String>) {
-    val parser = ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_STYLE.JVM)
-    parser.subcommands(
-        TdlibCommand(),
-        ApiCommand(),
-        DiffCommand(),
-        CopyLibsCommand(),
-        DispatchCommand()
-    )
-    parser.parse(args)
+    ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_STYLE.JVM).apply {
+        subcommands(
+            TdlibCommand(),
+            ApiCommand(),
+            DiffCommand(),
+            CopyLibsCommand(),
+            DispatchCommand()
+        )
+    }.parse(args)
 }
 
 fun main2() {

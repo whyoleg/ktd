@@ -55,8 +55,10 @@ jobs:
           java-version: 11
       - uses: actions/download-artifact@v1
         with:
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
           name: libs
-          path: libs
 
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}

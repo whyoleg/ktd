@@ -1,0 +1,287 @@
+name: Build tdlib
+on: repository_dispatch
+
+env:
+  BUCKET: ${{ secrets.scaleway_bucket }}
+  ENDPOINT: ${{ secrets.scaleway_endpoint }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
+  AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
+  JAVA_VERSION: 11.0.5
+  LIB_VERSION: 1
+  TD_VERSION: ${{ github.event.client_payload.version }}
+
+jobs:
+  check:
+    if: github.event.action == "generate_tdlib"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Init with ${{ toJson(github.event.client_payload) }}"
+
+  download-android-openssl:
+    needs: [check]
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: android-openssl
+          path: openssl.7z
+  download-windows-dependencies:
+    needs: [check]
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/dependencies.7z . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: windows-dependencies
+          path: dependencies.7z
+  download-cli:
+    needs: [check]
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: cli
+          path: cli.jar
+
+
+  generate-mac:
+    needs: [download-cli]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const tdRef = versions[${{ env.TD_VERSION }}];
+            return tdRef;
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - run: brew install gperf coreutils ninja
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+
+      - name: Generate tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t mac -c cli/config/tdlib.default.conf
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: mac
+          path: tdlib/jni/bin
+
+  generate-win:
+    needs: [download-cli, download-windows-dependencies]
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x86, x64]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const tdRef = versions[${{ env.TD_VERSION }}];
+            return tdRef;
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
+      - uses: actions/checkout@v2
+        with:
+          repository: Microsoft/vcpkg
+          path: vcpkg
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows-dependencies
+      - run: |
+          cd windows-dependencies
+          7z x dependencies.7z -y
+          xcopy /S dependencies ..\
+
+      - name: Generate tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t win-${{ matrix.arch }} -c cli/config/tdlib.default.conf
+
+      - name: Save tdlib
+        uses: actions/upload-artifact@v1
+        with:
+          name: win-${{ matrix.arch }}
+          path: tdlib/jni/bin
+
+  generate-linux:
+    needs: [download-cli]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const tdRef = versions[${{ env.TD_VERSION }}];
+            return tdRef;
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+
+      - name: Generate tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t linux -c cli/config/tdlib.default.conf
+
+      - name: Save tdlib
+        uses: actions/upload-artifact@v1
+        with:
+          name: linux
+          path: tdlib/jni/bin
+
+  generate-android:
+    needs: [download-cli, download-android-openssl]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [armv7, armv8, x86, x64]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
+            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const tdRef = versions[${{ env.TD_VERSION }}];
+            return tdRef;
+      - uses: actions/checkout@v2
+        with:
+          repository: tdlib/td
+          path: td
+          ref: ${{ steps.version.outputs.result }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          java-package: jre
+
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - uses: actions/download-artifact@v1
+        with:
+          name: android-openssl
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - run: |
+          cd android-openssl
+          7z x openssl.7z -y
+          cp -r openssl ..
+
+      - name: Generate tdlib
+        run: java -jar cli/cli.jar tdlib -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
+
+      - name: Save tdlib
+        uses: actions/upload-artifact@v1
+        with:
+          name: android-${{ matrix.arch }}
+          path: tdlib/jni/bin
+
+  #TODO create action to iterate over platforms/targets
+  upload-tdlib:
+    runs-on: ubuntu-latest
+    needs: [generate-linux, generate-win, generate-mac, generate-android]
+    steps:
+      - uses: actions/download-artifact@v1
+        with:
+          name: linux
+          path: tdlib/linux
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: mac
+          path: tdlib/mac
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: win-x64
+          path: tdlib/win-x64
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: win-x86
+          path: tdlib/win-x86
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: android-armv7
+          path: tdlib/android-armv7
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: android-armv8
+          path: tdlib/android-armv8
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: android-x86
+          path: tdlib/android-x86
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: android-x64
+          path: tdlib/android-x64
+
+      - run: ls tdlib -lahR
+
+      - run: aws s3 cp tdlib s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }}/${{ env.TD_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}

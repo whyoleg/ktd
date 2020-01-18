@@ -13,8 +13,5 @@ kotlin.target.dependenciesMain {
     implementation(BuiltInDependencies.Stable.kamp)
     implementation(BuiltInDependencies.Stable.androidPlugin.version("3.5.3", RepositoryProviders.jcenter))
     implementation(KotlinDependencies.Stable.gradlePlugin)
-    implementation(KotlinDependencies.Stable.serializationPlugin)
     implementation(KotlinDependencies.Stable.compilerEmbeddable)
-    implementation(KotlinxDependencies.Stable.atomicfu.plugin)
-    implementation(BuiltInDependencies.Stable.shadow)
 }

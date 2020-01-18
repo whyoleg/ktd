@@ -13,7 +13,7 @@ env:
 
 jobs:
   check:
-    if: github.event.action == "generate_tdlib"
+    if: github.event.action == 'generate_tdlib'
     runs-on: ubuntu-latest
     steps:
       - run: echo "Init with ${{ toJson(github.event.client_payload) }}"
@@ -107,7 +107,7 @@ jobs:
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
             const tdRef = versions[${{ env.TD_VERSION }}];
-            return tdRef;      
+            return tdRef;
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
@@ -202,7 +202,7 @@ jobs:
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
             const tdRef = versions[${{ env.TD_VERSION }}];
-            return tdRef;      
+            return tdRef;
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td

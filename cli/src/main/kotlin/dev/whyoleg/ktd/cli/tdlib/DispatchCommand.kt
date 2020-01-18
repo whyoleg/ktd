@@ -1,5 +1,6 @@
 package dev.whyoleg.ktd.cli.tdlib
 
+import dev.whyoleg.ktd.cli.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -29,6 +30,15 @@ class DispatchCommand : Subcommand("dispatch") {
                     "event_type" to "generate_$type"
                     "client_payload" to json {
                         "version" to version
+                        "ref" to tdVersionRefs.getValue(version)
+                        "versions" to jsonArray {
+                            tdVersions.forEach { +it }
+                        }
+                        "refs" to json {
+                            tdVersionRefs.forEach { (v, ref) ->
+                                v to ref
+                            }
+                        }
                     }
                 }.toString(), ContentType.Application.Json)
             }

@@ -281,4 +281,4 @@ jobs:
           result-encoding: string
           script: return context.ref.slice(17);
 
-      - run: aws s3 cp libs s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }}/${{ steps.version.outputs.result }} --recursive --endpoint-url ${{ env.ENDPOINT }}
+      - run: aws s3 cp tdlib s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }}/${{ steps.version.outputs.result }} --recursive --endpoint-url ${{ env.ENDPOINT }}

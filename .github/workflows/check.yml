@@ -71,4 +71,4 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }}
+          arguments: :api:integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}

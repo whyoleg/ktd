@@ -15,7 +15,7 @@ jobs:
     if: github.event.action == "generate_tdlib"
     runs-on: ubuntu-latest
     steps:
-      run: echo "Init with ${{ toJson(github.event.client_payload) }}"
+      - run: echo "Init with ${{ toJson(github.event.client_payload) }}"
 
   download-android-openssl:
     needs: [check]

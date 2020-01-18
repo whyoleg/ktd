@@ -1,16 +1,16 @@
 package dev.whyoleg.ktd.cli
 
 import eu.jrie.jetbrains.kotlinshell.shell.*
-import kotlinx.serialization.json.*
 import org.kohsuke.github.*
 import java.io.*
 
-val tdVersionRefs =
-    Json(JsonConfiguration.Stable)
-        .parseJson(File("tdVersions.json").readText())
-        .jsonObject
-        .toMap()
-        .mapValues { it.value.primitive.content }
+val tdVersionRefs = mapOf(
+    "1.5.0" to "e2734d4fb6815da5f357da4731d3013f64410e6b",
+    "1.5.1" to "9b0530e704158e56384e9b692590a9227e0cba83",
+    "1.5.2" to "ecc856a52c1f932e06c2ef87bdb1bd9a99b1ac9f",
+    "1.5.3" to "5fd1339bc1a2cadb8c52b61f2a4e5ccca8d0c41f",
+    "1.5.4" to "47c4d4267464c0b5709a9037ec2a49150f3de701"
+)
 
 val tdVersions = tdVersionRefs.keys.sorted()
 

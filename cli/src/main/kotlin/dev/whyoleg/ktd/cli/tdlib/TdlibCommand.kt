@@ -1,15 +1,19 @@
 package dev.whyoleg.ktd.cli.tdlib
 
+import com.typesafe.config.*
 import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.tdlib.jvm.*
 import kotlinx.cli.*
 import kotlinx.coroutines.*
+import org.jetbrains.kotlinx.serialization.config.*
+import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
-object TdlibCommand : ConfigCommand("tdlib") {
+object TdlibCommand : Subcommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
     private val version by option(ArgType.String, "version", "v", "Version of tdlib")
+    private val configPath by option(ArgType.String, "config", "c", "Path to .conf file").default("cli/config/tdlib.default.conf")
 
     override fun execute(): Unit = runBlocking {
         println("Start build tdlib $version for $platform/$target ")
@@ -33,6 +37,8 @@ object TdlibCommand : ConfigCommand("tdlib") {
             BuildPlatform.Native -> TODO()
         }
     }
+
+    private inline fun <reified T> config(path: String): T = ConfigParser.parse(ConfigFactory.parseFile(File(configPath)).getConfig(path))
 }
 
 object BuildPlatformArgType : ArgType<BuildPlatform>(true) {

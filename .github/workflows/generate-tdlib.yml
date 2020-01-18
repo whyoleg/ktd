@@ -9,6 +9,7 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11.0.5
   LIB_VERSION: 1
+  TD_VERSION: ${{ github.event.client_payload.version }}
 
 jobs:
   check:
@@ -51,6 +52,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -60,8 +63,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
+            const tdRef = versions[${{ env.TD_VERSION }}];
             return tdRef;
       - uses: actions/checkout@v2
         with:
@@ -93,6 +95,8 @@ jobs:
         arch: [x86, x64]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -102,8 +106,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
+            const tdRef = versions[${{ env.TD_VERSION }}];
             return tdRef;      
       - uses: actions/checkout@v2
         with:
@@ -142,6 +145,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -151,8 +156,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
+            const tdRef = versions[${{ env.TD_VERSION }}];
             return tdRef;
       - uses: actions/checkout@v2
         with:
@@ -186,6 +190,8 @@ jobs:
         arch: [armv7, armv8, x86, x64]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -195,8 +201,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
+            const tdRef = versions[${{ env.TD_VERSION }}];
             return tdRef;      
       - uses: actions/checkout@v2
         with:
@@ -279,11 +284,4 @@ jobs:
 
       - run: ls tdlib -lahR
 
-      - id: version
-        uses: actions/github-script@0.4.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          result-encoding: string
-          script: return context.ref.slice(17);
-
-      - run: aws s3 cp tdlib s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }}/${{ steps.version.outputs.result }} --recursive --endpoint-url ${{ env.ENDPOINT }}
+      - run: aws s3 cp tdlib s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }}/${{ env.TD_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}

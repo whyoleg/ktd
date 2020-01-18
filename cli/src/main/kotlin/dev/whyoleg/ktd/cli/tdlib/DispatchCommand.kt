@@ -22,9 +22,9 @@ class DispatchCommand : Subcommand("dispatch") {
         val client = HttpClient(CIO)
         runBlocking {
             val response = client.post<HttpResponse>("https://api.github.com/repos/whyoleg/ktd/dispatches") {
-                val toke = ""
+                val token = System.getenv("GITHUB_ACCESS_TOKEN")!!
                 headers["Accept"] = "application/vnd.github.everest-preview+json"
-                headers["Authorization"] = "Basic " + Base64.getEncoder().encodeToString("whyoleg:$toke".toByteArray())
+                headers["Authorization"] = "Basic " + Base64.getEncoder().encodeToString("whyoleg:$token".toByteArray())
                 body = TextContent(json {
                     "event_type" to "generate_$type"
                     "client_payload" to json {

@@ -27,11 +27,11 @@ interface BuildTarget {
         override fun toString(): String = targetName
     }
 
-    enum class Android(val archName: String, val ndkName: String, val toolChainName: String, val stripName: String) : BuildTarget {
-        ArmV7("armeabi-v7a", "arm", "arm-linux-androideabi", "arm-linux-androideabi"),
-        ArmV8("arm64-v8a", "arm64", "aarch64-linux-android", "aarch64-linux-android"),
-        X86("x86", "x86", "x86", "i686-linux-android"),
-        X64("x86_64", "x86_64", "x86_64", "x86_64-linux-android");
+    enum class Android(val archName: String, val toolChainName: String, val stripName: String) : BuildTarget {
+        ArmV7("armeabi-v7a", "arm-linux-androideabi", "arm-linux-androideabi"),
+        ArmV8("arm64-v8a", "aarch64-linux-android", "aarch64-linux-android"),
+        X86("x86", "x86", "i686-linux-android"),
+        X64("x86_64", "x86_64", "x86_64-linux-android");
 
         override val targetName: String = "android-$name"
         override fun toString(): String = targetName

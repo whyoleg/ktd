@@ -1,8 +1,5 @@
 name: Build tdlib
-on:
-  push:
-    branches:
-      - tdlib/[0-9]+.[0-9]+.[0-9]+
+on: repository_dispatch
 
 env:
   BUCKET: ${{ secrets.scaleway_bucket }}
@@ -11,27 +8,18 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11.0.5
+  LIB_VERSION: 1
+  TD_VERSION: ${{ github.event.client_payload.version }}
 
 jobs:
-
-  extract-version:
+  check:
+    if: github.event.action == 'generate_tdlib'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - id: version
-        uses: actions/github-script@0.4.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          result-encoding: string
-          script: |
-            const fs = require('fs');
-            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
-            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
-            return tdRef;
+      - run: echo "Init with ${{ toJson(github.event.client_payload) }}"
 
   download-android-openssl:
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/android/openssl.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -39,8 +27,8 @@ jobs:
         with:
           name: android-openssl
           path: openssl.7z
-
   download-windows-dependencies:
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/build/windows/dependencies.7z . --endpoint-url ${{ env.ENDPOINT }}
@@ -48,8 +36,8 @@ jobs:
         with:
           name: windows-dependencies
           path: dependencies.7z
-
   download-cli:
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
@@ -58,11 +46,14 @@ jobs:
           name: cli
           path: cli.jar
 
+
   generate-mac:
     needs: [download-cli]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -72,8 +63,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
+            const tdRef = versions[${{ env.TD_VERSION }}];
             return tdRef;
       - uses: actions/checkout@v2
         with:
@@ -105,6 +95,8 @@ jobs:
         arch: [x86, x64]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -114,9 +106,8 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
-            return tdRef;      
+            const tdRef = versions[${{ env.TD_VERSION }}];
+            return tdRef;
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
@@ -154,6 +145,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -163,8 +156,7 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
+            const tdRef = versions[${{ env.TD_VERSION }}];
             return tdRef;
       - uses: actions/checkout@v2
         with:
@@ -198,6 +190,8 @@ jobs:
         arch: [armv7, armv8, x86, x64]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: develop
       - id: version
         uses: actions/github-script@0.4.0
         with:
@@ -207,9 +201,8 @@ jobs:
             const fs = require('fs');
             const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
             const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
-            return tdRef;      
+            const tdRef = versions[${{ env.TD_VERSION }}];
+            return tdRef;
       - uses: actions/checkout@v2
         with:
           repository: tdlib/td
@@ -289,7 +282,6 @@ jobs:
           name: android-x64
           path: tdlib/android-x64
 
-      - run: ls -lahR
       - run: ls tdlib -lahR
-#      - name: Upload libs
-#        run: aws s3 cp libs s3://${{ env.BUCKET }}/tdlib/${{ env.TD_API_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}
+
+      - run: aws s3 cp tdlib s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }}/${{ env.TD_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}

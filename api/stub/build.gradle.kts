@@ -2,7 +2,7 @@ plugins {
     use(Plugins.mppModule)
 }
 
-configureMultiplatform()
+configureMultiplatform(publishable = false)
 
 kotlin {
     dependenciesMain {

@@ -14,6 +14,7 @@ kotlin {
             implementation(Dependencies.kotlinx.serialization.configParser)
             implementation(Dependencies.githubApi)
             implementation(Dependencies.kotlinShell)
+            implementation(Dependencies.ktor.client.cio)
         }
     }
 }

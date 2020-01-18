@@ -1,4 +1,3 @@
-import com.android.build.gradle.*
 import dev.whyoleg.kamp.project.*
 import org.gradle.api.*
 import org.gradle.jvm.tasks.*
@@ -40,10 +39,6 @@ fun Project.configureCoroutinesApi() {
 fun Project.configureLibApi() {
     Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
     configureMultiplatform(true)
-
-    extensions.configure<LibraryExtension> {
-        sourceSets["main"].jniLibs.srcDir("src/androidMain/jniLibs")
-    }
 
     tasks.named<Jar>("jvmJar") {
         from(file("src/jvmMain/jniLibs")) { into("libs") }

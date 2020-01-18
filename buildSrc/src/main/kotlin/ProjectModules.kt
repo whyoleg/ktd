@@ -13,6 +13,7 @@ object ProjectModules {
 
     object Api {
         val stub = ProjectModule(":api-stub")
+        val integration = ProjectModule(":api:integration")
         val raw = ProjectModule(":api-raw")
 
         object Raw {

@@ -1,23 +1,14 @@
-package dev.whyoleg.ktd
+package dev.whyoleg.ktd.api.integration
 
+import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import dev.whyoleg.ktd.api.TdApi.*
 import kotlin.test.*
 
-internal class TelegramRawClientTest {
-
-    @BeforeTest
-    fun init() {
-        //TODO remove hack, somehow java.library.path doesn't set in tests
-        System.setProperty("java.library.path", java.io.File("").absolutePath + "/libs/1.5.1/${NativeTarget.current().name.toLowerCase()}")
-        ClassLoader::class.java.getDeclaredField("sys_paths").apply {
-            isAccessible = true
-            set(null, null)
-        }
-    }
+abstract class TdlibCompatibilityTestBase {
 
     @Test
-    fun `execute function`() {
+    fun executeFunction() {
         val logLevel = 11
         TelegramRawClient.execute(SetLogVerbosityLevel(logLevel))
         val newLevel = (TelegramRawClient.execute(GetLogVerbosityLevel()) as LogVerbosityLevel).verbosityLevel
@@ -26,7 +17,7 @@ internal class TelegramRawClientTest {
     }
 
     @Test
-    fun `create client`() {
+    fun createClient() {
         val clientId = TelegramRawClient.create()
         val clientId2 = TelegramRawClient.create()
         assertNotEquals(clientId, clientId2)
@@ -35,7 +26,7 @@ internal class TelegramRawClientTest {
     }
 
     @Test
-    fun `receive any updates`() {
+    fun receiveUpdates() {
         val clientId = TelegramRawClient.create()
         val ids = LongArray(10)
         val events = arrayOfNulls<TelegramObject>(10)
@@ -45,7 +36,7 @@ internal class TelegramRawClientTest {
     }
 
     @Test
-    fun `send object`() {
+    fun sendObject() {
         val clientId = TelegramRawClient.create()
         TelegramRawClient.send(clientId, 1, GetCurrentState())
         val ids = LongArray(10)

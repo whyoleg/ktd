@@ -7,16 +7,18 @@ fun LibraryExtension.default() {
         minSdkVersion(21)
         targetSdkVersion(29)
         versionCode = 1
+        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
     sourceSets {
         getByName("main") {
-            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+            setRoot("src/androidMain")
             java.srcDir("src/androidMain/kotlin")
-            res.srcDir("src/androidMain/res")
         }
         getByName("androidTest") {
             java.srcDir("src/androidTest/kotlin")
-            res.srcDir("src/androidTest/res")
         }
+    }
+    packagingOptions {
+        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 }

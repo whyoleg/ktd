@@ -5,7 +5,7 @@ import kotlinx.cli.*
 import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
-object ApiCommand : ConfigCommand("api") {
+class ApiCommand : Subcommand("api") {
     private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
 
     private fun getAndroidManifest(type: String) = """

@@ -14,23 +14,6 @@ env:
 
 jobs:
 
-  extract-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - id: version
-        uses: actions/github-script@0.4.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          result-encoding: string
-          script: |
-            const fs = require('fs');
-            const path = `${process.env.GITHUB_WORKSPACE}/tdVersions.json`;
-            const versions = JSON.parse(fs.readFileSync(path, 'utf8'));
-            const version = context.ref.slice(17);
-            const tdRef = versions[version];
-            return tdRef;
-
   download-android-openssl:
     runs-on: ubuntu-latest
     steps:
@@ -289,7 +272,25 @@ jobs:
           name: android-x64
           path: tdlib/android-x64
 
-      - run: ls -lahR
       - run: ls tdlib -lahR
-#      - name: Upload libs
-#        run: aws s3 cp libs s3://${{ env.BUCKET }}/tdlib/${{ env.TD_API_VERSION }} --recursive --endpoint-url ${{ env.ENDPOINT }}
+
+      - id: libVersion
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const path = `${process.env.GITHUB_WORKSPACE}/gradle.properties`;
+            const properties = fs.readFileSync(path, 'utf8');
+            const libVersion = properties.split('\n').find(line => line.includes('libVersion=').slice(11);
+            return libVersion;
+
+      - id: version
+        uses: actions/github-script@0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: return context.ref.slice(17);
+
+      - run: aws s3 cp libs s3://${{ env.BUCKET }}/tdlib/${{ steps.libVersion.outputs.result }}/${{ steps.version.outputs.result }} --recursive --endpoint-url ${{ env.ENDPOINT }}

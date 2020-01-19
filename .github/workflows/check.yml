@@ -44,8 +44,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         tdVersion: [1.5.0] #, 1.5.1, 1.5.2, 1.5.3, 1.5.4] #TODO try to replace with github.event.client_payload?
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -68,3 +68,36 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: :api:integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}
+
+  test-android:
+    needs: [download-tdlib, download-cli]
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        tdVersion: [1.5.0] #, 1.5.1, 1.5.2, 1.5.3, 1.5.4] #TODO try to replace with github.event.client_payload?
+        arch: [x86_64, x86]
+    #        api-level: [21, 29]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
+          name: libs
+
+      - name: Copy libs
+        run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
+
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          #          api-level: ${{ matrix.api-level }}
+          arch: ${{ matrix.arch }}
+          script: ./gradlew :api:integration:connectedCheck --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}

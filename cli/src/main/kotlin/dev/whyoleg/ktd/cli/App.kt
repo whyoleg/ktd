@@ -30,3 +30,5 @@ fun main2() {
     val cmd = api
     val args = cmd.split(' ').toTypedArray()
 }
+
+private fun String.cmd(): Array<String> = split(' ').toTypedArray()

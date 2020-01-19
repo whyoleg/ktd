@@ -57,7 +57,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
@@ -89,7 +89,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/checkout@v2
@@ -128,7 +128,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
@@ -162,7 +162,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1

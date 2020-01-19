@@ -10,6 +10,7 @@ env:
   JAVA_VERSION: 11
   ANDROID_JAVA_VERSION: 1.8
   LIB_VERSION: 1
+  TD_VERSIONS: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
 
 jobs:
   test-jvm-client:
@@ -45,7 +46,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        tdVersion: [1.5.0] #, 1.5.1, 1.5.2, 1.5.3, 1.5.4] #TODO try to replace with github.event.client_payload?
+        tdVersion: ${{ env.TD_VERSIONS }}
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
@@ -75,7 +76,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        tdVersion: [1.5.0] #, 1.5.1, 1.5.2, 1.5.3, 1.5.4] #TODO try to replace with github.event.client_payload?
+        tdVersion: ${{ env.TD_VERSIONS }}
         arch: [x86_64, x86]
         api-level: [21, 29]
     steps:

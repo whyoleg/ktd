@@ -29,6 +29,9 @@ fun main2() {
     val tdlibWindows = "tdlib -v 1.5.1 -p jvm -t win-x64"
     val cmd = api
     val args = cmd.split(' ').toTypedArray()
+    tdVersions.forEach {
+        val args = "dispatch -v $it -t tdlib".cmd()
+    }
 }
 
 private fun String.cmd(): Array<String> = split(' ').toTypedArray()

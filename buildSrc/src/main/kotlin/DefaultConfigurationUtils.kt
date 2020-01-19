@@ -48,9 +48,8 @@ fun KotlinMultiplatformExtension.defaultTargets(useAndroidLibrary: Boolean) {
 
 fun KotlinMultiplatformExtension.default(useAndroidLibrary: Boolean = false, publishable: Boolean = true) {
     defaultTargets(useAndroidLibrary)
-
-    targets.first().project.run(Project::configurePublishing)
     defaultOptions()
+    if(publishable) targets.first().project.run(Project::configurePublishing)
 }
 
 val Project.apiVersion

@@ -7,8 +7,8 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
-  JAVA_VERSION: 11.0.5
-  GRADLE_VERSION: 5.6.4
+  JAVA_VERSION: 11
+  ANDROID_JAVA_VERSION: 1.8
   LIB_VERSION: 1
 
 jobs:
@@ -18,7 +18,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: :client-raw:jvmTest :client-coroutines:jvmTest --info
 
   download-tdlib:
@@ -46,27 +45,61 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
         os: [ubuntu-latest, macos-latest, windows-latest]
-        tdVersion: [1.5.0] #, 1.5.1, 1.5.2, 1.5.3, 1.5.4] #TODO try to replace with github.event.client_payload?
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
       - uses: actions/download-artifact@v1
         with:
           name: libs
-          path: libs
 
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
 
       - uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
 
       - uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :api:integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }}
+          arguments: :api:integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}
+
+  test-android:
+    needs: [download-tdlib, download-cli]
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
+        arch: [x86_64, x86]
+        api-level: [21, 29]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.ANDROID_JAVA_VERSION }}
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
+          name: libs
+
+      - name: Copy libs
+        run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
+
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
+
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: ${{ matrix.arch }}
+          script: ./gradlew :api:integration:connectedCheck --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}

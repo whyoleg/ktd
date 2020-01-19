@@ -7,10 +7,10 @@ import java.io.*
 val tdVersionRefs = mapOf(
     "1.5.0" to "e2734d4fb6815da5f357da4731d3013f64410e6b",
     "1.5.1" to "9b0530e704158e56384e9b692590a9227e0cba83",
-    "1.5.2" to "1f6f920a7d8093b045c84015ad026ab0169160fd",
+    "1.5.2" to "0d0159bc42bf9eb13057a68e983146973b45f3df",
     "1.5.3" to "917a3af6acda14f6cecafa9e3fbaaa134675cef5",
-    "1.5.4" to "cae329a5bd585beb17e66455c69856e389013363",
-    "1.6.0" to "92c9149e30318ac83baeb194ba9fcacf2bea3588" //latest commit from master branch
+    "1.5.4" to "b7928e64a68194d97011e4f3f015be65a0fbe8ca"
+    //    "1.6.0" to "92c9149e30318ac83baeb194ba9fcacf2bea3588" //latest commit from master branch
 )
 
 val tdVersions = tdVersionRefs.keys.sorted()

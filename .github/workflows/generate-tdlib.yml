@@ -7,7 +7,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
-  JAVA_VERSION: 11.0.5
+  JAVA_VERSION: 11
   LIB_VERSION: 1
   TD_VERSION: ${{ github.event.client_payload.version }}
   TD_VERSION_REF: ${{ github.event.client_payload.ref }}

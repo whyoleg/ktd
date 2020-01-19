@@ -7,7 +7,8 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
-  JAVA_VERSION: 11.0.5
+  JAVA_VERSION: 11
+  ANDROID_JAVA_VERSION: 1.8
   LIB_VERSION: 1
 
 jobs:
@@ -50,7 +51,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -81,7 +82,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.ANDROID_JAVA_VERSION }}
       - uses: actions/download-artifact@v1
         with:
           name: cli

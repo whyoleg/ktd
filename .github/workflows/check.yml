@@ -15,6 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle-
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: :client-raw:jvmTest :client-coroutines:jvmTest --info
@@ -61,6 +66,11 @@ jobs:
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
 
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle-
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
@@ -76,7 +86,7 @@ jobs:
       matrix:
         tdVersion: [1.5.0] #, 1.5.1, 1.5.2, 1.5.3, 1.5.4] #TODO try to replace with github.event.client_payload?
         arch: [x86_64, x86]
-    #        api-level: [21, 29]
+        api-level: [21, 29]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -92,12 +102,18 @@ jobs:
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
 
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle-
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
 
       - uses: reactivecircus/android-emulator-runner@v2
         with:
-          #          api-level: ${{ matrix.api-level }}
+          api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
           script: ./gradlew :api:integration:connectedCheck --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}

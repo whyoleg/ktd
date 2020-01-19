@@ -15,11 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle-
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: :client-raw:jvmTest :client-coroutines:jvmTest --info
@@ -66,11 +61,6 @@ jobs:
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
 
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle-
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
@@ -103,11 +93,6 @@ jobs:
         run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
 
 
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle-
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}

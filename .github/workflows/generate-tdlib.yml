@@ -57,7 +57,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
@@ -89,7 +89,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/checkout@v2
@@ -128,14 +128,14 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.JAVA_VERSION }}
 
-      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev libc++-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -162,7 +162,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
@@ -173,7 +173,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           java-package: jre
 
-      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev libc++-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1
         with:
           name: android-openssl

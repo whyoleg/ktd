@@ -14,14 +14,16 @@ val publication = Publication(
     url = "https://github.com/whyoleg/ktd",
     vcsUrl = "https://github.com/whyoleg/ktd"
 )
-
-val ktdPublisher = BintrayPublisher("whyoleg", "ktd", "ktd")
-val libPublisher = ktdPublisher.copy(name = "lib")
+private val stubPublisher = BintrayPublisher("whyoleg", "ktd", "")
+val ktdClientPublisher = stubPublisher.copy(name = "ktd-client")
+val ktdApiPublisher = stubPublisher.copy(name = "ktd-api")
+val ktdLibPublisher = stubPublisher.copy(name = "ktd-lib")
 
 fun Project.configurePublishing() = afterEvaluate {
     val publisher = when {
-        name.startsWith("api-lib-") -> libPublisher
-        else                        -> ktdPublisher
+        name.startsWith("client")   -> ktdClientPublisher
+        name.startsWith("api-lib-") -> ktdLibPublisher
+        else                        -> ktdApiPublisher
     }
     val publishOnly = (properties["publishOnly"] as String?)?.split(",")
     val needToPublish = when {
@@ -47,6 +49,5 @@ fun Project.configurePublishing() = afterEvaluate {
                 }
             }
         }
-
     }
 }

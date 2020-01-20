@@ -1,5 +1,8 @@
 name: Check build
-on: push
+on:
+  push:
+    branches:
+      - develop
 
 env:
   BUCKET: ${{ secrets.scaleway_bucket }}

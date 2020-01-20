@@ -9,7 +9,10 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
+  BINTRAY_USER: ${{secrets.bintray_user}}
+  BINTRAY_API_KEY: ${{secrets.bintray_key}}
   JAVA_VERSION: 11
+  LIB_VERSION: 1
 
 jobs:
   publish:
@@ -20,12 +23,12 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
-
-      - run: java -jar cli/cli.jar copyLibs -v 1.5.0 -lf libs/1.5.0
-      - run: java -jar cli/cli.jar copyLibs -v 1.5.1 -lf libs/1.5.1
-      - run: java -jar cli/cli.jar copyLibs -v 1.5.2 -lf libs/1.5.2
-      - run: java -jar cli/cli.jar copyLibs -v 1.5.3 -lf libs/1.5.3
-      - run: java -jar cli/cli.jar copyLibs -v 1.5.4 -lf libs/1.5.4
+      - run: aws s3 cp s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+      - run: java -jar cli.jar copyLibs -v 1.5.0 -lf libs/1.5.0
+      - run: java -jar cli.jar copyLibs -v 1.5.1 -lf libs/1.5.1
+      - run: java -jar cli.jar copyLibs -v 1.5.2 -lf libs/1.5.2
+      - run: java -jar cli.jar copyLibs -v 1.5.3 -lf libs/1.5.3
+      - run: java -jar cli.jar copyLibs -v 1.5.4 -lf libs/1.5.4
 
       - uses: eskatos/gradle-command-action@v1
         if: true

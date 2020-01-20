@@ -6,5 +6,5 @@ allprojects {
     }
 }
 
-createBintrayPublishTask(ktdPublisher)
-createBintrayPublishTask(libPublisher)
+createBintrayPublishTask(ktdPublisher, version.toString())
+createBintrayPublishTask(libPublisher, properties["libVersion"].toString())

@@ -1,7 +1,10 @@
 name: Publish artifacts
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - fix-pub-workflow
+#  release:
+#    types: [published]
 
 env:
   BUCKET: ${{ secrets.scaleway_bucket }}
@@ -10,6 +13,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11
+  LIB_VERSION: 1
 
 jobs:
   publish:
@@ -20,7 +24,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
-
+      - run: aws s3 cp s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
       - run: java -jar cli/cli.jar copyLibs -v 1.5.0 -lf libs/1.5.0
       - run: java -jar cli/cli.jar copyLibs -v 1.5.1 -lf libs/1.5.1
       - run: java -jar cli/cli.jar copyLibs -v 1.5.2 -lf libs/1.5.2

@@ -19,9 +19,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  *
  * @tag - Logging tag to change verbosity level
  */
-suspend fun TelegramClient.getLogTagVerbosityLevel(
+fun TelegramClient.Companion.getLogTagVerbosityLevel(
     tag: String? = null
-): LogVerbosityLevel = sync(
+): LogVerbosityLevel = execute(
     GetLogTagVerbosityLevel(
         tag
     )
@@ -32,6 +32,6 @@ suspend fun TelegramClient.getLogTagVerbosityLevel(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetLogTagVerbosityLevel
 ): LogVerbosityLevel = exec(f) as LogVerbosityLevel

@@ -20,10 +20,10 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @text - The text which should be parsed
  * @parseMode - Text parse mode
  */
-suspend fun TelegramClient.parseTextEntities(
+fun TelegramClient.Companion.parseTextEntities(
     text: String? = null,
     parseMode: TextParseMode? = null
-): FormattedText = sync(
+): FormattedText = execute(
     ParseTextEntities(
         text,
         parseMode
@@ -35,6 +35,6 @@ suspend fun TelegramClient.parseTextEntities(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: ParseTextEntities
 ): FormattedText = exec(f) as FormattedText

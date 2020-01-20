@@ -20,10 +20,10 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @verbosityLevel - Minimum verbosity level needed for the message to be logged, 0-1023
  * @text - Text of a message to log
  */
-suspend fun TelegramClient.addLogMessage(
+fun TelegramClient.Companion.addLogMessage(
     verbosityLevel: Int = 0,
     text: String? = null
-): Ok = sync(
+): Ok = execute(
     AddLogMessage(
         verbosityLevel,
         text
@@ -35,6 +35,6 @@ suspend fun TelegramClient.addLogMessage(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: AddLogMessage
 ): Ok = exec(f) as Ok

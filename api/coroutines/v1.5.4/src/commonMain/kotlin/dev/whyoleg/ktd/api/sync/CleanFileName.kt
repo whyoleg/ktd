@@ -21,9 +21,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  *
  * @fileName - File name or path to the file
  */
-suspend fun TelegramClient.cleanFileName(
+fun TelegramClient.Companion.cleanFileName(
     fileName: String? = null
-): Text = sync(
+): Text = execute(
     CleanFileName(
         fileName
     )
@@ -36,6 +36,6 @@ suspend fun TelegramClient.cleanFileName(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: CleanFileName
 ): Text = exec(f) as Text

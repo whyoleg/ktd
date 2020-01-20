@@ -19,9 +19,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  *
  * @json - The JSON-serialized string
  */
-suspend fun TelegramClient.getJsonValue(
+fun TelegramClient.Companion.getJsonValue(
     json: String? = null
-): JsonValue = sync(
+): JsonValue = execute(
     GetJsonValue(
         json
     )
@@ -32,6 +32,6 @@ suspend fun TelegramClient.getJsonValue(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetJsonValue
 ): JsonValue = exec(f) as JsonValue

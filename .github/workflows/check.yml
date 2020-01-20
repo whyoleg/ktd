@@ -7,7 +7,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
-  JAVA_VERSION: 13
+  JAVA_VERSION: 11
   ANDROID_JAVA_VERSION: 1.8
   LIB_VERSION: 1
 
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: ${{ env.JAVA_VERSION }}
+          java-version: ${{ env.ANDROID_JAVA_VERSION }}
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -100,7 +100,7 @@ jobs:
         with:
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
 
-      - uses: reactivecircus/android-emulator-runner@v2
+      - uses: reactivecircus/android-emulator-runner@v2.2.0
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}

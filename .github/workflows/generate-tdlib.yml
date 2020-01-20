@@ -81,6 +81,7 @@ jobs:
     needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         arch: [x86, x64]
     steps:

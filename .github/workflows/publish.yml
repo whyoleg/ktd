@@ -10,7 +10,6 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11
-  PUBLISH_LIB: ${{ true }}
 
 jobs:
   publish:
@@ -29,11 +28,11 @@ jobs:
       - run: java -jar cli/cli.jar copyLibs -v 1.5.4 -lf libs/1.5.4
 
       - uses: eskatos/gradle-command-action@v1
-        if: PUBLISH_LIB
+        if: true
         with:
           arguments: publish --info
 
       - uses: eskatos/gradle-command-action@v1
-        if: !PUBLISH_LIB
+        if: false
         with:
           arguments: publish --info -PpublishOnly=ktd

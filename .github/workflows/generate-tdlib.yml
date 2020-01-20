@@ -136,7 +136,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
 
-      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev libc++-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1
         with:
           name: cli
@@ -174,7 +174,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           java-package: jre
 
-      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev ccache ninja-build -y
+      - run: sudo apt install make zlib1g-dev libssl-dev gperf libc++abi-dev libc++-dev ccache ninja-build -y
       - uses: actions/download-artifact@v1
         with:
           name: android-openssl

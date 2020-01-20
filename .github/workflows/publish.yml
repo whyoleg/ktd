@@ -10,7 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11
-  PUBLISH_LIB: true
+  PUBLISH_LIB: ${{ true }}
 
 jobs:
   publish:

@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.getLogTags(): LogTags = sync(
+fun TelegramClient.Companion.getLogTags(): LogTags = execute(
     GetLogTags()
 )
 
@@ -26,6 +26,6 @@ suspend fun TelegramClient.getLogTags(): LogTags = sync(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetLogTags
 ): LogTags = exec(f) as LogTags

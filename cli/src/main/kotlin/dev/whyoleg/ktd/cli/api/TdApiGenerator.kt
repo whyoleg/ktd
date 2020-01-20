@@ -44,7 +44,7 @@ fun generateApi(scheme: ByteArray, version: String): Map<String, String> {
         nested("sync") {
             syncFunctions.forEach {
                 file(it.type) {
-                    buildFunction("sync", it, tlScheme.metadata)
+                    buildSyncFunction(it, tlScheme.metadata)
                 }
             }
         }

@@ -44,6 +44,7 @@ jobs:
     needs: [download-tdlib, download-cli]
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -74,6 +75,7 @@ jobs:
     needs: [download-tdlib, download-cli]
     runs-on: macos-latest
     strategy:
+      fail-fast: false
       matrix:
         tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
         arch: [x86_64, x86]
@@ -98,7 +100,7 @@ jobs:
         with:
           arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
 
-      - uses: reactivecircus/android-emulator-runner@v2
+      - uses: reactivecircus/android-emulator-runner@v2.2.0
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}

@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.getLogStream(): LogStream = sync(
+fun TelegramClient.Companion.getLogStream(): LogStream = execute(
     GetLogStream()
 )
 
@@ -26,6 +26,6 @@ suspend fun TelegramClient.getLogStream(): LogStream = sync(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetLogStream
 ): LogStream = exec(f) as LogStream

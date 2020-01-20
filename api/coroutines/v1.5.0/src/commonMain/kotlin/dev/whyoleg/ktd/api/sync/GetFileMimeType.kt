@@ -20,9 +20,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  *
  * @fileName - The name of the file or path to the file
  */
-suspend fun TelegramClient.getFileMimeType(
+fun TelegramClient.Companion.getFileMimeType(
     fileName: String? = null
-): Text = sync(
+): Text = execute(
     GetFileMimeType(
         fileName
     )
@@ -34,6 +34,6 @@ suspend fun TelegramClient.getFileMimeType(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetFileMimeType
 ): Text = exec(f) as Text

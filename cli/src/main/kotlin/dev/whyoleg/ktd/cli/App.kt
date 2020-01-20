@@ -5,17 +5,19 @@ import dev.whyoleg.ktd.cli.diff.*
 import dev.whyoleg.ktd.cli.tdlib.*
 import kotlinx.cli.*
 
-@UseExperimental(ExperimentalCli::class)
 fun main(args: Array<String>) {
-    ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_STYLE.JVM).apply {
-        subcommands(
-            TdlibCommand(),
-            ApiCommand(),
-            DiffCommand(),
-            CopyLibsCommand(),
-            DispatchCommand()
-        )
-    }.parse(args)
+    parser().parse(args)
+}
+
+@UseExperimental(ExperimentalCli::class)
+private fun parser() = ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_STYLE.JVM).apply {
+    subcommands(
+        TdlibCommand(),
+        ApiCommand(),
+        DiffCommand(),
+        CopyLibsCommand(),
+        DispatchCommand()
+    )
 }
 
 fun main2() {
@@ -29,6 +31,13 @@ fun main2() {
     val tdlibWindows = "tdlib -v 1.5.1 -p jvm -t win-x64"
     val cmd = api
     val args = cmd.split(' ').toTypedArray()
+    forEachVersion("dispatch -t tdlib")
+    forEachVersion("api")
 }
 
 private fun String.cmd(): Array<String> = split(' ').toTypedArray()
+private fun forEachVersion(cmd: String) {
+    tdVersions.forEach {
+        parser().parse("$cmd -v $it".cmd())
+    }
+}

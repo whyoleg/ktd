@@ -1,17 +1,16 @@
-name: Publish artifacts and upload cli
+name: Publish artifacts
 on:
   release:
     types: [published]
 
 env:
-  GRADLE_VERSION: 5.6.4
   BUCKET: ${{ secrets.scaleway_bucket }}
   ENDPOINT: ${{ secrets.scaleway_endpoint }}
   AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
-  bintray_user: ${{secrets.bintray_user}}
-  bintray_key: ${{secrets.bintray_key}}
+  JAVA_VERSION: 11
+  PUBLISH_LIB: true
 
 jobs:
   publish:
@@ -20,24 +19,21 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
+      - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
+
+      - run: java -jar cli/cli.jar copyLibs -v 1.5.0 -lf libs/1.5.0
+      - run: java -jar cli/cli.jar copyLibs -v 1.5.1 -lf libs/1.5.1
+      - run: java -jar cli/cli.jar copyLibs -v 1.5.2 -lf libs/1.5.2
+      - run: java -jar cli/cli.jar copyLibs -v 1.5.3 -lf libs/1.5.3
+      - run: java -jar cli/cli.jar copyLibs -v 1.5.4 -lf libs/1.5.4
 
       - uses: eskatos/gradle-command-action@v1
+        if: PUBLISH_LIB
         with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: publishLibOnBintray --info
+          arguments: publish --info
 
       - uses: eskatos/gradle-command-action@v1
+        if: !PUBLISH_LIB
         with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: publishKtdOnBintray --info
-
-      #TODO add cli.jar to release page
-      - name: Build cli
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: :cli:shadowJar --info
-
-      - name: Upload cli
-        run: aws s3 cp cli/build/libs/cli.jar s3://${{ env.BUCKET }}/cli/cli.jar --endpoint-url ${{ env.ENDPOINT }}
+          arguments: publish --info -PpublishOnly=ktd

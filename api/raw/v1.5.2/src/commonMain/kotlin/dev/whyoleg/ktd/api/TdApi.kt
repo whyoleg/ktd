@@ -1103,7 +1103,7 @@ class TdApi {
      * @isBlocked - True, if the user is blacklisted by the current user
      * @canBeCalled - True, if the user can be called
      * @hasPrivateCalls - True, if the user can't be called due to their privacy settings
-     * @needPhoneNumberPrivacyException - True, if the current user needs to explicitly allow to share his phone number with the user when the method addContact is used
+     * @needPhoneNumberPrivacyException - True, if the current user needs to explicitly allow to share their phone number with the user when the method addContact is used
      * @bio - A short user bio
      * @shareText - For bots, the text that is included with the link when users share the bot
      * @groupInCommonCount - Number of group chats where both the other user and the current user are a member
@@ -9167,7 +9167,7 @@ class TdApi {
      * This update is guaranteed to be sent only when chat.order == 0 and the current or the new chat list is null
      *
      * @chatId - Chat identifier
-     * @chatList - The new chat's list
+     * @chatList - The new chat's chat list
      */
     class UpdateChatChatList(
         val chatId: Long,
@@ -12877,13 +12877,13 @@ class TdApi {
     }
 
     /**
-     * Adds a user to the contacts list or edits an existing contact by their user_id
+     * Adds a user to the contact list or edits an existing contact by their user_id
      *
      * @contact - The contact to add or edit
      *            Phone number can be empty and needs to be specified only if known, vCard is ignored
      * @sharePhoneNumber - True, if the new contact needs to be allowed to see current user's phone number
      *                     A corresponding rule to userPrivacySettingShowPhoneNumber will be added if needed
-     *                     Use the field UserFullInfo.need_phone_number_privacy_exception to check whether the current user needs to be asked to share his phone number
+     *                     Use the field UserFullInfo.need_phone_number_privacy_exception to check whether the current user needs to be asked to share their phone number
      */
     class AddContact(
         val contact: Contact? = null,

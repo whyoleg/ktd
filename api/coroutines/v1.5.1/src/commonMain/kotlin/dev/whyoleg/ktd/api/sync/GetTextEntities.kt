@@ -19,9 +19,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  *
  * @text - The text in which to look for entites
  */
-suspend fun TelegramClient.getTextEntities(
+fun TelegramClient.Companion.getTextEntities(
     text: String? = null
-): TextEntities = sync(
+): TextEntities = execute(
     GetTextEntities(
         text
     )
@@ -32,6 +32,6 @@ suspend fun TelegramClient.getTextEntities(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetTextEntities
 ): TextEntities = exec(f) as TextEntities

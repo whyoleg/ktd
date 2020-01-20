@@ -79,21 +79,14 @@ repositories {
 }
 
 dependencies {
-    //just client independent on td api version
-    implementation "dev.whyoleg.ktd:ktd-client-coroutines-jvm:0.5.0"
-    //or for android
-    implementation "dev.whyoleg.ktd:ktd-client-coroutines-android:0.5.0"
-    //or for mpp common sourcSet
-    implementation "dev.whyoleg.ktd:ktd-client-coroutines:0.5.0"
-    
     //td api by version
     implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.4"
     //or for android
     implementation "dev.whyoleg.ktd:ktd-api-coroutines-android:0.5.0-1.5.4"
+    //or for common
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines:0.5.0-1.5.4"
     //or for another td api version
     implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.0"
-    //or for mpp common sourceSet
-    implementation "dev.whyoleg.ktd:ktd-api-coroutines:0.5.0-1.5.4"
 }
 ```
 
@@ -109,7 +102,7 @@ dependencies {
       - jvm
       - android (only for api, for client `jvm` can be used instead)
       - metadata (common)
-      - omit `platfrom` to use GRADLE_METADATA dependency
+      - omit `platfrom` to use `GRADLE_METADATA` dependency
     - `tdlib-version`
       - 1.5.4
       - 1.5.3

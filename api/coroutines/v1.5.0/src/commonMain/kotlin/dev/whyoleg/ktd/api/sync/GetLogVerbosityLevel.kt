@@ -17,7 +17,7 @@ import dev.whyoleg.ktd.api.TdApi.*
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.getLogVerbosityLevel(): LogVerbosityLevel = sync(
+fun TelegramClient.Companion.getLogVerbosityLevel(): LogVerbosityLevel = execute(
     GetLogVerbosityLevel()
 )
 
@@ -26,6 +26,6 @@ suspend fun TelegramClient.getLogVerbosityLevel(): LogVerbosityLevel = sync(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetLogVerbosityLevel
 ): LogVerbosityLevel = exec(f) as LogVerbosityLevel

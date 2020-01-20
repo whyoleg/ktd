@@ -20,9 +20,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @error - The error to be returned
  */
 @TestingOnly
-suspend fun TelegramClient.testReturnError(
+fun TelegramClient.Companion.testReturnError(
     error: Error? = null
-): Error = sync(
+): Error = execute(
     TestReturnError(
         error
     )
@@ -34,6 +34,6 @@ suspend fun TelegramClient.testReturnError(
  * Can be called before authorization
  */
 @TestingOnly
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: TestReturnError
 ): Error = exec(f) as Error

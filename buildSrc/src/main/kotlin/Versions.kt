@@ -6,5 +6,5 @@ object Versions {
     const val kotlinShell = "0.2"
     const val dotenv = "5.1.3"
 
-    const val ktdVersion = "0.5.0-mpp"
+    const val ktdVersion = "0.5.0"
 }

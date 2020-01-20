@@ -19,9 +19,9 @@ import dev.whyoleg.ktd.api.TdApi.*
  *
  * @payload - JSON-encoded push notification payload
  */
-suspend fun TelegramClient.getPushReceiverId(
+fun TelegramClient.Companion.getPushReceiverId(
     payload: String? = null
-): PushReceiverId = sync(
+): PushReceiverId = execute(
     GetPushReceiverId(
         payload
     )
@@ -32,6 +32,6 @@ suspend fun TelegramClient.getPushReceiverId(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetPushReceiverId
 ): PushReceiverId = exec(f) as PushReceiverId

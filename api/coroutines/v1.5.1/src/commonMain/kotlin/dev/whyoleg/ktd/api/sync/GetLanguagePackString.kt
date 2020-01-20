@@ -23,12 +23,12 @@ import dev.whyoleg.ktd.api.TdApi.*
  * @languagePackId - Language pack identifier
  * @key - Language pack key of the string to be returned
  */
-suspend fun TelegramClient.getLanguagePackString(
+fun TelegramClient.Companion.getLanguagePackString(
     languagePackDatabasePath: String? = null,
     localizationTarget: String? = null,
     languagePackId: String? = null,
     key: String? = null
-): LanguagePackStringValue = sync(
+): LanguagePackStringValue = execute(
     GetLanguagePackString(
         languagePackDatabasePath,
         localizationTarget,
@@ -43,6 +43,6 @@ suspend fun TelegramClient.getLanguagePackString(
  * This is an offline method
  * Can be called before authorization
  */
-suspend fun TelegramClient.sync(
+fun TelegramClient.Companion.execute(
     f: GetLanguagePackString
 ): LanguagePackStringValue = exec(f) as LanguagePackStringValue

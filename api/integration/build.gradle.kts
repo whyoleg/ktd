@@ -1,3 +1,5 @@
+import dev.whyoleg.kamp.project.*
+
 plugins {
     use(Plugins.mppAndroidModule)
 }
@@ -8,6 +10,7 @@ configureMultiplatform(
 )
 
 val tdIntegrationVersion = properties["tdIntegrationVersion"]?.toString()
+val tdOnlyVersion = properties["tdOnlyVersion"]?.toString() ?: "1.5.0"
 
 kotlin {
     dependenciesMain {
@@ -18,7 +21,7 @@ kotlin {
     metadata {
         dependenciesMain {
             if (tdIntegrationVersion == null) {
-                implementation(ProjectModules.Api.Coroutines.v1_5_0)
+                implementation(ProjectModule(":api-coroutines-v$tdOnlyVersion"))
             } else {
                 implementation(Dependencies.ktdApiCoroutines(tdIntegrationVersion))
             }

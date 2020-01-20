@@ -15,7 +15,7 @@ fun StringBuilder.buildRawSyncFunction(function: TlFunction) {
     append("\n")
 }
 
-fun StringBuilder.buildSyncFunction(function: TlFunction, metadata: TlDataMetadata) {
+fun StringBuilder.buildSyncFunctionWithParams(function: TlFunction, metadata: TlDataMetadata) {
     buildDescription(function.descriptionsWithProperties())
     buildAnnotations(function.metadata.additions)
     append("fun TelegramClient.Companion.").append(function.type.decapitalize())
@@ -30,18 +30,10 @@ fun StringBuilder.buildSyncFunction(function: TlFunction, metadata: TlDataMetada
     append("\n")
 }
 
-fun StringBuilder.buildRawSyncFunctions(functions: List<TlFunction>) {
+fun StringBuilder.buildSyncFunction(function: TlFunction, metadata: TlSchemeMetadata) {
     buildHeader("sync")
-    functions.forEach {
-        append("\n")
-        buildRawSyncFunction(it)
-    }
-}
-
-fun StringBuilder.buildSyncFunctions(functions: List<TlFunction>, metadata: TlSchemeMetadata) {
-    buildHeader("sync")
-    functions.forEach {
-        append("\n")
-        buildSyncFunction(it, metadata[it])
-    }
+    append("\n")
+    buildSyncFunctionWithParams(function, metadata[function])
+    append("\n")
+    buildRawSyncFunction(function)
 }

@@ -57,7 +57,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
@@ -81,6 +81,7 @@ jobs:
     needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         arch: [x86, x64]
     steps:
@@ -89,7 +90,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/checkout@v2
@@ -128,7 +129,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1
@@ -162,7 +163,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          repository: tdlib/td
+          repository: whyoleg/td
           path: td
           ref: ${{ env.TD_VERSION_REF }}
       - uses: actions/setup-java@v1

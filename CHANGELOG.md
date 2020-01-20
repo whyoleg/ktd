@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.5.0
-> Unreleased
+> Released January 21, 2020
 - Support Android: armeabi-v7a, arm64-v8a, x86, x86_64
 - Support of tdlib `v1.5.2` - `v1.5.4`
 - Generate changelog for `v1.5.1` - `v.1.5.4`
@@ -14,7 +14,6 @@
   - Create dispatch event to run tdlib build
   - Map libs to platforms
 - Changed dependencies structure to make it easy to use and support multiplatform
-
 
 ## 0.4.1
 > Released November 27, 2019

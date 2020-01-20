@@ -1,13 +1,21 @@
-configure("ktd-raw-client") {
-    source {
-        main {
-            api(Dependencies.kotlin.stdlib)
-            compileOnly(Modules.Api.stub)
-        }
-        test {
-            implementation(Dependencies.kotlin.test)
-            implementation(Dependencies.kotlin.annotations)
-            implementation(Modules.Api.latest.raw)
+plugins {
+    use(Plugins.mppModule)
+}
+
+configureMultiplatform()
+
+kotlin {
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
+    }
+    dependenciesTest {
+        implementation(Dependencies.kotlin.test)
+        implementation(Dependencies.kotlin.annotations)
+    }
+
+    metadata {
+        dependenciesMain {
+            compileOnly(ProjectModules.Api.stub)
         }
     }
 }

@@ -1,7 +1,11 @@
-configure("ktd-api-stub") {
-    source {
-        main {
-            implementation(Dependencies.kotlin.stdlib)
-        }
+plugins {
+    use(Plugins.mppModule)
+}
+
+configureMultiplatform(publishable = false)
+
+kotlin {
+    dependenciesMain {
+        api(Dependencies.kotlin.stdlib)
     }
 }

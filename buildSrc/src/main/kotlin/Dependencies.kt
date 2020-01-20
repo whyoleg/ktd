@@ -1,22 +1,21 @@
-@file:Suppress("unused")
-
 import dev.whyoleg.kamp.dependency.*
-import dev.whyoleg.kamp.dependency.classifier.*
-import dev.whyoleg.kamp.target.*
+import dev.whyoleg.kamp.dependency.builder.*
+import dev.whyoleg.kamp.modules.*
 
-object Dependencies : BuiltInDependencies() {
-    val immutableCollections = kotlinx.dependency(
-        name = "kotlinx-collections-immutable",
-        version = { Versions.immutableCollections },
-        target = jvm("jvm"),
-        provider = DependencyProviders.maven("https://kotlin.bintray.com/kotlinx") //TODO move it to kamp
-    )
+object Dependencies {
+    val kotlin = KotlinModule(KotlinVersion(Versions.kotlin)).dependencies
+    val kotlinx = KotlinxModule(KotlinxVersions.Stable).dependencies
+    val ktor = KtorDependencies.Stable
 
-    val githubApi = RawDependency("org.kohsuke", "github-api", { Versions.githubApi }, DependencyProviders.mavenCentral)(jvm())
-    val kotlinShell = RawDependency(
-        "eu.jrie.jetbrains",
-        "kotlin-shell-core",
-        { Versions.kotlinShell },
-        DependencyProviders.maven("https://dl.bintray.com/jakubriegel/kotlin-shell")
-    )(jvm())
+    val githubApi =
+        group("org.kohsuke", RepositoryProviders.mavenCentral)
+            .artifact("github-api").version(Versions.githubApi).jvm
+    val kotlinShell =
+        group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
+            .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
+
+
+    fun ktdApiCoroutines(tdVersion: String) =
+        group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
+            .artifact("ktd-api-coroutines").version("${Versions.ktdVersion}-$tdVersion").common
 }

@@ -11,4 +11,5 @@ syntax: glob
 classes
 build/
 *.log
-api/generator/jni/*/
+tdlib/jni/*/
+/local.properties

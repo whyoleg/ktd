@@ -1,13 +1,15 @@
-import dev.whyoleg.kamp.*
-import dev.whyoleg.kamp.plugin.*
-
 plugins { `kotlin-dsl` }
 
-buildscript {
-    repositories { maven { setUrl("https://dl.bintray.com/whyoleg/kamp") } }
-    dependencies { classpath("dev.whyoleg.kamp:kamp:0.1.15") }
+repositories {
+    maven("https://dl.bintray.com/whyoleg/kamp")
+    mavenCentral()
+    google()
+    jcenter()
 }
 
-kampBuild {
-    with(BuiltInPlugins) { resolvePlugins(updates, kotlinJvm, serialization, atomicfu, bintray, buildScan) }
+dependencies {
+    implementation("dev.whyoleg.kamp:kamp:0.2.1-pre-4")
+    implementation("com.android.tools.build:gradle:3.5.3")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61")
+    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.3.61")
 }

@@ -39,7 +39,7 @@ val telegram = Telegram(
 )
 ```
 
-`TelegramClient` can be created from `Telegram` and closed or independent by calling `cancel()` or by canceling `Telegram` object
+`TelegramClient` can be created from `Telegram` and closed or independent by calling `cancel()` or by canceling `Telegram` object.
 Using of client can be checked in [examples](https://github.com/whyoleg/ktd/tree/master/example/src/main/kotlin).
 `TelegramClient` - main interface to interact with library. 
 
@@ -53,9 +53,9 @@ suspend fun TelegramClient.chat(f: GetChat): Chat
 ```kotlin
 suspend fun TelegramClient.getChat(chatId: Long): Chat
 ```
-Result of calling this 2 functions fully the same. Parameterized functions just more easy to use and find.
+Result of calling this 2 functions will be the same. Parameterized functions just more easy to use and find.
  
-Also `sync` package exists which contains functions which can be called synchronously using `TelegramClient` companion.
+Also `sync` package exists which contains functions which can be called synchronously using `TelegramClient` companion object.
  ```kotlin
 fun TelegramClient.Companion.setLogVerbosityLevel(newVerbosityLevel: Int): Ok
 ``` 
@@ -79,25 +79,38 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.whyoleg.ktd:ktd-coroutines-api-latest:0.4.0"
+    //td api by version
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.4"
+    //or for android
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines-android:0.5.0-1.5.4"
+    //or for common
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines:0.5.0-1.5.4"
+    //or for another td api version
+    implementation "dev.whyoleg.ktd:ktd-api-coroutines-jvm:0.5.0-1.5.0"
 }
 ```
 
-Available dependencies:
-  - `ktd-raw-client` - raw client contains bindings for interaction with `tdlib`
-  - `ktd-raw-api-*` - raw api contains generated kotlin classes and built-in `tdlib` library for specific `tdlib` version
-    - `ktd-raw-api-v1.5.0` 
-    - `ktd-raw-api-v1.5.1`
-    - `ktd-raw-api-latest` - for now latest = 1.5.1
-  - `ktd-coroutines-client` - client with support of `suspend` and `Flow`
-  - `ktd-coroutines-api-*` - contains generated fast accessors for api classes
-    - `ktd-coroutines-api-v1.5.0` 
-    - `ktd-coroutines-api-v1.5.1` 
-    - `ktd-coroutines-api-latest`  - for now latest = 1.5.1
-  - `ktd-api-stub` - api stub that can be used in `compileOnly` scope with `ktd-*-client` dependency
-  
-Now library published only to bintray, it will change in future.
+- Available artifacts:
+  - Client: `dev.whyoleg.ktd:ktd-client-[type]-[platform]:[version]` - tdlib bindings
+  - API: `dev.whyoleg.ktd:ktd-api-[type]-[platform]:[version]-[tdlib-version]` - generated API accessors
+- Supported configurations:
+    - `version` - ktd version, f.e. 0.5.0
+    - `type` - level of abstraction
+      - `raw` - simple client with low-level bindings
+      - `corotutines` - standard client with `suspend` functions for execution and `updates` Flow for consuming updates
+    - `platform`
+      - jvm
+      - android (only for api, for client `jvm` can be used instead)
+      - metadata (common)
+      - omit `platfrom` to use `GRADLE_METADATA` dependency
+    - `tdlib-version`
+      - 1.5.4
+      - 1.5.3
+      - 1.5.2
+      - 1.5.1
+      - 1.5.0
 
+Now library published only to bintray, it will change in future.
 
 ## Status
 

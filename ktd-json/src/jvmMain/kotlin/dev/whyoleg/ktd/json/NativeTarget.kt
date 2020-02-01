@@ -22,15 +22,8 @@ internal enum class NativeTarget(val lib: String, val ext: String) {
 
 internal val NativeTarget.libPath: String get() = "libs/${name.toLowerCase()}/${lib}.${ext}"
 
-internal fun loadTdlib(libPath: String? = null) {
-    when {
-        libPath != null -> runCatching {
-            println("Try to load tdlib from local path: $libPath")
-            System.load(libPath)
-        }
-        else            -> Result.failure(IllegalArgumentException("No path provided"))
-    }.recoverCatching {
-        it.printStackTrace()
+internal fun loadTdlib() {
+    runCatching {
         println("Try to load tdlib as library")
         System.loadLibrary("tdjni")
     }.recoverCatching {

@@ -4,4 +4,6 @@ import dev.whyoleg.kamp.project.*
 
 object ProjectModules {
     val json = ProjectModule(":json")
+    val api = ProjectModule(":api")
+    val api_client = ProjectModule(":api-client")
 }

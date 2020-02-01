@@ -31,4 +31,6 @@ inline fun ModuleContext.m(name: String, block: ModuleContext.() -> Unit = {}) =
 
 modules {
     m("json")
+    m("api")
+    m("api-client")
 }

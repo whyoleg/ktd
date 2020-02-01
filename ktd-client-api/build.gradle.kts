@@ -15,7 +15,7 @@ kotlin {
 
     metadata {
         dependenciesMain {
-            compileOnly(ProjectModules.Api.stub)
+            api(ProjectModules.api_client)
         }
     }
 }

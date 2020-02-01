@@ -33,4 +33,6 @@ modules {
     m("json")
     m("api")
     m("api-client")
+    m("client")
+    m("client-api")
 }

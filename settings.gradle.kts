@@ -36,17 +36,6 @@ modules {
             it("client/$it")
         }
     }
-    "api" {
-        "stub"("api/stub")
-        "integration"()
-        (types + "lib").forEach { type ->
-            type("api/$type") {
-                tdVersions.forEach {
-                    "v$it"("api/$type/v$it")
-                }
-            }
-        }
-    }
     "cli"()
     if (tdOnlyVersion == null) "examples"()
 }

@@ -8,4 +8,27 @@ object ProjectModules {
     val api_client = ProjectModule(":api-client")
     val client = ProjectModule(":client")
     val client_api = ProjectModule(":client-api")
+    val clients = ProjectModule(":clients")
+
+    object Clients {
+        val client_deferred = ProjectModule(":clients-client-deferred")
+    }
+
+    val storage = ProjectModule(":storage")
+
+    object Storage {
+        val storage_channel = ProjectModule(":storage-storage-channel")
+    }
+
+    val updates = ProjectModule(":updates")
+
+    object Updates {
+        val updates_flow = ProjectModule(":updates-updates-flow")
+    }
+
+    val runners = ProjectModule(":runners")
+
+    object Runners {
+        val runner_coroutines = ProjectModule(":runners-runner-coroutines")
+    }
 }

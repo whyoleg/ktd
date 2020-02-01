@@ -27,7 +27,10 @@ val tdVersions = tdOnlyVersion?.let(::listOf) ?: listOf(
     "1.5.4"
 )
 
-inline fun ModuleContext.m(name: String, block: ModuleContext.() -> Unit = {}) = name("ktd-$name", block = block)
+inline fun ModuleContext.m(name: String, path: String? = null, block: ModuleContext.() -> Unit = {}) {
+    val p = path?.let { "$it/" } ?: ""
+    name("${p}ktd-$name", block = block)
+}
 
 modules {
     m("json")
@@ -35,4 +38,20 @@ modules {
     m("api-client")
     m("client")
     m("client-api")
+
+    "clients" {
+        m("client-deferred", "clients")
+    }
+
+    "storage" {
+        m("storage-channel", "storage") //experimental
+    }
+
+    "updates" {
+        m("updates-flow", "updates") //experimental
+    }
+
+    "runners" {
+        m("runner-coroutines", "runners") //experimental
+    }
 }

@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd
+package dev.whyoleg.ktd.client.runner
 
 import kotlinx.coroutines.*
 

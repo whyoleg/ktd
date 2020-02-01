@@ -1,3 +1,5 @@
+import dev.whyoleg.kamp.project.*
+
 buildscript {
     repositories {
         maven("https://dl.bintray.com/whyoleg/kamp")
@@ -25,17 +27,8 @@ val tdVersions = tdOnlyVersion?.let(::listOf) ?: listOf(
     "1.5.4"
 )
 
-val types = listOf(
-    "raw",
-    "coroutines"
-)
+inline fun ModuleContext.m(name: String, block: ModuleContext.() -> Unit = {}) = name("ktd-$name", block = block)
 
 modules {
-    "client" {
-        types.forEach {
-            it("client/$it")
-        }
-    }
-    "cli"()
-    if (tdOnlyVersion == null) "examples"()
+    m("json")
 }

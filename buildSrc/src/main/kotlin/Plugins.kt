@@ -12,4 +12,6 @@ object Plugins {
         GradleBuiltInPlugins.application,
         GradleBuiltInPlugins.mavenPublish
     )
+
+    val serializationModule = listOf(KotlinPlugins.Stable.serialization)
 }

@@ -6,7 +6,7 @@ Ordering of implementation is not static.
 - [x] JVM linux, macos, win32, win64 support
 - [x] Automated tdlib build for all platforms
 - [x] Artifacts per tdlib version. One version of library - different artifacts per tdlib version.
-- [ ] Android support
+- [x] Android support
 - [ ] iOS support
 - [ ] JS support
 - [ ] Native support

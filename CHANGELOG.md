@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.0
+> Unreleased
+
 ## 0.5.0
 > Released January 22, 2020
 - Support Android: armeabi-v7a, arm64-v8a, x86, x86_64

@@ -29,8 +29,9 @@ fun Project.configureCoroutinesApi() {
         }
         metadata {
             dependenciesMain {
-                api(ProjectModules.Client.coroutines)
-                api(ProjectModule(":api-raw-v${project.apiVersion}"))
+                //TODO change later
+                api(ProjectModule(":client-suspend"))
+                api(ProjectModule(":api-typed-v${project.apiVersion}"))
             }
         }
     }

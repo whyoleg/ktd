@@ -18,4 +18,19 @@ object Dependencies {
     fun ktdApiCoroutines(tdVersion: String) =
         group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
             .artifact("ktd-api-coroutines").version("${Versions.ktdVersion}-$tdVersion").common
+
+    object Reactive {
+        val rx2 =
+            group("io.reactivex.rxjava2", RepositoryProviders.mavenCentral)
+                .artifact("rxjava").version(Versions.Reactive.rx2).jvm
+        val rx3 =
+            group("io.reactivex.rxjava3", RepositoryProviders.mavenCentral)
+                .artifact("rxjava").version(Versions.Reactive.rx3).jvm
+        val reactor =
+            group("io.projectreactor", RepositoryProviders.mavenCentral)
+                .artifact("reactor-core").version(Versions.Reactive.reactor).jvm
+        val reaktive =
+            group("com.badoo.reaktive", RepositoryProviders.bintray("badoo", "maven"))
+                .artifact("reaktive").version(Versions.Reactive.reaktive).common
+    }
 }

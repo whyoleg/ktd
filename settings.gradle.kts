@@ -41,6 +41,10 @@ modules {
 
     "clients" {
         m("client-deferred", "clients")
+        m("client-rx2", "clients") //experimental
+        m("client-rx3", "clients") //experimental
+        m("client-reactor", "clients") //experimental
+        m("client-reaktive", "clients") //experimental
     }
 
     "storage" {

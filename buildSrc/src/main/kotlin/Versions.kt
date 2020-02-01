@@ -7,4 +7,11 @@ object Versions {
     const val dotenv = "5.1.3"
 
     const val ktdVersion = "0.5.0"
+
+    object Reactive {
+        val rx2 = "2.2.17"
+        val rx3 = "3.0.0-RC8"
+        val reactor = "3.3.2.RELEASE"
+        val reaktive = "1.1.8"
+    }
 }

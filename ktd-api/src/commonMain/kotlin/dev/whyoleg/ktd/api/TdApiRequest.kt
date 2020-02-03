@@ -1,6 +1,12 @@
 package dev.whyoleg.ktd.api
 
 /**
+ * Requests to [StaticTdApi] are untyped.
+ * Typing need to be handled on clients level.
+ */
+typealias TdApiRequest = TdRequest<*>
+
+/**
  * Represents request with associated [TdResponse] of type [R].
  * Response from [StaticTdApi] will be of type [TdResponseOrError]
  */
@@ -17,9 +23,3 @@ interface TdRequest<R : TdResponse> : TdPayload {
  * Represents [TdRequest] which can be executed synchronously.
  */
 interface SyncTdRequest<R : TdResponse> : TdRequest<R>
-
-/**
- * Requests to [StaticTdApi] are untyped.
- * Typing need to be handled on clients level.
- */
-typealias TdApiRequest = TdRequest<*>

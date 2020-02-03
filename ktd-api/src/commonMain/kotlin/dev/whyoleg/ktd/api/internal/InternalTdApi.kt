@@ -4,6 +4,7 @@ import dev.whyoleg.ktd.api.*
 import dev.whyoleg.ktd.json.*
 import kotlinx.serialization.modules.*
 
+@Suppress("FunctionName")
 @Deprecated(message = "Used internally inside api to init api and configure serialization", level = DeprecationLevel.ERROR)
 fun InternalTdApi(
     version: String,

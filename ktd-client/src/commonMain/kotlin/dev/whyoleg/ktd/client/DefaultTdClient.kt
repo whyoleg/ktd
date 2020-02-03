@@ -9,36 +9,37 @@ class DefaultTdClient(
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {}
 ) : TdClient {
-    private val client by lazy { IncrementalTdApiClient(api) }
-    override val id: Long get() = client.id
-
-    private val clientClosed = atomic(false) //todo check perf with enum(3) versus 2 bool flags
     private val clientClosing = atomic(false)
+    private val clientClosed = atomic(false)
 
     override val isClosed: Boolean get() = clientClosed.value
 
     private val callbacks = ConcurrentMap<Long, TdCallback>()
 
-    init {
-        runner.run(id) {
-            val response = client.receive(runner.timeout) ?: return@run true
-            if (response is UpdateTdState) when (response.state) {
-                is TdClosing -> clientClosing.value = true
-                is TdClosed  -> clientClosed.value = true
-            }
-            when (response) {
-                is TdUpdate          -> updatesCallback(response)
+    private val client by lazy {
+        val client = IncrementalTdApiClient(api)
+        runner.run(client.id) {
+            when (val response = client.receive(runner.timeout)) {
+                null                 -> Unit
+                is TdUpdate          -> {
+                    updatesCallback(response)
+                    if (response is TdUpdateState) when (response.state) {
+                        is TdClosing -> clientClosing.value = true
+                        is TdClosed  -> clientClosed.value = true
+                    }
+                }
                 is TdResponseOrError -> callbacks.remove(response.extra.id)?.invoke(TdResult(response))
             }
-
-            if (clientClosed.value && callbacks.size == 0) {
+            if (clientClosed.value && callbacks.isEmpty()) {
                 client.unsafeDestroy()
                 false
             } else {
                 true
             }
         }
+        client
     }
+    override val id: Long get() = client.id
 
     override fun close(callback: TypedTdCallback<TdOk>?): Unit = closeWith(TdClose(), callback)
     override fun logOut(callback: TypedTdCallback<TdOk>?): Unit = closeWith(TdLogOut(), callback)
@@ -52,8 +53,8 @@ class DefaultTdClient(
 
     override fun <R : TdResponse> sendCallback(request: TdRequest<R>, callback: TypedTdCallback<R>?) {
         if (clientClosing.value) callback?.invoke(TdResult(TdError(500, "Client is closing now.")))
-        else client.send(request) { id ->
-            callback?.let { callbacks[id] = @Suppress("UNCHECKED_CAST") (it as TdCallback) }
+        else client.send(request) { requestId ->
+            callback?.let { callbacks[requestId] = @Suppress("UNCHECKED_CAST") (it as TdCallback) }
         }
     }
 

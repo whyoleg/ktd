@@ -1,7 +1,6 @@
-package dev.whyoleg.ktd.client.future
+package dev.whyoleg.ktd.client
 
 import dev.whyoleg.ktd.api.*
-import dev.whyoleg.ktd.client.*
 import java.util.concurrent.*
 
 class FutureTdClient(

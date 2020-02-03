@@ -5,9 +5,7 @@ import dev.whyoleg.kamp.project.*
 object ProjectModules {
     val json = ProjectModule(":json")
     val api = ProjectModule(":api")
-    val api_client = ProjectModule(":api-client")
     val client = ProjectModule(":client")
-    val client_api = ProjectModule(":client-api")
     val clients = ProjectModule(":clients")
 
     object Clients {
@@ -16,11 +14,6 @@ object ProjectModules {
         val client_rx3 = ProjectModule(":clients-client-rx3")
         val client_reactor = ProjectModule(":clients-client-reactor")
         val client_reaktive = ProjectModule(":clients-client-reaktive")
-    }
-    val storage = ProjectModule(":storage")
-
-    object Storage {
-        val storage_channel = ProjectModule(":storage-storage-channel")
     }
     val updates = ProjectModule(":updates")
 

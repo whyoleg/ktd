@@ -1,5 +1,5 @@
 plugins {
-    use(Plugins.mppModule)
+    use(Plugins.mppModule + Plugins.atomicfuModule)
 }
 
 configureMultiplatform()
@@ -7,6 +7,7 @@ configureMultiplatform()
 kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
+        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
     }
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
@@ -15,7 +16,7 @@ kotlin {
 
     metadata {
         dependenciesMain {
-            api(ProjectModules.client_api)
+            api(ProjectModules.api)
         }
     }
 }

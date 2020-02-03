@@ -35,9 +35,7 @@ inline fun ModuleContext.m(name: String, path: String? = null, block: ModuleCont
 modules {
     m("json")
     m("api")
-    m("api-client")
     m("client")
-    m("client-api")
 
     "clients" {
         m("client-deferred", "clients")
@@ -45,10 +43,6 @@ modules {
         m("client-rx3", "clients") //experimental
         m("client-reactor", "clients") //experimental
         m("client-reaktive", "clients") //experimental
-    }
-
-    "storage" {
-        m("storage-channel", "storage") //experimental
     }
 
     "updates" {

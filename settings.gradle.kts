@@ -33,6 +33,8 @@ inline fun ModuleContext.m(name: String, path: String? = null, block: ModuleCont
 }
 
 modules {
+    "cli"()
+
     m("json")
     m("api")
     m("client")

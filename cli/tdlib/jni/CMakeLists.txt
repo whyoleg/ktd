@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-project(ktd VERSION 1 LANGUAGES CXX)
+project(ktd VERSION 2 LANGUAGES CXX)
 
 string(APPEND CMAKE_CXX_FLAGS " -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti")
 if (APPLE)
@@ -20,12 +20,9 @@ if (NOT Java_FOUND)
 endif()
 message(STATUS "Found Java: ${Java_JAVAC_EXECUTABLE} ${Java_JAVADOC_EXECUTABLE}")
 
-set(TD_API_JAVA_PACKAGE "dev/whyoleg/ktd")
-
-add_library(tdjni SHARED td_jni.cpp)
+add_library(tdjni SHARED td_json.cpp)
 target_include_directories(tdjni PRIVATE ${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2})
-target_link_libraries(tdjni PRIVATE Td::TdStatic ${JAVA_JVM_LIBRARY})
-target_compile_definitions(tdjni PRIVATE PACKAGE_NAME="${TD_API_JAVA_PACKAGE}")
+target_link_libraries(tdjni PRIVATE Td::TdJsonStatic ${JAVA_JVM_LIBRARY})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(GCC 1)

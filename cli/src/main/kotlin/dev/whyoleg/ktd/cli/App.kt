@@ -20,6 +20,8 @@ private fun parser() = ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_ST
     )
 }
 
+fun ArgParser.parse(string: String) = parse(string.cmd())
+
 fun main2() {
     //example commands
     val api = "api -v 1.5.4"

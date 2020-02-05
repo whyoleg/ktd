@@ -18,15 +18,9 @@ fun StringBuilder.buildApi(scheme: TlScheme) {
     withCurlyBrackets {
         append("\n")
         append("abstract class Object ")
-        withCurlyBrackets {
-            append("external override fun toString(): String\n")
-            append("abstract val constructor: Int")
-        }
+        append("\n")
         append("\n")
         append("abstract class Function : Object() ")
-        withCurlyBrackets {
-            append("external override fun toString(): String")
-        }
         scheme.data.forEach {
             append("\n")
             buildClass(it, scheme.metadata[it])

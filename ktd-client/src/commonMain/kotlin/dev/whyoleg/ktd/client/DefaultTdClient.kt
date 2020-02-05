@@ -23,7 +23,7 @@ class DefaultTdClient(
                 null                 -> Unit
                 is TdUpdate          -> {
                     updatesCallback(response)
-                    if (response is TdUpdateState) when (response.state) {
+                    if (response is TdStateUpdated) when (response.state) {
                         is TdClosing -> clientClosing.value = true
                         is TdClosed  -> clientClosed.value = true
                     }

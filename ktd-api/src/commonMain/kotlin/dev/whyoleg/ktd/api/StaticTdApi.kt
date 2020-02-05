@@ -21,7 +21,7 @@ class StaticTdApi internal constructor(val version: String, private val serializ
     fun receiveFrom(clientId: Long, timeout: Double = DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? =
         TdJson.receive(clientId, timeout)?.let(serializer::parse)
 
-    fun <R : TdResponse> executeSynchronously(request: SyncTdRequest<R>): TdResult<R> =
+    fun <R : TdResponse> executeSynchronously(request: TdSyncRequest<R>): TdResult<R> =
         TdResult(TdJson.execute(serializer.stringify(request)).let(serializer::parse) as TdResponseOrError)
 
     companion object {

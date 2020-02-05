@@ -9,6 +9,8 @@ typealias TdApiRequest = TdRequest<*>
 /**
  * Represents request with associated [TdResponse] of type [R].
  * Response from [StaticTdApi] will be of type [TdResponseOrError]
+ *
+ * @param[R] type of associated [TdResponse]
  */
 interface TdRequest<R : TdResponse> : TdPayload {
     /**
@@ -22,4 +24,4 @@ interface TdRequest<R : TdResponse> : TdPayload {
 /**
  * Represents [TdRequest] which can be executed synchronously.
  */
-interface SyncTdRequest<R : TdResponse> : TdRequest<R>
+interface TdSyncRequest<R : TdResponse> : TdRequest<R>

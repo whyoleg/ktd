@@ -26,7 +26,7 @@ fun List<TlData>.extractMetadata(): TlSchemeMetadata {
     val functions = filterIsInstance<TlFunction>()
     val functionReturnTypes = functions.map { it.returnType.toLowerCase() }.toSet() + "Update"
     val typesWithNullableProperties =
-        filter { it.type.toLowerCase() in functionReturnTypes || it.parentType.toLowerCase() in functionReturnTypes }
+        filter { it.type.toLowerCase() in functionReturnTypes || it.parentType?.toLowerCase() in functionReturnTypes }
             .map { it.type.toLowerCase() }
             .toSet()
 
@@ -35,7 +35,7 @@ fun List<TlData>.extractMetadata(): TlSchemeMetadata {
         val typesWithDefaults = init.propertyTypes()
         val nested =
             filter { it.type.toLowerCase() !in set }
-                .filter { it.type.toLowerCase() in typesWithDefaults || it.parentType.toLowerCase() in typesWithDefaults }
+                .filter { it.type.toLowerCase() in typesWithDefaults || it.parentType?.toLowerCase() in typesWithDefaults }
         return when {
             nested.isEmpty() -> set
             else             -> getAll(nested, set + typesWithDefaults + nested.map { it.type.toLowerCase() })

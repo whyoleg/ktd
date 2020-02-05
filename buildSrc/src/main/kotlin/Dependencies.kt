@@ -14,6 +14,9 @@ object Dependencies {
         group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
             .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
 
+    val kotlinPoet =
+        group("com.squareup", RepositoryProviders.mavenCentral)
+            .artifact("kotlinpoet").version(Versions.kotlinPoet).jvm
 
     fun ktdApiCoroutines(tdVersion: String) =
         group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)

@@ -1,274 +1,407 @@
-@file:Suppress(
-    "unused"
-)
-@file:UseExperimental(
-    BotsOnly::class,
-    TestingOnly::class
-)
-
 package dev.whyoleg.ktd.api
 
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Byte
+import kotlin.Double
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 typealias TelegramObject = TdApi.Object
+
 typealias TelegramFunction = TdApi.Function
+
 typealias TelegramUpdate = TdApi.Update
+
 typealias TelegramError = TdApi.Error
 
 class TdApi {
-
-    abstract class Object
+    abstract class Object : TdObject
 
     abstract class Function : Object()
 
     /**
      * An object of this type can be returned on every function call, in case of an error
      *
-     * @code - Error code
-     *         Subject to future changes
-     *         If the error code is 406, the error message must not be processed in any way and must not be displayed to the user
-     * @message - Error message
-     *            Subject to future changes
+     * @property code Error code
+     *                Subject to future changes
+     *                If the error code is 406, the error message must not be processed in any way and must not be displayed to the user
+     * @property message Error message
+     *                   Subject to future changes
+     * @property extra Extra data shared between request and response
      */
-    class Error(
-        val code: Int = 0,
-        val message: String
-    ) : Object()
+    @Serializable
+    @SerialName("error")
+    data class Error(
+        @SerialName("code")
+        val code: Int,
+        @SerialName("message")
+        val message: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * An object of this type is returned on a successful function call for certain functions
+     *
+     * @property extra Extra data shared between request and response
      */
-    class Ok : Object()
+    @Serializable
+    @SerialName("ok")
+    data class Ok(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains parameters for TDLib initialization
      *
-     * @useTestDc - If set to true, the Telegram test environment will be used instead of the production environment
-     * @databaseDirectory - The path to the directory for the persistent database
-     *                      If empty, the current working directory will be used
-     * @filesDirectory - The path to the directory for storing files
-     *                   If empty, database_directory will be used
-     * @useFileDatabase - If set to true, information about downloaded and uploaded files will be saved between application restarts
-     * @useChatInfoDatabase - If set to true, the library will maintain a cache of users, basic groups, supergroups, channels and secret chats
-     *                        Implies use_file_database
-     * @useMessageDatabase - If set to true, the library will maintain a cache of chats and messages
-     *                       Implies use_chat_info_database
-     * @useSecretChats - If set to true, support for secret chats will be enabled
-     * @apiId - Application identifier for Telegram API access, which can be obtained at https://my.telegram.org
-     * @apiHash - Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org
-     * @systemLanguageCode - IETF language tag of the user's operating system language
-     * @deviceModel - Model of the device the application is being run on
-     * @systemVersion - Version of the operating system the application is being run on
-     * @applicationVersion - Application version
-     * @enableStorageOptimizer - If set to true, old files will automatically be deleted
-     * @ignoreFileNames - If set to true, original file names will be ignored
-     *                    Otherwise, downloaded files will be saved under names as close as possible to the original name
+     * @property useTestDc If set to true, the Telegram test environment will be used instead of the production environment
+     * @property databaseDirectory The path to the directory for the persistent database
+     *                             If empty, the current working directory will be used
+     * @property filesDirectory The path to the directory for storing files
+     *                          If empty, database_directory will be used
+     * @property useFileDatabase If set to true, information about downloaded and uploaded files will be saved between application restarts
+     * @property useChatInfoDatabase If set to true, the library will maintain a cache of users, basic groups, supergroups, channels and secret chats
+     *                               Implies use_file_database
+     * @property useMessageDatabase If set to true, the library will maintain a cache of chats and messages
+     *                              Implies use_chat_info_database
+     * @property useSecretChats If set to true, support for secret chats will be enabled
+     * @property apiId Application identifier for Telegram API access, which can be obtained at https://my.telegram.org
+     * @property apiHash Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org
+     * @property systemLanguageCode IETF language tag of the user's operating system language
+     * @property deviceModel Model of the device the application is being run on
+     * @property systemVersion Version of the operating system the application is being run on
+     * @property applicationVersion Application version
+     * @property enableStorageOptimizer If set to true, old files will automatically be deleted
+     * @property ignoreFileNames If set to true, original file names will be ignored
+     *                           Otherwise, downloaded files will be saved under names as close as possible to the original name
      */
-    class TdlibParameters(
-        val useTestDc: Boolean = false,
+    @Serializable
+    @SerialName("tdlibParameters")
+    data class TdlibParameters(
+        @SerialName("use_test_dc")
+        val useTestDc: Boolean,
+        @SerialName("database_directory")
         val databaseDirectory: String,
+        @SerialName("files_directory")
         val filesDirectory: String,
-        val useFileDatabase: Boolean = false,
-        val useChatInfoDatabase: Boolean = false,
-        val useMessageDatabase: Boolean = false,
-        val useSecretChats: Boolean = false,
-        val apiId: Int = 0,
+        @SerialName("use_file_database")
+        val useFileDatabase: Boolean,
+        @SerialName("use_chat_info_database")
+        val useChatInfoDatabase: Boolean,
+        @SerialName("use_message_database")
+        val useMessageDatabase: Boolean,
+        @SerialName("use_secret_chats")
+        val useSecretChats: Boolean,
+        @SerialName("api_id")
+        val apiId: Int,
+        @SerialName("api_hash")
         val apiHash: String,
+        @SerialName("system_language_code")
         val systemLanguageCode: String,
+        @SerialName("device_model")
         val deviceModel: String,
+        @SerialName("system_version")
         val systemVersion: String,
+        @SerialName("application_version")
         val applicationVersion: String,
-        val enableStorageOptimizer: Boolean = false,
-        val ignoreFileNames: Boolean = false
+        @SerialName("enable_storage_optimizer")
+        val enableStorageOptimizer: Boolean,
+        @SerialName("ignore_file_names")
+        val ignoreFileNames: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Provides information about the method by which an authentication code is delivered to the user
      */
-    abstract class AuthenticationCodeType : null()
+    abstract class AuthenticationCodeType : Object()
 
     /**
      * An authentication code is delivered via a private Telegram message, which can be viewed in another client
      *
-     * @length - Length of the code
+     * @property length Length of the code
      */
-    class AuthenticationCodeTypeTelegramMessage(
-        val length: Int
+    @Serializable
+    @SerialName("authenticationCodeTypeTelegramMessage")
+    data class AuthenticationCodeTypeTelegramMessage(
+        @SerialName("length")
+        val length: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthenticationCodeType()
 
     /**
      * An authentication code is delivered via an SMS message to the specified phone number
      *
-     * @length - Length of the code
+     * @property length Length of the code
      */
-    class AuthenticationCodeTypeSms(
-        val length: Int
+    @Serializable
+    @SerialName("authenticationCodeTypeSms")
+    data class AuthenticationCodeTypeSms(
+        @SerialName("length")
+        val length: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthenticationCodeType()
 
     /**
      * An authentication code is delivered via a phone call to the specified phone number
      *
-     * @length - Length of the code
+     * @property length Length of the code
      */
-    class AuthenticationCodeTypeCall(
-        val length: Int
+    @Serializable
+    @SerialName("authenticationCodeTypeCall")
+    data class AuthenticationCodeTypeCall(
+        @SerialName("length")
+        val length: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthenticationCodeType()
 
     /**
      * An authentication code is delivered by an immediately cancelled call to the specified phone number
      * The number from which the call was made is the code
      *
-     * @pattern - Pattern of the phone number from which the call will be made
+     * @property pattern Pattern of the phone number from which the call will be made
      */
-    class AuthenticationCodeTypeFlashCall(
-        val pattern: String
+    @Serializable
+    @SerialName("authenticationCodeTypeFlashCall")
+    data class AuthenticationCodeTypeFlashCall(
+        @SerialName("pattern")
+        val pattern: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthenticationCodeType()
 
     /**
      * Information about the authentication code that was sent
      *
-     * @phoneNumber - A phone number that is being authenticated
-     * @type - Describes the way the code was sent to the user
-     * @nextType - Describes the way the next code will be sent to the user
-     * @timeout - Timeout before the code should be re-sent, in seconds
+     * @property phoneNumber A phone number that is being authenticated
+     * @property type Describes the way the code was sent to the user
+     * @property nextType Describes the way the next code will be sent to the user
+     * @property timeout Timeout before the code should be re-sent, in seconds
+     * @property extra Extra data shared between request and response
      */
-    class AuthenticationCodeInfo(
+    @Serializable
+    @SerialName("authenticationCodeInfo")
+    data class AuthenticationCodeInfo(
+        @SerialName("phone_number")
         val phoneNumber: String,
+        @SerialName("type")
         val type: AuthenticationCodeType,
+        @SerialName("next_type")
         val nextType: AuthenticationCodeType?,
-        val timeout: Int
-    ) : Object()
+        @SerialName("timeout")
+        val timeout: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Information about the email address authentication code that was sent
      *
-     * @emailAddressPattern - Pattern of the email address to which an authentication code was sent
-     * @length - Length of the code
-     *           0 if unknown
+     * @property emailAddressPattern Pattern of the email address to which an authentication code was sent
+     * @property length Length of the code
+     *                  0 if unknown
+     * @property extra Extra data shared between request and response
      */
-    class EmailAddressAuthenticationCodeInfo(
+    @Serializable
+    @SerialName("emailAddressAuthenticationCodeInfo")
+    data class EmailAddressAuthenticationCodeInfo(
+        @SerialName("email_address_pattern")
         val emailAddressPattern: String,
-        val length: Int
-    ) : Object()
+        @SerialName("length")
+        val length: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a part of the text that needs to be formatted in some unusual way
      *
-     * @offset - Offset of the entity in UTF-16 code points
-     * @length - Length of the entity, in UTF-16 code points
-     * @type - Type of the entity
+     * @property offset Offset of the entity in UTF-16 code points
+     * @property length Length of the entity, in UTF-16 code points
+     * @property type Type of the entity
      */
-    class TextEntity(
-        val offset: Int = 0,
-        val length: Int = 0,
-        val type: TextEntityType
+    @Serializable
+    @SerialName("textEntity")
+    data class TextEntity(
+        @SerialName("offset")
+        val offset: Int,
+        @SerialName("length")
+        val length: Int,
+        @SerialName("type")
+        val type: TextEntityType,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of text entities
      *
-     * @entities - List of text entities
+     * @property entities List of text entities
+     * @property extra Extra data shared between request and response
      */
-    class TextEntities(
-        val entities: Array<TextEntity>
-    ) : Object()
+    @Serializable
+    @SerialName("textEntities")
+    data class TextEntities(
+        @SerialName("entities")
+        val entities: Array<TextEntity>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A text with some entities
      *
-     * @text - The text
-     * @entities - Entities contained in the text
+     * @property text The text
+     * @property entities Entities contained in the text
+     * @property extra Extra data shared between request and response
      */
-    class FormattedText(
+    @Serializable
+    @SerialName("formattedText")
+    data class FormattedText(
+        @SerialName("text")
         val text: String,
-        val entities: Array<TextEntity> = emptyArray()
-    ) : Object()
+        @SerialName("entities")
+        val entities: Array<TextEntity>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains Telegram terms of service
      *
-     * @text - Text of the terms of service
-     * @minUserAge - Minimum age of a user to be able to accept the terms
-     *               0 if any
-     * @showPopup - True, if a blocking popup with terms of service must be shown to the user
+     * @property text Text of the terms of service
+     * @property minUserAge Minimum age of a user to be able to accept the terms
+     *                      0 if any
+     * @property showPopup True, if a blocking popup with terms of service must be shown to the user
      */
-    class TermsOfService(
+    @Serializable
+    @SerialName("termsOfService")
+    data class TermsOfService(
+        @SerialName("text")
         val text: FormattedText,
+        @SerialName("min_user_age")
         val minUserAge: Int,
-        val showPopup: Boolean
+        @SerialName("show_popup")
+        val showPopup: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents the current authorization state of the client
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class AuthorizationState : null()
+    abstract class AuthorizationState : Object(), TdResponse
 
     /**
      * TDLib needs TdlibParameters for initialization
      */
-    class AuthorizationStateWaitTdlibParameters : AuthorizationState()
+    @Serializable
+    @SerialName("authorizationStateWaitTdlibParameters")
+    data class AuthorizationStateWaitTdlibParameters(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : AuthorizationState()
 
     /**
      * TDLib needs an encryption key to decrypt the local database
      *
-     * @isEncrypted - True, if the database is currently encrypted
+     * @property isEncrypted True, if the database is currently encrypted
      */
-    class AuthorizationStateWaitEncryptionKey(
-        val isEncrypted: Boolean
+    @Serializable
+    @SerialName("authorizationStateWaitEncryptionKey")
+    data class AuthorizationStateWaitEncryptionKey(
+        @SerialName("is_encrypted")
+        val isEncrypted: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthorizationState()
 
     /**
      * TDLib needs the user's phone number to authorize
      */
-    class AuthorizationStateWaitPhoneNumber : AuthorizationState()
+    @Serializable
+    @SerialName("authorizationStateWaitPhoneNumber")
+    data class AuthorizationStateWaitPhoneNumber(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : AuthorizationState()
 
     /**
      * TDLib needs the user's authentication code to authorize
      *
-     * @codeInfo - Information about the authorization code that was sent
+     * @property codeInfo Information about the authorization code that was sent
      */
-    class AuthorizationStateWaitCode(
-        val codeInfo: AuthenticationCodeInfo
+    @Serializable
+    @SerialName("authorizationStateWaitCode")
+    data class AuthorizationStateWaitCode(
+        @SerialName("code_info")
+        val codeInfo: AuthenticationCodeInfo,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthorizationState()
 
     /**
      * The user is unregistered and need to accept terms of service and enter their first name and last name to finish registration
      *
-     * @termsOfService - Telegram terms of service
+     * @property termsOfService Telegram terms of service
      */
-    class AuthorizationStateWaitRegistration(
-        val termsOfService: TermsOfService
+    @Serializable
+    @SerialName("authorizationStateWaitRegistration")
+    data class AuthorizationStateWaitRegistration(
+        @SerialName("terms_of_service")
+        val termsOfService: TermsOfService,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthorizationState()
 
     /**
      * The user has been authorized, but needs to enter a password to start using the application
      *
-     * @passwordHint - Hint for the password
-     * @hasRecoveryEmailAddress - True, if a recovery email address has been set up
-     * @recoveryEmailAddressPattern - Pattern of the email address to which the recovery email was sent
-     *                                Empty until a recovery email has been sent
+     * @property passwordHint Hint for the password
+     * @property hasRecoveryEmailAddress True, if a recovery email address has been set up
+     * @property recoveryEmailAddressPattern Pattern of the email address to which the recovery email was sent
+     *                                       Empty until a recovery email has been sent
      */
-    class AuthorizationStateWaitPassword(
+    @Serializable
+    @SerialName("authorizationStateWaitPassword")
+    data class AuthorizationStateWaitPassword(
+        @SerialName("password_hint")
         val passwordHint: String?,
+        @SerialName("has_recovery_email_address")
         val hasRecoveryEmailAddress: Boolean,
-        val recoveryEmailAddressPattern: String
+        @SerialName("recovery_email_address_pattern")
+        val recoveryEmailAddressPattern: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : AuthorizationState()
 
     /**
      * The user has been successfully authorized
      * TDLib is now ready to answer queries
      */
-    class AuthorizationStateReady : AuthorizationState()
+    @Serializable
+    @SerialName("authorizationStateReady")
+    data class AuthorizationStateReady(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : AuthorizationState()
 
     /**
      * The user is currently logging out
      */
-    class AuthorizationStateLoggingOut : AuthorizationState()
+    @Serializable
+    @SerialName("authorizationStateLoggingOut")
+    data class AuthorizationStateLoggingOut(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : AuthorizationState()
 
     /**
      * TDLib is closing, all subsequent queries will be answered with the error 500
      * Note that closing TDLib can take a while
      * All resources will be freed only after authorizationStateClosed has been received
      */
-    class AuthorizationStateClosing : AuthorizationState()
+    @Serializable
+    @SerialName("authorizationStateClosing")
+    data class AuthorizationStateClosing(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : AuthorizationState()
 
     /**
      * TDLib client is in its final state
@@ -277,419 +410,605 @@ class TdApi {
      * All queries will be responded to with error code 500
      * To continue working, one should create a new instance of the TDLib client
      */
-    class AuthorizationStateClosed : AuthorizationState()
+    @Serializable
+    @SerialName("authorizationStateClosed")
+    data class AuthorizationStateClosed(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : AuthorizationState()
 
     /**
      * Represents the current state of 2-step verification
      *
-     * @hasPassword - True, if a 2-step verification password is set
-     * @passwordHint - Hint for the password
-     * @hasRecoveryEmailAddress - True, if a recovery email is set
-     * @hasPassportData - True, if some Telegram Passport elements were saved
-     * @recoveryEmailAddressCodeInfo - Information about the recovery email address to which the confirmation email was sent
+     * @property hasPassword True, if a 2-step verification password is set
+     * @property passwordHint Hint for the password
+     * @property hasRecoveryEmailAddress True, if a recovery email is set
+     * @property hasPassportData True, if some Telegram Passport elements were saved
+     * @property recoveryEmailAddressCodeInfo Information about the recovery email address to which the confirmation email was sent
+     * @property extra Extra data shared between request and response
      */
-    class PasswordState(
+    @Serializable
+    @SerialName("passwordState")
+    data class PasswordState(
+        @SerialName("has_password")
         val hasPassword: Boolean,
+        @SerialName("password_hint")
         val passwordHint: String?,
+        @SerialName("has_recovery_email_address")
         val hasRecoveryEmailAddress: Boolean,
+        @SerialName("has_passport_data")
         val hasPassportData: Boolean,
-        val recoveryEmailAddressCodeInfo: EmailAddressAuthenticationCodeInfo?
-    ) : Object()
+        @SerialName("recovery_email_address_code_info")
+        val recoveryEmailAddressCodeInfo: EmailAddressAuthenticationCodeInfo?,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about the current recovery email address
      *
-     * @recoveryEmailAddress - Recovery email address
+     * @property recoveryEmailAddress Recovery email address
+     * @property extra Extra data shared between request and response
      */
-    class RecoveryEmailAddress(
-        val recoveryEmailAddress: String
-    ) : Object()
+    @Serializable
+    @SerialName("recoveryEmailAddress")
+    data class RecoveryEmailAddress(
+        @SerialName("recovery_email_address")
+        val recoveryEmailAddress: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Returns information about the availability of a temporary password, which can be used for payments
      *
-     * @hasPassword - True, if a temporary password is available
-     * @validFor - Time left before the temporary password expires, in seconds
+     * @property hasPassword True, if a temporary password is available
+     * @property validFor Time left before the temporary password expires, in seconds
+     * @property extra Extra data shared between request and response
      */
-    class TemporaryPasswordState(
+    @Serializable
+    @SerialName("temporaryPasswordState")
+    data class TemporaryPasswordState(
+        @SerialName("has_password")
         val hasPassword: Boolean,
-        val validFor: Int
-    ) : Object()
+        @SerialName("valid_for")
+        val validFor: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a local file
      *
-     * @path - Local path to the locally available file part
-     * @canBeDownloaded - True, if it is possible to try to download or generate the file
-     * @canBeDeleted - True, if the file can be deleted
-     * @isDownloadingActive - True, if the file is currently being downloaded (or a local copy is being generated by some other means)
-     * @isDownloadingCompleted - True, if the local copy is fully available
-     * @downloadOffset - Download will be started from this offset
-     *                   Downloaded_prefix_size is calculated from this offset
-     * @downloadedPrefixSize - If is_downloading_completed is false, then only some prefix of the file starting from download_offset is ready to be read
-     *                         Downloaded_prefix_size is the size of that prefix
-     * @downloadedSize - Total downloaded file bytes
-     *                   Should be used only for calculating download progress
-     *                   The actual file size may be bigger, and some parts of it may contain garbage
+     * @property path Local path to the locally available file part
+     * @property canBeDownloaded True, if it is possible to try to download or generate the file
+     * @property canBeDeleted True, if the file can be deleted
+     * @property isDownloadingActive True, if the file is currently being downloaded (or a local copy is being generated by some other means)
+     * @property isDownloadingCompleted True, if the local copy is fully available
+     * @property downloadOffset Download will be started from this offset
+     *                          Downloaded_prefix_size is calculated from this offset
+     * @property downloadedPrefixSize If is_downloading_completed is false, then only some prefix of the file starting from download_offset is ready to be read
+     *                                Downloaded_prefix_size is the size of that prefix
+     * @property downloadedSize Total downloaded file bytes
+     *                          Should be used only for calculating download progress
+     *                          The actual file size may be bigger, and some parts of it may contain garbage
      */
-    class LocalFile(
+    @Serializable
+    @SerialName("localFile")
+    data class LocalFile(
+        @SerialName("path")
         val path: String?,
+        @SerialName("can_be_downloaded")
         val canBeDownloaded: Boolean,
+        @SerialName("can_be_deleted")
         val canBeDeleted: Boolean,
+        @SerialName("is_downloading_active")
         val isDownloadingActive: Boolean,
+        @SerialName("is_downloading_completed")
         val isDownloadingCompleted: Boolean,
+        @SerialName("download_offset")
         val downloadOffset: Int,
+        @SerialName("downloaded_prefix_size")
         val downloadedPrefixSize: Int,
-        val downloadedSize: Int
+        @SerialName("downloaded_size")
+        val downloadedSize: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents a remote file
      *
-     * @id - Remote file identifier
-     *       Can be used across application restarts or even from other devices for the current user
-     *       If the ID starts with "http://" or "https://", it represents the HTTP URL of the file
-     *       TDLib is currently unable to download files if only their URL is known
-     *       If downloadFile is called on such a file or if it is sent to a secret chat, TDLib starts a file generation process by sending updateFileGenerationStart to the client with the HTTP URL in the original_path and "#url#" as the conversion string
-     *       Clients should generate the file by downloading it to the specified location
-     * @isUploadingActive - True, if the file is currently being uploaded (or a remote copy is being generated by some other means)
-     * @isUploadingCompleted - True, if a remote copy is fully available
-     * @uploadedSize - Size of the remote available part of the file
-     *                 0 if unknown
+     * @property id Remote file identifier
+     *              Can be used across application restarts or even from other devices for the current user
+     *              If the ID starts with "http://" or "https://", it represents the HTTP URL of the file
+     *              TDLib is currently unable to download files if only their URL is known
+     *              If downloadFile is called on such a file or if it is sent to a secret chat, TDLib starts a file generation process by sending updateFileGenerationStart to the client with the HTTP URL in the original_path and "#url#" as the conversion string
+     *              Clients should generate the file by downloading it to the specified location
+     * @property isUploadingActive True, if the file is currently being uploaded (or a remote copy is being generated by some other means)
+     * @property isUploadingCompleted True, if a remote copy is fully available
+     * @property uploadedSize Size of the remote available part of the file
+     *                        0 if unknown
      */
-    class RemoteFile(
+    @Serializable
+    @SerialName("remoteFile")
+    data class RemoteFile(
+        @SerialName("id")
         val id: String?,
+        @SerialName("is_uploading_active")
         val isUploadingActive: Boolean,
+        @SerialName("is_uploading_completed")
         val isUploadingCompleted: Boolean,
-        val uploadedSize: Int
+        @SerialName("uploaded_size")
+        val uploadedSize: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents a file
      *
-     * @id - Unique file identifier
-     * @size - File size
-     *         0 if unknown
-     * @expectedSize - Expected file size in case the exact file size is unknown, but an approximate size is known
-     *                 Can be used to show download/upload progress
-     * @local - Information about the local copy of the file
-     * @remote - Information about the remote copy of the file
+     * @property id Unique file identifier
+     * @property size File size
+     *                0 if unknown
+     * @property expectedSize Expected file size in case the exact file size is unknown, but an approximate size is known
+     *                        Can be used to show download/upload progress
+     * @property local Information about the local copy of the file
+     * @property remote Information about the remote copy of the file
+     * @property extra Extra data shared between request and response
      */
-    class File(
+    @Serializable
+    @SerialName("file")
+    data class File(
+        @SerialName("id")
         val id: Int,
+        @SerialName("size")
         val size: Int,
+        @SerialName("expected_size")
         val expectedSize: Int,
+        @SerialName("local")
         val local: LocalFile,
-        val remote: RemoteFile
-    ) : Object()
+        @SerialName("remote")
+        val remote: RemoteFile,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Points to a file
      */
-    abstract class InputFile : null()
+    abstract class InputFile : Object()
 
     /**
      * A file defined by its unique ID
      *
-     * @id - Unique file identifier
+     * @property id Unique file identifier
      */
-    class InputFileId(
-        val id: Int = 0
+    @Serializable
+    @SerialName("inputFileId")
+    data class InputFileId(
+        @SerialName("id")
+        val id: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputFile()
 
     /**
      * A file defined by its remote ID
      *
-     * @id - Remote file identifier
+     * @property id Remote file identifier
      */
-    class InputFileRemote(
-        val id: String
+    @Serializable
+    @SerialName("inputFileRemote")
+    data class InputFileRemote(
+        @SerialName("id")
+        val id: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputFile()
 
     /**
      * A file defined by a local path
      *
-     * @path - Local path to the file
+     * @property path Local path to the file
      */
-    class InputFileLocal(
-        val path: String
+    @Serializable
+    @SerialName("inputFileLocal")
+    data class InputFileLocal(
+        @SerialName("path")
+        val path: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputFile()
 
     /**
      * A file generated by the client
      *
-     * @originalPath - Local path to a file from which the file is generated
-     *                 May be empty if there is no such file
-     * @conversion - String specifying the conversion applied to the original file
-     *               Should be persistent across application restarts
-     *               Conversions beginning with '#' are reserved for internal TDLib usage
-     * @expectedSize - Expected size of the generated file
-     *                 0 if unknown
+     * @property originalPath Local path to a file from which the file is generated
+     *                        May be empty if there is no such file
+     * @property conversion String specifying the conversion applied to the original file
+     *                      Should be persistent across application restarts
+     *                      Conversions beginning with '#' are reserved for internal TDLib usage
+     * @property expectedSize Expected size of the generated file
+     *                        0 if unknown
      */
-    class InputFileGenerated(
+    @Serializable
+    @SerialName("inputFileGenerated")
+    data class InputFileGenerated(
+        @SerialName("original_path")
         val originalPath: String,
+        @SerialName("conversion")
         val conversion: String,
-        val expectedSize: Int = 0
+        @SerialName("expected_size")
+        val expectedSize: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputFile()
 
     /**
      * Photo description
      *
-     * @type - Thumbnail type (see https://core.telegram.org/constructor/photoSize)
-     * @photo - Information about the photo file
-     * @width - Photo width
-     * @height - Photo height
+     * @property type Thumbnail type (see https://core.telegram.org/constructor/photoSize)
+     * @property photo Information about the photo file
+     * @property width Photo width
+     * @property height Photo height
      */
-    class PhotoSize(
+    @Serializable
+    @SerialName("photoSize")
+    data class PhotoSize(
+        @SerialName("type")
         val type: String,
+        @SerialName("photo")
         val photo: File,
+        @SerialName("width")
         val width: Int,
-        val height: Int
+        @SerialName("height")
+        val height: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Thumbnail image of a very poor quality and low resolution
      *
-     * @width - Thumbnail width, usually doesn't exceed 40
-     * @height - Thumbnail height, usually doesn't exceed 40
-     * @data - The thumbnail in JPEG format
+     * @property width Thumbnail width, usually doesn't exceed 40
+     * @property height Thumbnail height, usually doesn't exceed 40
+     * @property data The thumbnail in JPEG format
      */
-    class Minithumbnail(
+    @Serializable
+    @SerialName("minithumbnail")
+    data class Minithumbnail(
+        @SerialName("width")
         val width: Int,
+        @SerialName("height")
         val height: Int,
-        val data: ByteArray
+        @SerialName("data")
+        val data: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Part of the face, relative to which a mask should be placed
      */
-    abstract class MaskPoint : null()
+    abstract class MaskPoint : Object()
 
     /**
      * A mask should be placed relatively to the forehead
      */
-    class MaskPointForehead : MaskPoint()
+    @Serializable
+    @SerialName("maskPointForehead")
+    data class MaskPointForehead(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MaskPoint()
 
     /**
      * A mask should be placed relatively to the eyes
      */
-    class MaskPointEyes : MaskPoint()
+    @Serializable
+    @SerialName("maskPointEyes")
+    data class MaskPointEyes(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MaskPoint()
 
     /**
      * A mask should be placed relatively to the mouth
      */
-    class MaskPointMouth : MaskPoint()
+    @Serializable
+    @SerialName("maskPointMouth")
+    data class MaskPointMouth(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MaskPoint()
 
     /**
      * A mask should be placed relatively to the chin
      */
-    class MaskPointChin : MaskPoint()
+    @Serializable
+    @SerialName("maskPointChin")
+    data class MaskPointChin(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MaskPoint()
 
     /**
      * Position on a photo where a mask should be placed
      *
-     * @point - Part of the face, relative to which the mask should be placed
-     * @xShift - Shift by X-axis measured in widths of the mask scaled to the face size, from left to right
-     *           (For example, -1.0 will place the mask just to the left of the default mask position)
-     * @yShift - Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom
-     *           (For example, 1.0 will place the mask just below the default mask position)
-     * @scale - Mask scaling coefficient
-     *          (For example, 2.0 means a doubled size)
+     * @property point Part of the face, relative to which the mask should be placed
+     * @property xShift Shift by X-axis measured in widths of the mask scaled to the face size, from left to right
+     *                  (For example, -1.0 will place the mask just to the left of the default mask position)
+     * @property yShift Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom
+     *                  (For example, 1.0 will place the mask just below the default mask position)
+     * @property scale Mask scaling coefficient
+     *                 (For example, 2.0 means a doubled size)
      */
-    class MaskPosition(
+    @Serializable
+    @SerialName("maskPosition")
+    data class MaskPosition(
+        @SerialName("point")
         val point: MaskPoint,
-        val xShift: Double = 0.0,
-        val yShift: Double = 0.0,
-        val scale: Double = 0.0
+        @SerialName("x_shift")
+        val xShift: Double,
+        @SerialName("y_shift")
+        val yShift: Double,
+        @SerialName("scale")
+        val scale: Double,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes one answer option of a poll
      *
-     * @text - Option text, 1-100 characters
-     * @voterCount - Number of voters for this option, available only for closed or voted polls
-     * @votePercentage - The percentage of votes for this option, 0-100
-     * @isChosen - True, if the option was chosen by the user
-     * @isBeingChosen - True, if the option is being chosen by a pending setPollAnswer request
+     * @property text Option text, 1-100 characters
+     * @property voterCount Number of voters for this option, available only for closed or voted polls
+     * @property votePercentage The percentage of votes for this option, 0-100
+     * @property isChosen True, if the option was chosen by the user
+     * @property isBeingChosen True, if the option is being chosen by a pending setPollAnswer request
      */
-    class PollOption(
+    @Serializable
+    @SerialName("pollOption")
+    data class PollOption(
+        @SerialName("text")
         val text: String,
+        @SerialName("voter_count")
         val voterCount: Int,
+        @SerialName("vote_percentage")
         val votePercentage: Int,
+        @SerialName("is_chosen")
         val isChosen: Boolean,
-        val isBeingChosen: Boolean
+        @SerialName("is_being_chosen")
+        val isBeingChosen: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes an animation file
      * The animation must be encoded in GIF or MPEG4 format
      *
-     * @duration - Duration of the animation, in seconds
-     *             As defined by the sender
-     * @width - Width of the animation
-     * @height - Height of the animation
-     * @fileName - Original name of the file
-     *             As defined by the sender
-     * @mimeType - MIME type of the file, usually "image/gif" or "video/mp4"
-     * @minithumbnail - Animation minithumbnail
-     * @thumbnail - Animation thumbnail
-     * @animation - File containing the animation
+     * @property duration Duration of the animation, in seconds
+     *                    As defined by the sender
+     * @property width Width of the animation
+     * @property height Height of the animation
+     * @property fileName Original name of the file
+     *                    As defined by the sender
+     * @property mimeType MIME type of the file, usually "image/gif" or "video/mp4"
+     * @property minithumbnail Animation minithumbnail
+     * @property thumbnail Animation thumbnail
+     * @property animation File containing the animation
      */
-    class Animation(
+    @Serializable
+    @SerialName("animation")
+    data class Animation(
+        @SerialName("duration")
         val duration: Int,
+        @SerialName("width")
         val width: Int,
+        @SerialName("height")
         val height: Int,
+        @SerialName("file_name")
         val fileName: String,
+        @SerialName("mime_type")
         val mimeType: String,
+        @SerialName("minithumbnail")
         val minithumbnail: Minithumbnail?,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
-        val animation: File
+        @SerialName("animation")
+        val animation: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes an audio file
      * Audio is usually in MP3 format
      *
-     * @duration - Duration of the audio, in seconds
-     *             As defined by the sender
-     * @title - Title of the audio
-     *          As defined by the sender
-     * @performer - Performer of the audio
-     *              As defined by the sender
-     * @fileName - Original name of the file
-     *             As defined by the sender
-     * @mimeType - The MIME type of the file
-     *             As defined by the sender
-     * @albumCoverMinithumbnail - The minithumbnail of the album cover
-     * @albumCoverThumbnail - The thumbnail of the album cover
-     *                        As defined by the sender
-     *                        The full size thumbnail should be extracted from the downloaded file
-     * @audio - File containing the audio
+     * @property duration Duration of the audio, in seconds
+     *                    As defined by the sender
+     * @property title Title of the audio
+     *                 As defined by the sender
+     * @property performer Performer of the audio
+     *                     As defined by the sender
+     * @property fileName Original name of the file
+     *                    As defined by the sender
+     * @property mimeType The MIME type of the file
+     *                    As defined by the sender
+     * @property albumCoverMinithumbnail The minithumbnail of the album cover
+     * @property albumCoverThumbnail The thumbnail of the album cover
+     *                               As defined by the sender
+     *                               The full size thumbnail should be extracted from the downloaded file
+     * @property audio File containing the audio
      */
-    class Audio(
+    @Serializable
+    @SerialName("audio")
+    data class Audio(
+        @SerialName("duration")
         val duration: Int,
+        @SerialName("title")
         val title: String,
+        @SerialName("performer")
         val performer: String,
+        @SerialName("file_name")
         val fileName: String,
+        @SerialName("mime_type")
         val mimeType: String,
+        @SerialName("album_cover_minithumbnail")
         val albumCoverMinithumbnail: Minithumbnail?,
+        @SerialName("album_cover_thumbnail")
         val albumCoverThumbnail: PhotoSize?,
-        val audio: File
+        @SerialName("audio")
+        val audio: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a document of any type
      *
-     * @fileName - Original name of the file
-     *             As defined by the sender
-     * @mimeType - MIME type of the file
-     *             As defined by the sender
-     * @minithumbnail - Document minithumbnail
-     * @thumbnail - Document thumbnail in JPEG or PNG format (PNG will be used only for background patterns)
-     *              As defined by the sender
-     * @document - File containing the document
+     * @property fileName Original name of the file
+     *                    As defined by the sender
+     * @property mimeType MIME type of the file
+     *                    As defined by the sender
+     * @property minithumbnail Document minithumbnail
+     * @property thumbnail Document thumbnail in JPEG or PNG format (PNG will be used only for background patterns)
+     *                     As defined by the sender
+     * @property document File containing the document
      */
-    class Document(
+    @Serializable
+    @SerialName("document")
+    data class Document(
+        @SerialName("file_name")
         val fileName: String,
+        @SerialName("mime_type")
         val mimeType: String,
+        @SerialName("minithumbnail")
         val minithumbnail: Minithumbnail?,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
-        val document: File
+        @SerialName("document")
+        val document: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a photo
      *
-     * @hasStickers - True, if stickers were added to the photo
-     * @minithumbnail - Photo minithumbnail
-     * @sizes - Available variants of the photo, in different sizes
+     * @property hasStickers True, if stickers were added to the photo
+     * @property minithumbnail Photo minithumbnail
+     * @property sizes Available variants of the photo, in different sizes
      */
-    class Photo(
+    @Serializable
+    @SerialName("photo")
+    data class Photo(
+        @SerialName("has_stickers")
         val hasStickers: Boolean,
+        @SerialName("minithumbnail")
         val minithumbnail: Minithumbnail?,
-        val sizes: Array<PhotoSize>
+        @SerialName("sizes")
+        val sizes: Array<PhotoSize>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a sticker
      *
-     * @setId - The identifier of the sticker set to which the sticker belongs
-     *          0 if none
-     * @width - Sticker width
-     *          As defined by the sender
-     * @height - Sticker height
-     *           As defined by the sender
-     * @emoji - Emoji corresponding to the sticker
-     * @isAnimated - True, if the sticker is an animated sticker in TGS format
-     * @isMask - True, if the sticker is a mask
-     * @maskPosition - Position where the mask should be placed
-     * @thumbnail - Sticker thumbnail in WEBP or JPEG format
-     * @sticker - File containing the sticker
+     * @property setId The identifier of the sticker set to which the sticker belongs
+     *                 0 if none
+     * @property width Sticker width
+     *                 As defined by the sender
+     * @property height Sticker height
+     *                  As defined by the sender
+     * @property emoji Emoji corresponding to the sticker
+     * @property isAnimated True, if the sticker is an animated sticker in TGS format
+     * @property isMask True, if the sticker is a mask
+     * @property maskPosition Position where the mask should be placed
+     * @property thumbnail Sticker thumbnail in WEBP or JPEG format
+     * @property sticker File containing the sticker
      */
-    class Sticker(
+    @Serializable
+    @SerialName("sticker")
+    data class Sticker(
+        @SerialName("set_id")
         val setId: Long,
+        @SerialName("width")
         val width: Int,
+        @SerialName("height")
         val height: Int,
+        @SerialName("emoji")
         val emoji: String,
+        @SerialName("is_animated")
         val isAnimated: Boolean,
+        @SerialName("is_mask")
         val isMask: Boolean,
+        @SerialName("mask_position")
         val maskPosition: MaskPosition?,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
-        val sticker: File
+        @SerialName("sticker")
+        val sticker: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a video file
      *
-     * @duration - Duration of the video, in seconds
-     *             As defined by the sender
-     * @width - Video width
-     *          As defined by the sender
-     * @height - Video height
-     *           As defined by the sender
-     * @fileName - Original name of the file
-     *             As defined by the sender
-     * @mimeType - MIME type of the file
-     *             As defined by the sender
-     * @hasStickers - True, if stickers were added to the photo
-     * @supportsStreaming - True, if the video should be tried to be streamed
-     * @minithumbnail - Video minithumbnail
-     * @thumbnail - Video thumbnail
-     *              As defined by the sender
-     * @video - File containing the video
+     * @property duration Duration of the video, in seconds
+     *                    As defined by the sender
+     * @property width Video width
+     *                 As defined by the sender
+     * @property height Video height
+     *                  As defined by the sender
+     * @property fileName Original name of the file
+     *                    As defined by the sender
+     * @property mimeType MIME type of the file
+     *                    As defined by the sender
+     * @property hasStickers True, if stickers were added to the photo
+     * @property supportsStreaming True, if the video should be tried to be streamed
+     * @property minithumbnail Video minithumbnail
+     * @property thumbnail Video thumbnail
+     *                     As defined by the sender
+     * @property video File containing the video
      */
-    class Video(
+    @Serializable
+    @SerialName("video")
+    data class Video(
+        @SerialName("duration")
         val duration: Int,
+        @SerialName("width")
         val width: Int,
+        @SerialName("height")
         val height: Int,
+        @SerialName("file_name")
         val fileName: String,
+        @SerialName("mime_type")
         val mimeType: String,
+        @SerialName("has_stickers")
         val hasStickers: Boolean,
+        @SerialName("supports_streaming")
         val supportsStreaming: Boolean,
+        @SerialName("minithumbnail")
         val minithumbnail: Minithumbnail?,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
-        val video: File
+        @SerialName("video")
+        val video: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a video note
      * The video must be equal in width and height, cropped to a circle, and stored in MPEG4 format
      *
-     * @duration - Duration of the video, in seconds
-     *             As defined by the sender
-     * @length - Video width and height
-     *           As defined by the sender
-     * @minithumbnail - Video minithumbnail
-     * @thumbnail - Video thumbnail
-     *              As defined by the sender
-     * @video - File containing the video
+     * @property duration Duration of the video, in seconds
+     *                    As defined by the sender
+     * @property length Video width and height
+     *                  As defined by the sender
+     * @property minithumbnail Video minithumbnail
+     * @property thumbnail Video thumbnail
+     *                     As defined by the sender
+     * @property video File containing the video
      */
-    class VideoNote(
+    @Serializable
+    @SerialName("videoNote")
+    data class VideoNote(
+        @SerialName("duration")
         val duration: Int,
+        @SerialName("length")
         val length: Int,
+        @SerialName("minithumbnail")
         val minithumbnail: Minithumbnail?,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
-        val video: File
+        @SerialName("video")
+        val video: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
@@ -697,144 +1016,202 @@ class TdApi {
      * The voice note must be encoded with the Opus codec, and stored inside an OGG container
      * Voice notes can have only a single audio channel
      *
-     * @duration - Duration of the voice note, in seconds
-     *             As defined by the sender
-     * @waveform - A waveform representation of the voice note in 5-bit format
-     * @mimeType - MIME type of the file
-     *             As defined by the sender
-     * @voice - File containing the voice note
+     * @property duration Duration of the voice note, in seconds
+     *                    As defined by the sender
+     * @property waveform A waveform representation of the voice note in 5-bit format
+     * @property mimeType MIME type of the file
+     *                    As defined by the sender
+     * @property voice File containing the voice note
      */
-    class VoiceNote(
+    @Serializable
+    @SerialName("voiceNote")
+    data class VoiceNote(
+        @SerialName("duration")
         val duration: Int,
-        val waveform: ByteArray,
+        @SerialName("waveform")
+        val waveform: Array<Byte>,
+        @SerialName("mime_type")
         val mimeType: String,
-        val voice: File
+        @SerialName("voice")
+        val voice: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a user contact
      *
-     * @phoneNumber - Phone number of the user
-     * @firstName - First name of the user
-     * @lastName - Last name of the user
-     * @vcard - Additional data about the user in a form of vCard
-     * @userId - Identifier of the user, if known
-     *           Otherwise 0
+     * @property phoneNumber Phone number of the user
+     * @property firstName First name of the user
+     * @property lastName Last name of the user
+     * @property vcard Additional data about the user in a form of vCard
+     * @property userId Identifier of the user, if known
+     *                  Otherwise 0
      */
-    class Contact(
+    @Serializable
+    @SerialName("contact")
+    data class Contact(
+        @SerialName("phone_number")
         val phoneNumber: String,
+        @SerialName("first_name")
         val firstName: String,
+        @SerialName("last_name")
         val lastName: String,
+        @SerialName("vcard")
         val vcard: String,
-        val userId: Int = 0
+        @SerialName("user_id")
+        val userId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a location on planet Earth
      *
-     * @latitude - Latitude of the location in degrees
-     *             As defined by the sender
-     * @longitude - Longitude of the location, in degrees
-     *              As defined by the sender
+     * @property latitude Latitude of the location in degrees
+     *                    As defined by the sender
+     * @property longitude Longitude of the location, in degrees
+     *                     As defined by the sender
      */
-    class Location(
-        val latitude: Double = 0.0,
-        val longitude: Double = 0.0
+    @Serializable
+    @SerialName("location")
+    data class Location(
+        @SerialName("latitude")
+        val latitude: Double,
+        @SerialName("longitude")
+        val longitude: Double,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a venue
      *
-     * @location - Venue location
-     *             As defined by the sender
-     * @title - Venue name
-     *          As defined by the sender
-     * @address - Venue address
-     *            As defined by the sender
-     * @provider - Provider of the venue database
-     *             As defined by the sender
-     *             Currently only "foursquare" needs to be supported
-     * @id - Identifier of the venue in the provider database
-     *       As defined by the sender
-     * @type - Type of the venue in the provider database
-     *         As defined by the sender
+     * @property location Venue location
+     *                    As defined by the sender
+     * @property title Venue name
+     *                 As defined by the sender
+     * @property address Venue address
+     *                   As defined by the sender
+     * @property provider Provider of the venue database
+     *                    As defined by the sender
+     *                    Currently only "foursquare" needs to be supported
+     * @property id Identifier of the venue in the provider database
+     *              As defined by the sender
+     * @property type Type of the venue in the provider database
+     *                As defined by the sender
      */
-    class Venue(
+    @Serializable
+    @SerialName("venue")
+    data class Venue(
+        @SerialName("location")
         val location: Location,
+        @SerialName("title")
         val title: String,
+        @SerialName("address")
         val address: String,
+        @SerialName("provider")
         val provider: String,
+        @SerialName("id")
         val id: String,
-        val type: String
+        @SerialName("type")
+        val type: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a game
      *
-     * @id - Game ID
-     * @shortName - Game short name
-     *              To share a game use the URL https://t.me/{bot_username}?game={game_short_name}
-     * @title - Game title
-     * @text - Game text, usually containing scoreboards for a game
-     * @description - Game description
-     * @photo - Game photo
-     * @animation - Game animation
+     * @property id Game ID
+     * @property shortName Game short name
+     *                     To share a game use the URL https://t.me/{bot_username}?game={game_short_name}
+     * @property title Game title
+     * @property text Game text, usually containing scoreboards for a game
+     * @property description Game description
+     * @property photo Game photo
+     * @property animation Game animation
      */
-    class Game(
+    @Serializable
+    @SerialName("game")
+    data class Game(
+        @SerialName("id")
         val id: Long,
+        @SerialName("short_name")
         val shortName: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("text")
         val text: FormattedText,
+        @SerialName("description")
         val description: String,
+        @SerialName("photo")
         val photo: Photo,
-        val animation: Animation?
+        @SerialName("animation")
+        val animation: Animation?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a poll
      *
-     * @id - Unique poll identifier
-     * @question - Poll question, 1-255 characters
-     * @options - List of poll answer options
-     * @totalVoterCount - Total number of voters, participating in the poll
-     * @isClosed - True, if the poll is closed
+     * @property id Unique poll identifier
+     * @property question Poll question, 1-255 characters
+     * @property options List of poll answer options
+     * @property totalVoterCount Total number of voters, participating in the poll
+     * @property isClosed True, if the poll is closed
      */
-    class Poll(
+    @Serializable
+    @SerialName("poll")
+    data class Poll(
+        @SerialName("id")
         val id: Long,
+        @SerialName("question")
         val question: String,
+        @SerialName("options")
         val options: Array<PollOption>,
+        @SerialName("total_voter_count")
         val totalVoterCount: Int,
-        val isClosed: Boolean
+        @SerialName("is_closed")
+        val isClosed: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a user profile photo
      *
-     * @id - Photo identifier
-     *       0 for an empty photo
-     *       Can be used to find a photo in a list of userProfilePhotos
-     * @small - A small (160x160) user profile photo
-     *          The file can be downloaded only before the photo is changed
-     * @big - A big (640x640) user profile photo
-     *        The file can be downloaded only before the photo is changed
+     * @property id Photo identifier
+     *              0 for an empty photo
+     *              Can be used to find a photo in a list of userProfilePhotos
+     * @property small A small (160x160) user profile photo
+     *                 The file can be downloaded only before the photo is changed
+     * @property big A big (640x640) user profile photo
+     *               The file can be downloaded only before the photo is changed
      */
-    class ProfilePhoto(
+    @Serializable
+    @SerialName("profilePhoto")
+    data class ProfilePhoto(
+        @SerialName("id")
         val id: Long,
+        @SerialName("small")
         val small: File,
-        val big: File
+        @SerialName("big")
+        val big: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes the photo of a chat
      *
-     * @small - A small (160x160) chat photo
-     *          The file can be downloaded only before the photo is changed
-     * @big - A big (640x640) chat photo
-     *        The file can be downloaded only before the photo is changed
+     * @property small A small (160x160) chat photo
+     *                 The file can be downloaded only before the photo is changed
+     * @property big A big (640x640) chat photo
+     *               The file can be downloaded only before the photo is changed
      */
-    class ChatPhoto(
+    @Serializable
+    @SerialName("chatPhoto")
+    data class ChatPhoto(
+        @SerialName("small")
         val small: File,
-        val big: File
+        @SerialName("big")
+        val big: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
@@ -842,57 +1219,85 @@ class TdApi {
      * For incoming_link, user A is the current user
      * For outgoing_link, user B is the current user
      */
-    abstract class LinkState : null()
+    abstract class LinkState : Object()
 
     /**
      * The phone number of user A is not known to user B
      */
-    class LinkStateNone : LinkState()
+    @Serializable
+    @SerialName("linkStateNone")
+    data class LinkStateNone(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : LinkState()
 
     /**
      * The phone number of user A is known but that number has not been saved to the contact list of user B
      */
-    class LinkStateKnowsPhoneNumber : LinkState()
+    @Serializable
+    @SerialName("linkStateKnowsPhoneNumber")
+    data class LinkStateKnowsPhoneNumber(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : LinkState()
 
     /**
      * The phone number of user A has been saved to the contact list of user B
      */
-    class LinkStateIsContact : LinkState()
+    @Serializable
+    @SerialName("linkStateIsContact")
+    data class LinkStateIsContact(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : LinkState()
 
     /**
      * Represents the type of the user
      * The following types are possible: regular users, deleted users and bots
      */
-    abstract class UserType : null()
+    abstract class UserType : Object()
 
     /**
      * A regular user
      */
-    class UserTypeRegular : UserType()
+    @Serializable
+    @SerialName("userTypeRegular")
+    data class UserTypeRegular(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserType()
 
     /**
      * A deleted user or deleted bot
      * No information on the user besides the user_id is available
      * It is not possible to perform any active actions on this type of user
      */
-    class UserTypeDeleted : UserType()
+    @Serializable
+    @SerialName("userTypeDeleted")
+    data class UserTypeDeleted(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserType()
 
     /**
      * A bot (see https://core.telegram.org/bots)
      *
-     * @canJoinGroups - True, if the bot can be invited to basic group and supergroup chats
-     * @canReadAllGroupMessages - True, if the bot can read all messages in basic group or supergroup chats and not just those addressed to the bot
-     *                            In private and channel chats a bot can always read all messages
-     * @isInline - True, if the bot supports inline queries
-     * @inlineQueryPlaceholder - Placeholder for inline queries (displayed on the client input field)
-     * @needLocation - True, if the location of the user should be sent with every inline query to this bot
+     * @property canJoinGroups True, if the bot can be invited to basic group and supergroup chats
+     * @property canReadAllGroupMessages True, if the bot can read all messages in basic group or supergroup chats and not just those addressed to the bot
+     *                                   In private and channel chats a bot can always read all messages
+     * @property isInline True, if the bot supports inline queries
+     * @property inlineQueryPlaceholder Placeholder for inline queries (displayed on the client input field)
+     * @property needLocation True, if the location of the user should be sent with every inline query to this bot
      */
-    class UserTypeBot(
+    @Serializable
+    @SerialName("userTypeBot")
+    data class UserTypeBot(
+        @SerialName("can_join_groups")
         val canJoinGroups: Boolean,
+        @SerialName("can_read_all_group_messages")
         val canReadAllGroupMessages: Boolean,
+        @SerialName("is_inline")
         val isInline: Boolean,
+        @SerialName("inline_query_placeholder")
         val inlineQueryPlaceholder: String,
-        val needLocation: Boolean
+        @SerialName("need_location")
+        val needLocation: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : UserType()
 
     /**
@@ -900,170 +1305,253 @@ class TdApi {
      * This object is extremely rare and must be handled like a deleted user
      * It is not possible to perform any actions on users of this type
      */
-    class UserTypeUnknown : UserType()
+    @Serializable
+    @SerialName("userTypeUnknown")
+    data class UserTypeUnknown(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserType()
 
     /**
      * Represents commands supported by a bot
      *
-     * @command - Text of the bot command
-     * @description - Description of the bot command
+     * @property command Text of the bot command
+     * @property description Description of the bot command
      */
-    class BotCommand(
+    @Serializable
+    @SerialName("botCommand")
+    data class BotCommand(
+        @SerialName("command")
         val command: String,
-        val description: String
+        @SerialName("description")
+        val description: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Provides information about a bot and its supported commands
      *
-     * @description - Long description shown on the user info page
-     * @commands - A list of commands supported by the bot
+     * @property description Long description shown on the user info page
+     * @property commands A list of commands supported by the bot
      */
-    class BotInfo(
+    @Serializable
+    @SerialName("botInfo")
+    data class BotInfo(
+        @SerialName("description")
         val description: String,
-        val commands: Array<BotCommand>
+        @SerialName("commands")
+        val commands: Array<BotCommand>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents a user
      *
-     * @id - User identifier
-     * @firstName - First name of the user
-     * @lastName - Last name of the user
-     * @username - Username of the user
-     * @phoneNumber - Phone number of the user
-     * @status - Current online status of the user
-     * @profilePhoto - Profile photo of the user
-     * @outgoingLink - Relationship from the current user to the other user
-     * @incomingLink - Relationship from the other user to the current user
-     * @isVerified - True, if the user is verified
-     * @isSupport - True, if the user is Telegram support account
-     * @restrictionReason - If non-empty, it contains the reason why access to this user must be restricted
-     *                      The format of the string is "{type}: {description}"
-     *                      {type} contains the type of the restriction and at least one of the suffixes "-all", "-ios", "-android", or "-wp", which describe the platforms on which access should be restricted
-     *                      (For example, "terms-ios-android"
-     *                      {description} contains a human-readable description of the restriction, which can be shown to the user)
-     * @isScam - True, if many users reported this user as a scam
-     * @haveAccess - If false, the user is inaccessible, and the only information known about the user is inside this class
-     *               It can't be passed to any method except GetUser
-     * @type - Type of the user
-     * @languageCode - IETF language tag of the user's language
+     * @property id User identifier
+     * @property firstName First name of the user
+     * @property lastName Last name of the user
+     * @property username Username of the user
+     * @property phoneNumber Phone number of the user
+     * @property status Current online status of the user
+     * @property profilePhoto Profile photo of the user
+     * @property outgoingLink Relationship from the current user to the other user
+     * @property incomingLink Relationship from the other user to the current user
+     * @property isVerified True, if the user is verified
+     * @property isSupport True, if the user is Telegram support account
+     * @property restrictionReason If non-empty, it contains the reason why access to this user must be restricted
+     *                             The format of the string is "{type}: {description}"
+     *                             {type} contains the type of the restriction and at least one of the suffixes "-all", "-ios", "-android", or "-wp", which describe the platforms on which access should be restricted
+     *                             (For example, "terms-ios-android"
+     *                             {description} contains a human-readable description of the restriction, which can be shown to the user)
+     * @property isScam True, if many users reported this user as a scam
+     * @property haveAccess If false, the user is inaccessible, and the only information known about the user is inside this class
+     *                      It can't be passed to any method except GetUser
+     * @property type Type of the user
+     * @property languageCode IETF language tag of the user's language
+     * @property extra Extra data shared between request and response
      */
-    class User(
+    @Serializable
+    @SerialName("user")
+    data class User(
+        @SerialName("id")
         val id: Int,
+        @SerialName("first_name")
         val firstName: String,
+        @SerialName("last_name")
         val lastName: String,
+        @SerialName("username")
         val username: String,
+        @SerialName("phone_number")
         val phoneNumber: String,
+        @SerialName("status")
         val status: UserStatus,
+        @SerialName("profile_photo")
         val profilePhoto: ProfilePhoto?,
+        @SerialName("outgoing_link")
         val outgoingLink: LinkState,
+        @SerialName("incoming_link")
         val incomingLink: LinkState,
+        @SerialName("is_verified")
         val isVerified: Boolean,
+        @SerialName("is_support")
         val isSupport: Boolean,
+        @SerialName("restriction_reason")
         val restrictionReason: String,
+        @SerialName("is_scam")
         val isScam: Boolean,
+        @SerialName("have_access")
         val haveAccess: Boolean,
+        @SerialName("type")
         val type: UserType,
-        @BotsOnly val languageCode: String
-    ) : Object()
+        @SerialName("language_code")
+        @BotsOnly
+        val languageCode: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains full information about a user (except the full list of profile photos)
      *
-     * @isBlocked - True, if the user is blacklisted by the current user
-     * @canBeCalled - True, if the user can be called
-     * @hasPrivateCalls - True, if the user can't be called due to their privacy settings
-     * @bio - A short user bio
-     * @shareText - For bots, the text that is included with the link when users share the bot
-     * @groupInCommonCount - Number of group chats where both the other user and the current user are a member
-     *                       0 for the current user
-     * @botInfo - If the user is a bot, information about the bot
+     * @property isBlocked True, if the user is blacklisted by the current user
+     * @property canBeCalled True, if the user can be called
+     * @property hasPrivateCalls True, if the user can't be called due to their privacy settings
+     * @property bio A short user bio
+     * @property shareText For bots, the text that is included with the link when users share the bot
+     * @property groupInCommonCount Number of group chats where both the other user and the current user are a member
+     *                              0 for the current user
+     * @property botInfo If the user is a bot, information about the bot
+     * @property extra Extra data shared between request and response
      */
-    class UserFullInfo(
+    @Serializable
+    @SerialName("userFullInfo")
+    data class UserFullInfo(
+        @SerialName("is_blocked")
         val isBlocked: Boolean,
+        @SerialName("can_be_called")
         val canBeCalled: Boolean,
+        @SerialName("has_private_calls")
         val hasPrivateCalls: Boolean,
+        @SerialName("bio")
         val bio: String,
+        @SerialName("share_text")
         val shareText: String,
+        @SerialName("group_in_common_count")
         val groupInCommonCount: Int,
-        val botInfo: BotInfo?
-    ) : Object()
+        @SerialName("bot_info")
+        val botInfo: BotInfo?,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains full information about a user profile photo
      *
-     * @id - Unique user profile photo identifier
-     * @addedDate - Point in time (Unix timestamp) when the photo has been added
-     * @sizes - Available variants of the user photo, in different sizes
+     * @property id Unique user profile photo identifier
+     * @property addedDate Point in time (Unix timestamp) when the photo has been added
+     * @property sizes Available variants of the user photo, in different sizes
      */
-    class UserProfilePhoto(
+    @Serializable
+    @SerialName("userProfilePhoto")
+    data class UserProfilePhoto(
+        @SerialName("id")
         val id: Long,
+        @SerialName("added_date")
         val addedDate: Int,
-        val sizes: Array<PhotoSize>
+        @SerialName("sizes")
+        val sizes: Array<PhotoSize>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains part of the list of user photos
      *
-     * @totalCount - Total number of user profile photos
-     * @photos - A list of photos
+     * @property totalCount Total number of user profile photos
+     * @property photos A list of photos
+     * @property extra Extra data shared between request and response
      */
-    class UserProfilePhotos(
+    @Serializable
+    @SerialName("userProfilePhotos")
+    data class UserProfilePhotos(
+        @SerialName("total_count")
         val totalCount: Int,
-        val photos: Array<UserProfilePhoto>
-    ) : Object()
+        @SerialName("photos")
+        val photos: Array<UserProfilePhoto>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a list of users
      *
-     * @totalCount - Approximate total count of users found
-     * @userIds - A list of user identifiers
+     * @property totalCount Approximate total count of users found
+     * @property userIds A list of user identifiers
+     * @property extra Extra data shared between request and response
      */
-    class Users(
+    @Serializable
+    @SerialName("users")
+    data class Users(
+        @SerialName("total_count")
         val totalCount: Int,
-        val userIds: IntArray
-    ) : Object()
+        @SerialName("user_ids")
+        val userIds: Array<Int>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes actions that a user is allowed to take in a chat
      *
-     * @canSendMessages - True, if the user can send text messages, contacts, locations, and venues
-     * @canSendMediaMessages - True, if the user can send audio files, documents, photos, videos, video notes, and voice notes
-     *                         Implies can_send_messages permissions
-     * @canSendPolls - True, if the user can send polls
-     *                 Implies can_send_messages permissions
-     * @canSendOtherMessages - True, if the user can send animations, games, and stickers and use inline bots
-     *                         Implies can_send_messages permissions
-     * @canAddWebPagePreviews - True, if the user may add a web page preview to their messages
-     *                          Implies can_send_messages permissions
-     * @canChangeInfo - True, if the user can change the chat title, photo, and other settings
-     * @canInviteUsers - True, if the user can invite new users to the chat
-     * @canPinMessages - True, if the user can pin messages
+     * @property canSendMessages True, if the user can send text messages, contacts, locations, and venues
+     * @property canSendMediaMessages True, if the user can send audio files, documents, photos, videos, video notes, and voice notes
+     *                                Implies can_send_messages permissions
+     * @property canSendPolls True, if the user can send polls
+     *                        Implies can_send_messages permissions
+     * @property canSendOtherMessages True, if the user can send animations, games, and stickers and use inline bots
+     *                                Implies can_send_messages permissions
+     * @property canAddWebPagePreviews True, if the user may add a web page preview to their messages
+     *                                 Implies can_send_messages permissions
+     * @property canChangeInfo True, if the user can change the chat title, photo, and other settings
+     * @property canInviteUsers True, if the user can invite new users to the chat
+     * @property canPinMessages True, if the user can pin messages
      */
-    class ChatPermissions(
-        val canSendMessages: Boolean = false,
-        val canSendMediaMessages: Boolean = false,
-        val canSendPolls: Boolean = false,
-        val canSendOtherMessages: Boolean = false,
-        val canAddWebPagePreviews: Boolean = false,
-        val canChangeInfo: Boolean = false,
-        val canInviteUsers: Boolean = false,
-        val canPinMessages: Boolean = false
+    @Serializable
+    @SerialName("chatPermissions")
+    data class ChatPermissions(
+        @SerialName("can_send_messages")
+        val canSendMessages: Boolean,
+        @SerialName("can_send_media_messages")
+        val canSendMediaMessages: Boolean,
+        @SerialName("can_send_polls")
+        val canSendPolls: Boolean,
+        @SerialName("can_send_other_messages")
+        val canSendOtherMessages: Boolean,
+        @SerialName("can_add_web_page_previews")
+        val canAddWebPagePreviews: Boolean,
+        @SerialName("can_change_info")
+        val canChangeInfo: Boolean,
+        @SerialName("can_invite_users")
+        val canInviteUsers: Boolean,
+        @SerialName("can_pin_messages")
+        val canPinMessages: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Provides information about the status of a member in a chat
      */
-    abstract class ChatMemberStatus : null()
+    abstract class ChatMemberStatus : Object()
 
     /**
      * The user is the creator of a chat and has all the administrator privileges
      *
-     * @isMember - True, if the user is a member of the chat
+     * @property isMember True, if the user is a member of the chat
      */
-    class ChatMemberStatusCreator(
-        val isMember: Boolean = false
+    @Serializable
+    @SerialName("chatMemberStatusCreator")
+    data class ChatMemberStatusCreator(
+        @SerialName("is_member")
+        val isMember: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatMemberStatus()
 
     /**
@@ -1071,5579 +1559,8272 @@ class TdApi {
      * In basic groups, administrators can edit and delete messages sent by others, add new members, and ban unprivileged members
      * In supergroups and channels, there are more detailed options for administrator privileges
      *
-     * @canBeEdited - True, if the current user can edit the administrator privileges for the called user
-     * @canChangeInfo - True, if the administrator can change the chat title, photo, and other settings
-     * @canPostMessages - True, if the administrator can create channel posts
-     *                    Applicable to channels only
-     * @canEditMessages - True, if the administrator can edit messages of other users and pin messages
-     *                    Applicable to channels only
-     * @canDeleteMessages - True, if the administrator can delete messages of other users
-     * @canInviteUsers - True, if the administrator can invite new users to the chat
-     * @canRestrictMembers - True, if the administrator can restrict, ban, or unban chat members
-     * @canPinMessages - True, if the administrator can pin messages
-     *                   Applicable to groups only
-     * @canPromoteMembers - True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by him
+     * @property canBeEdited True, if the current user can edit the administrator privileges for the called user
+     * @property canChangeInfo True, if the administrator can change the chat title, photo, and other settings
+     * @property canPostMessages True, if the administrator can create channel posts
+     *                           Applicable to channels only
+     * @property canEditMessages True, if the administrator can edit messages of other users and pin messages
+     *                           Applicable to channels only
+     * @property canDeleteMessages True, if the administrator can delete messages of other users
+     * @property canInviteUsers True, if the administrator can invite new users to the chat
+     * @property canRestrictMembers True, if the administrator can restrict, ban, or unban chat members
+     * @property canPinMessages True, if the administrator can pin messages
+     *                          Applicable to groups only
+     * @property canPromoteMembers True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by him
      */
-    class ChatMemberStatusAdministrator(
-        val canBeEdited: Boolean = false,
-        val canChangeInfo: Boolean = false,
-        val canPostMessages: Boolean = false,
-        val canEditMessages: Boolean = false,
-        val canDeleteMessages: Boolean = false,
-        val canInviteUsers: Boolean = false,
-        val canRestrictMembers: Boolean = false,
-        val canPinMessages: Boolean = false,
-        val canPromoteMembers: Boolean = false
+    @Serializable
+    @SerialName("chatMemberStatusAdministrator")
+    data class ChatMemberStatusAdministrator(
+        @SerialName("can_be_edited")
+        val canBeEdited: Boolean,
+        @SerialName("can_change_info")
+        val canChangeInfo: Boolean,
+        @SerialName("can_post_messages")
+        val canPostMessages: Boolean,
+        @SerialName("can_edit_messages")
+        val canEditMessages: Boolean,
+        @SerialName("can_delete_messages")
+        val canDeleteMessages: Boolean,
+        @SerialName("can_invite_users")
+        val canInviteUsers: Boolean,
+        @SerialName("can_restrict_members")
+        val canRestrictMembers: Boolean,
+        @SerialName("can_pin_messages")
+        val canPinMessages: Boolean,
+        @SerialName("can_promote_members")
+        val canPromoteMembers: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatMemberStatus()
 
     /**
      * The user is a member of a chat, without any additional privileges or restrictions
      */
-    class ChatMemberStatusMember : ChatMemberStatus()
+    @Serializable
+    @SerialName("chatMemberStatusMember")
+    data class ChatMemberStatusMember(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMemberStatus()
 
     /**
      * The user is under certain restrictions in the chat
      * Not supported in basic groups and channels
      *
-     * @isMember - True, if the user is a member of the chat
-     * @restrictedUntilDate - Point in time (Unix timestamp) when restrictions will be lifted from the user
-     *                        0 if never
-     *                        If the user is restricted for more than 366 days or for less than 30 seconds from the current time, the user is considered to be restricted forever
-     * @permissions - User permissions in the chat
+     * @property isMember True, if the user is a member of the chat
+     * @property restrictedUntilDate Point in time (Unix timestamp) when restrictions will be lifted from the user
+     *                               0 if never
+     *                               If the user is restricted for more than 366 days or for less than 30 seconds from the current time, the user is considered to be restricted forever
+     * @property permissions User permissions in the chat
      */
-    class ChatMemberStatusRestricted(
-        val isMember: Boolean = false,
-        val restrictedUntilDate: Int = 0,
-        val permissions: ChatPermissions
+    @Serializable
+    @SerialName("chatMemberStatusRestricted")
+    data class ChatMemberStatusRestricted(
+        @SerialName("is_member")
+        val isMember: Boolean,
+        @SerialName("restricted_until_date")
+        val restrictedUntilDate: Int,
+        @SerialName("permissions")
+        val permissions: ChatPermissions,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatMemberStatus()
 
     /**
      * The user is not a chat member
      */
-    class ChatMemberStatusLeft : ChatMemberStatus()
+    @Serializable
+    @SerialName("chatMemberStatusLeft")
+    data class ChatMemberStatusLeft(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMemberStatus()
 
     /**
      * The user was banned (and hence is not a member of the chat)
      * Implies the user can't return to the chat or view messages
      *
-     * @bannedUntilDate - Point in time (Unix timestamp) when the user will be unbanned
-     *                    0 if never
-     *                    If the user is banned for more than 366 days or for less than 30 seconds from the current time, the user is considered to be banned forever
+     * @property bannedUntilDate Point in time (Unix timestamp) when the user will be unbanned
+     *                           0 if never
+     *                           If the user is banned for more than 366 days or for less than 30 seconds from the current time, the user is considered to be banned forever
      */
-    class ChatMemberStatusBanned(
-        val bannedUntilDate: Int = 0
+    @Serializable
+    @SerialName("chatMemberStatusBanned")
+    data class ChatMemberStatusBanned(
+        @SerialName("banned_until_date")
+        val bannedUntilDate: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatMemberStatus()
 
     /**
      * A user with information about joining/leaving a chat
      *
-     * @userId - User identifier of the chat member
-     * @inviterUserId - Identifier of a user that invited/promoted/banned this member in the chat
-     *                  0 if unknown
-     * @joinedChatDate - Point in time (Unix timestamp) when the user joined a chat
-     * @status - Status of the member in the chat
-     * @botInfo - If the user is a bot, information about the bot
-     *            Can be null even for a bot if the bot is not a chat member
+     * @property userId User identifier of the chat member
+     * @property inviterUserId Identifier of a user that invited/promoted/banned this member in the chat
+     *                         0 if unknown
+     * @property joinedChatDate Point in time (Unix timestamp) when the user joined a chat
+     * @property status Status of the member in the chat
+     * @property botInfo If the user is a bot, information about the bot
+     *                   Can be null even for a bot if the bot is not a chat member
+     * @property extra Extra data shared between request and response
      */
-    class ChatMember(
+    @Serializable
+    @SerialName("chatMember")
+    data class ChatMember(
+        @SerialName("user_id")
         val userId: Int,
+        @SerialName("inviter_user_id")
         val inviterUserId: Int,
+        @SerialName("joined_chat_date")
         val joinedChatDate: Int,
+        @SerialName("status")
         val status: ChatMemberStatus,
-        val botInfo: BotInfo?
-    ) : Object()
+        @SerialName("bot_info")
+        val botInfo: BotInfo?,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a list of chat members
      *
-     * @totalCount - Approximate total count of chat members found
-     * @members - A list of chat members
+     * @property totalCount Approximate total count of chat members found
+     * @property members A list of chat members
+     * @property extra Extra data shared between request and response
      */
-    class ChatMembers(
+    @Serializable
+    @SerialName("chatMembers")
+    data class ChatMembers(
+        @SerialName("total_count")
         val totalCount: Int,
-        val members: Array<ChatMember>
-    ) : Object()
+        @SerialName("members")
+        val members: Array<ChatMember>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Specifies the kind of chat members to return in searchChatMembers
      */
-    abstract class ChatMembersFilter : null()
+    abstract class ChatMembersFilter : Object()
 
     /**
      * Returns contacts of the user
      */
-    class ChatMembersFilterContacts : ChatMembersFilter()
+    @Serializable
+    @SerialName("chatMembersFilterContacts")
+    data class ChatMembersFilterContacts(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMembersFilter()
 
     /**
      * Returns the creator and administrators
      */
-    class ChatMembersFilterAdministrators : ChatMembersFilter()
+    @Serializable
+    @SerialName("chatMembersFilterAdministrators")
+    data class ChatMembersFilterAdministrators(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMembersFilter()
 
     /**
      * Returns all chat members, including restricted chat members
      */
-    class ChatMembersFilterMembers : ChatMembersFilter()
+    @Serializable
+    @SerialName("chatMembersFilterMembers")
+    data class ChatMembersFilterMembers(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMembersFilter()
 
     /**
      * Returns users under certain restrictions in the chat
      * Can be used only by administrators in a supergroup
      */
-    class ChatMembersFilterRestricted : ChatMembersFilter()
+    @Serializable
+    @SerialName("chatMembersFilterRestricted")
+    data class ChatMembersFilterRestricted(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMembersFilter()
 
     /**
      * Returns users banned from the chat
      * Can be used only by administrators in a supergroup or in a channel
      */
-    class ChatMembersFilterBanned : ChatMembersFilter()
+    @Serializable
+    @SerialName("chatMembersFilterBanned")
+    data class ChatMembersFilterBanned(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMembersFilter()
 
     /**
      * Returns bot members of the chat
      */
-    class ChatMembersFilterBots : ChatMembersFilter()
+    @Serializable
+    @SerialName("chatMembersFilterBots")
+    data class ChatMembersFilterBots(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatMembersFilter()
 
     /**
      * Specifies the kind of chat members to return in getSupergroupMembers
      */
-    abstract class SupergroupMembersFilter : null()
+    abstract class SupergroupMembersFilter : Object()
 
     /**
      * Returns recently active users in reverse chronological order
      */
-    class SupergroupMembersFilterRecent : SupergroupMembersFilter()
+    @Serializable
+    @SerialName("supergroupMembersFilterRecent")
+    data class SupergroupMembersFilterRecent(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SupergroupMembersFilter()
 
     /**
      * Returns contacts of the user, which are members of the supergroup or channel
      *
-     * @query - Query to search for
+     * @property query Query to search for
      */
-    class SupergroupMembersFilterContacts(
-        val query: String
+    @Serializable
+    @SerialName("supergroupMembersFilterContacts")
+    data class SupergroupMembersFilterContacts(
+        @SerialName("query")
+        val query: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : SupergroupMembersFilter()
 
     /**
      * Returns the creator and administrators
      */
-    class SupergroupMembersFilterAdministrators : SupergroupMembersFilter()
+    @Serializable
+    @SerialName("supergroupMembersFilterAdministrators")
+    data class SupergroupMembersFilterAdministrators(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SupergroupMembersFilter()
 
     /**
      * Used to search for supergroup or channel members via a (string) query
      *
-     * @query - Query to search for
+     * @property query Query to search for
      */
-    class SupergroupMembersFilterSearch(
-        val query: String
+    @Serializable
+    @SerialName("supergroupMembersFilterSearch")
+    data class SupergroupMembersFilterSearch(
+        @SerialName("query")
+        val query: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : SupergroupMembersFilter()
 
     /**
      * Returns restricted supergroup members
      * Can be used only by administrators
      *
-     * @query - Query to search for
+     * @property query Query to search for
      */
-    class SupergroupMembersFilterRestricted(
-        val query: String
+    @Serializable
+    @SerialName("supergroupMembersFilterRestricted")
+    data class SupergroupMembersFilterRestricted(
+        @SerialName("query")
+        val query: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : SupergroupMembersFilter()
 
     /**
      * Returns users banned from the supergroup or channel
      * Can be used only by administrators
      *
-     * @query - Query to search for
+     * @property query Query to search for
      */
-    class SupergroupMembersFilterBanned(
-        val query: String
+    @Serializable
+    @SerialName("supergroupMembersFilterBanned")
+    data class SupergroupMembersFilterBanned(
+        @SerialName("query")
+        val query: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : SupergroupMembersFilter()
 
     /**
      * Returns bot members of the supergroup or channel
      */
-    class SupergroupMembersFilterBots : SupergroupMembersFilter()
+    @Serializable
+    @SerialName("supergroupMembersFilterBots")
+    data class SupergroupMembersFilterBots(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SupergroupMembersFilter()
 
     /**
      * Represents a basic group of 0-200 users (must be upgraded to a supergroup to accommodate more than 200 users)
      *
-     * @id - Group identifier
-     * @memberCount - Number of members in the group
-     * @status - Status of the current user in the group
-     * @isActive - True, if the group is active
-     * @upgradedToSupergroupId - Identifier of the supergroup to which this group was upgraded
-     *                           0 if none
+     * @property id Group identifier
+     * @property memberCount Number of members in the group
+     * @property status Status of the current user in the group
+     * @property isActive True, if the group is active
+     * @property upgradedToSupergroupId Identifier of the supergroup to which this group was upgraded
+     *                                  0 if none
+     * @property extra Extra data shared between request and response
      */
-    class BasicGroup(
+    @Serializable
+    @SerialName("basicGroup")
+    data class BasicGroup(
+        @SerialName("id")
         val id: Int,
+        @SerialName("member_count")
         val memberCount: Int,
+        @SerialName("status")
         val status: ChatMemberStatus,
+        @SerialName("is_active")
         val isActive: Boolean,
-        val upgradedToSupergroupId: Int
-    ) : Object()
+        @SerialName("upgraded_to_supergroup_id")
+        val upgradedToSupergroupId: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains full information about a basic group
      *
-     * @description - Group description
-     * @creatorUserId - User identifier of the creator of the group
-     *                  0 if unknown
-     * @members - Group members
-     * @inviteLink - Invite link for this group
-     *               Available only for the group creator and only after it has been generated at least once
+     * @property description Group description
+     * @property creatorUserId User identifier of the creator of the group
+     *                         0 if unknown
+     * @property members Group members
+     * @property inviteLink Invite link for this group
+     *                      Available only for the group creator and only after it has been generated at least once
+     * @property extra Extra data shared between request and response
      */
-    class BasicGroupFullInfo(
+    @Serializable
+    @SerialName("basicGroupFullInfo")
+    data class BasicGroupFullInfo(
+        @SerialName("description")
         val description: String,
+        @SerialName("creator_user_id")
         val creatorUserId: Int,
+        @SerialName("members")
         val members: Array<ChatMember>,
-        val inviteLink: String
-    ) : Object()
+        @SerialName("invite_link")
+        val inviteLink: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a supergroup or channel with zero or more members (subscribers in the case of channels)
      * From the point of view of the system, a channel is a special kind of a supergroup: only administrators can post and see the list of members, and posts from all administrators use the name and photo of the channel instead of individual names and profile photos
      * Unlike supergroups, channels can have an unlimited number of subscribers
      *
-     * @id - Supergroup or channel identifier
-     * @username - Username of the supergroup or channel
-     *             Empty for private supergroups or channels
-     * @date - Point in time (Unix timestamp) when the current user joined, or the point in time when the supergroup or channel was created, in case the user is not a member
-     * @status - Status of the current user in the supergroup or channel
-     * @memberCount - Member count
-     *                0 if unknown
-     *                Currently it is guaranteed to be known only if the supergroup or channel was found through SearchPublicChats
-     * @signMessages - True, if messages sent to the channel should contain information about the sender
-     *                 This field is only applicable to channels
-     * @isChannel - True, if the supergroup is a channel
-     * @isVerified - True, if the supergroup or channel is verified
-     * @restrictionReason - If non-empty, contains the reason why access to this supergroup or channel must be restricted
-     *                      Format of the string is "{type}: {description}"
-     *                      {type} Contains the type of the restriction and at least one of the suffixes "-all", "-ios", "-android", or "-wp", which describe the platforms on which access should be restricted
-     *                      (For example, "terms-ios-android"
-     *                      {description} contains a human-readable description of the restriction, which can be shown to the user)
-     * @isScam - True, if many users reported this supergroup as a scam
+     * @property id Supergroup or channel identifier
+     * @property username Username of the supergroup or channel
+     *                    Empty for private supergroups or channels
+     * @property date Point in time (Unix timestamp) when the current user joined, or the point in time when the supergroup or channel was created, in case the user is not a member
+     * @property status Status of the current user in the supergroup or channel
+     * @property memberCount Member count
+     *                       0 if unknown
+     *                       Currently it is guaranteed to be known only if the supergroup or channel was found through SearchPublicChats
+     * @property signMessages True, if messages sent to the channel should contain information about the sender
+     *                        This field is only applicable to channels
+     * @property isChannel True, if the supergroup is a channel
+     * @property isVerified True, if the supergroup or channel is verified
+     * @property restrictionReason If non-empty, contains the reason why access to this supergroup or channel must be restricted
+     *                             Format of the string is "{type}: {description}"
+     *                             {type} Contains the type of the restriction and at least one of the suffixes "-all", "-ios", "-android", or "-wp", which describe the platforms on which access should be restricted
+     *                             (For example, "terms-ios-android"
+     *                             {description} contains a human-readable description of the restriction, which can be shown to the user)
+     * @property isScam True, if many users reported this supergroup as a scam
+     * @property extra Extra data shared between request and response
      */
-    class Supergroup(
+    @Serializable
+    @SerialName("supergroup")
+    data class Supergroup(
+        @SerialName("id")
         val id: Int,
+        @SerialName("username")
         val username: String,
+        @SerialName("date")
         val date: Int,
+        @SerialName("status")
         val status: ChatMemberStatus,
+        @SerialName("member_count")
         val memberCount: Int,
+        @SerialName("sign_messages")
         val signMessages: Boolean,
+        @SerialName("is_channel")
         val isChannel: Boolean,
+        @SerialName("is_verified")
         val isVerified: Boolean,
+        @SerialName("restriction_reason")
         val restrictionReason: String,
-        val isScam: Boolean
-    ) : Object()
+        @SerialName("is_scam")
+        val isScam: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains full information about a supergroup or channel
      *
-     * @description - Supergroup or channel description
-     * @memberCount - Number of members in the supergroup or channel
-     *                0 if unknown
-     * @administratorCount - Number of privileged users in the supergroup or channel
+     * @property description Supergroup or channel description
+     * @property memberCount Number of members in the supergroup or channel
      *                       0 if unknown
-     * @restrictedCount - Number of restricted users in the supergroup
-     *                    0 if unknown
-     * @bannedCount - Number of users banned from chat
-     *                0 if unknown
-     * @canGetMembers - True, if members of the chat can be retrieved
-     * @canSetUsername - True, if the chat can be made public
-     * @canSetStickerSet - True, if the supergroup sticker set can be changed
-     * @canViewStatistics - True, if the channel statistics is available through getChatStatisticsUrl
-     * @isAllHistoryAvailable - True, if new chat members will have access to old messages
-     *                          In public supergroups and both public and private channels, old messages are always available, so this option affects only private supergroups
-     *                          The value of this field is only available for chat administrators
-     * @stickerSetId - Identifier of the supergroup sticker set
-     *                 0 if none
-     * @inviteLink - Invite link for this chat
-     * @upgradedFromBasicGroupId - Identifier of the basic group from which supergroup was upgraded
-     *                             0 if none
-     * @upgradedFromMaxMessageId - Identifier of the last message in the basic group from which supergroup was upgraded
-     *                             0 if none
+     * @property administratorCount Number of privileged users in the supergroup or channel
+     *                              0 if unknown
+     * @property restrictedCount Number of restricted users in the supergroup
+     *                           0 if unknown
+     * @property bannedCount Number of users banned from chat
+     *                       0 if unknown
+     * @property canGetMembers True, if members of the chat can be retrieved
+     * @property canSetUsername True, if the chat can be made public
+     * @property canSetStickerSet True, if the supergroup sticker set can be changed
+     * @property canViewStatistics True, if the channel statistics is available through getChatStatisticsUrl
+     * @property isAllHistoryAvailable True, if new chat members will have access to old messages
+     *                                 In public supergroups and both public and private channels, old messages are always available, so this option affects only private supergroups
+     *                                 The value of this field is only available for chat administrators
+     * @property stickerSetId Identifier of the supergroup sticker set
+     *                        0 if none
+     * @property inviteLink Invite link for this chat
+     * @property upgradedFromBasicGroupId Identifier of the basic group from which supergroup was upgraded
+     *                                    0 if none
+     * @property upgradedFromMaxMessageId Identifier of the last message in the basic group from which supergroup was upgraded
+     *                                    0 if none
+     * @property extra Extra data shared between request and response
      */
-    class SupergroupFullInfo(
+    @Serializable
+    @SerialName("supergroupFullInfo")
+    data class SupergroupFullInfo(
+        @SerialName("description")
         val description: String,
+        @SerialName("member_count")
         val memberCount: Int,
+        @SerialName("administrator_count")
         val administratorCount: Int,
+        @SerialName("restricted_count")
         val restrictedCount: Int,
+        @SerialName("banned_count")
         val bannedCount: Int,
+        @SerialName("can_get_members")
         val canGetMembers: Boolean,
+        @SerialName("can_set_username")
         val canSetUsername: Boolean,
+        @SerialName("can_set_sticker_set")
         val canSetStickerSet: Boolean,
+        @SerialName("can_view_statistics")
         val canViewStatistics: Boolean,
+        @SerialName("is_all_history_available")
         val isAllHistoryAvailable: Boolean,
+        @SerialName("sticker_set_id")
         val stickerSetId: Long,
+        @SerialName("invite_link")
         val inviteLink: String,
+        @SerialName("upgraded_from_basic_group_id")
         val upgradedFromBasicGroupId: Int,
-        val upgradedFromMaxMessageId: Long
-    ) : Object()
+        @SerialName("upgraded_from_max_message_id")
+        val upgradedFromMaxMessageId: Long,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the current secret chat state
      */
-    abstract class SecretChatState : null()
+    abstract class SecretChatState : Object()
 
     /**
      * The secret chat is not yet created
      * Waiting for the other user to get online
      */
-    class SecretChatStatePending : SecretChatState()
+    @Serializable
+    @SerialName("secretChatStatePending")
+    data class SecretChatStatePending(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SecretChatState()
 
     /**
      * The secret chat is ready to use
      */
-    class SecretChatStateReady : SecretChatState()
+    @Serializable
+    @SerialName("secretChatStateReady")
+    data class SecretChatStateReady(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SecretChatState()
 
     /**
      * The secret chat is closed
      */
-    class SecretChatStateClosed : SecretChatState()
+    @Serializable
+    @SerialName("secretChatStateClosed")
+    data class SecretChatStateClosed(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SecretChatState()
 
     /**
      * Represents a secret chat
      *
-     * @id - Secret chat identifier
-     * @userId - Identifier of the chat partner
-     * @state - State of the secret chat
-     * @isOutbound - True, if the chat was created by the current user
-     *               Otherwise false
-     * @ttl - Current message Time To Live setting (self-destruct timer) for the chat, in seconds
-     * @keyHash - Hash of the currently used key for comparison with the hash of the chat partner's key
-     *            This is a string of 36 bytes, which must be used to make a 12x12 square image with a color depth of 4
-     *            The first 16 bytes should be used to make a central 8x8 square, while the remaining 20 bytes should be used to construct a 2-pixel-wide border around that square
-     *            Alternatively, the first 32 bytes of the hash can be converted to the hexadecimal format and printed as 32 2-digit hex numbers
-     * @layer - Secret chat layer
-     *          Determines features supported by the other client
-     *          Video notes are supported if the layer >= 66
+     * @property id Secret chat identifier
+     * @property userId Identifier of the chat partner
+     * @property state State of the secret chat
+     * @property isOutbound True, if the chat was created by the current user
+     *                      Otherwise false
+     * @property ttl Current message Time To Live setting (self-destruct timer) for the chat, in seconds
+     * @property keyHash Hash of the currently used key for comparison with the hash of the chat partner's key
+     *                   This is a string of 36 bytes, which must be used to make a 12x12 square image with a color depth of 4
+     *                   The first 16 bytes should be used to make a central 8x8 square, while the remaining 20 bytes should be used to construct a 2-pixel-wide border around that square
+     *                   Alternatively, the first 32 bytes of the hash can be converted to the hexadecimal format and printed as 32 2-digit hex numbers
+     * @property layer Secret chat layer
+     *                 Determines features supported by the other client
+     *                 Video notes are supported if the layer >= 66
+     * @property extra Extra data shared between request and response
      */
-    class SecretChat(
+    @Serializable
+    @SerialName("secretChat")
+    data class SecretChat(
+        @SerialName("id")
         val id: Int,
+        @SerialName("user_id")
         val userId: Int,
+        @SerialName("state")
         val state: SecretChatState,
+        @SerialName("is_outbound")
         val isOutbound: Boolean,
+        @SerialName("ttl")
         val ttl: Int,
-        val keyHash: ByteArray,
-        val layer: Int
-    ) : Object()
+        @SerialName("key_hash")
+        val keyHash: Array<Byte>,
+        @SerialName("layer")
+        val layer: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about the origin of a forwarded message
      */
-    abstract class MessageForwardOrigin : null()
+    abstract class MessageForwardOrigin : Object()
 
     /**
      * The message was originally written by a known user
      *
-     * @senderUserId - Identifier of the user that originally sent the message
+     * @property senderUserId Identifier of the user that originally sent the message
      */
-    class MessageForwardOriginUser(
-        val senderUserId: Int
+    @Serializable
+    @SerialName("messageForwardOriginUser")
+    data class MessageForwardOriginUser(
+        @SerialName("sender_user_id")
+        val senderUserId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageForwardOrigin()
 
     /**
      * The message was originally written by a user, which is hidden by their privacy settings
      *
-     * @senderName - Name of the sender
+     * @property senderName Name of the sender
      */
-    class MessageForwardOriginHiddenUser(
-        val senderName: String
+    @Serializable
+    @SerialName("messageForwardOriginHiddenUser")
+    data class MessageForwardOriginHiddenUser(
+        @SerialName("sender_name")
+        val senderName: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageForwardOrigin()
 
     /**
      * The message was originally a post in a channel
      *
-     * @chatId - Identifier of the chat from which the message was originally forwarded
-     * @messageId - Message identifier of the original message
-     *              0 if unknown
-     * @authorSignature - Original post author signature
+     * @property chatId Identifier of the chat from which the message was originally forwarded
+     * @property messageId Message identifier of the original message
+     *                     0 if unknown
+     * @property authorSignature Original post author signature
      */
-    class MessageForwardOriginChannel(
+    @Serializable
+    @SerialName("messageForwardOriginChannel")
+    data class MessageForwardOriginChannel(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message_id")
         val messageId: Long,
-        val authorSignature: String
+        @SerialName("author_signature")
+        val authorSignature: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageForwardOrigin()
 
     /**
      * Contains information about a forwarded message
      *
-     * @origin - Origin of a forwarded message
-     * @date - Point in time (Unix timestamp) when the message was originally sent
-     * @fromChatId - For messages forwarded to the chat with the current user (saved messages) or to the channel discussion supergroup, the identifier of the chat from which the message was forwarded last time
-     *               0 if unknown
-     * @fromMessageId - For messages forwarded to the chat with the current user (saved messages) or to the channel discussion supergroup, the identifier of the original message from which the new message was forwarded last time
-     *                  0 if unknown
+     * @property origin Origin of a forwarded message
+     * @property date Point in time (Unix timestamp) when the message was originally sent
+     * @property fromChatId For messages forwarded to the chat with the current user (saved messages) or to the channel discussion supergroup, the identifier of the chat from which the message was forwarded last time
+     *                      0 if unknown
+     * @property fromMessageId For messages forwarded to the chat with the current user (saved messages) or to the channel discussion supergroup, the identifier of the original message from which the new message was forwarded last time
+     *                         0 if unknown
      */
-    class MessageForwardInfo(
+    @Serializable
+    @SerialName("messageForwardInfo")
+    data class MessageForwardInfo(
+        @SerialName("origin")
         val origin: MessageForwardOrigin,
+        @SerialName("date")
         val date: Int,
+        @SerialName("from_chat_id")
         val fromChatId: Long,
-        val fromMessageId: Long
+        @SerialName("from_message_id")
+        val fromMessageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about the sending state of the message
      */
-    abstract class MessageSendingState : null()
+    abstract class MessageSendingState : Object()
 
     /**
      * The message is being sent now, but has not yet been delivered to the server
      */
-    class MessageSendingStatePending : MessageSendingState()
+    @Serializable
+    @SerialName("messageSendingStatePending")
+    data class MessageSendingStatePending(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageSendingState()
 
     /**
      * The message failed to be sent
      *
-     * @errorCode - An error code
-     *              0 if unknown
-     * @errorMessage - Error message
-     * @canRetry - True, if the message can be re-sent
-     * @retryAfter - Time left before the message can be re-sent, in seconds
-     *               No update is sent when this field changes
+     * @property errorCode An error code
+     *                     0 if unknown
+     * @property errorMessage Error message
+     * @property canRetry True, if the message can be re-sent
+     * @property retryAfter Time left before the message can be re-sent, in seconds
+     *                      No update is sent when this field changes
      */
-    class MessageSendingStateFailed(
+    @Serializable
+    @SerialName("messageSendingStateFailed")
+    data class MessageSendingStateFailed(
+        @SerialName("error_code")
         val errorCode: Int,
+        @SerialName("error_message")
         val errorMessage: String,
+        @SerialName("can_retry")
         val canRetry: Boolean,
-        val retryAfter: Double
+        @SerialName("retry_after")
+        val retryAfter: Double,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageSendingState()
 
     /**
      * Describes a message
      *
-     * @id - Message identifier, unique for the chat to which the message belongs
-     * @senderUserId - Identifier of the user who sent the message
-     *                 0 if unknown
-     *                 Currently, it is unknown for channel posts and for channel posts automatically forwarded to discussion group
-     * @chatId - Chat identifier
-     * @sendingState - Information about the sending state of the message
-     * @isOutgoing - True, if the message is outgoing
-     * @canBeEdited - True, if the message can be edited
-     *                For live location and poll messages this fields shows, whether editMessageLiveLocation or stopPoll can be used with this message by the client
-     * @canBeForwarded - True, if the message can be forwarded
-     * @canBeDeletedOnlyForSelf - True, if the message can be deleted only for the current user while other users will continue to see it
-     * @canBeDeletedForAllUsers - True, if the message can be deleted for all users
-     * @isChannelPost - True, if the message is a channel post
-     *                  All messages to channels are channel posts, all other messages are not channel posts
-     * @containsUnreadMention - True, if the message contains an unread mention for the current user
-     * @date - Point in time (Unix timestamp) when the message was sent
-     * @editDate - Point in time (Unix timestamp) when the message was last edited
-     * @forwardInfo - Information about the initial message sender
-     * @replyToMessageId - If non-zero, the identifier of the message this message is replying to
-     *                     Can be the identifier of a deleted message
-     * @ttl - For self-destructing messages, the message's TTL (Time To Live), in seconds
-     *        0 if none
-     *        TDLib will send updateDeleteMessages or updateMessageContent once the TTL expires
-     * @ttlExpiresIn - Time left before the message expires, in seconds
-     * @viaBotUserId - If non-zero, the user identifier of the bot through which this message was sent
-     * @authorSignature - For channel posts, optional author signature
-     * @views - Number of times this message was viewed
-     * @mediaAlbumId - Unique identifier of an album this message belongs to
-     *                 Only photos and videos can be grouped together in albums
-     * @content - Content of the message
-     * @replyMarkup - Reply markup for the message
+     * @property id Message identifier, unique for the chat to which the message belongs
+     * @property senderUserId Identifier of the user who sent the message
+     *                        0 if unknown
+     *                        Currently, it is unknown for channel posts and for channel posts automatically forwarded to discussion group
+     * @property chatId Chat identifier
+     * @property sendingState Information about the sending state of the message
+     * @property isOutgoing True, if the message is outgoing
+     * @property canBeEdited True, if the message can be edited
+     *                       For live location and poll messages this fields shows, whether editMessageLiveLocation or stopPoll can be used with this message by the client
+     * @property canBeForwarded True, if the message can be forwarded
+     * @property canBeDeletedOnlyForSelf True, if the message can be deleted only for the current user while other users will continue to see it
+     * @property canBeDeletedForAllUsers True, if the message can be deleted for all users
+     * @property isChannelPost True, if the message is a channel post
+     *                         All messages to channels are channel posts, all other messages are not channel posts
+     * @property containsUnreadMention True, if the message contains an unread mention for the current user
+     * @property date Point in time (Unix timestamp) when the message was sent
+     * @property editDate Point in time (Unix timestamp) when the message was last edited
+     * @property forwardInfo Information about the initial message sender
+     * @property replyToMessageId If non-zero, the identifier of the message this message is replying to
+     *                            Can be the identifier of a deleted message
+     * @property ttl For self-destructing messages, the message's TTL (Time To Live), in seconds
+     *               0 if none
+     *               TDLib will send updateDeleteMessages or updateMessageContent once the TTL expires
+     * @property ttlExpiresIn Time left before the message expires, in seconds
+     * @property viaBotUserId If non-zero, the user identifier of the bot through which this message was sent
+     * @property authorSignature For channel posts, optional author signature
+     * @property views Number of times this message was viewed
+     * @property mediaAlbumId Unique identifier of an album this message belongs to
+     *                        Only photos and videos can be grouped together in albums
+     * @property content Content of the message
+     * @property replyMarkup Reply markup for the message
+     * @property extra Extra data shared between request and response
      */
-    class Message(
+    @Serializable
+    @SerialName("message")
+    data class Message(
+        @SerialName("id")
         val id: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("sending_state")
         val sendingState: MessageSendingState?,
+        @SerialName("is_outgoing")
         val isOutgoing: Boolean,
+        @SerialName("can_be_edited")
         val canBeEdited: Boolean,
+        @SerialName("can_be_forwarded")
         val canBeForwarded: Boolean,
+        @SerialName("can_be_deleted_only_for_self")
         val canBeDeletedOnlyForSelf: Boolean,
+        @SerialName("can_be_deleted_for_all_users")
         val canBeDeletedForAllUsers: Boolean,
+        @SerialName("is_channel_post")
         val isChannelPost: Boolean,
+        @SerialName("contains_unread_mention")
         val containsUnreadMention: Boolean,
+        @SerialName("date")
         val date: Int,
+        @SerialName("edit_date")
         val editDate: Int,
+        @SerialName("forward_info")
         val forwardInfo: MessageForwardInfo?,
+        @SerialName("reply_to_message_id")
         val replyToMessageId: Long,
+        @SerialName("ttl")
         val ttl: Int,
+        @SerialName("ttl_expires_in")
         val ttlExpiresIn: Double,
+        @SerialName("via_bot_user_id")
         val viaBotUserId: Int,
+        @SerialName("author_signature")
         val authorSignature: String,
+        @SerialName("views")
         val views: Int,
+        @SerialName("media_album_id")
         val mediaAlbumId: Long,
+        @SerialName("content")
         val content: MessageContent,
-        val replyMarkup: ReplyMarkup?
-    ) : Object()
+        @SerialName("reply_markup")
+        val replyMarkup: ReplyMarkup?,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a list of messages
      *
-     * @totalCount - Approximate total count of messages found
-     * @messages - List of messages
-     *             Messages may be null
+     * @property totalCount Approximate total count of messages found
+     * @property messages List of messages
+     *                    Messages may be null
+     * @property extra Extra data shared between request and response
      */
-    class Messages(
+    @Serializable
+    @SerialName("messages")
+    data class Messages(
+        @SerialName("total_count")
         val totalCount: Int,
-        val messages: Array<Message>
-    ) : Object()
+        @SerialName("messages")
+        val messages: Array<Message>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a list of messages found by a search
      *
-     * @messages - List of messages
-     * @nextFromSearchId - Value to pass as from_search_id to get more results
+     * @property messages List of messages
+     * @property nextFromSearchId Value to pass as from_search_id to get more results
+     * @property extra Extra data shared between request and response
      */
-    class FoundMessages(
+    @Serializable
+    @SerialName("foundMessages")
+    data class FoundMessages(
+        @SerialName("messages")
         val messages: Array<Message>,
-        val nextFromSearchId: Long
-    ) : Object()
+        @SerialName("next_from_search_id")
+        val nextFromSearchId: Long,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the types of chats to which notification settings are applied
      */
-    abstract class NotificationSettingsScope : null()
+    abstract class NotificationSettingsScope : Object()
 
     /**
      * Notification settings applied to all private and secret chats when the corresponding chat setting has a default value
      */
-    class NotificationSettingsScopePrivateChats : NotificationSettingsScope()
+    @Serializable
+    @SerialName("notificationSettingsScopePrivateChats")
+    data class NotificationSettingsScopePrivateChats(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationSettingsScope()
 
     /**
      * Notification settings applied to all basic groups and supergroups when the corresponding chat setting has a default value
      */
-    class NotificationSettingsScopeGroupChats : NotificationSettingsScope()
+    @Serializable
+    @SerialName("notificationSettingsScopeGroupChats")
+    data class NotificationSettingsScopeGroupChats(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationSettingsScope()
 
     /**
      * Notification settings applied to all channels when the corresponding chat setting has a default value
      */
-    class NotificationSettingsScopeChannelChats : NotificationSettingsScope()
+    @Serializable
+    @SerialName("notificationSettingsScopeChannelChats")
+    data class NotificationSettingsScopeChannelChats(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationSettingsScope()
 
     /**
      * Contains information about notification settings for a chat
      *
-     * @useDefaultMuteFor - If true, mute_for is ignored and the value for the relevant type of chat is used instead
-     * @muteFor - Time left before notifications will be unmuted, in seconds
-     * @useDefaultSound - If true, sound is ignored and the value for the relevant type of chat is used instead
-     * @sound - The name of an audio file to be used for notification sounds
-     *          Only applies to iOS applications
-     * @useDefaultShowPreview - If true, show_preview is ignored and the value for the relevant type of chat is used instead
-     * @showPreview - True, if message content should be displayed in notifications
-     * @useDefaultDisablePinnedMessageNotifications - If true, disable_pinned_message_notifications is ignored and the value for the relevant type of chat is used instead
-     * @disablePinnedMessageNotifications - If true, notifications for incoming pinned messages will be created as for an ordinary unread message
-     * @useDefaultDisableMentionNotifications - If true, disable_mention_notifications is ignored and the value for the relevant type of chat is used instead
-     * @disableMentionNotifications - If true, notifications for messages with mentions will be created as for an ordinary unread message
+     * @property useDefaultMuteFor If true, mute_for is ignored and the value for the relevant type of chat is used instead
+     * @property muteFor Time left before notifications will be unmuted, in seconds
+     * @property useDefaultSound If true, sound is ignored and the value for the relevant type of chat is used instead
+     * @property sound The name of an audio file to be used for notification sounds
+     *                 Only applies to iOS applications
+     * @property useDefaultShowPreview If true, show_preview is ignored and the value for the relevant type of chat is used instead
+     * @property showPreview True, if message content should be displayed in notifications
+     * @property useDefaultDisablePinnedMessageNotifications If true, disable_pinned_message_notifications is ignored and the value for the relevant type of chat is used instead
+     * @property disablePinnedMessageNotifications If true, notifications for incoming pinned messages will be created as for an ordinary unread message
+     * @property useDefaultDisableMentionNotifications If true, disable_mention_notifications is ignored and the value for the relevant type of chat is used instead
+     * @property disableMentionNotifications If true, notifications for messages with mentions will be created as for an ordinary unread message
      */
-    class ChatNotificationSettings(
-        val useDefaultMuteFor: Boolean = false,
-        val muteFor: Int = 0,
-        val useDefaultSound: Boolean = false,
+    @Serializable
+    @SerialName("chatNotificationSettings")
+    data class ChatNotificationSettings(
+        @SerialName("use_default_mute_for")
+        val useDefaultMuteFor: Boolean,
+        @SerialName("mute_for")
+        val muteFor: Int,
+        @SerialName("use_default_sound")
+        val useDefaultSound: Boolean,
+        @SerialName("sound")
         val sound: String,
-        val useDefaultShowPreview: Boolean = false,
-        val showPreview: Boolean = false,
-        val useDefaultDisablePinnedMessageNotifications: Boolean = false,
-        val disablePinnedMessageNotifications: Boolean = false,
-        val useDefaultDisableMentionNotifications: Boolean = false,
-        val disableMentionNotifications: Boolean = false
+        @SerialName("use_default_show_preview")
+        val useDefaultShowPreview: Boolean,
+        @SerialName("show_preview")
+        val showPreview: Boolean,
+        @SerialName("use_default_disable_pinned_message_notifications")
+        val useDefaultDisablePinnedMessageNotifications: Boolean,
+        @SerialName("disable_pinned_message_notifications")
+        val disablePinnedMessageNotifications: Boolean,
+        @SerialName("use_default_disable_mention_notifications")
+        val useDefaultDisableMentionNotifications: Boolean,
+        @SerialName("disable_mention_notifications")
+        val disableMentionNotifications: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about notification settings for several chats
      *
-     * @muteFor - Time left before notifications will be unmuted, in seconds
-     * @sound - The name of an audio file to be used for notification sounds
-     *          Only applies to iOS applications
-     * @showPreview - True, if message content should be displayed in notifications
-     * @disablePinnedMessageNotifications - True, if notifications for incoming pinned messages will be created as for an ordinary unread message
-     * @disableMentionNotifications - True, if notifications for messages with mentions will be created as for an ordinary unread message
+     * @property muteFor Time left before notifications will be unmuted, in seconds
+     * @property sound The name of an audio file to be used for notification sounds
+     *                 Only applies to iOS applications
+     * @property showPreview True, if message content should be displayed in notifications
+     * @property disablePinnedMessageNotifications True, if notifications for incoming pinned messages will be created as for an ordinary unread message
+     * @property disableMentionNotifications True, if notifications for messages with mentions will be created as for an ordinary unread message
+     * @property extra Extra data shared between request and response
      */
-    class ScopeNotificationSettings(
-        val muteFor: Int = 0,
+    @Serializable
+    @SerialName("scopeNotificationSettings")
+    data class ScopeNotificationSettings(
+        @SerialName("mute_for")
+        val muteFor: Int,
+        @SerialName("sound")
         val sound: String,
-        val showPreview: Boolean = false,
-        val disablePinnedMessageNotifications: Boolean = false,
-        val disableMentionNotifications: Boolean = false
-    ) : Object()
+        @SerialName("show_preview")
+        val showPreview: Boolean,
+        @SerialName("disable_pinned_message_notifications")
+        val disablePinnedMessageNotifications: Boolean,
+        @SerialName("disable_mention_notifications")
+        val disableMentionNotifications: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a message draft
      *
-     * @replyToMessageId - Identifier of the message to reply to
-     *                     0 if none
-     * @inputMessageText - Content of the message draft
-     *                     This should always be of type inputMessageText
+     * @property replyToMessageId Identifier of the message to reply to
+     *                            0 if none
+     * @property inputMessageText Content of the message draft
+     *                            This should always be of type inputMessageText
      */
-    class DraftMessage(
-        val replyToMessageId: Long = 0L,
-        val inputMessageText: InputMessageContent
+    @Serializable
+    @SerialName("draftMessage")
+    data class DraftMessage(
+        @SerialName("reply_to_message_id")
+        val replyToMessageId: Long,
+        @SerialName("input_message_text")
+        val inputMessageText: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes the type of a chat
      */
-    abstract class ChatType : null()
+    abstract class ChatType : Object()
 
     /**
      * An ordinary chat with a user
      *
-     * @userId - User identifier
+     * @property userId User identifier
      */
-    class ChatTypePrivate(
-        val userId: Int
+    @Serializable
+    @SerialName("chatTypePrivate")
+    data class ChatTypePrivate(
+        @SerialName("user_id")
+        val userId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatType()
 
     /**
      * A basic group (i.e., a chat with 0-200 other users)
      *
-     * @basicGroupId - Basic group identifier
+     * @property basicGroupId Basic group identifier
      */
-    class ChatTypeBasicGroup(
-        val basicGroupId: Int
+    @Serializable
+    @SerialName("chatTypeBasicGroup")
+    data class ChatTypeBasicGroup(
+        @SerialName("basic_group_id")
+        val basicGroupId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatType()
 
     /**
      * A supergroup (i.e
      * A chat with up to GetOption("supergroup_max_size") other users), or channel (with unlimited members)
      *
-     * @supergroupId - Supergroup or channel identifier
-     * @isChannel - True, if the supergroup is a channel
+     * @property supergroupId Supergroup or channel identifier
+     * @property isChannel True, if the supergroup is a channel
      */
-    class ChatTypeSupergroup(
+    @Serializable
+    @SerialName("chatTypeSupergroup")
+    data class ChatTypeSupergroup(
+        @SerialName("supergroup_id")
         val supergroupId: Int,
-        val isChannel: Boolean
+        @SerialName("is_channel")
+        val isChannel: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatType()
 
     /**
      * A secret chat with a user
      *
-     * @secretChatId - Secret chat identifier
-     * @userId - User identifier of the secret chat peer
+     * @property secretChatId Secret chat identifier
+     * @property userId User identifier of the secret chat peer
      */
-    class ChatTypeSecret(
+    @Serializable
+    @SerialName("chatTypeSecret")
+    data class ChatTypeSecret(
+        @SerialName("secret_chat_id")
         val secretChatId: Int,
-        val userId: Int
+        @SerialName("user_id")
+        val userId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatType()
 
     /**
      * A chat
      * (Can be a private chat, basic group, supergroup, or secret chat)
      *
-     * @id - Chat unique identifier
-     * @type - Type of the chat
-     * @title - Chat title
-     * @photo - Chat photo
-     * @permissions - Actions that non-administrator chat members are allowed to take in the chat
-     * @lastMessage - Last message in the chat
-     * @order - Descending parameter by which chats are sorted in the main chat list
-     *          If the order number of two chats is the same, they must be sorted in descending order by ID
-     *          If 0, the position of the chat in the list is undetermined
-     * @isPinned - True, if the chat is pinned
-     * @isMarkedAsUnread - True, if the chat is marked as unread
-     * @isSponsored - True, if the chat is sponsored by the user's MTProxy server
-     * @canBeDeletedOnlyForSelf - True, if the chat messages can be deleted only for the current user while other users will continue to see the messages
-     * @canBeDeletedForAllUsers - True, if the chat messages can be deleted for all users
-     * @canBeReported - True, if the chat can be reported to Telegram moderators through reportChat
-     * @defaultDisableNotification - Default value of the disable_notification parameter, used when a message is sent to the chat
-     * @unreadCount - Number of unread messages in the chat
-     * @lastReadInboxMessageId - Identifier of the last read incoming message
-     * @lastReadOutboxMessageId - Identifier of the last read outgoing message
-     * @unreadMentionCount - Number of unread messages with a mention/reply in the chat
-     * @notificationSettings - Notification settings for this chat
-     * @pinnedMessageId - Identifier of the pinned message in the chat
-     *                    0 if none
-     * @replyMarkupMessageId - Identifier of the message from which reply markup needs to be used
-     *                         0 if there is no default custom reply markup in the chat
-     * @draftMessage - A draft of a message in the chat
-     * @clientData - Contains client-specific data associated with the chat
-     *               (For example, the chat position or local chat notification settings can be stored here.) Persistent if a message database is used
+     * @property id Chat unique identifier
+     * @property type Type of the chat
+     * @property title Chat title
+     * @property photo Chat photo
+     * @property permissions Actions that non-administrator chat members are allowed to take in the chat
+     * @property lastMessage Last message in the chat
+     * @property order Descending parameter by which chats are sorted in the main chat list
+     *                 If the order number of two chats is the same, they must be sorted in descending order by ID
+     *                 If 0, the position of the chat in the list is undetermined
+     * @property isPinned True, if the chat is pinned
+     * @property isMarkedAsUnread True, if the chat is marked as unread
+     * @property isSponsored True, if the chat is sponsored by the user's MTProxy server
+     * @property canBeDeletedOnlyForSelf True, if the chat messages can be deleted only for the current user while other users will continue to see the messages
+     * @property canBeDeletedForAllUsers True, if the chat messages can be deleted for all users
+     * @property canBeReported True, if the chat can be reported to Telegram moderators through reportChat
+     * @property defaultDisableNotification Default value of the disable_notification parameter, used when a message is sent to the chat
+     * @property unreadCount Number of unread messages in the chat
+     * @property lastReadInboxMessageId Identifier of the last read incoming message
+     * @property lastReadOutboxMessageId Identifier of the last read outgoing message
+     * @property unreadMentionCount Number of unread messages with a mention/reply in the chat
+     * @property notificationSettings Notification settings for this chat
+     * @property pinnedMessageId Identifier of the pinned message in the chat
+     *                           0 if none
+     * @property replyMarkupMessageId Identifier of the message from which reply markup needs to be used
+     *                                0 if there is no default custom reply markup in the chat
+     * @property draftMessage A draft of a message in the chat
+     * @property clientData Contains client-specific data associated with the chat
+     *                      (For example, the chat position or local chat notification settings can be stored here.) Persistent if a message database is used
+     * @property extra Extra data shared between request and response
      */
-    class Chat(
+    @Serializable
+    @SerialName("chat")
+    data class Chat(
+        @SerialName("id")
         val id: Long,
+        @SerialName("type")
         val type: ChatType,
+        @SerialName("title")
         val title: String,
+        @SerialName("photo")
         val photo: ChatPhoto?,
+        @SerialName("permissions")
         val permissions: ChatPermissions,
+        @SerialName("last_message")
         val lastMessage: Message?,
+        @SerialName("order")
         val order: Long,
+        @SerialName("is_pinned")
         val isPinned: Boolean,
+        @SerialName("is_marked_as_unread")
         val isMarkedAsUnread: Boolean,
+        @SerialName("is_sponsored")
         val isSponsored: Boolean,
+        @SerialName("can_be_deleted_only_for_self")
         val canBeDeletedOnlyForSelf: Boolean,
+        @SerialName("can_be_deleted_for_all_users")
         val canBeDeletedForAllUsers: Boolean,
+        @SerialName("can_be_reported")
         val canBeReported: Boolean,
+        @SerialName("default_disable_notification")
         val defaultDisableNotification: Boolean,
+        @SerialName("unread_count")
         val unreadCount: Int,
+        @SerialName("last_read_inbox_message_id")
         val lastReadInboxMessageId: Long,
+        @SerialName("last_read_outbox_message_id")
         val lastReadOutboxMessageId: Long,
+        @SerialName("unread_mention_count")
         val unreadMentionCount: Int,
+        @SerialName("notification_settings")
         val notificationSettings: ChatNotificationSettings,
+        @SerialName("pinned_message_id")
         val pinnedMessageId: Long,
+        @SerialName("reply_markup_message_id")
         val replyMarkupMessageId: Long,
+        @SerialName("draft_message")
         val draftMessage: DraftMessage?,
-        val clientData: String
-    ) : Object()
+        @SerialName("client_data")
+        val clientData: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a list of chats
      *
-     * @chatIds - List of chat identifiers
+     * @property chatIds List of chat identifiers
+     * @property extra Extra data shared between request and response
      */
-    class Chats(
-        val chatIds: LongArray
-    ) : Object()
+    @Serializable
+    @SerialName("chats")
+    data class Chats(
+        @SerialName("chat_ids")
+        val chatIds: Array<Long>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a chat invite link
      *
-     * @inviteLink - Chat invite link
+     * @property inviteLink Chat invite link
+     * @property extra Extra data shared between request and response
      */
-    class ChatInviteLink(
-        val inviteLink: String
-    ) : Object()
+    @Serializable
+    @SerialName("chatInviteLink")
+    data class ChatInviteLink(
+        @SerialName("invite_link")
+        val inviteLink: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a chat invite link
      *
-     * @chatId - Chat identifier of the invite link
-     *           0 if the user is not a member of this chat
-     * @type - Contains information about the type of the chat
-     * @title - Title of the chat
-     * @photo - Chat photo
-     * @memberCount - Number of members
-     * @memberUserIds - User identifiers of some chat members that may be known to the current user
-     * @isPublic - True, if the chat is a public supergroup or a channel with a username
+     * @property chatId Chat identifier of the invite link
+     *                  0 if the user is not a member of this chat
+     * @property type Contains information about the type of the chat
+     * @property title Title of the chat
+     * @property photo Chat photo
+     * @property memberCount Number of members
+     * @property memberUserIds User identifiers of some chat members that may be known to the current user
+     * @property isPublic True, if the chat is a public supergroup or a channel with a username
+     * @property extra Extra data shared between request and response
      */
-    class ChatInviteLinkInfo(
+    @Serializable
+    @SerialName("chatInviteLinkInfo")
+    data class ChatInviteLinkInfo(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("type")
         val type: ChatType,
+        @SerialName("title")
         val title: String,
+        @SerialName("photo")
         val photo: ChatPhoto?,
+        @SerialName("member_count")
         val memberCount: Int,
-        val memberUserIds: IntArray,
-        val isPublic: Boolean
-    ) : Object()
+        @SerialName("member_user_ids")
+        val memberUserIds: Array<Int>,
+        @SerialName("is_public")
+        val isPublic: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes a keyboard button type
      */
-    abstract class KeyboardButtonType : null()
+    abstract class KeyboardButtonType : Object()
 
     /**
      * A simple button, with text that should be sent when the button is pressed
      */
-    class KeyboardButtonTypeText : KeyboardButtonType()
+    @Serializable
+    @SerialName("keyboardButtonTypeText")
+    data class KeyboardButtonTypeText(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : KeyboardButtonType()
 
     /**
      * A button that sends the user's phone number when pressed
      * Available only in private chats
      */
-    class KeyboardButtonTypeRequestPhoneNumber : KeyboardButtonType()
+    @Serializable
+    @SerialName("keyboardButtonTypeRequestPhoneNumber")
+    data class KeyboardButtonTypeRequestPhoneNumber(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : KeyboardButtonType()
 
     /**
      * A button that sends the user's location when pressed
      * Available only in private chats
      */
-    class KeyboardButtonTypeRequestLocation : KeyboardButtonType()
+    @Serializable
+    @SerialName("keyboardButtonTypeRequestLocation")
+    data class KeyboardButtonTypeRequestLocation(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : KeyboardButtonType()
 
     /**
      * Represents a single button in a bot keyboard
      *
-     * @text - Text of the button
-     * @type - Type of the button
+     * @property text Text of the button
+     * @property type Type of the button
      */
-    class KeyboardButton(
+    @Serializable
+    @SerialName("keyboardButton")
+    data class KeyboardButton(
+        @SerialName("text")
         val text: String,
-        val type: KeyboardButtonType
+        @SerialName("type")
+        val type: KeyboardButtonType,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes the type of an inline keyboard button
      */
-    abstract class InlineKeyboardButtonType : null()
+    abstract class InlineKeyboardButtonType : Object()
 
     /**
      * A button that opens a specified URL
      *
-     * @url - HTTP or tg:// URL to open
+     * @property url HTTP or tg:// URL to open
      */
-    class InlineKeyboardButtonTypeUrl(
-        val url: String
+    @Serializable
+    @SerialName("inlineKeyboardButtonTypeUrl")
+    data class InlineKeyboardButtonTypeUrl(
+        @SerialName("url")
+        val url: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineKeyboardButtonType()
 
     /**
      * A button that opens a specified URL and automatically logs in in current user if they allowed to do that
      *
-     * @url - HTTP URL to open
-     * @id - Unique button identifier
-     * @forwardText - If non-empty, new text of the button in forwarded messages
+     * @property url HTTP URL to open
+     * @property id Unique button identifier
+     * @property forwardText If non-empty, new text of the button in forwarded messages
      */
-    class InlineKeyboardButtonTypeLoginUrl(
+    @Serializable
+    @SerialName("inlineKeyboardButtonTypeLoginUrl")
+    data class InlineKeyboardButtonTypeLoginUrl(
+        @SerialName("url")
         val url: String,
+        @SerialName("id")
         val id: Int,
-        val forwardText: String
+        @SerialName("forward_text")
+        val forwardText: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineKeyboardButtonType()
 
     /**
      * A button that sends a special callback query to a bot
      *
-     * @data - Data to be sent to the bot via a callback query
+     * @property data Data to be sent to the bot via a callback query
      */
-    class InlineKeyboardButtonTypeCallback(
-        val data: ByteArray
+    @Serializable
+    @SerialName("inlineKeyboardButtonTypeCallback")
+    data class InlineKeyboardButtonTypeCallback(
+        @SerialName("data")
+        val data: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineKeyboardButtonType()
 
     /**
      * A button with a game that sends a special callback query to a bot
      * This button must be in the first column and row of the keyboard and can be attached only to a message with content of the type messageGame
      */
-    class InlineKeyboardButtonTypeCallbackGame : InlineKeyboardButtonType()
+    @Serializable
+    @SerialName("inlineKeyboardButtonTypeCallbackGame")
+    data class InlineKeyboardButtonTypeCallbackGame(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : InlineKeyboardButtonType()
 
     /**
      * A button that forces an inline query to the bot to be inserted in the input field
      *
-     * @query - Inline query to be sent to the bot
-     * @inCurrentChat - True, if the inline query should be sent from the current chat
+     * @property query Inline query to be sent to the bot
+     * @property inCurrentChat True, if the inline query should be sent from the current chat
      */
-    class InlineKeyboardButtonTypeSwitchInline(
+    @Serializable
+    @SerialName("inlineKeyboardButtonTypeSwitchInline")
+    data class InlineKeyboardButtonTypeSwitchInline(
+        @SerialName("query")
         val query: String,
-        val inCurrentChat: Boolean
+        @SerialName("in_current_chat")
+        val inCurrentChat: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineKeyboardButtonType()
 
     /**
      * A button to buy something
      * This button must be in the first column and row of the keyboard and can be attached only to a message with content of the type messageInvoice
      */
-    class InlineKeyboardButtonTypeBuy : InlineKeyboardButtonType()
+    @Serializable
+    @SerialName("inlineKeyboardButtonTypeBuy")
+    data class InlineKeyboardButtonTypeBuy(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : InlineKeyboardButtonType()
 
     /**
      * Represents a single button in an inline keyboard
      *
-     * @text - Text of the button
-     * @type - Type of the button
+     * @property text Text of the button
+     * @property type Type of the button
      */
-    class InlineKeyboardButton(
+    @Serializable
+    @SerialName("inlineKeyboardButton")
+    data class InlineKeyboardButton(
+        @SerialName("text")
         val text: String,
-        val type: InlineKeyboardButtonType
+        @SerialName("type")
+        val type: InlineKeyboardButtonType,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a description of a custom keyboard and actions that can be done with it to quickly reply to bots
      */
-    abstract class ReplyMarkup : null()
+    abstract class ReplyMarkup : Object()
 
     /**
      * Instructs clients to remove the keyboard once this message has been received
      * This kind of keyboard can't be received in an incoming message
      * Instead, UpdateChatReplyMarkup with message_id == 0 will be sent
      *
-     * @isPersonal - True, if the keyboard is removed only for the mentioned users or the target user of a reply
+     * @property isPersonal True, if the keyboard is removed only for the mentioned users or the target user of a reply
      */
-    class ReplyMarkupRemoveKeyboard(
-        val isPersonal: Boolean = false
+    @Serializable
+    @SerialName("replyMarkupRemoveKeyboard")
+    data class ReplyMarkupRemoveKeyboard(
+        @SerialName("is_personal")
+        val isPersonal: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ReplyMarkup()
 
     /**
      * Instructs clients to force a reply to this message
      *
-     * @isPersonal - True, if a forced reply must automatically be shown to the current user
-     *               For outgoing messages, specify true to show the forced reply only for the mentioned users and for the target user of a reply
+     * @property isPersonal True, if a forced reply must automatically be shown to the current user
+     *                      For outgoing messages, specify true to show the forced reply only for the mentioned users and for the target user of a reply
      */
-    class ReplyMarkupForceReply(
-        val isPersonal: Boolean = false
+    @Serializable
+    @SerialName("replyMarkupForceReply")
+    data class ReplyMarkupForceReply(
+        @SerialName("is_personal")
+        val isPersonal: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ReplyMarkup()
 
     /**
      * Contains a custom keyboard layout to quickly reply to bots
      *
-     * @rows - A list of rows of bot keyboard buttons
-     * @resizeKeyboard - True, if the client needs to resize the keyboard vertically
-     * @oneTime - True, if the client needs to hide the keyboard after use
-     * @isPersonal - True, if the keyboard must automatically be shown to the current user
-     *               For outgoing messages, specify true to show the keyboard only for the mentioned users and for the target user of a reply
+     * @property rows A list of rows of bot keyboard buttons
+     * @property resizeKeyboard True, if the client needs to resize the keyboard vertically
+     * @property oneTime True, if the client needs to hide the keyboard after use
+     * @property isPersonal True, if the keyboard must automatically be shown to the current user
+     *                      For outgoing messages, specify true to show the keyboard only for the mentioned users and for the target user of a reply
      */
-    class ReplyMarkupShowKeyboard(
-        val rows: Array<Array<KeyboardButton>> = emptyArray(),
-        val resizeKeyboard: Boolean = false,
-        val oneTime: Boolean = false,
-        val isPersonal: Boolean = false
+    @Serializable
+    @SerialName("replyMarkupShowKeyboard")
+    data class ReplyMarkupShowKeyboard(
+        @SerialName("rows")
+        val rows: Array<Array<KeyboardButton>>,
+        @SerialName("resize_keyboard")
+        val resizeKeyboard: Boolean,
+        @SerialName("one_time")
+        val oneTime: Boolean,
+        @SerialName("is_personal")
+        val isPersonal: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ReplyMarkup()
 
     /**
      * Contains an inline keyboard layout
      *
-     * @rows - A list of rows of inline keyboard buttons
+     * @property rows A list of rows of inline keyboard buttons
      */
-    class ReplyMarkupInlineKeyboard(
-        val rows: Array<Array<InlineKeyboardButton>> = emptyArray()
+    @Serializable
+    @SerialName("replyMarkupInlineKeyboard")
+    data class ReplyMarkupInlineKeyboard(
+        @SerialName("rows")
+        val rows: Array<Array<InlineKeyboardButton>>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ReplyMarkup()
 
     /**
      * Describes a text object inside an instant-view web page
      */
-    abstract class RichText : null()
+    abstract class RichText : Object()
 
     /**
      * A plain text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextPlain(
-        val text: String
+    @Serializable
+    @SerialName("richTextPlain")
+    data class RichTextPlain(
+        @SerialName("text")
+        val text: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A bold rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextBold(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextBold")
+    data class RichTextBold(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * An italicized rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextItalic(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextItalic")
+    data class RichTextItalic(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * An underlined rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextUnderline(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextUnderline")
+    data class RichTextUnderline(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A strike-through rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextStrikethrough(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextStrikethrough")
+    data class RichTextStrikethrough(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A fixed-width rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextFixed(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextFixed")
+    data class RichTextFixed(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A rich text URL link
      *
-     * @text - Text
-     * @url - URL
+     * @property text Text
+     * @property url URL
      */
-    class RichTextUrl(
+    @Serializable
+    @SerialName("richTextUrl")
+    data class RichTextUrl(
+        @SerialName("text")
         val text: RichText,
-        val url: String
+        @SerialName("url")
+        val url: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A rich text email link
      *
-     * @text - Text
-     * @emailAddress - Email address
+     * @property text Text
+     * @property emailAddress Email address
      */
-    class RichTextEmailAddress(
+    @Serializable
+    @SerialName("richTextEmailAddress")
+    data class RichTextEmailAddress(
+        @SerialName("text")
         val text: RichText,
-        val emailAddress: String
+        @SerialName("email_address")
+        val emailAddress: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A subscript rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextSubscript(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextSubscript")
+    data class RichTextSubscript(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A superscript rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextSuperscript(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextSuperscript")
+    data class RichTextSuperscript(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A marked rich text
      *
-     * @text - Text
+     * @property text Text
      */
-    class RichTextMarked(
-        val text: RichText
+    @Serializable
+    @SerialName("richTextMarked")
+    data class RichTextMarked(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A rich text phone number
      *
-     * @text - Text
-     * @phoneNumber - Phone number
+     * @property text Text
+     * @property phoneNumber Phone number
      */
-    class RichTextPhoneNumber(
+    @Serializable
+    @SerialName("richTextPhoneNumber")
+    data class RichTextPhoneNumber(
+        @SerialName("text")
         val text: RichText,
-        val phoneNumber: String
+        @SerialName("phone_number")
+        val phoneNumber: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A small image inside the text
      *
-     * @document - The image represented as a document
-     *             The image can be in GIF, JPEG or PNG format
-     * @width - Width of a bounding box in which the image should be shown
-     *          0 if unknown
-     * @height - Height of a bounding box in which the image should be shown
-     *           0 if unknown
+     * @property document The image represented as a document
+     *                    The image can be in GIF, JPEG or PNG format
+     * @property width Width of a bounding box in which the image should be shown
+     *                 0 if unknown
+     * @property height Height of a bounding box in which the image should be shown
+     *                  0 if unknown
      */
-    class RichTextIcon(
+    @Serializable
+    @SerialName("richTextIcon")
+    data class RichTextIcon(
+        @SerialName("document")
         val document: Document,
+        @SerialName("width")
         val width: Int,
-        val height: Int
+        @SerialName("height")
+        val height: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A rich text anchor
      *
-     * @text - Text
-     * @name - Anchor name
+     * @property text Text
+     * @property name Anchor name
      */
-    class RichTextAnchor(
+    @Serializable
+    @SerialName("richTextAnchor")
+    data class RichTextAnchor(
+        @SerialName("text")
         val text: RichText,
-        val name: String
+        @SerialName("name")
+        val name: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * A concatenation of rich texts
      *
-     * @texts - Texts
+     * @property texts Texts
      */
-    class RichTexts(
-        val texts: Array<RichText>
+    @Serializable
+    @SerialName("richTexts")
+    data class RichTexts(
+        @SerialName("texts")
+        val texts: Array<RichText>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : RichText()
 
     /**
      * Contains a caption of an instant view web page block, consisting of a text and a trailing credit
      *
-     * @text - Content of the caption
-     * @credit - Block credit (like HTML tag <cite>)
+     * @property text Content of the caption
+     * @property credit Block credit (like HTML tag <cite>)
      */
-    class PageBlockCaption(
+    @Serializable
+    @SerialName("pageBlockCaption")
+    data class PageBlockCaption(
+        @SerialName("text")
         val text: RichText,
-        val credit: RichText
+        @SerialName("credit")
+        val credit: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes an item of a list page block
      *
-     * @label - Item label
-     * @pageBlocks - Item blocks
+     * @property label Item label
+     * @property pageBlocks Item blocks
      */
-    class PageBlockListItem(
+    @Serializable
+    @SerialName("pageBlockListItem")
+    data class PageBlockListItem(
+        @SerialName("label")
         val label: String,
-        val pageBlocks: Array<PageBlock>
+        @SerialName("page_blocks")
+        val pageBlocks: Array<PageBlock>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a horizontal alignment of a table cell content
      */
-    abstract class PageBlockHorizontalAlignment : null()
+    abstract class PageBlockHorizontalAlignment : Object()
 
     /**
      * The content should be left-aligned
      */
-    class PageBlockHorizontalAlignmentLeft : PageBlockHorizontalAlignment()
+    @Serializable
+    @SerialName("pageBlockHorizontalAlignmentLeft")
+    data class PageBlockHorizontalAlignmentLeft(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlockHorizontalAlignment()
 
     /**
      * The content should be center-aligned
      */
-    class PageBlockHorizontalAlignmentCenter : PageBlockHorizontalAlignment()
+    @Serializable
+    @SerialName("pageBlockHorizontalAlignmentCenter")
+    data class PageBlockHorizontalAlignmentCenter(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlockHorizontalAlignment()
 
     /**
      * The content should be right-aligned
      */
-    class PageBlockHorizontalAlignmentRight : PageBlockHorizontalAlignment()
+    @Serializable
+    @SerialName("pageBlockHorizontalAlignmentRight")
+    data class PageBlockHorizontalAlignmentRight(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlockHorizontalAlignment()
 
     /**
      * Describes a Vertical alignment of a table cell content
      */
-    abstract class PageBlockVerticalAlignment : null()
+    abstract class PageBlockVerticalAlignment : Object()
 
     /**
      * The content should be top-aligned
      */
-    class PageBlockVerticalAlignmentTop : PageBlockVerticalAlignment()
+    @Serializable
+    @SerialName("pageBlockVerticalAlignmentTop")
+    data class PageBlockVerticalAlignmentTop(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlockVerticalAlignment()
 
     /**
      * The content should be middle-aligned
      */
-    class PageBlockVerticalAlignmentMiddle : PageBlockVerticalAlignment()
+    @Serializable
+    @SerialName("pageBlockVerticalAlignmentMiddle")
+    data class PageBlockVerticalAlignmentMiddle(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlockVerticalAlignment()
 
     /**
      * The content should be bottom-aligned
      */
-    class PageBlockVerticalAlignmentBottom : PageBlockVerticalAlignment()
+    @Serializable
+    @SerialName("pageBlockVerticalAlignmentBottom")
+    data class PageBlockVerticalAlignmentBottom(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlockVerticalAlignment()
 
     /**
      * Represents a cell of a table
      *
-     * @text - Cell text
-     * @isHeader - True, if it is a header cell
-     * @colspan - The number of columns the cell should span
-     * @rowspan - The number of rows the cell should span
-     * @align - Horizontal cell content alignment
-     * @valign - Vertical cell content alignment
+     * @property text Cell text
+     * @property isHeader True, if it is a header cell
+     * @property colspan The number of columns the cell should span
+     * @property rowspan The number of rows the cell should span
+     * @property align Horizontal cell content alignment
+     * @property valign Vertical cell content alignment
      */
-    class PageBlockTableCell(
+    @Serializable
+    @SerialName("pageBlockTableCell")
+    data class PageBlockTableCell(
+        @SerialName("text")
         val text: RichText,
+        @SerialName("is_header")
         val isHeader: Boolean,
+        @SerialName("colspan")
         val colspan: Int,
+        @SerialName("rowspan")
         val rowspan: Int,
+        @SerialName("align")
         val align: PageBlockHorizontalAlignment,
-        val valign: PageBlockVerticalAlignment
+        @SerialName("valign")
+        val valign: PageBlockVerticalAlignment,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about a related article
      *
-     * @url - Related article URL
-     * @title - Article title
-     * @description - Article description
-     * @photo - Article photo
-     * @author - Article author
-     * @publishDate - Point in time (Unix timestamp) when the article was published
-     *                0 if unknown
+     * @property url Related article URL
+     * @property title Article title
+     * @property description Article description
+     * @property photo Article photo
+     * @property author Article author
+     * @property publishDate Point in time (Unix timestamp) when the article was published
+     *                       0 if unknown
      */
-    class PageBlockRelatedArticle(
+    @Serializable
+    @SerialName("pageBlockRelatedArticle")
+    data class PageBlockRelatedArticle(
+        @SerialName("url")
         val url: String,
+        @SerialName("title")
         val title: String?,
+        @SerialName("description")
         val description: String?,
+        @SerialName("photo")
         val photo: Photo?,
+        @SerialName("author")
         val author: String?,
-        val publishDate: Int
+        @SerialName("publish_date")
+        val publishDate: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a block of an instant view web page
      */
-    abstract class PageBlock : null()
+    abstract class PageBlock : Object()
 
     /**
      * The title of a page
      *
-     * @title - Title
+     * @property title Title
      */
-    class PageBlockTitle(
-        val title: RichText
+    @Serializable
+    @SerialName("pageBlockTitle")
+    data class PageBlockTitle(
+        @SerialName("title")
+        val title: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * The subtitle of a page
      *
-     * @subtitle - Subtitle
+     * @property subtitle Subtitle
      */
-    class PageBlockSubtitle(
-        val subtitle: RichText
+    @Serializable
+    @SerialName("pageBlockSubtitle")
+    data class PageBlockSubtitle(
+        @SerialName("subtitle")
+        val subtitle: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * The author and publishing date of a page
      *
-     * @author - Author
-     * @publishDate - Point in time (Unix timestamp) when the article was published
-     *                0 if unknown
+     * @property author Author
+     * @property publishDate Point in time (Unix timestamp) when the article was published
+     *                       0 if unknown
      */
-    class PageBlockAuthorDate(
+    @Serializable
+    @SerialName("pageBlockAuthorDate")
+    data class PageBlockAuthorDate(
+        @SerialName("author")
         val author: RichText,
-        val publishDate: Int
+        @SerialName("publish_date")
+        val publishDate: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A header
      *
-     * @header - Header
+     * @property header Header
      */
-    class PageBlockHeader(
-        val header: RichText
+    @Serializable
+    @SerialName("pageBlockHeader")
+    data class PageBlockHeader(
+        @SerialName("header")
+        val header: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A subheader
      *
-     * @subheader - Subheader
+     * @property subheader Subheader
      */
-    class PageBlockSubheader(
-        val subheader: RichText
+    @Serializable
+    @SerialName("pageBlockSubheader")
+    data class PageBlockSubheader(
+        @SerialName("subheader")
+        val subheader: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A kicker
      *
-     * @kicker - Kicker
+     * @property kicker Kicker
      */
-    class PageBlockKicker(
-        val kicker: RichText
+    @Serializable
+    @SerialName("pageBlockKicker")
+    data class PageBlockKicker(
+        @SerialName("kicker")
+        val kicker: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A text paragraph
      *
-     * @text - Paragraph text
+     * @property text Paragraph text
      */
-    class PageBlockParagraph(
-        val text: RichText
+    @Serializable
+    @SerialName("pageBlockParagraph")
+    data class PageBlockParagraph(
+        @SerialName("text")
+        val text: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A preformatted text paragraph
      *
-     * @text - Paragraph text
-     * @language - Programming language for which the text should be formatted
+     * @property text Paragraph text
+     * @property language Programming language for which the text should be formatted
      */
-    class PageBlockPreformatted(
+    @Serializable
+    @SerialName("pageBlockPreformatted")
+    data class PageBlockPreformatted(
+        @SerialName("text")
         val text: RichText,
-        val language: String
+        @SerialName("language")
+        val language: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * The footer of a page
      *
-     * @footer - Footer
+     * @property footer Footer
      */
-    class PageBlockFooter(
-        val footer: RichText
+    @Serializable
+    @SerialName("pageBlockFooter")
+    data class PageBlockFooter(
+        @SerialName("footer")
+        val footer: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * An empty block separating a page
      */
-    class PageBlockDivider : PageBlock()
+    @Serializable
+    @SerialName("pageBlockDivider")
+    data class PageBlockDivider(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PageBlock()
 
     /**
      * An invisible anchor on a page, which can be used in a URL to open the page from the specified anchor
      *
-     * @name - Name of the anchor
+     * @property name Name of the anchor
      */
-    class PageBlockAnchor(
-        val name: String
+    @Serializable
+    @SerialName("pageBlockAnchor")
+    data class PageBlockAnchor(
+        @SerialName("name")
+        val name: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A list of data blocks
      *
-     * @items - The items of the list
+     * @property items The items of the list
      */
-    class PageBlockList(
-        val items: Array<PageBlockListItem>
+    @Serializable
+    @SerialName("pageBlockList")
+    data class PageBlockList(
+        @SerialName("items")
+        val items: Array<PageBlockListItem>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A block quote
      *
-     * @text - Quote text
-     * @credit - Quote credit
+     * @property text Quote text
+     * @property credit Quote credit
      */
-    class PageBlockBlockQuote(
+    @Serializable
+    @SerialName("pageBlockBlockQuote")
+    data class PageBlockBlockQuote(
+        @SerialName("text")
         val text: RichText,
-        val credit: RichText
+        @SerialName("credit")
+        val credit: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A pull quote
      *
-     * @text - Quote text
-     * @credit - Quote credit
+     * @property text Quote text
+     * @property credit Quote credit
      */
-    class PageBlockPullQuote(
+    @Serializable
+    @SerialName("pageBlockPullQuote")
+    data class PageBlockPullQuote(
+        @SerialName("text")
         val text: RichText,
-        val credit: RichText
+        @SerialName("credit")
+        val credit: RichText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * An animation
      *
-     * @animation - Animation file
-     * @caption - Animation caption
-     * @needAutoplay - True, if the animation should be played automatically
+     * @property animation Animation file
+     * @property caption Animation caption
+     * @property needAutoplay True, if the animation should be played automatically
      */
-    class PageBlockAnimation(
+    @Serializable
+    @SerialName("pageBlockAnimation")
+    data class PageBlockAnimation(
+        @SerialName("animation")
         val animation: Animation?,
+        @SerialName("caption")
         val caption: PageBlockCaption,
-        val needAutoplay: Boolean
+        @SerialName("need_autoplay")
+        val needAutoplay: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * An audio file
      *
-     * @audio - Audio file
-     * @caption - Audio file caption
+     * @property audio Audio file
+     * @property caption Audio file caption
      */
-    class PageBlockAudio(
+    @Serializable
+    @SerialName("pageBlockAudio")
+    data class PageBlockAudio(
+        @SerialName("audio")
         val audio: Audio?,
-        val caption: PageBlockCaption
+        @SerialName("caption")
+        val caption: PageBlockCaption,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A photo
      *
-     * @photo - Photo file
-     * @caption - Photo caption
-     * @url - URL that needs to be opened when the photo is clicked
+     * @property photo Photo file
+     * @property caption Photo caption
+     * @property url URL that needs to be opened when the photo is clicked
      */
-    class PageBlockPhoto(
+    @Serializable
+    @SerialName("pageBlockPhoto")
+    data class PageBlockPhoto(
+        @SerialName("photo")
         val photo: Photo?,
+        @SerialName("caption")
         val caption: PageBlockCaption,
-        val url: String
+        @SerialName("url")
+        val url: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A video
      *
-     * @video - Video file
-     * @caption - Video caption
-     * @needAutoplay - True, if the video should be played automatically
-     * @isLooped - True, if the video should be looped
+     * @property video Video file
+     * @property caption Video caption
+     * @property needAutoplay True, if the video should be played automatically
+     * @property isLooped True, if the video should be looped
      */
-    class PageBlockVideo(
+    @Serializable
+    @SerialName("pageBlockVideo")
+    data class PageBlockVideo(
+        @SerialName("video")
         val video: Video?,
+        @SerialName("caption")
         val caption: PageBlockCaption,
+        @SerialName("need_autoplay")
         val needAutoplay: Boolean,
-        val isLooped: Boolean
+        @SerialName("is_looped")
+        val isLooped: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A page cover
      *
-     * @cover - Cover
+     * @property cover Cover
      */
-    class PageBlockCover(
-        val cover: PageBlock
+    @Serializable
+    @SerialName("pageBlockCover")
+    data class PageBlockCover(
+        @SerialName("cover")
+        val cover: PageBlock,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * An embedded web page
      *
-     * @url - Web page URL, if available
-     * @html - HTML-markup of the embedded page
-     * @posterPhoto - Poster photo, if available
-     * @width - Block width
-     *          0 if unknown
-     * @height - Block height
-     *           0 if unknown
-     * @caption - Block caption
-     * @isFullWidth - True, if the block should be full width
-     * @allowScrolling - True, if scrolling should be allowed
+     * @property url Web page URL, if available
+     * @property html HTML-markup of the embedded page
+     * @property posterPhoto Poster photo, if available
+     * @property width Block width
+     *                 0 if unknown
+     * @property height Block height
+     *                  0 if unknown
+     * @property caption Block caption
+     * @property isFullWidth True, if the block should be full width
+     * @property allowScrolling True, if scrolling should be allowed
      */
-    class PageBlockEmbedded(
+    @Serializable
+    @SerialName("pageBlockEmbedded")
+    data class PageBlockEmbedded(
+        @SerialName("url")
         val url: String,
+        @SerialName("html")
         val html: String,
+        @SerialName("poster_photo")
         val posterPhoto: Photo?,
+        @SerialName("width")
         val width: Int,
+        @SerialName("height")
         val height: Int,
+        @SerialName("caption")
         val caption: PageBlockCaption,
+        @SerialName("is_full_width")
         val isFullWidth: Boolean,
-        val allowScrolling: Boolean
+        @SerialName("allow_scrolling")
+        val allowScrolling: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * An embedded post
      *
-     * @url - Web page URL
-     * @author - Post author
-     * @authorPhoto - Post author photo
-     * @date - Point in time (Unix timestamp) when the post was created
-     *         0 if unknown
-     * @pageBlocks - Post content
-     * @caption - Post caption
+     * @property url Web page URL
+     * @property author Post author
+     * @property authorPhoto Post author photo
+     * @property date Point in time (Unix timestamp) when the post was created
+     *                0 if unknown
+     * @property pageBlocks Post content
+     * @property caption Post caption
      */
-    class PageBlockEmbeddedPost(
+    @Serializable
+    @SerialName("pageBlockEmbeddedPost")
+    data class PageBlockEmbeddedPost(
+        @SerialName("url")
         val url: String,
+        @SerialName("author")
         val author: String,
+        @SerialName("author_photo")
         val authorPhoto: Photo?,
+        @SerialName("date")
         val date: Int,
+        @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
-        val caption: PageBlockCaption
+        @SerialName("caption")
+        val caption: PageBlockCaption,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A collage
      *
-     * @pageBlocks - Collage item contents
-     * @caption - Block caption
+     * @property pageBlocks Collage item contents
+     * @property caption Block caption
      */
-    class PageBlockCollage(
+    @Serializable
+    @SerialName("pageBlockCollage")
+    data class PageBlockCollage(
+        @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
-        val caption: PageBlockCaption
+        @SerialName("caption")
+        val caption: PageBlockCaption,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A slideshow
      *
-     * @pageBlocks - Slideshow item contents
-     * @caption - Block caption
+     * @property pageBlocks Slideshow item contents
+     * @property caption Block caption
      */
-    class PageBlockSlideshow(
+    @Serializable
+    @SerialName("pageBlockSlideshow")
+    data class PageBlockSlideshow(
+        @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
-        val caption: PageBlockCaption
+        @SerialName("caption")
+        val caption: PageBlockCaption,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A link to a chat
      *
-     * @title - Chat title
-     * @photo - Chat photo
-     * @username - Chat username, by which all other information about the chat should be resolved
+     * @property title Chat title
+     * @property photo Chat photo
+     * @property username Chat username, by which all other information about the chat should be resolved
      */
-    class PageBlockChatLink(
+    @Serializable
+    @SerialName("pageBlockChatLink")
+    data class PageBlockChatLink(
+        @SerialName("title")
         val title: String,
+        @SerialName("photo")
         val photo: ChatPhoto?,
-        val username: String
+        @SerialName("username")
+        val username: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A table
      *
-     * @caption - Table caption
-     * @cells - Table cells
-     * @isBordered - True, if the table is bordered
-     * @isStriped - True, if the table is striped
+     * @property caption Table caption
+     * @property cells Table cells
+     * @property isBordered True, if the table is bordered
+     * @property isStriped True, if the table is striped
      */
-    class PageBlockTable(
+    @Serializable
+    @SerialName("pageBlockTable")
+    data class PageBlockTable(
+        @SerialName("caption")
         val caption: RichText,
+        @SerialName("cells")
         val cells: Array<Array<PageBlockTableCell>>,
+        @SerialName("is_bordered")
         val isBordered: Boolean,
-        val isStriped: Boolean
+        @SerialName("is_striped")
+        val isStriped: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A collapsible block
      *
-     * @header - Always visible heading for the block
-     * @pageBlocks - Block contents
-     * @isOpen - True, if the block is open by default
+     * @property header Always visible heading for the block
+     * @property pageBlocks Block contents
+     * @property isOpen True, if the block is open by default
      */
-    class PageBlockDetails(
+    @Serializable
+    @SerialName("pageBlockDetails")
+    data class PageBlockDetails(
+        @SerialName("header")
         val header: RichText,
+        @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
-        val isOpen: Boolean
+        @SerialName("is_open")
+        val isOpen: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * Related articles
      *
-     * @header - Block header
-     * @articles - List of related articles
+     * @property header Block header
+     * @property articles List of related articles
      */
-    class PageBlockRelatedArticles(
+    @Serializable
+    @SerialName("pageBlockRelatedArticles")
+    data class PageBlockRelatedArticles(
+        @SerialName("header")
         val header: RichText,
-        val articles: Array<PageBlockRelatedArticle>
+        @SerialName("articles")
+        val articles: Array<PageBlockRelatedArticle>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * A map
      *
-     * @location - Location of the map center
-     * @zoom - Map zoom level
-     * @width - Map width
-     * @height - Map height
-     * @caption - Block caption
+     * @property location Location of the map center
+     * @property zoom Map zoom level
+     * @property width Map width
+     * @property height Map height
+     * @property caption Block caption
      */
-    class PageBlockMap(
+    @Serializable
+    @SerialName("pageBlockMap")
+    data class PageBlockMap(
+        @SerialName("location")
         val location: Location,
+        @SerialName("zoom")
         val zoom: Int,
+        @SerialName("width")
         val width: Int,
+        @SerialName("height")
         val height: Int,
-        val caption: PageBlockCaption
+        @SerialName("caption")
+        val caption: PageBlockCaption,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PageBlock()
 
     /**
      * Describes an instant view page for a web page
      *
-     * @pageBlocks - Content of the web page
-     * @version - Version of the instant view, currently can be 1 or 2
-     * @url - Instant view URL
-     *        May be different from WebPage.url and must be used for the correct anchors handling
-     * @isRtl - True, if the instant view must be shown from right to left
-     * @isFull - True, if the instant view contains the full page
-     *           A network request might be needed to get the full web page instant view
+     * @property pageBlocks Content of the web page
+     * @property version Version of the instant view, currently can be 1 or 2
+     * @property url Instant view URL
+     *               May be different from WebPage.url and must be used for the correct anchors handling
+     * @property isRtl True, if the instant view must be shown from right to left
+     * @property isFull True, if the instant view contains the full page
+     *                  A network request might be needed to get the full web page instant view
+     * @property extra Extra data shared between request and response
      */
-    class WebPageInstantView(
+    @Serializable
+    @SerialName("webPageInstantView")
+    data class WebPageInstantView(
+        @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
+        @SerialName("version")
         val version: Int,
+        @SerialName("url")
         val url: String,
+        @SerialName("is_rtl")
         val isRtl: Boolean,
-        val isFull: Boolean
-    ) : Object()
+        @SerialName("is_full")
+        val isFull: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes a web page preview
      *
-     * @url - Original URL of the link
-     * @displayUrl - URL to display
-     * @type - Type of the web page
-     *         Can be: article, photo, audio, video, document, profile, app, or something else
-     * @siteName - Short name of the site (e.g., Google Docs, App Store)
-     * @title - Title of the content
-     * @description - Description of the content
-     * @photo - Image representing the content
-     * @embedUrl - URL to show in the embedded preview
-     * @embedType - MIME type of the embedded preview, (e.g., text/html or video/mp4)
-     * @embedWidth - Width of the embedded preview
-     * @embedHeight - Height of the embedded preview
-     * @duration - Duration of the content, in seconds
-     * @author - Author of the content
-     * @animation - Preview of the content as an animation, if available
-     * @audio - Preview of the content as an audio file, if available
-     * @document - Preview of the content as a document, if available (currently only available for small PDF files and ZIP archives)
-     * @sticker - Preview of the content as a sticker for small WEBP files, if available
-     * @video - Preview of the content as a video, if available
-     * @videoNote - Preview of the content as a video note, if available
-     * @voiceNote - Preview of the content as a voice note, if available
-     * @instantViewVersion - Version of instant view, available for the web page (currently can be 1 or 2), 0 if none
+     * @property url Original URL of the link
+     * @property displayUrl URL to display
+     * @property type Type of the web page
+     *                Can be: article, photo, audio, video, document, profile, app, or something else
+     * @property siteName Short name of the site (e.g., Google Docs, App Store)
+     * @property title Title of the content
+     * @property description Description of the content
+     * @property photo Image representing the content
+     * @property embedUrl URL to show in the embedded preview
+     * @property embedType MIME type of the embedded preview, (e.g., text/html or video/mp4)
+     * @property embedWidth Width of the embedded preview
+     * @property embedHeight Height of the embedded preview
+     * @property duration Duration of the content, in seconds
+     * @property author Author of the content
+     * @property animation Preview of the content as an animation, if available
+     * @property audio Preview of the content as an audio file, if available
+     * @property document Preview of the content as a document, if available (currently only available for small PDF files and ZIP archives)
+     * @property sticker Preview of the content as a sticker for small WEBP files, if available
+     * @property video Preview of the content as a video, if available
+     * @property videoNote Preview of the content as a video note, if available
+     * @property voiceNote Preview of the content as a voice note, if available
+     * @property instantViewVersion Version of instant view, available for the web page (currently can be 1 or 2), 0 if none
+     * @property extra Extra data shared between request and response
      */
-    class WebPage(
+    @Serializable
+    @SerialName("webPage")
+    data class WebPage(
+        @SerialName("url")
         val url: String,
+        @SerialName("display_url")
         val displayUrl: String,
+        @SerialName("type")
         val type: String,
+        @SerialName("site_name")
         val siteName: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
+        @SerialName("photo")
         val photo: Photo?,
+        @SerialName("embed_url")
         val embedUrl: String,
+        @SerialName("embed_type")
         val embedType: String,
+        @SerialName("embed_width")
         val embedWidth: Int,
+        @SerialName("embed_height")
         val embedHeight: Int,
+        @SerialName("duration")
         val duration: Int,
+        @SerialName("author")
         val author: String,
+        @SerialName("animation")
         val animation: Animation?,
+        @SerialName("audio")
         val audio: Audio?,
+        @SerialName("document")
         val document: Document?,
+        @SerialName("sticker")
         val sticker: Sticker?,
+        @SerialName("video")
         val video: Video?,
+        @SerialName("video_note")
         val videoNote: VideoNote?,
+        @SerialName("voice_note")
         val voiceNote: VoiceNote?,
-        val instantViewVersion: Int
-    ) : Object()
+        @SerialName("instant_view_version")
+        val instantViewVersion: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes an address
      *
-     * @countryCode - A two-letter ISO 3166-1 alpha-2 country code
-     * @state - State, if applicable
-     * @city - City
-     * @streetLine1 - First line of the address
-     * @streetLine2 - Second line of the address
-     * @postalCode - Address postal code
+     * @property countryCode A two-letter ISO 3166-1 alpha-2 country code
+     * @property state State, if applicable
+     * @property city City
+     * @property streetLine1 First line of the address
+     * @property streetLine2 Second line of the address
+     * @property postalCode Address postal code
      */
-    class Address(
+    @Serializable
+    @SerialName("address")
+    data class Address(
+        @SerialName("country_code")
         val countryCode: String,
+        @SerialName("state")
         val state: String,
+        @SerialName("city")
         val city: String,
+        @SerialName("street_line1")
         val streetLine1: String,
+        @SerialName("street_line2")
         val streetLine2: String,
-        val postalCode: String
+        @SerialName("postal_code")
+        val postalCode: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Portion of the price of a product (e.g., "delivery cost", "tax amount")
      *
-     * @label - Label for this portion of the product price
-     * @amount - Currency amount in minimal quantity of the currency
+     * @property label Label for this portion of the product price
+     * @property amount Currency amount in minimal quantity of the currency
      */
-    class LabeledPricePart(
+    @Serializable
+    @SerialName("labeledPricePart")
+    data class LabeledPricePart(
+        @SerialName("label")
         val label: String,
-        val amount: Long = 0L
+        @SerialName("amount")
+        val amount: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Product invoice
      *
-     * @currency - ISO 4217 currency code
-     * @priceParts - A list of objects used to calculate the total price of the product
-     * @isTest - True, if the payment is a test payment
-     * @needName - True, if the user's name is needed for payment
-     * @needPhoneNumber - True, if the user's phone number is needed for payment
-     * @needEmailAddress - True, if the user's email address is needed for payment
-     * @needShippingAddress - True, if the user's shipping address is needed for payment
-     * @sendPhoneNumberToProvider - True, if the user's phone number will be sent to the provider
-     * @sendEmailAddressToProvider - True, if the user's email address will be sent to the provider
-     * @isFlexible - True, if the total price depends on the shipping method
+     * @property currency ISO 4217 currency code
+     * @property priceParts A list of objects used to calculate the total price of the product
+     * @property isTest True, if the payment is a test payment
+     * @property needName True, if the user's name is needed for payment
+     * @property needPhoneNumber True, if the user's phone number is needed for payment
+     * @property needEmailAddress True, if the user's email address is needed for payment
+     * @property needShippingAddress True, if the user's shipping address is needed for payment
+     * @property sendPhoneNumberToProvider True, if the user's phone number will be sent to the provider
+     * @property sendEmailAddressToProvider True, if the user's email address will be sent to the provider
+     * @property isFlexible True, if the total price depends on the shipping method
      */
-    class Invoice(
+    @Serializable
+    @SerialName("invoice")
+    data class Invoice(
+        @SerialName("currency")
         val currency: String,
-        val priceParts: Array<LabeledPricePart> = emptyArray(),
-        val isTest: Boolean = false,
-        val needName: Boolean = false,
-        val needPhoneNumber: Boolean = false,
-        val needEmailAddress: Boolean = false,
-        val needShippingAddress: Boolean = false,
-        val sendPhoneNumberToProvider: Boolean = false,
-        val sendEmailAddressToProvider: Boolean = false,
-        val isFlexible: Boolean = false
+        @SerialName("price_parts")
+        val priceParts: Array<LabeledPricePart>,
+        @SerialName("is_test")
+        val isTest: Boolean,
+        @SerialName("need_name")
+        val needName: Boolean,
+        @SerialName("need_phone_number")
+        val needPhoneNumber: Boolean,
+        @SerialName("need_email_address")
+        val needEmailAddress: Boolean,
+        @SerialName("need_shipping_address")
+        val needShippingAddress: Boolean,
+        @SerialName("send_phone_number_to_provider")
+        val sendPhoneNumberToProvider: Boolean,
+        @SerialName("send_email_address_to_provider")
+        val sendEmailAddressToProvider: Boolean,
+        @SerialName("is_flexible")
+        val isFlexible: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Order information
      *
-     * @name - Name of the user
-     * @phoneNumber - Phone number of the user
-     * @emailAddress - Email address of the user
-     * @shippingAddress - Shipping address for this order
+     * @property name Name of the user
+     * @property phoneNumber Phone number of the user
+     * @property emailAddress Email address of the user
+     * @property shippingAddress Shipping address for this order
+     * @property extra Extra data shared between request and response
      */
-    class OrderInfo(
+    @Serializable
+    @SerialName("orderInfo")
+    data class OrderInfo(
+        @SerialName("name")
         val name: String,
+        @SerialName("phone_number")
         val phoneNumber: String,
+        @SerialName("email_address")
         val emailAddress: String,
-        val shippingAddress: Address? = null
-    ) : Object()
+        @SerialName("shipping_address")
+        val shippingAddress: Address?,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * One shipping option
      *
-     * @id - Shipping option identifier
-     * @title - Option title
-     * @priceParts - A list of objects used to calculate the total shipping costs
+     * @property id Shipping option identifier
+     * @property title Option title
+     * @property priceParts A list of objects used to calculate the total shipping costs
      */
-    class ShippingOption(
+    @Serializable
+    @SerialName("shippingOption")
+    data class ShippingOption(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
-        val priceParts: Array<LabeledPricePart> = emptyArray()
+        @SerialName("price_parts")
+        val priceParts: Array<LabeledPricePart>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about saved card credentials
      *
-     * @id - Unique identifier of the saved credentials
-     * @title - Title of the saved credentials
+     * @property id Unique identifier of the saved credentials
+     * @property title Title of the saved credentials
      */
-    class SavedCredentials(
+    @Serializable
+    @SerialName("savedCredentials")
+    data class SavedCredentials(
+        @SerialName("id")
         val id: String,
-        val title: String
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about the payment method chosen by the user
      */
-    abstract class InputCredentials : null()
+    abstract class InputCredentials : Object()
 
     /**
      * Applies if a user chooses some previously saved payment credentials
      * To use their previously saved credentials, the user must have a valid temporary password
      *
-     * @savedCredentialsId - Identifier of the saved credentials
+     * @property savedCredentialsId Identifier of the saved credentials
      */
-    class InputCredentialsSaved(
-        val savedCredentialsId: String
+    @Serializable
+    @SerialName("inputCredentialsSaved")
+    data class InputCredentialsSaved(
+        @SerialName("saved_credentials_id")
+        val savedCredentialsId: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputCredentials()
 
     /**
      * Applies if a user enters new credentials on a payment provider website
      *
-     * @data - Contains JSON-encoded data with a credential identifier from the payment provider
-     * @allowSave - True, if the credential identifier can be saved on the server side
+     * @property data Contains JSON-encoded data with a credential identifier from the payment provider
+     * @property allowSave True, if the credential identifier can be saved on the server side
      */
-    class InputCredentialsNew(
+    @Serializable
+    @SerialName("inputCredentialsNew")
+    data class InputCredentialsNew(
+        @SerialName("data")
         val data: String,
-        val allowSave: Boolean = false
+        @SerialName("allow_save")
+        val allowSave: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputCredentials()
 
     /**
      * Applies if a user enters new credentials using Android Pay
      *
-     * @data - JSON-encoded data with the credential identifier
+     * @property data JSON-encoded data with the credential identifier
      */
-    class InputCredentialsAndroidPay(
-        val data: String
+    @Serializable
+    @SerialName("inputCredentialsAndroidPay")
+    data class InputCredentialsAndroidPay(
+        @SerialName("data")
+        val data: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputCredentials()
 
     /**
      * Applies if a user enters new credentials using Apple Pay
      *
-     * @data - JSON-encoded data with the credential identifier
+     * @property data JSON-encoded data with the credential identifier
      */
-    class InputCredentialsApplePay(
-        val data: String
+    @Serializable
+    @SerialName("inputCredentialsApplePay")
+    data class InputCredentialsApplePay(
+        @SerialName("data")
+        val data: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputCredentials()
 
     /**
      * Stripe payment provider
      *
-     * @publishableKey - Stripe API publishable key
-     * @needCountry - True, if the user country must be provided
-     * @needPostalCode - True, if the user ZIP/postal code must be provided
-     * @needCardholderName - True, if the cardholder name must be provided
+     * @property publishableKey Stripe API publishable key
+     * @property needCountry True, if the user country must be provided
+     * @property needPostalCode True, if the user ZIP/postal code must be provided
+     * @property needCardholderName True, if the cardholder name must be provided
      */
-    class PaymentsProviderStripe(
+    @Serializable
+    @SerialName("paymentsProviderStripe")
+    data class PaymentsProviderStripe(
+        @SerialName("publishable_key")
         val publishableKey: String,
+        @SerialName("need_country")
         val needCountry: Boolean,
+        @SerialName("need_postal_code")
         val needPostalCode: Boolean,
-        val needCardholderName: Boolean
+        @SerialName("need_cardholder_name")
+        val needCardholderName: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about an invoice payment form
      *
-     * @invoice - Full information of the invoice
-     * @url - Payment form URL
-     * @paymentsProvider - Contains information about the payment provider, if available, to support it natively without the need for opening the URL
-     * @savedOrderInfo - Saved server-side order information
-     * @savedCredentials - Contains information about saved card credentials
-     * @canSaveCredentials - True, if the user can choose to save credentials
-     * @needPassword - True, if the user will be able to save credentials protected by a password they set up
+     * @property invoice Full information of the invoice
+     * @property url Payment form URL
+     * @property paymentsProvider Contains information about the payment provider, if available, to support it natively without the need for opening the URL
+     * @property savedOrderInfo Saved server-side order information
+     * @property savedCredentials Contains information about saved card credentials
+     * @property canSaveCredentials True, if the user can choose to save credentials
+     * @property needPassword True, if the user will be able to save credentials protected by a password they set up
+     * @property extra Extra data shared between request and response
      */
-    class PaymentForm(
+    @Serializable
+    @SerialName("paymentForm")
+    data class PaymentForm(
+        @SerialName("invoice")
         val invoice: Invoice,
+        @SerialName("url")
         val url: String,
+        @SerialName("payments_provider")
         val paymentsProvider: PaymentsProviderStripe?,
+        @SerialName("saved_order_info")
         val savedOrderInfo: OrderInfo?,
+        @SerialName("saved_credentials")
         val savedCredentials: SavedCredentials?,
+        @SerialName("can_save_credentials")
         val canSaveCredentials: Boolean,
-        val needPassword: Boolean
-    ) : Object()
+        @SerialName("need_password")
+        val needPassword: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a temporary identifier of validated order information, which is stored for one hour
      * Also contains the available shipping options
      *
-     * @orderInfoId - Temporary identifier of the order information
-     * @shippingOptions - Available shipping options
+     * @property orderInfoId Temporary identifier of the order information
+     * @property shippingOptions Available shipping options
+     * @property extra Extra data shared between request and response
      */
-    class ValidatedOrderInfo(
+    @Serializable
+    @SerialName("validatedOrderInfo")
+    data class ValidatedOrderInfo(
+        @SerialName("order_info_id")
         val orderInfoId: String,
-        val shippingOptions: Array<ShippingOption>
-    ) : Object()
+        @SerialName("shipping_options")
+        val shippingOptions: Array<ShippingOption>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains the result of a payment request
      *
-     * @success - True, if the payment request was successful
-     *            Otherwise the verification_url will be not empty
-     * @verificationUrl - URL for additional payment credentials verification
+     * @property success True, if the payment request was successful
+     *                   Otherwise the verification_url will be not empty
+     * @property verificationUrl URL for additional payment credentials verification
+     * @property extra Extra data shared between request and response
      */
-    class PaymentResult(
+    @Serializable
+    @SerialName("paymentResult")
+    data class PaymentResult(
+        @SerialName("success")
         val success: Boolean,
-        val verificationUrl: String
-    ) : Object()
+        @SerialName("verification_url")
+        val verificationUrl: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a successful payment
      *
-     * @date - Point in time (Unix timestamp) when the payment was made
-     * @paymentsProviderUserId - User identifier of the payment provider bot
-     * @invoice - Contains information about the invoice
-     * @orderInfo - Contains order information
-     * @shippingOption - Chosen shipping option
-     * @credentialsTitle - Title of the saved credentials
+     * @property date Point in time (Unix timestamp) when the payment was made
+     * @property paymentsProviderUserId User identifier of the payment provider bot
+     * @property invoice Contains information about the invoice
+     * @property orderInfo Contains order information
+     * @property shippingOption Chosen shipping option
+     * @property credentialsTitle Title of the saved credentials
+     * @property extra Extra data shared between request and response
      */
-    class PaymentReceipt(
+    @Serializable
+    @SerialName("paymentReceipt")
+    data class PaymentReceipt(
+        @SerialName("date")
         val date: Int,
+        @SerialName("payments_provider_user_id")
         val paymentsProviderUserId: Int,
+        @SerialName("invoice")
         val invoice: Invoice,
+        @SerialName("order_info")
         val orderInfo: OrderInfo?,
+        @SerialName("shipping_option")
         val shippingOption: ShippingOption?,
-        val credentialsTitle: String
-    ) : Object()
+        @SerialName("credentials_title")
+        val credentialsTitle: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * File with the date it was uploaded
      *
-     * @file - The file
-     * @date - Point in time (Unix timestamp) when the file was uploaded
+     * @property file The file
+     * @property date Point in time (Unix timestamp) when the file was uploaded
      */
-    class DatedFile(
+    @Serializable
+    @SerialName("datedFile")
+    data class DatedFile(
+        @SerialName("file")
         val file: File,
-        val date: Int
+        @SerialName("date")
+        val date: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the type of a Telegram Passport element
      */
-    abstract class PassportElementType : null()
+    abstract class PassportElementType : Object()
 
     /**
      * A Telegram Passport element containing the user's personal details
      */
-    class PassportElementTypePersonalDetails : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypePersonalDetails")
+    data class PassportElementTypePersonalDetails(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's passport
      */
-    class PassportElementTypePassport : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypePassport")
+    data class PassportElementTypePassport(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's driver license
      */
-    class PassportElementTypeDriverLicense : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeDriverLicense")
+    data class PassportElementTypeDriverLicense(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's identity card
      */
-    class PassportElementTypeIdentityCard : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeIdentityCard")
+    data class PassportElementTypeIdentityCard(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's internal passport
      */
-    class PassportElementTypeInternalPassport : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeInternalPassport")
+    data class PassportElementTypeInternalPassport(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's address
      */
-    class PassportElementTypeAddress : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeAddress")
+    data class PassportElementTypeAddress(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's utility bill
      */
-    class PassportElementTypeUtilityBill : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeUtilityBill")
+    data class PassportElementTypeUtilityBill(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's bank statement
      */
-    class PassportElementTypeBankStatement : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeBankStatement")
+    data class PassportElementTypeBankStatement(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's rental agreement
      */
-    class PassportElementTypeRentalAgreement : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeRentalAgreement")
+    data class PassportElementTypeRentalAgreement(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the registration page of the user's passport
      */
-    class PassportElementTypePassportRegistration : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypePassportRegistration")
+    data class PassportElementTypePassportRegistration(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's temporary registration
      */
-    class PassportElementTypeTemporaryRegistration : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeTemporaryRegistration")
+    data class PassportElementTypeTemporaryRegistration(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's phone number
      */
-    class PassportElementTypePhoneNumber : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypePhoneNumber")
+    data class PassportElementTypePhoneNumber(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * A Telegram Passport element containing the user's email address
      */
-    class PassportElementTypeEmailAddress : PassportElementType()
+    @Serializable
+    @SerialName("passportElementTypeEmailAddress")
+    data class PassportElementTypeEmailAddress(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementType()
 
     /**
      * Represents a date according to the Gregorian calendar
      *
-     * @day - Day of the month, 1-31
-     * @month - Month, 1-12
-     * @year - Year, 1-9999
+     * @property day Day of the month, 1-31
+     * @property month Month, 1-12
+     * @property year Year, 1-9999
      */
-    class Date(
-        val day: Int = 0,
-        val month: Int = 0,
-        val year: Int = 0
+    @Serializable
+    @SerialName("date")
+    data class Date(
+        @SerialName("day")
+        val day: Int,
+        @SerialName("month")
+        val month: Int,
+        @SerialName("year")
+        val year: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the user's personal details
      *
-     * @firstName - First name of the user written in English
-     * @middleName - Middle name of the user written in English
-     * @lastName - Last name of the user written in English
-     * @nativeFirstName - Native first name of the user
-     * @nativeMiddleName - Native middle name of the user
-     * @nativeLastName - Native last name of the user
-     * @birthdate - Birthdate of the user
-     * @gender - Gender of the user, "male" or "female"
-     * @countryCode - A two-letter ISO 3166-1 alpha-2 country code of the user's country
-     * @residenceCountryCode - A two-letter ISO 3166-1 alpha-2 country code of the user's residence country
+     * @property firstName First name of the user written in English
+     * @property middleName Middle name of the user written in English
+     * @property lastName Last name of the user written in English
+     * @property nativeFirstName Native first name of the user
+     * @property nativeMiddleName Native middle name of the user
+     * @property nativeLastName Native last name of the user
+     * @property birthdate Birthdate of the user
+     * @property gender Gender of the user, "male" or "female"
+     * @property countryCode A two-letter ISO 3166-1 alpha-2 country code of the user's country
+     * @property residenceCountryCode A two-letter ISO 3166-1 alpha-2 country code of the user's residence country
      */
-    class PersonalDetails(
+    @Serializable
+    @SerialName("personalDetails")
+    data class PersonalDetails(
+        @SerialName("first_name")
         val firstName: String,
+        @SerialName("middle_name")
         val middleName: String,
+        @SerialName("last_name")
         val lastName: String,
+        @SerialName("native_first_name")
         val nativeFirstName: String,
+        @SerialName("native_middle_name")
         val nativeMiddleName: String,
+        @SerialName("native_last_name")
         val nativeLastName: String,
+        @SerialName("birthdate")
         val birthdate: Date,
+        @SerialName("gender")
         val gender: String,
+        @SerialName("country_code")
         val countryCode: String,
-        val residenceCountryCode: String
+        @SerialName("residence_country_code")
+        val residenceCountryCode: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * An identity document
      *
-     * @number - Document number
-     * @expiryDate - Document expiry date
-     * @frontSide - Front side of the document
-     * @reverseSide - Reverse side of the document
-     *                Only for driver license and identity card
-     * @selfie - Selfie with the document
-     * @translation - List of files containing a certified English translation of the document
+     * @property number Document number
+     * @property expiryDate Document expiry date
+     * @property frontSide Front side of the document
+     * @property reverseSide Reverse side of the document
+     *                       Only for driver license and identity card
+     * @property selfie Selfie with the document
+     * @property translation List of files containing a certified English translation of the document
      */
-    class IdentityDocument(
+    @Serializable
+    @SerialName("identityDocument")
+    data class IdentityDocument(
+        @SerialName("number")
         val number: String,
+        @SerialName("expiry_date")
         val expiryDate: Date?,
+        @SerialName("front_side")
         val frontSide: DatedFile,
+        @SerialName("reverse_side")
         val reverseSide: DatedFile,
+        @SerialName("selfie")
         val selfie: DatedFile?,
-        val translation: Array<DatedFile>
+        @SerialName("translation")
+        val translation: Array<DatedFile>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * An identity document to be saved to Telegram Passport
      *
-     * @number - Document number
-     * @expiryDate - Document expiry date, if available
-     * @frontSide - Front side of the document
-     * @reverseSide - Reverse side of the document
-     *                Only for driver license and identity card
-     * @selfie - Selfie with the document, if available
-     * @translation - List of files containing a certified English translation of the document
+     * @property number Document number
+     * @property expiryDate Document expiry date, if available
+     * @property frontSide Front side of the document
+     * @property reverseSide Reverse side of the document
+     *                       Only for driver license and identity card
+     * @property selfie Selfie with the document, if available
+     * @property translation List of files containing a certified English translation of the document
      */
-    class InputIdentityDocument(
+    @Serializable
+    @SerialName("inputIdentityDocument")
+    data class InputIdentityDocument(
+        @SerialName("number")
         val number: String,
+        @SerialName("expiry_date")
         val expiryDate: Date,
+        @SerialName("front_side")
         val frontSide: InputFile,
+        @SerialName("reverse_side")
         val reverseSide: InputFile,
+        @SerialName("selfie")
         val selfie: InputFile,
-        val translation: Array<InputFile> = emptyArray()
+        @SerialName("translation")
+        val translation: Array<InputFile>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * A personal document, containing some information about a user
      *
-     * @files - List of files containing the pages of the document
-     * @translation - List of files containing a certified English translation of the document
+     * @property files List of files containing the pages of the document
+     * @property translation List of files containing a certified English translation of the document
      */
-    class PersonalDocument(
+    @Serializable
+    @SerialName("personalDocument")
+    data class PersonalDocument(
+        @SerialName("files")
         val files: Array<DatedFile>,
-        val translation: Array<DatedFile>
+        @SerialName("translation")
+        val translation: Array<DatedFile>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * A personal document to be saved to Telegram Passport
      *
-     * @files - List of files containing the pages of the document
-     * @translation - List of files containing a certified English translation of the document
+     * @property files List of files containing the pages of the document
+     * @property translation List of files containing a certified English translation of the document
      */
-    class InputPersonalDocument(
-        val files: Array<InputFile> = emptyArray(),
-        val translation: Array<InputFile> = emptyArray()
+    @Serializable
+    @SerialName("inputPersonalDocument")
+    data class InputPersonalDocument(
+        @SerialName("files")
+        val files: Array<InputFile>,
+        @SerialName("translation")
+        val translation: Array<InputFile>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about a Telegram Passport element
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class PassportElement : null()
+    abstract class PassportElement : Object(), TdResponse
 
     /**
      * A Telegram Passport element containing the user's personal details
      *
-     * @personalDetails - Personal details of the user
+     * @property personalDetails Personal details of the user
      */
-    class PassportElementPersonalDetails(
-        val personalDetails: PersonalDetails
+    @Serializable
+    @SerialName("passportElementPersonalDetails")
+    data class PassportElementPersonalDetails(
+        @SerialName("personal_details")
+        val personalDetails: PersonalDetails,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's passport
      *
-     * @passport - Passport
+     * @property passport Passport
      */
-    class PassportElementPassport(
-        val passport: IdentityDocument
+    @Serializable
+    @SerialName("passportElementPassport")
+    data class PassportElementPassport(
+        @SerialName("passport")
+        val passport: IdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's driver license
      *
-     * @driverLicense - Driver license
+     * @property driverLicense Driver license
      */
-    class PassportElementDriverLicense(
-        val driverLicense: IdentityDocument
+    @Serializable
+    @SerialName("passportElementDriverLicense")
+    data class PassportElementDriverLicense(
+        @SerialName("driver_license")
+        val driverLicense: IdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's identity card
      *
-     * @identityCard - Identity card
+     * @property identityCard Identity card
      */
-    class PassportElementIdentityCard(
-        val identityCard: IdentityDocument
+    @Serializable
+    @SerialName("passportElementIdentityCard")
+    data class PassportElementIdentityCard(
+        @SerialName("identity_card")
+        val identityCard: IdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's internal passport
      *
-     * @internalPassport - Internal passport
+     * @property internalPassport Internal passport
      */
-    class PassportElementInternalPassport(
-        val internalPassport: IdentityDocument
+    @Serializable
+    @SerialName("passportElementInternalPassport")
+    data class PassportElementInternalPassport(
+        @SerialName("internal_passport")
+        val internalPassport: IdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's address
      *
-     * @address - Address
+     * @property address Address
      */
-    class PassportElementAddress(
-        val address: Address
+    @Serializable
+    @SerialName("passportElementAddress")
+    data class PassportElementAddress(
+        @SerialName("address")
+        val address: Address,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's utility bill
      *
-     * @utilityBill - Utility bill
+     * @property utilityBill Utility bill
      */
-    class PassportElementUtilityBill(
-        val utilityBill: PersonalDocument
+    @Serializable
+    @SerialName("passportElementUtilityBill")
+    data class PassportElementUtilityBill(
+        @SerialName("utility_bill")
+        val utilityBill: PersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's bank statement
      *
-     * @bankStatement - Bank statement
+     * @property bankStatement Bank statement
      */
-    class PassportElementBankStatement(
-        val bankStatement: PersonalDocument
+    @Serializable
+    @SerialName("passportElementBankStatement")
+    data class PassportElementBankStatement(
+        @SerialName("bank_statement")
+        val bankStatement: PersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's rental agreement
      *
-     * @rentalAgreement - Rental agreement
+     * @property rentalAgreement Rental agreement
      */
-    class PassportElementRentalAgreement(
-        val rentalAgreement: PersonalDocument
+    @Serializable
+    @SerialName("passportElementRentalAgreement")
+    data class PassportElementRentalAgreement(
+        @SerialName("rental_agreement")
+        val rentalAgreement: PersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's passport registration pages
      *
-     * @passportRegistration - Passport registration pages
+     * @property passportRegistration Passport registration pages
      */
-    class PassportElementPassportRegistration(
-        val passportRegistration: PersonalDocument
+    @Serializable
+    @SerialName("passportElementPassportRegistration")
+    data class PassportElementPassportRegistration(
+        @SerialName("passport_registration")
+        val passportRegistration: PersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's temporary registration
      *
-     * @temporaryRegistration - Temporary registration
+     * @property temporaryRegistration Temporary registration
      */
-    class PassportElementTemporaryRegistration(
-        val temporaryRegistration: PersonalDocument
+    @Serializable
+    @SerialName("passportElementTemporaryRegistration")
+    data class PassportElementTemporaryRegistration(
+        @SerialName("temporary_registration")
+        val temporaryRegistration: PersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's phone number
      *
-     * @phoneNumber - Phone number
+     * @property phoneNumber Phone number
      */
-    class PassportElementPhoneNumber(
-        val phoneNumber: String
+    @Serializable
+    @SerialName("passportElementPhoneNumber")
+    data class PassportElementPhoneNumber(
+        @SerialName("phone_number")
+        val phoneNumber: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * A Telegram Passport element containing the user's email address
      *
-     * @emailAddress - Email address
+     * @property emailAddress Email address
      */
-    class PassportElementEmailAddress(
-        val emailAddress: String
+    @Serializable
+    @SerialName("passportElementEmailAddress")
+    data class PassportElementEmailAddress(
+        @SerialName("email_address")
+        val emailAddress: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElement()
 
     /**
      * Contains information about a Telegram Passport element to be saved
      */
-    abstract class InputPassportElement : null()
+    abstract class InputPassportElement : Object()
 
     /**
      * A Telegram Passport element to be saved containing the user's personal details
      *
-     * @personalDetails - Personal details of the user
+     * @property personalDetails Personal details of the user
      */
-    class InputPassportElementPersonalDetails(
-        val personalDetails: PersonalDetails
+    @Serializable
+    @SerialName("inputPassportElementPersonalDetails")
+    data class InputPassportElementPersonalDetails(
+        @SerialName("personal_details")
+        val personalDetails: PersonalDetails,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's passport
      *
-     * @passport - The passport to be saved
+     * @property passport The passport to be saved
      */
-    class InputPassportElementPassport(
-        val passport: InputIdentityDocument
+    @Serializable
+    @SerialName("inputPassportElementPassport")
+    data class InputPassportElementPassport(
+        @SerialName("passport")
+        val passport: InputIdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's driver license
      *
-     * @driverLicense - The driver license to be saved
+     * @property driverLicense The driver license to be saved
      */
-    class InputPassportElementDriverLicense(
-        val driverLicense: InputIdentityDocument
+    @Serializable
+    @SerialName("inputPassportElementDriverLicense")
+    data class InputPassportElementDriverLicense(
+        @SerialName("driver_license")
+        val driverLicense: InputIdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's identity card
      *
-     * @identityCard - The identity card to be saved
+     * @property identityCard The identity card to be saved
      */
-    class InputPassportElementIdentityCard(
-        val identityCard: InputIdentityDocument
+    @Serializable
+    @SerialName("inputPassportElementIdentityCard")
+    data class InputPassportElementIdentityCard(
+        @SerialName("identity_card")
+        val identityCard: InputIdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's internal passport
      *
-     * @internalPassport - The internal passport to be saved
+     * @property internalPassport The internal passport to be saved
      */
-    class InputPassportElementInternalPassport(
-        val internalPassport: InputIdentityDocument
+    @Serializable
+    @SerialName("inputPassportElementInternalPassport")
+    data class InputPassportElementInternalPassport(
+        @SerialName("internal_passport")
+        val internalPassport: InputIdentityDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's address
      *
-     * @address - The address to be saved
+     * @property address The address to be saved
      */
-    class InputPassportElementAddress(
-        val address: Address
+    @Serializable
+    @SerialName("inputPassportElementAddress")
+    data class InputPassportElementAddress(
+        @SerialName("address")
+        val address: Address,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's utility bill
      *
-     * @utilityBill - The utility bill to be saved
+     * @property utilityBill The utility bill to be saved
      */
-    class InputPassportElementUtilityBill(
-        val utilityBill: InputPersonalDocument
+    @Serializable
+    @SerialName("inputPassportElementUtilityBill")
+    data class InputPassportElementUtilityBill(
+        @SerialName("utility_bill")
+        val utilityBill: InputPersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's bank statement
      *
-     * @bankStatement - The bank statement to be saved
+     * @property bankStatement The bank statement to be saved
      */
-    class InputPassportElementBankStatement(
-        val bankStatement: InputPersonalDocument
+    @Serializable
+    @SerialName("inputPassportElementBankStatement")
+    data class InputPassportElementBankStatement(
+        @SerialName("bank_statement")
+        val bankStatement: InputPersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's rental agreement
      *
-     * @rentalAgreement - The rental agreement to be saved
+     * @property rentalAgreement The rental agreement to be saved
      */
-    class InputPassportElementRentalAgreement(
-        val rentalAgreement: InputPersonalDocument
+    @Serializable
+    @SerialName("inputPassportElementRentalAgreement")
+    data class InputPassportElementRentalAgreement(
+        @SerialName("rental_agreement")
+        val rentalAgreement: InputPersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's passport registration
      *
-     * @passportRegistration - The passport registration page to be saved
+     * @property passportRegistration The passport registration page to be saved
      */
-    class InputPassportElementPassportRegistration(
-        val passportRegistration: InputPersonalDocument
+    @Serializable
+    @SerialName("inputPassportElementPassportRegistration")
+    data class InputPassportElementPassportRegistration(
+        @SerialName("passport_registration")
+        val passportRegistration: InputPersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's temporary registration
      *
-     * @temporaryRegistration - The temporary registration document to be saved
+     * @property temporaryRegistration The temporary registration document to be saved
      */
-    class InputPassportElementTemporaryRegistration(
-        val temporaryRegistration: InputPersonalDocument
+    @Serializable
+    @SerialName("inputPassportElementTemporaryRegistration")
+    data class InputPassportElementTemporaryRegistration(
+        @SerialName("temporary_registration")
+        val temporaryRegistration: InputPersonalDocument,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's phone number
      *
-     * @phoneNumber - The phone number to be saved
+     * @property phoneNumber The phone number to be saved
      */
-    class InputPassportElementPhoneNumber(
-        val phoneNumber: String
+    @Serializable
+    @SerialName("inputPassportElementPhoneNumber")
+    data class InputPassportElementPhoneNumber(
+        @SerialName("phone_number")
+        val phoneNumber: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * A Telegram Passport element to be saved containing the user's email address
      *
-     * @emailAddress - The email address to be saved
+     * @property emailAddress The email address to be saved
      */
-    class InputPassportElementEmailAddress(
-        val emailAddress: String
+    @Serializable
+    @SerialName("inputPassportElementEmailAddress")
+    data class InputPassportElementEmailAddress(
+        @SerialName("email_address")
+        val emailAddress: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElement()
 
     /**
      * Contains information about saved Telegram Passport elements
      *
-     * @elements - Telegram Passport elements
+     * @property elements Telegram Passport elements
+     * @property extra Extra data shared between request and response
      */
-    class PassportElements(
-        val elements: Array<PassportElement>
-    ) : Object()
+    @Serializable
+    @SerialName("passportElements")
+    data class PassportElements(
+        @SerialName("elements")
+        val elements: Array<PassportElement>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains the description of an error in a Telegram Passport element
      */
-    abstract class PassportElementErrorSource : null()
+    abstract class PassportElementErrorSource : Object()
 
     /**
      * The element contains an error in an unspecified place
      * The error will be considered resolved when new data is added
      */
-    class PassportElementErrorSourceUnspecified : PassportElementErrorSource()
+    @Serializable
+    @SerialName("passportElementErrorSourceUnspecified")
+    data class PassportElementErrorSourceUnspecified(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementErrorSource()
 
     /**
      * One of the data fields contains an error
      * The error will be considered resolved when the value of the field changes
      *
-     * @fieldName - Field name
+     * @property fieldName Field name
      */
-    class PassportElementErrorSourceDataField(
-        val fieldName: String
+    @Serializable
+    @SerialName("passportElementErrorSourceDataField")
+    data class PassportElementErrorSourceDataField(
+        @SerialName("field_name")
+        val fieldName: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElementErrorSource()
 
     /**
      * The front side of the document contains an error
      * The error will be considered resolved when the file with the front side changes
      */
-    class PassportElementErrorSourceFrontSide : PassportElementErrorSource()
+    @Serializable
+    @SerialName("passportElementErrorSourceFrontSide")
+    data class PassportElementErrorSourceFrontSide(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementErrorSource()
 
     /**
      * The reverse side of the document contains an error
      * The error will be considered resolved when the file with the reverse side changes
      */
-    class PassportElementErrorSourceReverseSide : PassportElementErrorSource()
+    @Serializable
+    @SerialName("passportElementErrorSourceReverseSide")
+    data class PassportElementErrorSourceReverseSide(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementErrorSource()
 
     /**
      * The selfie with the document contains an error
      * The error will be considered resolved when the file with the selfie changes
      */
-    class PassportElementErrorSourceSelfie : PassportElementErrorSource()
+    @Serializable
+    @SerialName("passportElementErrorSourceSelfie")
+    data class PassportElementErrorSourceSelfie(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementErrorSource()
 
     /**
      * One of files with the translation of the document contains an error
      * The error will be considered resolved when the file changes
      *
-     * @fileIndex - Index of a file with the error
+     * @property fileIndex Index of a file with the error
      */
-    class PassportElementErrorSourceTranslationFile(
-        val fileIndex: Int
+    @Serializable
+    @SerialName("passportElementErrorSourceTranslationFile")
+    data class PassportElementErrorSourceTranslationFile(
+        @SerialName("file_index")
+        val fileIndex: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElementErrorSource()
 
     /**
      * The translation of the document contains an error
      * The error will be considered resolved when the list of translation files changes
      */
-    class PassportElementErrorSourceTranslationFiles : PassportElementErrorSource()
+    @Serializable
+    @SerialName("passportElementErrorSourceTranslationFiles")
+    data class PassportElementErrorSourceTranslationFiles(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementErrorSource()
 
     /**
      * The file contains an error
      * The error will be considered resolved when the file changes
      *
-     * @fileIndex - Index of a file with the error
+     * @property fileIndex Index of a file with the error
      */
-    class PassportElementErrorSourceFile(
-        val fileIndex: Int
+    @Serializable
+    @SerialName("passportElementErrorSourceFile")
+    data class PassportElementErrorSourceFile(
+        @SerialName("file_index")
+        val fileIndex: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PassportElementErrorSource()
 
     /**
      * The list of attached files contains an error
      * The error will be considered resolved when the list of files changes
      */
-    class PassportElementErrorSourceFiles : PassportElementErrorSource()
+    @Serializable
+    @SerialName("passportElementErrorSourceFiles")
+    data class PassportElementErrorSourceFiles(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PassportElementErrorSource()
 
     /**
      * Contains the description of an error in a Telegram Passport element
      *
-     * @type - Type of the Telegram Passport element which has the error
-     * @message - Error message
-     * @source - Error source
+     * @property type Type of the Telegram Passport element which has the error
+     * @property message Error message
+     * @property source Error source
      */
-    class PassportElementError(
+    @Serializable
+    @SerialName("passportElementError")
+    data class PassportElementError(
+        @SerialName("type")
         val type: PassportElementType,
+        @SerialName("message")
         val message: String,
-        val source: PassportElementErrorSource
+        @SerialName("source")
+        val source: PassportElementErrorSource,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about a Telegram Passport element that was requested by a service
      *
-     * @type - Type of the element
-     * @isSelfieRequired - True, if a selfie is required with the identity document
-     * @isTranslationRequired - True, if a certified English translation is required with the document
-     * @isNativeNameRequired - True, if personal details must include the user's name in the language of their country of residence
+     * @property type Type of the element
+     * @property isSelfieRequired True, if a selfie is required with the identity document
+     * @property isTranslationRequired True, if a certified English translation is required with the document
+     * @property isNativeNameRequired True, if personal details must include the user's name in the language of their country of residence
      */
-    class PassportSuitableElement(
+    @Serializable
+    @SerialName("passportSuitableElement")
+    data class PassportSuitableElement(
+        @SerialName("type")
         val type: PassportElementType,
+        @SerialName("is_selfie_required")
         val isSelfieRequired: Boolean,
+        @SerialName("is_translation_required")
         val isTranslationRequired: Boolean,
-        val isNativeNameRequired: Boolean
+        @SerialName("is_native_name_required")
+        val isNativeNameRequired: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a description of the required Telegram Passport element that was requested by a service
      *
-     * @suitableElements - List of Telegram Passport elements any of which is enough to provide
+     * @property suitableElements List of Telegram Passport elements any of which is enough to provide
      */
-    class PassportRequiredElement(
-        val suitableElements: Array<PassportSuitableElement>
+    @Serializable
+    @SerialName("passportRequiredElement")
+    data class PassportRequiredElement(
+        @SerialName("suitable_elements")
+        val suitableElements: Array<PassportSuitableElement>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about a Telegram Passport authorization form that was requested
      *
-     * @id - Unique identifier of the authorization form
-     * @requiredElements - Information about the Telegram Passport elements that need to be provided to complete the form
-     * @privacyPolicyUrl - URL for the privacy policy of the service
+     * @property id Unique identifier of the authorization form
+     * @property requiredElements Information about the Telegram Passport elements that need to be provided to complete the form
+     * @property privacyPolicyUrl URL for the privacy policy of the service
+     * @property extra Extra data shared between request and response
      */
-    class PassportAuthorizationForm(
+    @Serializable
+    @SerialName("passportAuthorizationForm")
+    data class PassportAuthorizationForm(
+        @SerialName("id")
         val id: Int,
+        @SerialName("required_elements")
         val requiredElements: Array<PassportRequiredElement>,
-        val privacyPolicyUrl: String?
-    ) : Object()
+        @SerialName("privacy_policy_url")
+        val privacyPolicyUrl: String?,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a Telegram Passport elements and corresponding errors
      *
-     * @elements - Telegram Passport elements
-     * @errors - Errors in the elements that are already available
+     * @property elements Telegram Passport elements
+     * @property errors Errors in the elements that are already available
+     * @property extra Extra data shared between request and response
      */
-    class PassportElementsWithErrors(
+    @Serializable
+    @SerialName("passportElementsWithErrors")
+    data class PassportElementsWithErrors(
+        @SerialName("elements")
         val elements: Array<PassportElement>,
-        val errors: Array<PassportElementError>
-    ) : Object()
+        @SerialName("errors")
+        val errors: Array<PassportElementError>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains encrypted Telegram Passport data credentials
      *
-     * @data - The encrypted credentials
-     * @hash - The decrypted data hash
-     * @secret - Secret for data decryption, encrypted with the service's public key
+     * @property data The encrypted credentials
+     * @property hash The decrypted data hash
+     * @property secret Secret for data decryption, encrypted with the service's public key
      */
-    class EncryptedCredentials(
-        val data: ByteArray,
-        val hash: ByteArray,
-        val secret: ByteArray
+    @Serializable
+    @SerialName("encryptedCredentials")
+    data class EncryptedCredentials(
+        @SerialName("data")
+        val data: Array<Byte>,
+        @SerialName("hash")
+        val hash: Array<Byte>,
+        @SerialName("secret")
+        val secret: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains information about an encrypted Telegram Passport element
      *
-     * @type - Type of Telegram Passport element
-     * @data - Encrypted JSON-encoded data about the user
-     * @frontSide - The front side of an identity document
-     * @reverseSide - The reverse side of an identity document
-     * @selfie - Selfie with the document
-     * @translation - List of files containing a certified English translation of the document
-     * @files - List of attached files
-     * @value - Unencrypted data, phone number or email address
-     * @hash - Hash of the entire element
+     * @property type Type of Telegram Passport element
+     * @property data Encrypted JSON-encoded data about the user
+     * @property frontSide The front side of an identity document
+     * @property reverseSide The reverse side of an identity document
+     * @property selfie Selfie with the document
+     * @property translation List of files containing a certified English translation of the document
+     * @property files List of attached files
+     * @property value Unencrypted data, phone number or email address
+     * @property hash Hash of the entire element
      */
+    @Serializable
+    @SerialName("encryptedPassportElement")
     @BotsOnly
-    class EncryptedPassportElement(
+    data class EncryptedPassportElement(
+        @SerialName("type")
         val type: PassportElementType,
-        val data: ByteArray,
+        @SerialName("data")
+        val data: Array<Byte>,
+        @SerialName("front_side")
         val frontSide: DatedFile,
+        @SerialName("reverse_side")
         val reverseSide: DatedFile?,
+        @SerialName("selfie")
         val selfie: DatedFile?,
+        @SerialName("translation")
         val translation: Array<DatedFile>,
+        @SerialName("files")
         val files: Array<DatedFile>,
+        @SerialName("value")
         val value: String,
-        val hash: String
+        @SerialName("hash")
+        val hash: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the description of an error in a Telegram Passport element
      */
-    @BotsOnly
-    abstract class InputPassportElementErrorSource : null()
+    abstract class InputPassportElementErrorSource : Object()
 
     /**
      * The element contains an error in an unspecified place
      * The error will be considered resolved when new data is added
      *
-     * @elementHash - Current hash of the entire element
+     * @property elementHash Current hash of the entire element
      */
-    class InputPassportElementErrorSourceUnspecified(
-        val elementHash: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceUnspecified")
+    data class InputPassportElementErrorSourceUnspecified(
+        @SerialName("element_hash")
+        val elementHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * A data field contains an error
      * The error is considered resolved when the field's value changes
      *
-     * @fieldName - Field name
-     * @dataHash - Current data hash
+     * @property fieldName Field name
+     * @property dataHash Current data hash
      */
-    class InputPassportElementErrorSourceDataField(
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceDataField")
+    data class InputPassportElementErrorSourceDataField(
+        @SerialName("field_name")
         val fieldName: String,
-        val dataHash: ByteArray = byteArrayOf()
+        @SerialName("data_hash")
+        val dataHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * The front side of the document contains an error
      * The error is considered resolved when the file with the front side of the document changes
      *
-     * @fileHash - Current hash of the file containing the front side
+     * @property fileHash Current hash of the file containing the front side
      */
-    class InputPassportElementErrorSourceFrontSide(
-        val fileHash: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceFrontSide")
+    data class InputPassportElementErrorSourceFrontSide(
+        @SerialName("file_hash")
+        val fileHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * The reverse side of the document contains an error
      * The error is considered resolved when the file with the reverse side of the document changes
      *
-     * @fileHash - Current hash of the file containing the reverse side
+     * @property fileHash Current hash of the file containing the reverse side
      */
-    class InputPassportElementErrorSourceReverseSide(
-        val fileHash: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceReverseSide")
+    data class InputPassportElementErrorSourceReverseSide(
+        @SerialName("file_hash")
+        val fileHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * The selfie contains an error
      * The error is considered resolved when the file with the selfie changes
      *
-     * @fileHash - Current hash of the file containing the selfie
+     * @property fileHash Current hash of the file containing the selfie
      */
-    class InputPassportElementErrorSourceSelfie(
-        val fileHash: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceSelfie")
+    data class InputPassportElementErrorSourceSelfie(
+        @SerialName("file_hash")
+        val fileHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * One of the files containing the translation of the document contains an error
      * The error is considered resolved when the file with the translation changes
      *
-     * @fileHash - Current hash of the file containing the translation
+     * @property fileHash Current hash of the file containing the translation
      */
-    class InputPassportElementErrorSourceTranslationFile(
-        val fileHash: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceTranslationFile")
+    data class InputPassportElementErrorSourceTranslationFile(
+        @SerialName("file_hash")
+        val fileHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * The translation of the document contains an error
      * The error is considered resolved when the list of files changes
      *
-     * @fileHashes - Current hashes of all files with the translation
+     * @property fileHashes Current hashes of all files with the translation
      */
-    class InputPassportElementErrorSourceTranslationFiles(
-        val fileHashes: Array<ByteArray> = emptyArray()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceTranslationFiles")
+    data class InputPassportElementErrorSourceTranslationFiles(
+        @SerialName("file_hashes")
+        val fileHashes: Array<Array<Byte>>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * The file contains an error
      * The error is considered resolved when the file changes
      *
-     * @fileHash - Current hash of the file which has the error
+     * @property fileHash Current hash of the file which has the error
      */
-    class InputPassportElementErrorSourceFile(
-        val fileHash: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceFile")
+    data class InputPassportElementErrorSourceFile(
+        @SerialName("file_hash")
+        val fileHash: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * The list of attached files contains an error
      * The error is considered resolved when the file list changes
      *
-     * @fileHashes - Current hashes of all attached files
+     * @property fileHashes Current hashes of all attached files
      */
-    class InputPassportElementErrorSourceFiles(
-        val fileHashes: Array<ByteArray> = emptyArray()
+    @Serializable
+    @SerialName("inputPassportElementErrorSourceFiles")
+    data class InputPassportElementErrorSourceFiles(
+        @SerialName("file_hashes")
+        val fileHashes: Array<Array<Byte>>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputPassportElementErrorSource()
 
     /**
      * Contains the description of an error in a Telegram Passport element
      *
-     * @type - Type of Telegram Passport element that has the error
-     * @message - Error message
-     * @source - Error source
+     * @property type Type of Telegram Passport element that has the error
+     * @property message Error message
+     * @property source Error source
      */
+    @Serializable
+    @SerialName("inputPassportElementError")
     @BotsOnly
-    class InputPassportElementError(
+    data class InputPassportElementError(
+        @SerialName("type")
         val type: PassportElementType,
+        @SerialName("message")
         val message: String,
-        val source: InputPassportElementErrorSource
+        @SerialName("source")
+        val source: InputPassportElementErrorSource,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the content of a message
      */
-    abstract class MessageContent : null()
+    abstract class MessageContent : Object()
 
     /**
      * A text message
      *
-     * @text - Text of the message
-     * @webPage - A preview of the web page that's mentioned in the text
+     * @property text Text of the message
+     * @property webPage A preview of the web page that's mentioned in the text
      */
-    class MessageText(
+    @Serializable
+    @SerialName("messageText")
+    data class MessageText(
+        @SerialName("text")
         val text: FormattedText,
-        val webPage: WebPage?
+        @SerialName("web_page")
+        val webPage: WebPage?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * An animation message (GIF-style).
      *
-     * @animation - Message content
-     * @caption - Animation caption
-     * @isSecret - True, if the animation thumbnail must be blurred and the animation must be shown only while tapped
+     * @property animation Message content
+     * @property caption Animation caption
+     * @property isSecret True, if the animation thumbnail must be blurred and the animation must be shown only while tapped
      */
-    class MessageAnimation(
+    @Serializable
+    @SerialName("messageAnimation")
+    data class MessageAnimation(
+        @SerialName("animation")
         val animation: Animation,
+        @SerialName("caption")
         val caption: FormattedText,
-        val isSecret: Boolean
+        @SerialName("is_secret")
+        val isSecret: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * An audio message
      *
-     * @audio - Message content
-     * @caption - Audio caption
+     * @property audio Message content
+     * @property caption Audio caption
      */
-    class MessageAudio(
+    @Serializable
+    @SerialName("messageAudio")
+    data class MessageAudio(
+        @SerialName("audio")
         val audio: Audio,
-        val caption: FormattedText
+        @SerialName("caption")
+        val caption: FormattedText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A document message (general file)
      *
-     * @document - Message content
-     * @caption - Document caption
+     * @property document Message content
+     * @property caption Document caption
      */
-    class MessageDocument(
+    @Serializable
+    @SerialName("messageDocument")
+    data class MessageDocument(
+        @SerialName("document")
         val document: Document,
-        val caption: FormattedText
+        @SerialName("caption")
+        val caption: FormattedText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A photo message
      *
-     * @photo - Message content
-     * @caption - Photo caption
-     * @isSecret - True, if the photo must be blurred and must be shown only while tapped
+     * @property photo Message content
+     * @property caption Photo caption
+     * @property isSecret True, if the photo must be blurred and must be shown only while tapped
      */
-    class MessagePhoto(
+    @Serializable
+    @SerialName("messagePhoto")
+    data class MessagePhoto(
+        @SerialName("photo")
         val photo: Photo,
+        @SerialName("caption")
         val caption: FormattedText,
-        val isSecret: Boolean
+        @SerialName("is_secret")
+        val isSecret: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * An expired photo message (self-destructed after TTL has elapsed)
      */
-    class MessageExpiredPhoto : MessageContent()
+    @Serializable
+    @SerialName("messageExpiredPhoto")
+    data class MessageExpiredPhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * A sticker message
      *
-     * @sticker - Message content
+     * @property sticker Message content
      */
-    class MessageSticker(
-        val sticker: Sticker
+    @Serializable
+    @SerialName("messageSticker")
+    data class MessageSticker(
+        @SerialName("sticker")
+        val sticker: Sticker,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A video message
      *
-     * @video - Message content
-     * @caption - Video caption
-     * @isSecret - True, if the video thumbnail must be blurred and the video must be shown only while tapped
+     * @property video Message content
+     * @property caption Video caption
+     * @property isSecret True, if the video thumbnail must be blurred and the video must be shown only while tapped
      */
-    class MessageVideo(
+    @Serializable
+    @SerialName("messageVideo")
+    data class MessageVideo(
+        @SerialName("video")
         val video: Video,
+        @SerialName("caption")
         val caption: FormattedText,
-        val isSecret: Boolean
+        @SerialName("is_secret")
+        val isSecret: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * An expired video message (self-destructed after TTL has elapsed)
      */
-    class MessageExpiredVideo : MessageContent()
+    @Serializable
+    @SerialName("messageExpiredVideo")
+    data class MessageExpiredVideo(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * A video note message
      *
-     * @videoNote - Message content
-     * @isViewed - True, if at least one of the recipients has viewed the video note
-     * @isSecret - True, if the video note thumbnail must be blurred and the video note must be shown only while tapped
+     * @property videoNote Message content
+     * @property isViewed True, if at least one of the recipients has viewed the video note
+     * @property isSecret True, if the video note thumbnail must be blurred and the video note must be shown only while tapped
      */
-    class MessageVideoNote(
+    @Serializable
+    @SerialName("messageVideoNote")
+    data class MessageVideoNote(
+        @SerialName("video_note")
         val videoNote: VideoNote,
+        @SerialName("is_viewed")
         val isViewed: Boolean,
-        val isSecret: Boolean
+        @SerialName("is_secret")
+        val isSecret: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A voice note message
      *
-     * @voiceNote - Message content
-     * @caption - Voice note caption
-     * @isListened - True, if at least one of the recipients has listened to the voice note
+     * @property voiceNote Message content
+     * @property caption Voice note caption
+     * @property isListened True, if at least one of the recipients has listened to the voice note
      */
-    class MessageVoiceNote(
+    @Serializable
+    @SerialName("messageVoiceNote")
+    data class MessageVoiceNote(
+        @SerialName("voice_note")
         val voiceNote: VoiceNote,
+        @SerialName("caption")
         val caption: FormattedText,
-        val isListened: Boolean
+        @SerialName("is_listened")
+        val isListened: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with a location
      *
-     * @location - Message content
-     * @livePeriod - Time relative to the message sent date until which the location can be updated, in seconds
-     * @expiresIn - Left time for which the location can be updated, in seconds
-     *              UpdateMessageContent is not sent when this field changes
+     * @property location Message content
+     * @property livePeriod Time relative to the message sent date until which the location can be updated, in seconds
+     * @property expiresIn Left time for which the location can be updated, in seconds
+     *                     UpdateMessageContent is not sent when this field changes
      */
-    class MessageLocation(
+    @Serializable
+    @SerialName("messageLocation")
+    data class MessageLocation(
+        @SerialName("location")
         val location: Location,
+        @SerialName("live_period")
         val livePeriod: Int,
-        val expiresIn: Int
+        @SerialName("expires_in")
+        val expiresIn: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with information about a venue
      *
-     * @venue - Message content
+     * @property venue Message content
      */
-    class MessageVenue(
-        val venue: Venue
+    @Serializable
+    @SerialName("messageVenue")
+    data class MessageVenue(
+        @SerialName("venue")
+        val venue: Venue,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with a user contact
      *
-     * @contact - Message content
+     * @property contact Message content
      */
-    class MessageContact(
-        val contact: Contact
+    @Serializable
+    @SerialName("messageContact")
+    data class MessageContact(
+        @SerialName("contact")
+        val contact: Contact,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with a game
      *
-     * @game - Game
+     * @property game Game
      */
-    class MessageGame(
-        val game: Game
+    @Serializable
+    @SerialName("messageGame")
+    data class MessageGame(
+        @SerialName("game")
+        val game: Game,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with a poll
      *
-     * @poll - Poll
+     * @property poll Poll
      */
-    class MessagePoll(
-        val poll: Poll
+    @Serializable
+    @SerialName("messagePoll")
+    data class MessagePoll(
+        @SerialName("poll")
+        val poll: Poll,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with an invoice from a bot
      *
-     * @title - Product title
-     * @description - Product description
-     * @photo - Product photo
-     * @currency - Currency for the product price
-     * @totalAmount - Product total price in the minimal quantity of the currency
-     * @startParameter - Unique invoice bot start_parameter
-     *                   To share an invoice use the URL https://t.me/{bot_username}?start={start_parameter}
-     * @isTest - True, if the invoice is a test invoice
-     * @needShippingAddress - True, if the shipping address should be specified
-     * @receiptMessageId - The identifier of the message with the receipt, after the product has been purchased
+     * @property title Product title
+     * @property description Product description
+     * @property photo Product photo
+     * @property currency Currency for the product price
+     * @property totalAmount Product total price in the minimal quantity of the currency
+     * @property startParameter Unique invoice bot start_parameter
+     *                          To share an invoice use the URL https://t.me/{bot_username}?start={start_parameter}
+     * @property isTest True, if the invoice is a test invoice
+     * @property needShippingAddress True, if the shipping address should be specified
+     * @property receiptMessageId The identifier of the message with the receipt, after the product has been purchased
      */
-    class MessageInvoice(
+    @Serializable
+    @SerialName("messageInvoice")
+    data class MessageInvoice(
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
+        @SerialName("photo")
         val photo: Photo?,
+        @SerialName("currency")
         val currency: String,
+        @SerialName("total_amount")
         val totalAmount: Long,
+        @SerialName("start_parameter")
         val startParameter: String,
+        @SerialName("is_test")
         val isTest: Boolean,
+        @SerialName("need_shipping_address")
         val needShippingAddress: Boolean,
-        val receiptMessageId: Long
+        @SerialName("receipt_message_id")
+        val receiptMessageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message with information about an ended call
      *
-     * @discardReason - Reason why the call was discarded
-     * @duration - Call duration, in seconds
+     * @property discardReason Reason why the call was discarded
+     * @property duration Call duration, in seconds
      */
-    class MessageCall(
+    @Serializable
+    @SerialName("messageCall")
+    data class MessageCall(
+        @SerialName("discard_reason")
         val discardReason: CallDiscardReason,
-        val duration: Int
+        @SerialName("duration")
+        val duration: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A newly created basic group
      *
-     * @title - Title of the basic group
-     * @memberUserIds - User identifiers of members in the basic group
+     * @property title Title of the basic group
+     * @property memberUserIds User identifiers of members in the basic group
      */
-    class MessageBasicGroupChatCreate(
+    @Serializable
+    @SerialName("messageBasicGroupChatCreate")
+    data class MessageBasicGroupChatCreate(
+        @SerialName("title")
         val title: String,
-        val memberUserIds: IntArray
+        @SerialName("member_user_ids")
+        val memberUserIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A newly created supergroup or channel
      *
-     * @title - Title of the supergroup or channel
+     * @property title Title of the supergroup or channel
      */
-    class MessageSupergroupChatCreate(
-        val title: String
+    @Serializable
+    @SerialName("messageSupergroupChatCreate")
+    data class MessageSupergroupChatCreate(
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * An updated chat title
      *
-     * @title - New chat title
+     * @property title New chat title
      */
-    class MessageChatChangeTitle(
-        val title: String
+    @Serializable
+    @SerialName("messageChatChangeTitle")
+    data class MessageChatChangeTitle(
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * An updated chat photo
      *
-     * @photo - New chat photo
+     * @property photo New chat photo
      */
-    class MessageChatChangePhoto(
-        val photo: Photo
+    @Serializable
+    @SerialName("messageChatChangePhoto")
+    data class MessageChatChangePhoto(
+        @SerialName("photo")
+        val photo: Photo,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A deleted chat photo
      */
-    class MessageChatDeletePhoto : MessageContent()
+    @Serializable
+    @SerialName("messageChatDeletePhoto")
+    data class MessageChatDeletePhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * New chat members were added
      *
-     * @memberUserIds - User identifiers of the new members
+     * @property memberUserIds User identifiers of the new members
      */
-    class MessageChatAddMembers(
-        val memberUserIds: IntArray
+    @Serializable
+    @SerialName("messageChatAddMembers")
+    data class MessageChatAddMembers(
+        @SerialName("member_user_ids")
+        val memberUserIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A new member joined the chat by invite link
      */
-    class MessageChatJoinByLink : MessageContent()
+    @Serializable
+    @SerialName("messageChatJoinByLink")
+    data class MessageChatJoinByLink(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * A chat member was deleted
      *
-     * @userId - User identifier of the deleted chat member
+     * @property userId User identifier of the deleted chat member
      */
-    class MessageChatDeleteMember(
-        val userId: Int
+    @Serializable
+    @SerialName("messageChatDeleteMember")
+    data class MessageChatDeleteMember(
+        @SerialName("user_id")
+        val userId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A basic group was upgraded to a supergroup and was deactivated as the result
      *
-     * @supergroupId - Identifier of the supergroup to which the basic group was upgraded
+     * @property supergroupId Identifier of the supergroup to which the basic group was upgraded
      */
-    class MessageChatUpgradeTo(
-        val supergroupId: Int
+    @Serializable
+    @SerialName("messageChatUpgradeTo")
+    data class MessageChatUpgradeTo(
+        @SerialName("supergroup_id")
+        val supergroupId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A supergroup has been created from a basic group
      *
-     * @title - Title of the newly created supergroup
-     * @basicGroupId - The identifier of the original basic group
+     * @property title Title of the newly created supergroup
+     * @property basicGroupId The identifier of the original basic group
      */
-    class MessageChatUpgradeFrom(
+    @Serializable
+    @SerialName("messageChatUpgradeFrom")
+    data class MessageChatUpgradeFrom(
+        @SerialName("title")
         val title: String,
-        val basicGroupId: Int
+        @SerialName("basic_group_id")
+        val basicGroupId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A message has been pinned
      *
-     * @messageId - Identifier of the pinned message, can be an identifier of a deleted message or 0
+     * @property messageId Identifier of the pinned message, can be an identifier of a deleted message or 0
      */
-    class MessagePinMessage(
-        val messageId: Long
+    @Serializable
+    @SerialName("messagePinMessage")
+    data class MessagePinMessage(
+        @SerialName("message_id")
+        val messageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A screenshot of a message in the chat has been taken
      */
-    class MessageScreenshotTaken : MessageContent()
+    @Serializable
+    @SerialName("messageScreenshotTaken")
+    data class MessageScreenshotTaken(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * The TTL (Time To Live) setting messages in a secret chat has been changed
      *
-     * @ttl - New TTL
+     * @property ttl New TTL
      */
-    class MessageChatSetTtl(
-        val ttl: Int
+    @Serializable
+    @SerialName("messageChatSetTtl")
+    data class MessageChatSetTtl(
+        @SerialName("ttl")
+        val ttl: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A non-standard action has happened in the chat
      *
-     * @text - Message text to be shown in the chat
+     * @property text Message text to be shown in the chat
      */
-    class MessageCustomServiceAction(
-        val text: String
+    @Serializable
+    @SerialName("messageCustomServiceAction")
+    data class MessageCustomServiceAction(
+        @SerialName("text")
+        val text: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A new high score was achieved in a game
      *
-     * @gameMessageId - Identifier of the message with the game, can be an identifier of a deleted message
-     * @gameId - Identifier of the game
-     *           May be different from the games presented in the message with the game
-     * @score - New score
+     * @property gameMessageId Identifier of the message with the game, can be an identifier of a deleted message
+     * @property gameId Identifier of the game
+     *                  May be different from the games presented in the message with the game
+     * @property score New score
      */
-    class MessageGameScore(
+    @Serializable
+    @SerialName("messageGameScore")
+    data class MessageGameScore(
+        @SerialName("game_message_id")
         val gameMessageId: Long,
+        @SerialName("game_id")
         val gameId: Long,
-        val score: Int
+        @SerialName("score")
+        val score: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A payment has been completed
      *
-     * @invoiceMessageId - Identifier of the message with the corresponding invoice
-     *                     Can be an identifier of a deleted message
-     * @currency - Currency for the price of the product
-     * @totalAmount - Total price for the product, in the minimal quantity of the currency
+     * @property invoiceMessageId Identifier of the message with the corresponding invoice
+     *                            Can be an identifier of a deleted message
+     * @property currency Currency for the price of the product
+     * @property totalAmount Total price for the product, in the minimal quantity of the currency
      */
-    class MessagePaymentSuccessful(
+    @Serializable
+    @SerialName("messagePaymentSuccessful")
+    data class MessagePaymentSuccessful(
+        @SerialName("invoice_message_id")
         val invoiceMessageId: Long,
+        @SerialName("currency")
         val currency: String,
-        val totalAmount: Long
-    ) : MessageContent()
-
-    /**
-     * A payment has been completed
-     *
-     * @invoiceMessageId - Identifier of the message with the corresponding invoice
-     *                     Can be an identifier of a deleted message
-     * @currency - Currency for price of the product
-     * @totalAmount - Total price for the product, in the minimal quantity of the currency
-     * @invoicePayload - Invoice payload
-     * @shippingOptionId - Identifier of the shipping option chosen by the user
-     *                     May be empty if not applicable
-     * @orderInfo - Information about the order
-     * @telegramPaymentChargeId - Telegram payment identifier
-     * @providerPaymentChargeId - Provider payment identifier
-     */
-    @BotsOnly
-    class MessagePaymentSuccessfulBot(
-        val invoiceMessageId: Long,
-        val currency: String,
+        @SerialName("total_amount")
         val totalAmount: Long,
-        val invoicePayload: ByteArray,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
+
+    /**
+     * A payment has been completed
+     *
+     * @property invoiceMessageId Identifier of the message with the corresponding invoice
+     *                            Can be an identifier of a deleted message
+     * @property currency Currency for price of the product
+     * @property totalAmount Total price for the product, in the minimal quantity of the currency
+     * @property invoicePayload Invoice payload
+     * @property shippingOptionId Identifier of the shipping option chosen by the user
+     *                            May be empty if not applicable
+     * @property orderInfo Information about the order
+     * @property telegramPaymentChargeId Telegram payment identifier
+     * @property providerPaymentChargeId Provider payment identifier
+     */
+    @Serializable
+    @SerialName("messagePaymentSuccessfulBot")
+    @BotsOnly
+    data class MessagePaymentSuccessfulBot(
+        @SerialName("invoice_message_id")
+        val invoiceMessageId: Long,
+        @SerialName("currency")
+        val currency: String,
+        @SerialName("total_amount")
+        val totalAmount: Long,
+        @SerialName("invoice_payload")
+        val invoicePayload: Array<Byte>,
+        @SerialName("shipping_option_id")
         val shippingOptionId: String?,
+        @SerialName("order_info")
         val orderInfo: OrderInfo?,
+        @SerialName("telegram_payment_charge_id")
         val telegramPaymentChargeId: String,
-        val providerPaymentChargeId: String
+        @SerialName("provider_payment_charge_id")
+        val providerPaymentChargeId: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * A contact has registered with Telegram
      */
-    class MessageContactRegistered : MessageContent()
+    @Serializable
+    @SerialName("messageContactRegistered")
+    data class MessageContactRegistered(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * The current user has connected a website by logging in using Telegram Login Widget on it
      *
-     * @domainName - Domain name of the connected website
+     * @property domainName Domain name of the connected website
      */
-    class MessageWebsiteConnected(
-        val domainName: String
+    @Serializable
+    @SerialName("messageWebsiteConnected")
+    data class MessageWebsiteConnected(
+        @SerialName("domain_name")
+        val domainName: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * Telegram Passport data has been sent
      *
-     * @types - List of Telegram Passport element types sent
+     * @property types List of Telegram Passport element types sent
      */
-    class MessagePassportDataSent(
-        val types: Array<PassportElementType>
+    @Serializable
+    @SerialName("messagePassportDataSent")
+    data class MessagePassportDataSent(
+        @SerialName("types")
+        val types: Array<PassportElementType>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * Telegram Passport data has been received
      *
-     * @elements - List of received Telegram Passport elements
-     * @credentials - Encrypted data credentials
+     * @property elements List of received Telegram Passport elements
+     * @property credentials Encrypted data credentials
      */
+    @Serializable
+    @SerialName("messagePassportDataReceived")
     @BotsOnly
-    class MessagePassportDataReceived(
+    data class MessagePassportDataReceived(
+        @SerialName("elements")
         val elements: Array<EncryptedPassportElement>,
-        val credentials: EncryptedCredentials
+        @SerialName("credentials")
+        val credentials: EncryptedCredentials,
+        extra: TdExtra = TdExtra.EMPTY
     ) : MessageContent()
 
     /**
      * Message content that is not supported by the client
      */
-    class MessageUnsupported : MessageContent()
+    @Serializable
+    @SerialName("messageUnsupported")
+    data class MessageUnsupported(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : MessageContent()
 
     /**
      * Represents a part of the text which must be formatted differently
      */
-    abstract class TextEntityType : null()
+    abstract class TextEntityType : Object()
 
     /**
      * A mention of a user by their username
      */
-    class TextEntityTypeMention : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeMention")
+    data class TextEntityTypeMention(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * A hashtag text, beginning with "#"
      */
-    class TextEntityTypeHashtag : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeHashtag")
+    data class TextEntityTypeHashtag(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * A cashtag text, beginning with "$" and consisting of capital english letters (i.e
      * "$USD")
      */
-    class TextEntityTypeCashtag : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeCashtag")
+    data class TextEntityTypeCashtag(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * A bot command, beginning with "/"
      * This shouldn't be highlighted if there are no bots in the chat
      */
-    class TextEntityTypeBotCommand : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeBotCommand")
+    data class TextEntityTypeBotCommand(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * An HTTP URL
      */
-    class TextEntityTypeUrl : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeUrl")
+    data class TextEntityTypeUrl(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * An email address
      */
-    class TextEntityTypeEmailAddress : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeEmailAddress")
+    data class TextEntityTypeEmailAddress(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * A bold text
      */
-    class TextEntityTypeBold : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeBold")
+    data class TextEntityTypeBold(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * An italic text
      */
-    class TextEntityTypeItalic : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeItalic")
+    data class TextEntityTypeItalic(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * Text that must be formatted as if inside a code HTML tag
      */
-    class TextEntityTypeCode : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypeCode")
+    data class TextEntityTypeCode(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * Text that must be formatted as if inside a pre HTML tag
      */
-    class TextEntityTypePre : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypePre")
+    data class TextEntityTypePre(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * Text that must be formatted as if inside pre, and code HTML tags
      *
-     * @language - Programming language of the code
-     *             As defined by the sender
+     * @property language Programming language of the code
+     *                    As defined by the sender
      */
-    class TextEntityTypePreCode(
-        val language: String
+    @Serializable
+    @SerialName("textEntityTypePreCode")
+    data class TextEntityTypePreCode(
+        @SerialName("language")
+        val language: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TextEntityType()
 
     /**
      * A text description shown instead of a raw URL
      *
-     * @url - HTTP or tg:// URL to be opened when the link is clicked
+     * @property url HTTP or tg:// URL to be opened when the link is clicked
      */
-    class TextEntityTypeTextUrl(
-        val url: String
+    @Serializable
+    @SerialName("textEntityTypeTextUrl")
+    data class TextEntityTypeTextUrl(
+        @SerialName("url")
+        val url: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TextEntityType()
 
     /**
      * A text shows instead of a raw mention of the user (e.g., when the user has no username)
      *
-     * @userId - Identifier of the mentioned user
+     * @property userId Identifier of the mentioned user
      */
-    class TextEntityTypeMentionName(
-        val userId: Int = 0
+    @Serializable
+    @SerialName("textEntityTypeMentionName")
+    data class TextEntityTypeMentionName(
+        @SerialName("user_id")
+        val userId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TextEntityType()
 
     /**
      * A phone number
      */
-    class TextEntityTypePhoneNumber : TextEntityType()
+    @Serializable
+    @SerialName("textEntityTypePhoneNumber")
+    data class TextEntityTypePhoneNumber(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextEntityType()
 
     /**
      * A thumbnail to be sent along with a file
      * Should be in JPEG or WEBP format for stickers, and less than 200 kB in size
      *
-     * @thumbnail - Thumbnail file to send
-     *              Sending thumbnails by file_id is currently not supported
-     * @width - Thumbnail width, usually shouldn't exceed 320
-     *          Use 0 if unknown
-     * @height - Thumbnail height, usually shouldn't exceed 320
-     *           Use 0 if unknown
+     * @property thumbnail Thumbnail file to send
+     *                     Sending thumbnails by file_id is currently not supported
+     * @property width Thumbnail width, usually shouldn't exceed 320
+     *                 Use 0 if unknown
+     * @property height Thumbnail height, usually shouldn't exceed 320
+     *                  Use 0 if unknown
      */
-    class InputThumbnail(
+    @Serializable
+    @SerialName("inputThumbnail")
+    data class InputThumbnail(
+        @SerialName("thumbnail")
         val thumbnail: InputFile,
-        val width: Int = 0,
-        val height: Int = 0
+        @SerialName("width")
+        val width: Int,
+        @SerialName("height")
+        val height: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * The content of a message to send
      */
-    abstract class InputMessageContent : null()
+    abstract class InputMessageContent : Object()
 
     /**
      * A text message
      *
-     * @text - Formatted text to be sent
-     *         1-GetOption("message_text_length_max") characters
-     *         Only Bold, Italic, Code, Pre, PreCode and TextUrl entities are allowed to be specified manually
-     * @disableWebPagePreview - True, if rich web page previews for URLs in the message text should be disabled
-     * @clearDraft - True, if a chat message draft should be deleted
+     * @property text Formatted text to be sent
+     *                1-GetOption("message_text_length_max") characters
+     *                Only Bold, Italic, Code, Pre, PreCode and TextUrl entities are allowed to be specified manually
+     * @property disableWebPagePreview True, if rich web page previews for URLs in the message text should be disabled
+     * @property clearDraft True, if a chat message draft should be deleted
      */
-    class InputMessageText(
+    @Serializable
+    @SerialName("inputMessageText")
+    data class InputMessageText(
+        @SerialName("text")
         val text: FormattedText,
-        val disableWebPagePreview: Boolean = false,
-        val clearDraft: Boolean = false
+        @SerialName("disable_web_page_preview")
+        val disableWebPagePreview: Boolean,
+        @SerialName("clear_draft")
+        val clearDraft: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * An animation message (GIF-style).
      *
-     * @animation - Animation file to be sent
-     * @thumbnail - Animation thumbnail, if available
-     * @duration - Duration of the animation, in seconds
-     * @width - Width of the animation
-     *          May be replaced by the server
-     * @height - Height of the animation
-     *           May be replaced by the server
-     * @caption - Animation caption
-     *            0-GetOption("message_caption_length_max") characters
+     * @property animation Animation file to be sent
+     * @property thumbnail Animation thumbnail, if available
+     * @property duration Duration of the animation, in seconds
+     * @property width Width of the animation
+     *                 May be replaced by the server
+     * @property height Height of the animation
+     *                  May be replaced by the server
+     * @property caption Animation caption
+     *                   0-GetOption("message_caption_length_max") characters
      */
-    class InputMessageAnimation(
+    @Serializable
+    @SerialName("inputMessageAnimation")
+    data class InputMessageAnimation(
+        @SerialName("animation")
         val animation: InputFile,
+        @SerialName("thumbnail")
         val thumbnail: InputThumbnail,
-        val duration: Int = 0,
-        val width: Int = 0,
-        val height: Int = 0,
-        val caption: FormattedText
+        @SerialName("duration")
+        val duration: Int,
+        @SerialName("width")
+        val width: Int,
+        @SerialName("height")
+        val height: Int,
+        @SerialName("caption")
+        val caption: FormattedText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * An audio message
      *
-     * @audio - Audio file to be sent
-     * @albumCoverThumbnail - Thumbnail of the cover for the album, if available
-     * @duration - Duration of the audio, in seconds
-     *             May be replaced by the server
-     * @title - Title of the audio
-     *          May be replaced by the server
-     * @performer - Performer of the audio
-     * @caption - Audio caption
-     *            0-GetOption("message_caption_length_max") characters
+     * @property audio Audio file to be sent
+     * @property albumCoverThumbnail Thumbnail of the cover for the album, if available
+     * @property duration Duration of the audio, in seconds
+     *                    May be replaced by the server
+     * @property title Title of the audio
+     *                 May be replaced by the server
+     * @property performer Performer of the audio
+     * @property caption Audio caption
+     *                   0-GetOption("message_caption_length_max") characters
      */
-    class InputMessageAudio(
+    @Serializable
+    @SerialName("inputMessageAudio")
+    data class InputMessageAudio(
+        @SerialName("audio")
         val audio: InputFile,
+        @SerialName("album_cover_thumbnail")
         val albumCoverThumbnail: InputThumbnail,
-        val duration: Int = 0,
+        @SerialName("duration")
+        val duration: Int,
+        @SerialName("title")
         val title: String,
+        @SerialName("performer")
         val performer: String,
-        val caption: FormattedText
+        @SerialName("caption")
+        val caption: FormattedText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A document message (general file)
      *
-     * @document - Document to be sent
-     * @thumbnail - Document thumbnail, if available
-     * @caption - Document caption
-     *            0-GetOption("message_caption_length_max") characters
+     * @property document Document to be sent
+     * @property thumbnail Document thumbnail, if available
+     * @property caption Document caption
+     *                   0-GetOption("message_caption_length_max") characters
      */
-    class InputMessageDocument(
+    @Serializable
+    @SerialName("inputMessageDocument")
+    data class InputMessageDocument(
+        @SerialName("document")
         val document: InputFile,
+        @SerialName("thumbnail")
         val thumbnail: InputThumbnail,
-        val caption: FormattedText
+        @SerialName("caption")
+        val caption: FormattedText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A photo message
      *
-     * @photo - Photo to send
-     * @thumbnail - Photo thumbnail to be sent, this is sent to the other party in secret chats only
-     * @addedStickerFileIds - File identifiers of the stickers added to the photo, if applicable
-     * @width - Photo width
-     * @height - Photo height
-     * @caption - Photo caption
-     *            0-GetOption("message_caption_length_max") characters
-     * @ttl - Photo TTL (Time To Live), in seconds (0-60)
-     *        A non-zero TTL can be specified only in private chats
+     * @property photo Photo to send
+     * @property thumbnail Photo thumbnail to be sent, this is sent to the other party in secret chats only
+     * @property addedStickerFileIds File identifiers of the stickers added to the photo, if applicable
+     * @property width Photo width
+     * @property height Photo height
+     * @property caption Photo caption
+     *                   0-GetOption("message_caption_length_max") characters
+     * @property ttl Photo TTL (Time To Live), in seconds (0-60)
+     *               A non-zero TTL can be specified only in private chats
      */
-    class InputMessagePhoto(
+    @Serializable
+    @SerialName("inputMessagePhoto")
+    data class InputMessagePhoto(
+        @SerialName("photo")
         val photo: InputFile,
+        @SerialName("thumbnail")
         val thumbnail: InputThumbnail,
-        val addedStickerFileIds: IntArray = intArrayOf(),
-        val width: Int = 0,
-        val height: Int = 0,
+        @SerialName("added_sticker_file_ids")
+        val addedStickerFileIds: Array<Int>,
+        @SerialName("width")
+        val width: Int,
+        @SerialName("height")
+        val height: Int,
+        @SerialName("caption")
         val caption: FormattedText,
-        val ttl: Int = 0
+        @SerialName("ttl")
+        val ttl: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A sticker message
      *
-     * @sticker - Sticker to be sent
-     * @thumbnail - Sticker thumbnail, if available
-     * @width - Sticker width
-     * @height - Sticker height
+     * @property sticker Sticker to be sent
+     * @property thumbnail Sticker thumbnail, if available
+     * @property width Sticker width
+     * @property height Sticker height
      */
-    class InputMessageSticker(
+    @Serializable
+    @SerialName("inputMessageSticker")
+    data class InputMessageSticker(
+        @SerialName("sticker")
         val sticker: InputFile,
+        @SerialName("thumbnail")
         val thumbnail: InputThumbnail,
-        val width: Int = 0,
-        val height: Int = 0
+        @SerialName("width")
+        val width: Int,
+        @SerialName("height")
+        val height: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A video message
      *
-     * @video - Video to be sent
-     * @thumbnail - Video thumbnail, if available
-     * @addedStickerFileIds - File identifiers of the stickers added to the video, if applicable
-     * @duration - Duration of the video, in seconds
-     * @width - Video width
-     * @height - Video height
-     * @supportsStreaming - True, if the video should be tried to be streamed
-     * @caption - Video caption
-     *            0-GetOption("message_caption_length_max") characters
-     * @ttl - Video TTL (Time To Live), in seconds (0-60)
-     *        A non-zero TTL can be specified only in private chats
+     * @property video Video to be sent
+     * @property thumbnail Video thumbnail, if available
+     * @property addedStickerFileIds File identifiers of the stickers added to the video, if applicable
+     * @property duration Duration of the video, in seconds
+     * @property width Video width
+     * @property height Video height
+     * @property supportsStreaming True, if the video should be tried to be streamed
+     * @property caption Video caption
+     *                   0-GetOption("message_caption_length_max") characters
+     * @property ttl Video TTL (Time To Live), in seconds (0-60)
+     *               A non-zero TTL can be specified only in private chats
      */
-    class InputMessageVideo(
+    @Serializable
+    @SerialName("inputMessageVideo")
+    data class InputMessageVideo(
+        @SerialName("video")
         val video: InputFile,
+        @SerialName("thumbnail")
         val thumbnail: InputThumbnail,
-        val addedStickerFileIds: IntArray = intArrayOf(),
-        val duration: Int = 0,
-        val width: Int = 0,
-        val height: Int = 0,
-        val supportsStreaming: Boolean = false,
+        @SerialName("added_sticker_file_ids")
+        val addedStickerFileIds: Array<Int>,
+        @SerialName("duration")
+        val duration: Int,
+        @SerialName("width")
+        val width: Int,
+        @SerialName("height")
+        val height: Int,
+        @SerialName("supports_streaming")
+        val supportsStreaming: Boolean,
+        @SerialName("caption")
         val caption: FormattedText,
-        val ttl: Int = 0
+        @SerialName("ttl")
+        val ttl: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A video note message
      *
-     * @videoNote - Video note to be sent
-     * @thumbnail - Video thumbnail, if available
-     * @duration - Duration of the video, in seconds
-     * @length - Video width and height
-     *           Must be positive and not greater than 640
+     * @property videoNote Video note to be sent
+     * @property thumbnail Video thumbnail, if available
+     * @property duration Duration of the video, in seconds
+     * @property length Video width and height
+     *                  Must be positive and not greater than 640
      */
-    class InputMessageVideoNote(
+    @Serializable
+    @SerialName("inputMessageVideoNote")
+    data class InputMessageVideoNote(
+        @SerialName("video_note")
         val videoNote: InputFile,
+        @SerialName("thumbnail")
         val thumbnail: InputThumbnail,
-        val duration: Int = 0,
-        val length: Int = 0
+        @SerialName("duration")
+        val duration: Int,
+        @SerialName("length")
+        val length: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A voice note message
      *
-     * @voiceNote - Voice note to be sent
-     * @duration - Duration of the voice note, in seconds
-     * @waveform - Waveform representation of the voice note, in 5-bit format
-     * @caption - Voice note caption
-     *            0-GetOption("message_caption_length_max") characters
+     * @property voiceNote Voice note to be sent
+     * @property duration Duration of the voice note, in seconds
+     * @property waveform Waveform representation of the voice note, in 5-bit format
+     * @property caption Voice note caption
+     *                   0-GetOption("message_caption_length_max") characters
      */
-    class InputMessageVoiceNote(
+    @Serializable
+    @SerialName("inputMessageVoiceNote")
+    data class InputMessageVoiceNote(
+        @SerialName("voice_note")
         val voiceNote: InputFile,
-        val duration: Int = 0,
-        val waveform: ByteArray = byteArrayOf(),
-        val caption: FormattedText
+        @SerialName("duration")
+        val duration: Int,
+        @SerialName("waveform")
+        val waveform: Array<Byte>,
+        @SerialName("caption")
+        val caption: FormattedText,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A message with a location
      *
-     * @location - Location to be sent
-     * @livePeriod - Period for which the location can be updated, in seconds
-     *               Should bebetween 60 and 86400 for a live location and 0 otherwise
+     * @property location Location to be sent
+     * @property livePeriod Period for which the location can be updated, in seconds
+     *                      Should bebetween 60 and 86400 for a live location and 0 otherwise
      */
-    class InputMessageLocation(
+    @Serializable
+    @SerialName("inputMessageLocation")
+    data class InputMessageLocation(
+        @SerialName("location")
         val location: Location,
-        val livePeriod: Int = 0
+        @SerialName("live_period")
+        val livePeriod: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A message with information about a venue
      *
-     * @venue - Venue to send
+     * @property venue Venue to send
      */
-    class InputMessageVenue(
-        val venue: Venue
+    @Serializable
+    @SerialName("inputMessageVenue")
+    data class InputMessageVenue(
+        @SerialName("venue")
+        val venue: Venue,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A message containing a user contact
      *
-     * @contact - Contact to send
+     * @property contact Contact to send
      */
-    class InputMessageContact(
-        val contact: Contact
+    @Serializable
+    @SerialName("inputMessageContact")
+    data class InputMessageContact(
+        @SerialName("contact")
+        val contact: Contact,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A message with a game
      * Not supported for channels or secret chats
      *
-     * @botUserId - User identifier of the bot that owns the game
-     * @gameShortName - Short name of the game
+     * @property botUserId User identifier of the bot that owns the game
+     * @property gameShortName Short name of the game
      */
-    class InputMessageGame(
-        val botUserId: Int = 0,
-        val gameShortName: String
+    @Serializable
+    @SerialName("inputMessageGame")
+    data class InputMessageGame(
+        @SerialName("bot_user_id")
+        val botUserId: Int,
+        @SerialName("game_short_name")
+        val gameShortName: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A message with an invoice
      *
-     * @invoice - Invoice
-     * @title - Product title
-     * @description - Product description
-     * @photoUrl - Product photo URL
-     * @photoSize - Product photo size
-     * @photoWidth - Product photo width
-     * @photoHeight - Product photo height
-     * @payload - The invoice payload
-     * @providerToken - Payment provider token
-     * @providerData - JSON-encoded data about the invoice, which will be shared with the payment provider
-     * @startParameter - Unique invoice bot start_parameter for the generation of this invoice
+     * @property invoice Invoice
+     * @property title Product title
+     * @property description Product description
+     * @property photoUrl Product photo URL
+     * @property photoSize Product photo size
+     * @property photoWidth Product photo width
+     * @property photoHeight Product photo height
+     * @property payload The invoice payload
+     * @property providerToken Payment provider token
+     * @property providerData JSON-encoded data about the invoice, which will be shared with the payment provider
+     * @property startParameter Unique invoice bot start_parameter for the generation of this invoice
      */
+    @Serializable
+    @SerialName("inputMessageInvoice")
     @BotsOnly
-    class InputMessageInvoice(
+    data class InputMessageInvoice(
+        @SerialName("invoice")
         val invoice: Invoice,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
-        val photoUrl: String? = null,
-        val photoSize: Int = 0,
-        val photoWidth: Int = 0,
-        val photoHeight: Int = 0,
-        val payload: ByteArray = byteArrayOf(),
+        @SerialName("photo_url")
+        val photoUrl: String?,
+        @SerialName("photo_size")
+        val photoSize: Int,
+        @SerialName("photo_width")
+        val photoWidth: Int,
+        @SerialName("photo_height")
+        val photoHeight: Int,
+        @SerialName("payload")
+        val payload: Array<Byte>,
+        @SerialName("provider_token")
         val providerToken: String,
+        @SerialName("provider_data")
         val providerData: String,
-        val startParameter: String
+        @SerialName("start_parameter")
+        val startParameter: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A message with a poll
      * Polls can't be sent to private or secret chats
      *
-     * @question - Poll question, 1-255 characters
-     * @options - List of poll answer options, 2-10 strings 1-100 characters each
+     * @property question Poll question, 1-255 characters
+     * @property options List of poll answer options, 2-10 strings 1-100 characters each
      */
-    class InputMessagePoll(
+    @Serializable
+    @SerialName("inputMessagePoll")
+    data class InputMessagePoll(
+        @SerialName("question")
         val question: String,
-        val options: Array<String> = emptyArray()
+        @SerialName("options")
+        val options: Array<String>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * A forwarded message
      *
-     * @fromChatId - Identifier for the chat this forwarded message came from
-     * @messageId - Identifier of the message to forward
-     * @inGameShare - True, if a game message should be shared within a launched game
-     *                Applies only to game messages
-     * @sendCopy - True, if content of the message needs to be copied without a link to the original message
-     *             Always true if the message is forwarded to a secret chat
-     * @removeCaption - True, if media caption of the message copy needs to be removed
-     *                  Ignored if send_copy is false
+     * @property fromChatId Identifier for the chat this forwarded message came from
+     * @property messageId Identifier of the message to forward
+     * @property inGameShare True, if a game message should be shared within a launched game
+     *                       Applies only to game messages
+     * @property sendCopy True, if content of the message needs to be copied without a link to the original message
+     *                    Always true if the message is forwarded to a secret chat
+     * @property removeCaption True, if media caption of the message copy needs to be removed
+     *                         Ignored if send_copy is false
      */
-    class InputMessageForwarded(
-        val fromChatId: Long = 0L,
-        val messageId: Long = 0L,
-        val inGameShare: Boolean = false,
-        val sendCopy: Boolean = false,
-        val removeCaption: Boolean = false
+    @Serializable
+    @SerialName("inputMessageForwarded")
+    data class InputMessageForwarded(
+        @SerialName("from_chat_id")
+        val fromChatId: Long,
+        @SerialName("message_id")
+        val messageId: Long,
+        @SerialName("in_game_share")
+        val inGameShare: Boolean,
+        @SerialName("send_copy")
+        val sendCopy: Boolean,
+        @SerialName("remove_caption")
+        val removeCaption: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputMessageContent()
 
     /**
      * Represents a filter for message search results
      */
-    abstract class SearchMessagesFilter : null()
+    abstract class SearchMessagesFilter : Object()
 
     /**
      * Returns all found messages, no filter is applied
      */
-    class SearchMessagesFilterEmpty : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterEmpty")
+    data class SearchMessagesFilterEmpty(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only animation messages
      */
-    class SearchMessagesFilterAnimation : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterAnimation")
+    data class SearchMessagesFilterAnimation(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only audio messages
      */
-    class SearchMessagesFilterAudio : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterAudio")
+    data class SearchMessagesFilterAudio(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only document messages
      */
-    class SearchMessagesFilterDocument : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterDocument")
+    data class SearchMessagesFilterDocument(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only photo messages
      */
-    class SearchMessagesFilterPhoto : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterPhoto")
+    data class SearchMessagesFilterPhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only video messages
      */
-    class SearchMessagesFilterVideo : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterVideo")
+    data class SearchMessagesFilterVideo(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only voice note messages
      */
-    class SearchMessagesFilterVoiceNote : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterVoiceNote")
+    data class SearchMessagesFilterVoiceNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only photo and video messages
      */
-    class SearchMessagesFilterPhotoAndVideo : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterPhotoAndVideo")
+    data class SearchMessagesFilterPhotoAndVideo(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only messages containing URLs
      */
-    class SearchMessagesFilterUrl : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterUrl")
+    data class SearchMessagesFilterUrl(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only messages containing chat photos
      */
-    class SearchMessagesFilterChatPhoto : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterChatPhoto")
+    data class SearchMessagesFilterChatPhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only call messages
      */
-    class SearchMessagesFilterCall : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterCall")
+    data class SearchMessagesFilterCall(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only incoming call messages with missed/declined discard reasons
      */
-    class SearchMessagesFilterMissedCall : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterMissedCall")
+    data class SearchMessagesFilterMissedCall(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only video note messages
      */
-    class SearchMessagesFilterVideoNote : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterVideoNote")
+    data class SearchMessagesFilterVideoNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only voice and video note messages
      */
-    class SearchMessagesFilterVoiceAndVideoNote : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterVoiceAndVideoNote")
+    data class SearchMessagesFilterVoiceAndVideoNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only messages with mentions of the current user, or messages that are replies to their messages
      */
-    class SearchMessagesFilterMention : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterMention")
+    data class SearchMessagesFilterMention(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Returns only messages with unread mentions of the current user, or messages that are replies to their messages
      * When using this filter the results can't be additionally filtered by a query or by the sending user
      */
-    class SearchMessagesFilterUnreadMention : SearchMessagesFilter()
+    @Serializable
+    @SerialName("searchMessagesFilterUnreadMention")
+    data class SearchMessagesFilterUnreadMention(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : SearchMessagesFilter()
 
     /**
      * Describes the different types of activity in a chat
      */
-    abstract class ChatAction : null()
+    abstract class ChatAction : Object()
 
     /**
      * The user is typing a message
      */
-    class ChatActionTyping : ChatAction()
+    @Serializable
+    @SerialName("chatActionTyping")
+    data class ChatActionTyping(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user is recording a video
      */
-    class ChatActionRecordingVideo : ChatAction()
+    @Serializable
+    @SerialName("chatActionRecordingVideo")
+    data class ChatActionRecordingVideo(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user is uploading a video
      *
-     * @progress - Upload progress, as a percentage
+     * @property progress Upload progress, as a percentage
      */
-    class ChatActionUploadingVideo(
-        val progress: Int = 0
+    @Serializable
+    @SerialName("chatActionUploadingVideo")
+    data class ChatActionUploadingVideo(
+        @SerialName("progress")
+        val progress: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatAction()
 
     /**
      * The user is recording a voice note
      */
-    class ChatActionRecordingVoiceNote : ChatAction()
+    @Serializable
+    @SerialName("chatActionRecordingVoiceNote")
+    data class ChatActionRecordingVoiceNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user is uploading a voice note
      *
-     * @progress - Upload progress, as a percentage
+     * @property progress Upload progress, as a percentage
      */
-    class ChatActionUploadingVoiceNote(
-        val progress: Int = 0
+    @Serializable
+    @SerialName("chatActionUploadingVoiceNote")
+    data class ChatActionUploadingVoiceNote(
+        @SerialName("progress")
+        val progress: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatAction()
 
     /**
      * The user is uploading a photo
      *
-     * @progress - Upload progress, as a percentage
+     * @property progress Upload progress, as a percentage
      */
-    class ChatActionUploadingPhoto(
-        val progress: Int = 0
+    @Serializable
+    @SerialName("chatActionUploadingPhoto")
+    data class ChatActionUploadingPhoto(
+        @SerialName("progress")
+        val progress: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatAction()
 
     /**
      * The user is uploading a document
      *
-     * @progress - Upload progress, as a percentage
+     * @property progress Upload progress, as a percentage
      */
-    class ChatActionUploadingDocument(
-        val progress: Int = 0
+    @Serializable
+    @SerialName("chatActionUploadingDocument")
+    data class ChatActionUploadingDocument(
+        @SerialName("progress")
+        val progress: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatAction()
 
     /**
      * The user is picking a location or venue to send
      */
-    class ChatActionChoosingLocation : ChatAction()
+    @Serializable
+    @SerialName("chatActionChoosingLocation")
+    data class ChatActionChoosingLocation(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user is picking a contact to send
      */
-    class ChatActionChoosingContact : ChatAction()
+    @Serializable
+    @SerialName("chatActionChoosingContact")
+    data class ChatActionChoosingContact(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user has started to play a game
      */
-    class ChatActionStartPlayingGame : ChatAction()
+    @Serializable
+    @SerialName("chatActionStartPlayingGame")
+    data class ChatActionStartPlayingGame(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user is recording a video note
      */
-    class ChatActionRecordingVideoNote : ChatAction()
+    @Serializable
+    @SerialName("chatActionRecordingVideoNote")
+    data class ChatActionRecordingVideoNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * The user is uploading a video note
      *
-     * @progress - Upload progress, as a percentage
+     * @property progress Upload progress, as a percentage
      */
-    class ChatActionUploadingVideoNote(
-        val progress: Int = 0
+    @Serializable
+    @SerialName("chatActionUploadingVideoNote")
+    data class ChatActionUploadingVideoNote(
+        @SerialName("progress")
+        val progress: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatAction()
 
     /**
      * The user has cancelled the previous action
      */
-    class ChatActionCancel : ChatAction()
+    @Serializable
+    @SerialName("chatActionCancel")
+    data class ChatActionCancel(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatAction()
 
     /**
      * Describes the last time the user was online
      */
-    abstract class UserStatus : null()
+    abstract class UserStatus : Object()
 
     /**
      * The user status was never changed
      */
-    class UserStatusEmpty : UserStatus()
+    @Serializable
+    @SerialName("userStatusEmpty")
+    data class UserStatusEmpty(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserStatus()
 
     /**
      * The user is online
      *
-     * @expires - Point in time (Unix timestamp) when the user's online status will expire
+     * @property expires Point in time (Unix timestamp) when the user's online status will expire
      */
-    class UserStatusOnline(
-        val expires: Int
+    @Serializable
+    @SerialName("userStatusOnline")
+    data class UserStatusOnline(
+        @SerialName("expires")
+        val expires: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : UserStatus()
 
     /**
      * The user is offline
      *
-     * @wasOnline - Point in time (Unix timestamp) when the user was last online
+     * @property wasOnline Point in time (Unix timestamp) when the user was last online
      */
-    class UserStatusOffline(
-        val wasOnline: Int
+    @Serializable
+    @SerialName("userStatusOffline")
+    data class UserStatusOffline(
+        @SerialName("was_online")
+        val wasOnline: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : UserStatus()
 
     /**
      * The user was online recently
      */
-    class UserStatusRecently : UserStatus()
+    @Serializable
+    @SerialName("userStatusRecently")
+    data class UserStatusRecently(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserStatus()
 
     /**
      * The user is offline, but was online last week
      */
-    class UserStatusLastWeek : UserStatus()
+    @Serializable
+    @SerialName("userStatusLastWeek")
+    data class UserStatusLastWeek(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserStatus()
 
     /**
      * The user is offline, but was online last month
      */
-    class UserStatusLastMonth : UserStatus()
+    @Serializable
+    @SerialName("userStatusLastMonth")
+    data class UserStatusLastMonth(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserStatus()
 
     /**
      * Represents a list of stickers
      *
-     * @stickers - List of stickers
+     * @property stickers List of stickers
+     * @property extra Extra data shared between request and response
      */
-    class Stickers(
-        val stickers: Array<Sticker>
-    ) : Object()
+    @Serializable
+    @SerialName("stickers")
+    data class Stickers(
+        @SerialName("stickers")
+        val stickers: Array<Sticker>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a list of emoji
      *
-     * @emojis - List of emojis
+     * @property emojis List of emojis
+     * @property extra Extra data shared between request and response
      */
-    class Emojis(
-        val emojis: Array<String>
-    ) : Object()
+    @Serializable
+    @SerialName("emojis")
+    data class Emojis(
+        @SerialName("emojis")
+        val emojis: Array<String>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a sticker set
      *
-     * @id - Identifier of the sticker set
-     * @title - Title of the sticker set
-     * @name - Name of the sticker set
-     * @thumbnail - Sticker set thumbnail in WEBP format with width and height 100
-     *              The file can be downloaded only before the thumbnail is changed
-     * @isInstalled - True, if the sticker set has been installed by the current user
-     * @isArchived - True, if the sticker set has been archived
-     *               A sticker set can't be installed and archived simultaneously
-     * @isOfficial - True, if the sticker set is official
-     * @isAnimated - True, is the stickers in the set are animated
-     * @isMasks - True, if the stickers in the set are masks
-     * @isViewed - True for already viewed trending sticker sets
-     * @stickers - List of stickers in this set
-     * @emojis - A list of emoji corresponding to the stickers in the same order
-     *           The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
+     * @property id Identifier of the sticker set
+     * @property title Title of the sticker set
+     * @property name Name of the sticker set
+     * @property thumbnail Sticker set thumbnail in WEBP format with width and height 100
+     *                     The file can be downloaded only before the thumbnail is changed
+     * @property isInstalled True, if the sticker set has been installed by the current user
+     * @property isArchived True, if the sticker set has been archived
+     *                      A sticker set can't be installed and archived simultaneously
+     * @property isOfficial True, if the sticker set is official
+     * @property isAnimated True, is the stickers in the set are animated
+     * @property isMasks True, if the stickers in the set are masks
+     * @property isViewed True for already viewed trending sticker sets
+     * @property stickers List of stickers in this set
+     * @property emojis A list of emoji corresponding to the stickers in the same order
+     *                  The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
+     * @property extra Extra data shared between request and response
      */
-    class StickerSet(
+    @Serializable
+    @SerialName("stickerSet")
+    data class StickerSet(
+        @SerialName("id")
         val id: Long,
+        @SerialName("title")
         val title: String,
+        @SerialName("name")
         val name: String,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
+        @SerialName("is_installed")
         val isInstalled: Boolean,
+        @SerialName("is_archived")
         val isArchived: Boolean,
+        @SerialName("is_official")
         val isOfficial: Boolean,
+        @SerialName("is_animated")
         val isAnimated: Boolean,
+        @SerialName("is_masks")
         val isMasks: Boolean,
+        @SerialName("is_viewed")
         val isViewed: Boolean,
+        @SerialName("stickers")
         val stickers: Array<Sticker>,
-        val emojis: Array<Emojis>
-    ) : Object()
+        @SerialName("emojis")
+        val emojis: Array<Emojis>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents short information about a sticker set
      *
-     * @id - Identifier of the sticker set
-     * @title - Title of the sticker set
-     * @name - Name of the sticker set
-     * @thumbnail - Sticker set thumbnail in WEBP format with width and height 100
-     * @isInstalled - True, if the sticker set has been installed by current user
-     * @isArchived - True, if the sticker set has been archived
-     *               A sticker set can't be installed and archived simultaneously
-     * @isOfficial - True, if the sticker set is official
-     * @isAnimated - True, is the stickers in the set are animated
-     * @isMasks - True, if the stickers in the set are masks
-     * @isViewed - True for already viewed trending sticker sets
-     * @size - Total number of stickers in the set
-     * @covers - Contains up to the first 5 stickers from the set, depending on the context
-     *           If the client needs more stickers the full set should be requested
+     * @property id Identifier of the sticker set
+     * @property title Title of the sticker set
+     * @property name Name of the sticker set
+     * @property thumbnail Sticker set thumbnail in WEBP format with width and height 100
+     * @property isInstalled True, if the sticker set has been installed by current user
+     * @property isArchived True, if the sticker set has been archived
+     *                      A sticker set can't be installed and archived simultaneously
+     * @property isOfficial True, if the sticker set is official
+     * @property isAnimated True, is the stickers in the set are animated
+     * @property isMasks True, if the stickers in the set are masks
+     * @property isViewed True for already viewed trending sticker sets
+     * @property size Total number of stickers in the set
+     * @property covers Contains up to the first 5 stickers from the set, depending on the context
+     *                  If the client needs more stickers the full set should be requested
      */
-    class StickerSetInfo(
+    @Serializable
+    @SerialName("stickerSetInfo")
+    data class StickerSetInfo(
+        @SerialName("id")
         val id: Long,
+        @SerialName("title")
         val title: String,
+        @SerialName("name")
         val name: String,
+        @SerialName("thumbnail")
         val thumbnail: PhotoSize?,
+        @SerialName("is_installed")
         val isInstalled: Boolean,
+        @SerialName("is_archived")
         val isArchived: Boolean,
+        @SerialName("is_official")
         val isOfficial: Boolean,
+        @SerialName("is_animated")
         val isAnimated: Boolean,
+        @SerialName("is_masks")
         val isMasks: Boolean,
+        @SerialName("is_viewed")
         val isViewed: Boolean,
+        @SerialName("size")
         val size: Int,
-        val covers: Array<Sticker>
+        @SerialName("covers")
+        val covers: Array<Sticker>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents a list of sticker sets
      *
-     * @totalCount - Approximate total number of sticker sets found
-     * @sets - List of sticker sets
+     * @property totalCount Approximate total number of sticker sets found
+     * @property sets List of sticker sets
+     * @property extra Extra data shared between request and response
      */
-    class StickerSets(
+    @Serializable
+    @SerialName("stickerSets")
+    data class StickerSets(
+        @SerialName("total_count")
         val totalCount: Int,
-        val sets: Array<StickerSetInfo>
-    ) : Object()
+        @SerialName("sets")
+        val sets: Array<StickerSetInfo>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the reason why a call was discarded
      */
-    abstract class CallDiscardReason : null()
+    abstract class CallDiscardReason : Object()
 
     /**
      * The call wasn't discarded, or the reason is unknown
      */
-    class CallDiscardReasonEmpty : CallDiscardReason()
+    @Serializable
+    @SerialName("callDiscardReasonEmpty")
+    data class CallDiscardReasonEmpty(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallDiscardReason()
 
     /**
      * The call was ended before the conversation started
      * It was cancelled by the caller or missed by the other party
      */
-    class CallDiscardReasonMissed : CallDiscardReason()
+    @Serializable
+    @SerialName("callDiscardReasonMissed")
+    data class CallDiscardReasonMissed(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallDiscardReason()
 
     /**
      * The call was ended before the conversation started
      * It was declined by the other party
      */
-    class CallDiscardReasonDeclined : CallDiscardReason()
+    @Serializable
+    @SerialName("callDiscardReasonDeclined")
+    data class CallDiscardReasonDeclined(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallDiscardReason()
 
     /**
      * The call was ended during the conversation because the users were disconnected
      */
-    class CallDiscardReasonDisconnected : CallDiscardReason()
+    @Serializable
+    @SerialName("callDiscardReasonDisconnected")
+    data class CallDiscardReasonDisconnected(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallDiscardReason()
 
     /**
      * The call was ended because one of the parties hung up
      */
-    class CallDiscardReasonHungUp : CallDiscardReason()
+    @Serializable
+    @SerialName("callDiscardReasonHungUp")
+    data class CallDiscardReasonHungUp(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallDiscardReason()
 
     /**
      * Specifies the supported call protocols
      *
-     * @udpP2p - True, if UDP peer-to-peer connections are supported
-     * @udpReflector - True, if connection through UDP reflectors is supported
-     * @minLayer - Minimum supported API layer
-     * @maxLayer - Maximum supported API layer
+     * @property udpP2p True, if UDP peer-to-peer connections are supported
+     * @property udpReflector True, if connection through UDP reflectors is supported
+     * @property minLayer Minimum supported API layer
+     * @property maxLayer Maximum supported API layer
      */
-    class CallProtocol(
-        val udpP2p: Boolean = false,
-        val udpReflector: Boolean = false,
-        val minLayer: Int = 0,
-        val maxLayer: Int = 0
+    @Serializable
+    @SerialName("callProtocol")
+    data class CallProtocol(
+        @SerialName("udp_p2p")
+        val udpP2p: Boolean,
+        @SerialName("udp_reflector")
+        val udpReflector: Boolean,
+        @SerialName("min_layer")
+        val minLayer: Int,
+        @SerialName("max_layer")
+        val maxLayer: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes the address of UDP reflectors
      *
-     * @id - Reflector identifier
-     * @ip - IPv4 reflector address
-     * @ipv6 - IPv6 reflector address
-     * @port - Reflector port number
-     * @peerTag - Connection peer tag
+     * @property id Reflector identifier
+     * @property ip IPv4 reflector address
+     * @property ipv6 IPv6 reflector address
+     * @property port Reflector port number
+     * @property peerTag Connection peer tag
      */
-    class CallConnection(
+    @Serializable
+    @SerialName("callConnection")
+    data class CallConnection(
+        @SerialName("id")
         val id: Long,
+        @SerialName("ip")
         val ip: String,
+        @SerialName("ipv6")
         val ipv6: String,
+        @SerialName("port")
         val port: Int,
-        val peerTag: ByteArray
+        @SerialName("peer_tag")
+        val peerTag: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the call identifier
      *
-     * @id - Call identifier
+     * @property id Call identifier
+     * @property extra Extra data shared between request and response
      */
-    class CallId(
-        val id: Int
-    ) : Object()
+    @Serializable
+    @SerialName("callId")
+    data class CallId(
+        @SerialName("id")
+        val id: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the current call state
      */
-    abstract class CallState : null()
+    abstract class CallState : Object()
 
     /**
      * The call is pending, waiting to be accepted by a user
      *
-     * @isCreated - True, if the call has already been created by the server
-     * @isReceived - True, if the call has already been received by the other party
+     * @property isCreated True, if the call has already been created by the server
+     * @property isReceived True, if the call has already been received by the other party
      */
-    class CallStatePending(
+    @Serializable
+    @SerialName("callStatePending")
+    data class CallStatePending(
+        @SerialName("is_created")
         val isCreated: Boolean,
-        val isReceived: Boolean
+        @SerialName("is_received")
+        val isReceived: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : CallState()
 
     /**
      * The call has been answered and encryption keys are being exchanged
      */
-    class CallStateExchangingKeys : CallState()
+    @Serializable
+    @SerialName("callStateExchangingKeys")
+    data class CallStateExchangingKeys(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallState()
 
     /**
      * The call is ready to use
      *
-     * @protocol - Call protocols supported by the peer
-     * @connections - Available UDP reflectors
-     * @config - A JSON-encoded call config
-     * @encryptionKey - Call encryption key
-     * @emojis - Encryption key emojis fingerprint
-     * @allowP2p - True, if peer-to-peer connection is allowed by users privacy settings
+     * @property protocol Call protocols supported by the peer
+     * @property connections Available UDP reflectors
+     * @property config A JSON-encoded call config
+     * @property encryptionKey Call encryption key
+     * @property emojis Encryption key emojis fingerprint
+     * @property allowP2p True, if peer-to-peer connection is allowed by users privacy settings
      */
-    class CallStateReady(
+    @Serializable
+    @SerialName("callStateReady")
+    data class CallStateReady(
+        @SerialName("protocol")
         val protocol: CallProtocol,
+        @SerialName("connections")
         val connections: Array<CallConnection>,
+        @SerialName("config")
         val config: String,
-        val encryptionKey: ByteArray,
+        @SerialName("encryption_key")
+        val encryptionKey: Array<Byte>,
+        @SerialName("emojis")
         val emojis: Array<String>,
-        val allowP2p: Boolean
+        @SerialName("allow_p2p")
+        val allowP2p: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : CallState()
 
     /**
      * The call is hanging up after discardCall has been called
      */
-    class CallStateHangingUp : CallState()
+    @Serializable
+    @SerialName("callStateHangingUp")
+    data class CallStateHangingUp(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallState()
 
     /**
      * The call has ended successfully
      *
-     * @reason - The reason, why the call has ended
-     * @needRating - True, if the call rating should be sent to the server
-     * @needDebugInformation - True, if the call debug information should be sent to the server
+     * @property reason The reason, why the call has ended
+     * @property needRating True, if the call rating should be sent to the server
+     * @property needDebugInformation True, if the call debug information should be sent to the server
      */
-    class CallStateDiscarded(
+    @Serializable
+    @SerialName("callStateDiscarded")
+    data class CallStateDiscarded(
+        @SerialName("reason")
         val reason: CallDiscardReason,
+        @SerialName("need_rating")
         val needRating: Boolean,
-        val needDebugInformation: Boolean
+        @SerialName("need_debug_information")
+        val needDebugInformation: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : CallState()
 
     /**
      * The call has ended with an error
      *
-     * @error - Error
-     *          An error with the code 4005000 will be returned if an outgoing call is missed because of an expired timeout
+     * @property error Error
+     *                 An error with the code 4005000 will be returned if an outgoing call is missed because of an expired timeout
      */
-    class CallStateError(
-        val error: Error
+    @Serializable
+    @SerialName("callStateError")
+    data class CallStateError(
+        @SerialName("error")
+        val error: Error,
+        extra: TdExtra = TdExtra.EMPTY
     ) : CallState()
 
     /**
      * Describes the exact type of a problem with a call
      */
-    abstract class CallProblem : null()
+    abstract class CallProblem : Object()
 
     /**
      * The user heard their own voice
      */
-    class CallProblemEcho : CallProblem()
+    @Serializable
+    @SerialName("callProblemEcho")
+    data class CallProblemEcho(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * The user heard background noise
      */
-    class CallProblemNoise : CallProblem()
+    @Serializable
+    @SerialName("callProblemNoise")
+    data class CallProblemNoise(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * The other side kept disappearing
      */
-    class CallProblemInterruptions : CallProblem()
+    @Serializable
+    @SerialName("callProblemInterruptions")
+    data class CallProblemInterruptions(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * The speech was distorted
      */
-    class CallProblemDistortedSpeech : CallProblem()
+    @Serializable
+    @SerialName("callProblemDistortedSpeech")
+    data class CallProblemDistortedSpeech(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * The user couldn't hear the other side
      */
-    class CallProblemSilentLocal : CallProblem()
+    @Serializable
+    @SerialName("callProblemSilentLocal")
+    data class CallProblemSilentLocal(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * The other side couldn't hear the user
      */
-    class CallProblemSilentRemote : CallProblem()
+    @Serializable
+    @SerialName("callProblemSilentRemote")
+    data class CallProblemSilentRemote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * The call ended unexpectedly
      */
-    class CallProblemDropped : CallProblem()
+    @Serializable
+    @SerialName("callProblemDropped")
+    data class CallProblemDropped(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CallProblem()
 
     /**
      * Describes a call
      *
-     * @id - Call identifier, not persistent
-     * @userId - Peer user identifier
-     * @isOutgoing - True, if the call is outgoing
-     * @state - Call state
+     * @property id Call identifier, not persistent
+     * @property userId Peer user identifier
+     * @property isOutgoing True, if the call is outgoing
+     * @property state Call state
      */
-    class Call(
+    @Serializable
+    @SerialName("call")
+    data class Call(
+        @SerialName("id")
         val id: Int,
+        @SerialName("user_id")
         val userId: Int,
+        @SerialName("is_outgoing")
         val isOutgoing: Boolean,
-        val state: CallState
+        @SerialName("state")
+        val state: CallState,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains settings for the authentication of the user's phone number
      *
-     * @allowFlashCall - Pass true if the authentication code may be sent via flash call to the specified phone number
-     * @isCurrentPhoneNumber - Pass true if the authenticated phone number is used on the current device
-     * @allowSmsRetrieverApi - For official applications only
-     *                         True, if the app can use Android SMS Retriever API (requires Google Play Services >= 10.2) to automatically receive the authentication code from the SMS
-     *                         See https://developers.google.com/identity/sms-retriever/ for more details
+     * @property allowFlashCall Pass true if the authentication code may be sent via flash call to the specified phone number
+     * @property isCurrentPhoneNumber Pass true if the authenticated phone number is used on the current device
+     * @property allowSmsRetrieverApi For official applications only
+     *                                True, if the app can use Android SMS Retriever API (requires Google Play Services >= 10.2) to automatically receive the authentication code from the SMS
+     *                                See https://developers.google.com/identity/sms-retriever/ for more details
      */
-    class PhoneNumberAuthenticationSettings(
-        val allowFlashCall: Boolean = false,
-        val isCurrentPhoneNumber: Boolean = false,
-        val allowSmsRetrieverApi: Boolean = false
+    @Serializable
+    @SerialName("phoneNumberAuthenticationSettings")
+    data class PhoneNumberAuthenticationSettings(
+        @SerialName("allow_flash_call")
+        val allowFlashCall: Boolean,
+        @SerialName("is_current_phone_number")
+        val isCurrentPhoneNumber: Boolean,
+        @SerialName("allow_sms_retriever_api")
+        val allowSmsRetrieverApi: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents a list of animations
      *
-     * @animations - List of animations
+     * @property animations List of animations
+     * @property extra Extra data shared between request and response
      */
-    class Animations(
-        val animations: Array<Animation>
-    ) : Object()
+    @Serializable
+    @SerialName("animations")
+    data class Animations(
+        @SerialName("animations")
+        val animations: Array<Animation>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents the result of an ImportContacts request
      *
-     * @userIds - User identifiers of the imported contacts in the same order as they were specified in the request
-     *            0 if the contact is not yet a registered user
-     * @importerCount - The number of users that imported the corresponding contact
-     *                  0 for already registered users or if unavailable
+     * @property userIds User identifiers of the imported contacts in the same order as they were specified in the request
+     *                   0 if the contact is not yet a registered user
+     * @property importerCount The number of users that imported the corresponding contact
+     *                         0 for already registered users or if unavailable
+     * @property extra Extra data shared between request and response
      */
-    class ImportedContacts(
-        val userIds: IntArray,
-        val importerCount: IntArray
-    ) : Object()
+    @Serializable
+    @SerialName("importedContacts")
+    data class ImportedContacts(
+        @SerialName("user_ids")
+        val userIds: Array<Int>,
+        @SerialName("importer_count")
+        val importerCount: Array<Int>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains an HTTP URL
      *
-     * @url - The URL
+     * @property url The URL
+     * @property extra Extra data shared between request and response
      */
-    class HttpUrl(
-        val url: String
-    ) : Object()
+    @Serializable
+    @SerialName("httpUrl")
+    data class HttpUrl(
+        @SerialName("url")
+        val url: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a single result of an inline query
      */
-    @BotsOnly
-    abstract class InputInlineQueryResult : null()
+    abstract class InputInlineQueryResult : Object()
 
     /**
      * Represents a link to an animated GIF
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the query result
-     * @thumbnailUrl - URL of the static result thumbnail (JPEG or GIF), if it exists
-     * @gifUrl - The URL of the GIF-file (file size must not exceed 1MB)
-     * @gifDuration - Duration of the GIF, in seconds
-     * @gifWidth - Width of the GIF
-     * @gifHeight - Height of the GIF
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageAnimation, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the query result
+     * @property thumbnailUrl URL of the static result thumbnail (JPEG or GIF), if it exists
+     * @property gifUrl The URL of the GIF-file (file size must not exceed 1MB)
+     * @property gifDuration Duration of the GIF, in seconds
+     * @property gifWidth Width of the GIF
+     * @property gifHeight Height of the GIF
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageAnimation, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultAnimatedGif(
+    @Serializable
+    @SerialName("inputInlineQueryResultAnimatedGif")
+    data class InputInlineQueryResultAnimatedGif(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
+        @SerialName("gif_url")
         val gifUrl: String,
-        val gifDuration: Int = 0,
-        val gifWidth: Int = 0,
-        val gifHeight: Int = 0,
+        @SerialName("gif_duration")
+        val gifDuration: Int,
+        @SerialName("gif_width")
+        val gifWidth: Int,
+        @SerialName("gif_height")
+        val gifHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to an animated (i.e
      * Without sound) H.264/MPEG-4 AVC video
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the result
-     * @thumbnailUrl - URL of the static result thumbnail (JPEG or GIF), if it exists
-     * @mpeg4Url - The URL of the MPEG4-file (file size must not exceed 1MB)
-     * @mpeg4Duration - Duration of the video, in seconds
-     * @mpeg4Width - Width of the video
-     * @mpeg4Height - Height of the video
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageAnimation, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the result
+     * @property thumbnailUrl URL of the static result thumbnail (JPEG or GIF), if it exists
+     * @property mpeg4Url The URL of the MPEG4-file (file size must not exceed 1MB)
+     * @property mpeg4Duration Duration of the video, in seconds
+     * @property mpeg4Width Width of the video
+     * @property mpeg4Height Height of the video
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageAnimation, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultAnimatedMpeg4(
+    @Serializable
+    @SerialName("inputInlineQueryResultAnimatedMpeg4")
+    data class InputInlineQueryResultAnimatedMpeg4(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
+        @SerialName("mpeg4_url")
         val mpeg4Url: String,
-        val mpeg4Duration: Int = 0,
-        val mpeg4Width: Int = 0,
-        val mpeg4Height: Int = 0,
+        @SerialName("mpeg4_duration")
+        val mpeg4Duration: Int,
+        @SerialName("mpeg4_width")
+        val mpeg4Width: Int,
+        @SerialName("mpeg4_height")
+        val mpeg4Height: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to an article or web page
      *
-     * @id - Unique identifier of the query result
-     * @url - URL of the result, if it exists
-     * @hideUrl - True, if the URL must be not shown
-     * @title - Title of the result
-     * @description - A short description of the result
-     * @thumbnailUrl - URL of the result thumbnail, if it exists
-     * @thumbnailWidth - Thumbnail width, if known
-     * @thumbnailHeight - Thumbnail height, if known
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property url URL of the result, if it exists
+     * @property hideUrl True, if the URL must be not shown
+     * @property title Title of the result
+     * @property description A short description of the result
+     * @property thumbnailUrl URL of the result thumbnail, if it exists
+     * @property thumbnailWidth Thumbnail width, if known
+     * @property thumbnailHeight Thumbnail height, if known
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultArticle(
+    @Serializable
+    @SerialName("inputInlineQueryResultArticle")
+    data class InputInlineQueryResultArticle(
+        @SerialName("id")
         val id: String,
+        @SerialName("url")
         val url: String,
-        val hideUrl: Boolean = false,
+        @SerialName("hide_url")
+        val hideUrl: Boolean,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
-        val thumbnailWidth: Int = 0,
-        val thumbnailHeight: Int = 0,
+        @SerialName("thumbnail_width")
+        val thumbnailWidth: Int,
+        @SerialName("thumbnail_height")
+        val thumbnailHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to an MP3 audio file
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the audio file
-     * @performer - Performer of the audio file
-     * @audioUrl - The URL of the audio file
-     * @audioDuration - Audio file duration, in seconds
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageAudio, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the audio file
+     * @property performer Performer of the audio file
+     * @property audioUrl The URL of the audio file
+     * @property audioDuration Audio file duration, in seconds
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageAudio, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultAudio(
+    @Serializable
+    @SerialName("inputInlineQueryResultAudio")
+    data class InputInlineQueryResultAudio(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("performer")
         val performer: String,
+        @SerialName("audio_url")
         val audioUrl: String,
-        val audioDuration: Int = 0,
+        @SerialName("audio_duration")
+        val audioDuration: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a user contact
      *
-     * @id - Unique identifier of the query result
-     * @contact - User contact
-     * @thumbnailUrl - URL of the result thumbnail, if it exists
-     * @thumbnailWidth - Thumbnail width, if known
-     * @thumbnailHeight - Thumbnail height, if known
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property contact User contact
+     * @property thumbnailUrl URL of the result thumbnail, if it exists
+     * @property thumbnailWidth Thumbnail width, if known
+     * @property thumbnailHeight Thumbnail height, if known
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultContact(
+    @Serializable
+    @SerialName("inputInlineQueryResultContact")
+    data class InputInlineQueryResultContact(
+        @SerialName("id")
         val id: String,
+        @SerialName("contact")
         val contact: Contact,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
-        val thumbnailWidth: Int = 0,
-        val thumbnailHeight: Int = 0,
+        @SerialName("thumbnail_width")
+        val thumbnailWidth: Int,
+        @SerialName("thumbnail_height")
+        val thumbnailHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to a file
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the resulting file
-     * @description - Short description of the result, if known
-     * @documentUrl - URL of the file
-     * @mimeType - MIME type of the file content
-     *             Only "application/pdf" and "application/zip" are currently allowed
-     * @thumbnailUrl - The URL of the file thumbnail, if it exists
-     * @thumbnailWidth - Width of the thumbnail
-     * @thumbnailHeight - Height of the thumbnail
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageDocument, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the resulting file
+     * @property description Short description of the result, if known
+     * @property documentUrl URL of the file
+     * @property mimeType MIME type of the file content
+     *                    Only "application/pdf" and "application/zip" are currently allowed
+     * @property thumbnailUrl The URL of the file thumbnail, if it exists
+     * @property thumbnailWidth Width of the thumbnail
+     * @property thumbnailHeight Height of the thumbnail
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageDocument, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultDocument(
+    @Serializable
+    @SerialName("inputInlineQueryResultDocument")
+    data class InputInlineQueryResultDocument(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
+        @SerialName("document_url")
         val documentUrl: String,
+        @SerialName("mime_type")
         val mimeType: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
-        val thumbnailWidth: Int = 0,
-        val thumbnailHeight: Int = 0,
+        @SerialName("thumbnail_width")
+        val thumbnailWidth: Int,
+        @SerialName("thumbnail_height")
+        val thumbnailHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a game
      *
-     * @id - Unique identifier of the query result
-     * @gameShortName - Short name of the game
-     * @replyMarkup - Message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
+     * @property id Unique identifier of the query result
+     * @property gameShortName Short name of the game
+     * @property replyMarkup Message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
      */
-    class InputInlineQueryResultGame(
+    @Serializable
+    @SerialName("inputInlineQueryResultGame")
+    data class InputInlineQueryResultGame(
+        @SerialName("id")
         val id: String,
+        @SerialName("game_short_name")
         val gameShortName: String,
-        val replyMarkup: ReplyMarkup
+        @SerialName("reply_markup")
+        val replyMarkup: ReplyMarkup,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a point on the map
      *
-     * @id - Unique identifier of the query result
-     * @location - Location result
-     * @livePeriod - Amount of time relative to the message sent time until the location can be updated, in seconds
-     * @title - Title of the result
-     * @thumbnailUrl - URL of the result thumbnail, if it exists
-     * @thumbnailWidth - Thumbnail width, if known
-     * @thumbnailHeight - Thumbnail height, if known
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property location Location result
+     * @property livePeriod Amount of time relative to the message sent time until the location can be updated, in seconds
+     * @property title Title of the result
+     * @property thumbnailUrl URL of the result thumbnail, if it exists
+     * @property thumbnailWidth Thumbnail width, if known
+     * @property thumbnailHeight Thumbnail height, if known
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultLocation(
+    @Serializable
+    @SerialName("inputInlineQueryResultLocation")
+    data class InputInlineQueryResultLocation(
+        @SerialName("id")
         val id: String,
+        @SerialName("location")
         val location: Location,
-        val livePeriod: Int = 0,
+        @SerialName("live_period")
+        val livePeriod: Int,
+        @SerialName("title")
         val title: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
-        val thumbnailWidth: Int = 0,
-        val thumbnailHeight: Int = 0,
+        @SerialName("thumbnail_width")
+        val thumbnailWidth: Int,
+        @SerialName("thumbnail_height")
+        val thumbnailHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents link to a JPEG image
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the result, if known
-     * @description - A short description of the result, if known
-     * @thumbnailUrl - URL of the photo thumbnail, if it exists
-     * @photoUrl - The URL of the JPEG photo (photo size must not exceed 5MB)
-     * @photoWidth - Width of the photo
-     * @photoHeight - Height of the photo
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessagePhoto, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the result, if known
+     * @property description A short description of the result, if known
+     * @property thumbnailUrl URL of the photo thumbnail, if it exists
+     * @property photoUrl The URL of the JPEG photo (photo size must not exceed 5MB)
+     * @property photoWidth Width of the photo
+     * @property photoHeight Height of the photo
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessagePhoto, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultPhoto(
+    @Serializable
+    @SerialName("inputInlineQueryResultPhoto")
+    data class InputInlineQueryResultPhoto(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
+        @SerialName("photo_url")
         val photoUrl: String,
-        val photoWidth: Int = 0,
-        val photoHeight: Int = 0,
+        @SerialName("photo_width")
+        val photoWidth: Int,
+        @SerialName("photo_height")
+        val photoHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to a WEBP or a TGS sticker
      *
-     * @id - Unique identifier of the query result
-     * @thumbnailUrl - URL of the sticker thumbnail, if it exists
-     * @stickerUrl - The URL of the WEBP or a TGS sticker (sticker file size must not exceed 5MB)
-     * @stickerWidth - Width of the sticker
-     * @stickerHeight - Height of the sticker
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, inputMessageSticker, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property thumbnailUrl URL of the sticker thumbnail, if it exists
+     * @property stickerUrl The URL of the WEBP or a TGS sticker (sticker file size must not exceed 5MB)
+     * @property stickerWidth Width of the sticker
+     * @property stickerHeight Height of the sticker
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, inputMessageSticker, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultSticker(
+    @Serializable
+    @SerialName("inputInlineQueryResultSticker")
+    data class InputInlineQueryResultSticker(
+        @SerialName("id")
         val id: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
+        @SerialName("sticker_url")
         val stickerUrl: String,
-        val stickerWidth: Int = 0,
-        val stickerHeight: Int = 0,
+        @SerialName("sticker_width")
+        val stickerWidth: Int,
+        @SerialName("sticker_height")
+        val stickerHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents information about a venue
      *
-     * @id - Unique identifier of the query result
-     * @venue - Venue result
-     * @thumbnailUrl - URL of the result thumbnail, if it exists
-     * @thumbnailWidth - Thumbnail width, if known
-     * @thumbnailHeight - Thumbnail height, if known
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property venue Venue result
+     * @property thumbnailUrl URL of the result thumbnail, if it exists
+     * @property thumbnailWidth Thumbnail width, if known
+     * @property thumbnailHeight Thumbnail height, if known
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultVenue(
+    @Serializable
+    @SerialName("inputInlineQueryResultVenue")
+    data class InputInlineQueryResultVenue(
+        @SerialName("id")
         val id: String,
+        @SerialName("venue")
         val venue: Venue,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
-        val thumbnailWidth: Int = 0,
-        val thumbnailHeight: Int = 0,
+        @SerialName("thumbnail_width")
+        val thumbnailWidth: Int,
+        @SerialName("thumbnail_height")
+        val thumbnailHeight: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to a page containing an embedded video player or a video file
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the result
-     * @description - A short description of the result, if known
-     * @thumbnailUrl - The URL of the video thumbnail (JPEG), if it exists
-     * @videoUrl - URL of the embedded video player or video file
-     * @mimeType - MIME type of the content of the video URL, only "text/html" or "video/mp4" are currently supported
-     * @videoWidth - Width of the video
-     * @videoHeight - Height of the video
-     * @videoDuration - Video duration, in seconds
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageVideo, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the result
+     * @property description A short description of the result, if known
+     * @property thumbnailUrl The URL of the video thumbnail (JPEG), if it exists
+     * @property videoUrl URL of the embedded video player or video file
+     * @property mimeType MIME type of the content of the video URL, only "text/html" or "video/mp4" are currently supported
+     * @property videoWidth Width of the video
+     * @property videoHeight Height of the video
+     * @property videoDuration Video duration, in seconds
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageVideo, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultVideo(
+    @Serializable
+    @SerialName("inputInlineQueryResultVideo")
+    data class InputInlineQueryResultVideo(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
+        @SerialName("thumbnail_url")
         val thumbnailUrl: String,
+        @SerialName("video_url")
         val videoUrl: String,
+        @SerialName("mime_type")
         val mimeType: String,
-        val videoWidth: Int = 0,
-        val videoHeight: Int = 0,
-        val videoDuration: Int = 0,
+        @SerialName("video_width")
+        val videoWidth: Int,
+        @SerialName("video_height")
+        val videoHeight: Int,
+        @SerialName("video_duration")
+        val videoDuration: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a link to an opus-encoded audio file within an OGG container, single channel audio
      *
-     * @id - Unique identifier of the query result
-     * @title - Title of the voice note
-     * @voiceNoteUrl - The URL of the voice note file
-     * @voiceNoteDuration - Duration of the voice note, in seconds
-     * @replyMarkup - The message reply markup
-     *                Must be of type replyMarkupInlineKeyboard or null
-     * @inputMessageContent - The content of the message to be sent
-     *                        Must be one of the following types: InputMessageText, InputMessageVoiceNote, InputMessageLocation, InputMessageVenue or InputMessageContact
+     * @property id Unique identifier of the query result
+     * @property title Title of the voice note
+     * @property voiceNoteUrl The URL of the voice note file
+     * @property voiceNoteDuration Duration of the voice note, in seconds
+     * @property replyMarkup The message reply markup
+     *                       Must be of type replyMarkupInlineKeyboard or null
+     * @property inputMessageContent The content of the message to be sent
+     *                               Must be one of the following types: InputMessageText, InputMessageVoiceNote, InputMessageLocation, InputMessageVenue or InputMessageContact
      */
-    class InputInlineQueryResultVoiceNote(
+    @Serializable
+    @SerialName("inputInlineQueryResultVoiceNote")
+    data class InputInlineQueryResultVoiceNote(
+        @SerialName("id")
         val id: String,
+        @SerialName("title")
         val title: String,
+        @SerialName("voice_note_url")
         val voiceNoteUrl: String,
-        val voiceNoteDuration: Int = 0,
+        @SerialName("voice_note_duration")
+        val voiceNoteDuration: Int,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup,
-        val inputMessageContent: InputMessageContent
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputInlineQueryResult()
 
     /**
      * Represents a single result of an inline query
      */
-    abstract class InlineQueryResult : null()
+    abstract class InlineQueryResult : Object()
 
     /**
      * Represents a link to an article or web page
      *
-     * @id - Unique identifier of the query result
-     * @url - URL of the result, if it exists
-     * @hideUrl - True, if the URL must be not shown
-     * @title - Title of the result
-     * @description - A short description of the result
-     * @thumbnail - Result thumbnail
+     * @property id Unique identifier of the query result
+     * @property url URL of the result, if it exists
+     * @property hideUrl True, if the URL must be not shown
+     * @property title Title of the result
+     * @property description A short description of the result
+     * @property thumbnail Result thumbnail
      */
-    class InlineQueryResultArticle(
+    @Serializable
+    @SerialName("inlineQueryResultArticle")
+    data class InlineQueryResultArticle(
+        @SerialName("id")
         val id: String,
+        @SerialName("url")
         val url: String,
+        @SerialName("hide_url")
         val hideUrl: Boolean,
+        @SerialName("title")
         val title: String,
+        @SerialName("description")
         val description: String,
-        val thumbnail: PhotoSize?
+        @SerialName("thumbnail")
+        val thumbnail: PhotoSize?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a user contact
      *
-     * @id - Unique identifier of the query result
-     * @contact - A user contact
-     * @thumbnail - Result thumbnail
+     * @property id Unique identifier of the query result
+     * @property contact A user contact
+     * @property thumbnail Result thumbnail
      */
-    class InlineQueryResultContact(
+    @Serializable
+    @SerialName("inlineQueryResultContact")
+    data class InlineQueryResultContact(
+        @SerialName("id")
         val id: String,
+        @SerialName("contact")
         val contact: Contact,
-        val thumbnail: PhotoSize?
+        @SerialName("thumbnail")
+        val thumbnail: PhotoSize?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a point on the map
      *
-     * @id - Unique identifier of the query result
-     * @location - Location result
-     * @title - Title of the result
-     * @thumbnail - Result thumbnail
+     * @property id Unique identifier of the query result
+     * @property location Location result
+     * @property title Title of the result
+     * @property thumbnail Result thumbnail
      */
-    class InlineQueryResultLocation(
+    @Serializable
+    @SerialName("inlineQueryResultLocation")
+    data class InlineQueryResultLocation(
+        @SerialName("id")
         val id: String,
+        @SerialName("location")
         val location: Location,
+        @SerialName("title")
         val title: String,
-        val thumbnail: PhotoSize?
+        @SerialName("thumbnail")
+        val thumbnail: PhotoSize?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents information about a venue
      *
-     * @id - Unique identifier of the query result
-     * @venue - Venue result
-     * @thumbnail - Result thumbnail
+     * @property id Unique identifier of the query result
+     * @property venue Venue result
+     * @property thumbnail Result thumbnail
      */
-    class InlineQueryResultVenue(
+    @Serializable
+    @SerialName("inlineQueryResultVenue")
+    data class InlineQueryResultVenue(
+        @SerialName("id")
         val id: String,
+        @SerialName("venue")
         val venue: Venue,
-        val thumbnail: PhotoSize?
+        @SerialName("thumbnail")
+        val thumbnail: PhotoSize?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents information about a game
      *
-     * @id - Unique identifier of the query result
-     * @game - Game result
+     * @property id Unique identifier of the query result
+     * @property game Game result
      */
-    class InlineQueryResultGame(
+    @Serializable
+    @SerialName("inlineQueryResultGame")
+    data class InlineQueryResultGame(
+        @SerialName("id")
         val id: String,
-        val game: Game
+        @SerialName("game")
+        val game: Game,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents an animation file
      *
-     * @id - Unique identifier of the query result
-     * @animation - Animation file
-     * @title - Animation title
+     * @property id Unique identifier of the query result
+     * @property animation Animation file
+     * @property title Animation title
      */
-    class InlineQueryResultAnimation(
+    @Serializable
+    @SerialName("inlineQueryResultAnimation")
+    data class InlineQueryResultAnimation(
+        @SerialName("id")
         val id: String,
+        @SerialName("animation")
         val animation: Animation,
-        val title: String
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents an audio file
      *
-     * @id - Unique identifier of the query result
-     * @audio - Audio file
+     * @property id Unique identifier of the query result
+     * @property audio Audio file
      */
-    class InlineQueryResultAudio(
+    @Serializable
+    @SerialName("inlineQueryResultAudio")
+    data class InlineQueryResultAudio(
+        @SerialName("id")
         val id: String,
-        val audio: Audio
+        @SerialName("audio")
+        val audio: Audio,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a document
      *
-     * @id - Unique identifier of the query result
-     * @document - Document
-     * @title - Document title
-     * @description - Document description
+     * @property id Unique identifier of the query result
+     * @property document Document
+     * @property title Document title
+     * @property description Document description
      */
-    class InlineQueryResultDocument(
+    @Serializable
+    @SerialName("inlineQueryResultDocument")
+    data class InlineQueryResultDocument(
+        @SerialName("id")
         val id: String,
+        @SerialName("document")
         val document: Document,
+        @SerialName("title")
         val title: String,
-        val description: String
+        @SerialName("description")
+        val description: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a photo
      *
-     * @id - Unique identifier of the query result
-     * @photo - Photo
-     * @title - Title of the result, if known
-     * @description - A short description of the result, if known
+     * @property id Unique identifier of the query result
+     * @property photo Photo
+     * @property title Title of the result, if known
+     * @property description A short description of the result, if known
      */
-    class InlineQueryResultPhoto(
+    @Serializable
+    @SerialName("inlineQueryResultPhoto")
+    data class InlineQueryResultPhoto(
+        @SerialName("id")
         val id: String,
+        @SerialName("photo")
         val photo: Photo,
+        @SerialName("title")
         val title: String,
-        val description: String
+        @SerialName("description")
+        val description: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a sticker
      *
-     * @id - Unique identifier of the query result
-     * @sticker - Sticker
+     * @property id Unique identifier of the query result
+     * @property sticker Sticker
      */
-    class InlineQueryResultSticker(
+    @Serializable
+    @SerialName("inlineQueryResultSticker")
+    data class InlineQueryResultSticker(
+        @SerialName("id")
         val id: String,
-        val sticker: Sticker
+        @SerialName("sticker")
+        val sticker: Sticker,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a video
      *
-     * @id - Unique identifier of the query result
-     * @video - Video
-     * @title - Title of the video
-     * @description - Description of the video
+     * @property id Unique identifier of the query result
+     * @property video Video
+     * @property title Title of the video
+     * @property description Description of the video
      */
-    class InlineQueryResultVideo(
+    @Serializable
+    @SerialName("inlineQueryResultVideo")
+    data class InlineQueryResultVideo(
+        @SerialName("id")
         val id: String,
+        @SerialName("video")
         val video: Video,
+        @SerialName("title")
         val title: String,
-        val description: String
+        @SerialName("description")
+        val description: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents a voice note
      *
-     * @id - Unique identifier of the query result
-     * @voiceNote - Voice note
-     * @title - Title of the voice note
+     * @property id Unique identifier of the query result
+     * @property voiceNote Voice note
+     * @property title Title of the voice note
      */
-    class InlineQueryResultVoiceNote(
+    @Serializable
+    @SerialName("inlineQueryResultVoiceNote")
+    data class InlineQueryResultVoiceNote(
+        @SerialName("id")
         val id: String,
+        @SerialName("voice_note")
         val voiceNote: VoiceNote,
-        val title: String
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InlineQueryResult()
 
     /**
      * Represents the results of the inline query
      * Use sendInlineQueryResultMessage to send the result of the query
      *
-     * @inlineQueryId - Unique identifier of the inline query
-     * @nextOffset - The offset for the next request
-     *               If empty, there are no more results
-     * @results - Results of the query
-     * @switchPmText - If non-empty, this text should be shown on the button, which opens a private chat with the bot and sends the bot a start message with the switch_pm_parameter
-     * @switchPmParameter - Parameter for the bot start message
+     * @property inlineQueryId Unique identifier of the inline query
+     * @property nextOffset The offset for the next request
+     *                      If empty, there are no more results
+     * @property results Results of the query
+     * @property switchPmText If non-empty, this text should be shown on the button, which opens a private chat with the bot and sends the bot a start message with the switch_pm_parameter
+     * @property switchPmParameter Parameter for the bot start message
+     * @property extra Extra data shared between request and response
      */
-    class InlineQueryResults(
+    @Serializable
+    @SerialName("inlineQueryResults")
+    data class InlineQueryResults(
+        @SerialName("inline_query_id")
         val inlineQueryId: Long,
+        @SerialName("next_offset")
         val nextOffset: String,
+        @SerialName("results")
         val results: Array<InlineQueryResult>,
+        @SerialName("switch_pm_text")
         val switchPmText: String,
-        val switchPmParameter: String
-    ) : Object()
+        @SerialName("switch_pm_parameter")
+        val switchPmParameter: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a payload of a callback query
      */
-    abstract class CallbackQueryPayload : null()
+    abstract class CallbackQueryPayload : Object()
 
     /**
      * The payload from a general callback button
      *
-     * @data - Data that was attached to the callback button
+     * @property data Data that was attached to the callback button
      */
-    class CallbackQueryPayloadData(
-        val data: ByteArray = byteArrayOf()
+    @Serializable
+    @SerialName("callbackQueryPayloadData")
+    data class CallbackQueryPayloadData(
+        @SerialName("data")
+        val data: Array<Byte>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : CallbackQueryPayload()
 
     /**
      * The payload from a game callback button
      *
-     * @gameShortName - A short name of the game that was attached to the callback button
+     * @property gameShortName A short name of the game that was attached to the callback button
      */
-    class CallbackQueryPayloadGame(
-        val gameShortName: String
+    @Serializable
+    @SerialName("callbackQueryPayloadGame")
+    data class CallbackQueryPayloadGame(
+        @SerialName("game_short_name")
+        val gameShortName: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : CallbackQueryPayload()
 
     /**
      * Contains a bot's answer to a callback query
      *
-     * @text - Text of the answer
-     * @showAlert - True, if an alert should be shown to the user instead of a toast notification
-     * @url - URL to be opened
+     * @property text Text of the answer
+     * @property showAlert True, if an alert should be shown to the user instead of a toast notification
+     * @property url URL to be opened
+     * @property extra Extra data shared between request and response
      */
-    class CallbackQueryAnswer(
+    @Serializable
+    @SerialName("callbackQueryAnswer")
+    data class CallbackQueryAnswer(
+        @SerialName("text")
         val text: String,
+        @SerialName("show_alert")
         val showAlert: Boolean,
-        val url: String
-    ) : Object()
+        @SerialName("url")
+        val url: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains the result of a custom request
      *
-     * @result - A JSON-serialized result
+     * @property result A JSON-serialized result
+     * @property extra Extra data shared between request and response
      */
-    class CustomRequestResult(
-        val result: String
-    ) : Object()
+    @Serializable
+    @SerialName("customRequestResult")
+    data class CustomRequestResult(
+        @SerialName("result")
+        val result: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains one row of the game high score table
      *
-     * @position - Position in the high score table
-     * @userId - User identifier
-     * @score - User score
+     * @property position Position in the high score table
+     * @property userId User identifier
+     * @property score User score
      */
-    class GameHighScore(
+    @Serializable
+    @SerialName("gameHighScore")
+    data class GameHighScore(
+        @SerialName("position")
         val position: Int,
+        @SerialName("user_id")
         val userId: Int,
-        val score: Int
+        @SerialName("score")
+        val score: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of game high scores
      *
-     * @scores - A list of game high scores
+     * @property scores A list of game high scores
+     * @property extra Extra data shared between request and response
      */
-    class GameHighScores(
-        val scores: Array<GameHighScore>
-    ) : Object()
+    @Serializable
+    @SerialName("gameHighScores")
+    data class GameHighScores(
+        @SerialName("scores")
+        val scores: Array<GameHighScore>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a chat event
      */
-    abstract class ChatEventAction : null()
+    abstract class ChatEventAction : Object()
 
     /**
      * A message was edited
      *
-     * @oldMessage - The original message before the edit
-     * @newMessage - The message after it was edited
+     * @property oldMessage The original message before the edit
+     * @property newMessage The message after it was edited
      */
-    class ChatEventMessageEdited(
+    @Serializable
+    @SerialName("chatEventMessageEdited")
+    data class ChatEventMessageEdited(
+        @SerialName("old_message")
         val oldMessage: Message,
-        val newMessage: Message
+        @SerialName("new_message")
+        val newMessage: Message,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * A message was deleted
      *
-     * @message - Deleted message
+     * @property message Deleted message
      */
-    class ChatEventMessageDeleted(
-        val message: Message
+    @Serializable
+    @SerialName("chatEventMessageDeleted")
+    data class ChatEventMessageDeleted(
+        @SerialName("message")
+        val message: Message,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * A poll in a message was stopped
      *
-     * @message - The message with the poll
+     * @property message The message with the poll
      */
-    class ChatEventPollStopped(
-        val message: Message
+    @Serializable
+    @SerialName("chatEventPollStopped")
+    data class ChatEventPollStopped(
+        @SerialName("message")
+        val message: Message,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * A message was pinned
      *
-     * @message - Pinned message
+     * @property message Pinned message
      */
-    class ChatEventMessagePinned(
-        val message: Message
+    @Serializable
+    @SerialName("chatEventMessagePinned")
+    data class ChatEventMessagePinned(
+        @SerialName("message")
+        val message: Message,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * A message was unpinned
      */
-    class ChatEventMessageUnpinned : ChatEventAction()
+    @Serializable
+    @SerialName("chatEventMessageUnpinned")
+    data class ChatEventMessageUnpinned(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatEventAction()
 
     /**
      * A new member joined the chat
      */
-    class ChatEventMemberJoined : ChatEventAction()
+    @Serializable
+    @SerialName("chatEventMemberJoined")
+    data class ChatEventMemberJoined(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatEventAction()
 
     /**
      * A member left the chat
      */
-    class ChatEventMemberLeft : ChatEventAction()
+    @Serializable
+    @SerialName("chatEventMemberLeft")
+    data class ChatEventMemberLeft(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatEventAction()
 
     /**
      * A new chat member was invited
      *
-     * @userId - New member user identifier
-     * @status - New member status
+     * @property userId New member user identifier
+     * @property status New member status
      */
-    class ChatEventMemberInvited(
+    @Serializable
+    @SerialName("chatEventMemberInvited")
+    data class ChatEventMemberInvited(
+        @SerialName("user_id")
         val userId: Int,
-        val status: ChatMemberStatus
+        @SerialName("status")
+        val status: ChatMemberStatus,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * A chat member has gained/lost administrator status, or the list of their administrator privileges has changed
      *
-     * @userId - Chat member user identifier
-     * @oldStatus - Previous status of the chat member
-     * @newStatus - New status of the chat member
+     * @property userId Chat member user identifier
+     * @property oldStatus Previous status of the chat member
+     * @property newStatus New status of the chat member
      */
-    class ChatEventMemberPromoted(
+    @Serializable
+    @SerialName("chatEventMemberPromoted")
+    data class ChatEventMemberPromoted(
+        @SerialName("user_id")
         val userId: Int,
+        @SerialName("old_status")
         val oldStatus: ChatMemberStatus,
-        val newStatus: ChatMemberStatus
+        @SerialName("new_status")
+        val newStatus: ChatMemberStatus,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * A chat member was restricted/unrestricted or banned/unbanned, or the list of their restrictions has changed
      *
-     * @userId - Chat member user identifier
-     * @oldStatus - Previous status of the chat member
-     * @newStatus - New status of the chat member
+     * @property userId Chat member user identifier
+     * @property oldStatus Previous status of the chat member
+     * @property newStatus New status of the chat member
      */
-    class ChatEventMemberRestricted(
+    @Serializable
+    @SerialName("chatEventMemberRestricted")
+    data class ChatEventMemberRestricted(
+        @SerialName("user_id")
         val userId: Int,
+        @SerialName("old_status")
         val oldStatus: ChatMemberStatus,
-        val newStatus: ChatMemberStatus
+        @SerialName("new_status")
+        val newStatus: ChatMemberStatus,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The chat title was changed
      *
-     * @oldTitle - Previous chat title
-     * @newTitle - New chat title
+     * @property oldTitle Previous chat title
+     * @property newTitle New chat title
      */
-    class ChatEventTitleChanged(
+    @Serializable
+    @SerialName("chatEventTitleChanged")
+    data class ChatEventTitleChanged(
+        @SerialName("old_title")
         val oldTitle: String,
-        val newTitle: String
+        @SerialName("new_title")
+        val newTitle: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The chat permissions was changed
      *
-     * @oldPermissions - Previous chat permissions
-     * @newPermissions - New chat permissions
+     * @property oldPermissions Previous chat permissions
+     * @property newPermissions New chat permissions
      */
-    class ChatEventPermissionsChanged(
+    @Serializable
+    @SerialName("chatEventPermissionsChanged")
+    data class ChatEventPermissionsChanged(
+        @SerialName("old_permissions")
         val oldPermissions: ChatPermissions,
-        val newPermissions: ChatPermissions
+        @SerialName("new_permissions")
+        val newPermissions: ChatPermissions,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The chat description was changed
      *
-     * @oldDescription - Previous chat description
-     * @newDescription - New chat description
+     * @property oldDescription Previous chat description
+     * @property newDescription New chat description
      */
-    class ChatEventDescriptionChanged(
+    @Serializable
+    @SerialName("chatEventDescriptionChanged")
+    data class ChatEventDescriptionChanged(
+        @SerialName("old_description")
         val oldDescription: String,
-        val newDescription: String
+        @SerialName("new_description")
+        val newDescription: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The chat username was changed
      *
-     * @oldUsername - Previous chat username
-     * @newUsername - New chat username
+     * @property oldUsername Previous chat username
+     * @property newUsername New chat username
      */
-    class ChatEventUsernameChanged(
+    @Serializable
+    @SerialName("chatEventUsernameChanged")
+    data class ChatEventUsernameChanged(
+        @SerialName("old_username")
         val oldUsername: String,
-        val newUsername: String
+        @SerialName("new_username")
+        val newUsername: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The chat photo was changed
      *
-     * @oldPhoto - Previous chat photo value
-     * @newPhoto - New chat photo value
+     * @property oldPhoto Previous chat photo value
+     * @property newPhoto New chat photo value
      */
-    class ChatEventPhotoChanged(
+    @Serializable
+    @SerialName("chatEventPhotoChanged")
+    data class ChatEventPhotoChanged(
+        @SerialName("old_photo")
         val oldPhoto: Photo?,
-        val newPhoto: Photo?
+        @SerialName("new_photo")
+        val newPhoto: Photo?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The can_invite_users permission of a supergroup chat was toggled
      *
-     * @canInviteUsers - New value of can_invite_users permission
+     * @property canInviteUsers New value of can_invite_users permission
      */
-    class ChatEventInvitesToggled(
-        val canInviteUsers: Boolean
+    @Serializable
+    @SerialName("chatEventInvitesToggled")
+    data class ChatEventInvitesToggled(
+        @SerialName("can_invite_users")
+        val canInviteUsers: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The sign_messages setting of a channel was toggled
      *
-     * @signMessages - New value of sign_messages
+     * @property signMessages New value of sign_messages
      */
-    class ChatEventSignMessagesToggled(
-        val signMessages: Boolean
+    @Serializable
+    @SerialName("chatEventSignMessagesToggled")
+    data class ChatEventSignMessagesToggled(
+        @SerialName("sign_messages")
+        val signMessages: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The supergroup sticker set was changed
      *
-     * @oldStickerSetId - Previous identifier of the chat sticker set
-     *                    0 if none
-     * @newStickerSetId - New identifier of the chat sticker set
-     *                    0 if none
+     * @property oldStickerSetId Previous identifier of the chat sticker set
+     *                           0 if none
+     * @property newStickerSetId New identifier of the chat sticker set
+     *                           0 if none
      */
-    class ChatEventStickerSetChanged(
+    @Serializable
+    @SerialName("chatEventStickerSetChanged")
+    data class ChatEventStickerSetChanged(
+        @SerialName("old_sticker_set_id")
         val oldStickerSetId: Long,
-        val newStickerSetId: Long
+        @SerialName("new_sticker_set_id")
+        val newStickerSetId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * The is_all_history_available setting of a supergroup was toggled
      *
-     * @isAllHistoryAvailable - New value of is_all_history_available
+     * @property isAllHistoryAvailable New value of is_all_history_available
      */
-    class ChatEventIsAllHistoryAvailableToggled(
-        val isAllHistoryAvailable: Boolean
+    @Serializable
+    @SerialName("chatEventIsAllHistoryAvailableToggled")
+    data class ChatEventIsAllHistoryAvailableToggled(
+        @SerialName("is_all_history_available")
+        val isAllHistoryAvailable: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatEventAction()
 
     /**
      * Represents a chat event
      *
-     * @id - Chat event identifier
-     * @date - Point in time (Unix timestamp) when the event happened
-     * @userId - Identifier of the user who performed the action that triggered the event
-     * @action - Action performed by the user
+     * @property id Chat event identifier
+     * @property date Point in time (Unix timestamp) when the event happened
+     * @property userId Identifier of the user who performed the action that triggered the event
+     * @property action Action performed by the user
      */
-    class ChatEvent(
+    @Serializable
+    @SerialName("chatEvent")
+    data class ChatEvent(
+        @SerialName("id")
         val id: Long,
+        @SerialName("date")
         val date: Int,
+        @SerialName("user_id")
         val userId: Int,
-        val action: ChatEventAction
+        @SerialName("action")
+        val action: ChatEventAction,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of chat events
      *
-     * @events - List of events
+     * @property events List of events
+     * @property extra Extra data shared between request and response
      */
-    class ChatEvents(
-        val events: Array<ChatEvent>
-    ) : Object()
+    @Serializable
+    @SerialName("chatEvents")
+    data class ChatEvents(
+        @SerialName("events")
+        val events: Array<ChatEvent>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a set of filters used to obtain a chat event log
      *
-     * @messageEdits - True, if message edits should be returned
-     * @messageDeletions - True, if message deletions should be returned
-     * @messagePins - True, if pin/unpin events should be returned
-     * @memberJoins - True, if members joining events should be returned
-     * @memberLeaves - True, if members leaving events should be returned
-     * @memberInvites - True, if invited member events should be returned
-     * @memberPromotions - True, if member promotion/demotion events should be returned
-     * @memberRestrictions - True, if member restricted/unrestricted/banned/unbanned events should be returned
-     * @infoChanges - True, if changes in chat information should be returned
-     * @settingChanges - True, if changes in chat settings should be returned
+     * @property messageEdits True, if message edits should be returned
+     * @property messageDeletions True, if message deletions should be returned
+     * @property messagePins True, if pin/unpin events should be returned
+     * @property memberJoins True, if members joining events should be returned
+     * @property memberLeaves True, if members leaving events should be returned
+     * @property memberInvites True, if invited member events should be returned
+     * @property memberPromotions True, if member promotion/demotion events should be returned
+     * @property memberRestrictions True, if member restricted/unrestricted/banned/unbanned events should be returned
+     * @property infoChanges True, if changes in chat information should be returned
+     * @property settingChanges True, if changes in chat settings should be returned
      */
-    class ChatEventLogFilters(
-        val messageEdits: Boolean = false,
-        val messageDeletions: Boolean = false,
-        val messagePins: Boolean = false,
-        val memberJoins: Boolean = false,
-        val memberLeaves: Boolean = false,
-        val memberInvites: Boolean = false,
-        val memberPromotions: Boolean = false,
-        val memberRestrictions: Boolean = false,
-        val infoChanges: Boolean = false,
-        val settingChanges: Boolean = false
+    @Serializable
+    @SerialName("chatEventLogFilters")
+    data class ChatEventLogFilters(
+        @SerialName("message_edits")
+        val messageEdits: Boolean,
+        @SerialName("message_deletions")
+        val messageDeletions: Boolean,
+        @SerialName("message_pins")
+        val messagePins: Boolean,
+        @SerialName("member_joins")
+        val memberJoins: Boolean,
+        @SerialName("member_leaves")
+        val memberLeaves: Boolean,
+        @SerialName("member_invites")
+        val memberInvites: Boolean,
+        @SerialName("member_promotions")
+        val memberPromotions: Boolean,
+        @SerialName("member_restrictions")
+        val memberRestrictions: Boolean,
+        @SerialName("info_changes")
+        val infoChanges: Boolean,
+        @SerialName("setting_changes")
+        val settingChanges: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents the value of a string in a language pack
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class LanguagePackStringValue : null()
+    abstract class LanguagePackStringValue : Object(), TdResponse
 
     /**
      * An ordinary language pack string
      *
-     * @value - String value
+     * @property value String value
      */
-    class LanguagePackStringValueOrdinary(
-        val value: String
+    @Serializable
+    @SerialName("languagePackStringValueOrdinary")
+    data class LanguagePackStringValueOrdinary(
+        @SerialName("value")
+        val value: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : LanguagePackStringValue()
 
     /**
      * A language pack string which has different forms based on the number of some object it mentions
      * See https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html for more info
      *
-     * @zeroValue - Value for zero objects
-     * @oneValue - Value for one object
-     * @twoValue - Value for two objects
-     * @fewValue - Value for few objects
-     * @manyValue - Value for many objects
-     * @otherValue - Default value
+     * @property zeroValue Value for zero objects
+     * @property oneValue Value for one object
+     * @property twoValue Value for two objects
+     * @property fewValue Value for few objects
+     * @property manyValue Value for many objects
+     * @property otherValue Default value
      */
-    class LanguagePackStringValuePluralized(
+    @Serializable
+    @SerialName("languagePackStringValuePluralized")
+    data class LanguagePackStringValuePluralized(
+        @SerialName("zero_value")
         val zeroValue: String,
+        @SerialName("one_value")
         val oneValue: String,
+        @SerialName("two_value")
         val twoValue: String,
+        @SerialName("few_value")
         val fewValue: String,
+        @SerialName("many_value")
         val manyValue: String,
-        val otherValue: String
+        @SerialName("other_value")
+        val otherValue: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : LanguagePackStringValue()
 
     /**
      * A deleted language pack string, the value should be taken from the built-in english language pack
      */
-    class LanguagePackStringValueDeleted : LanguagePackStringValue()
+    @Serializable
+    @SerialName("languagePackStringValueDeleted")
+    data class LanguagePackStringValueDeleted(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : LanguagePackStringValue()
 
     /**
      * Represents one language pack string
      *
-     * @key - String key
-     * @value - String value
+     * @property key String key
+     * @property value String value
      */
-    class LanguagePackString(
+    @Serializable
+    @SerialName("languagePackString")
+    data class LanguagePackString(
+        @SerialName("key")
         val key: String,
-        val value: LanguagePackStringValue
+        @SerialName("value")
+        val value: LanguagePackStringValue,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of language pack strings
      *
-     * @strings - A list of language pack strings
+     * @property strings A list of language pack strings
+     * @property extra Extra data shared between request and response
      */
-    class LanguagePackStrings(
-        val strings: Array<LanguagePackString>
-    ) : Object()
+    @Serializable
+    @SerialName("languagePackStrings")
+    data class LanguagePackStrings(
+        @SerialName("strings")
+        val strings: Array<LanguagePackString>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a language pack
      *
-     * @id - Unique language pack identifier
-     * @baseLanguagePackId - Identifier of a base language pack
-     *                       If a string is missed in the language pack, then it should be fetched from base language pack
-     *                       Unsupported in custom language packs
-     * @name - Language name
-     * @nativeName - Name of the language in that language
-     * @pluralCode - A language code to be used to apply plural forms
-     *               See https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html for more info
-     * @isOfficial - True, if the language pack is official
-     * @isRtl - True, if the language pack strings are RTL
-     * @isBeta - True, if the language pack is a beta language pack
-     * @isInstalled - True, if the language pack is installed by the current user
-     * @totalStringCount - Total number of non-deleted strings from the language pack
-     * @translatedStringCount - Total number of translated strings from the language pack
-     * @localStringCount - Total number of non-deleted strings from the language pack available locally
-     * @translationUrl - Link to language translation interface
-     *                   Empty for custom local language packs
+     * @property id Unique language pack identifier
+     * @property baseLanguagePackId Identifier of a base language pack
+     *                              If a string is missed in the language pack, then it should be fetched from base language pack
+     *                              Unsupported in custom language packs
+     * @property name Language name
+     * @property nativeName Name of the language in that language
+     * @property pluralCode A language code to be used to apply plural forms
+     *                      See https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html for more info
+     * @property isOfficial True, if the language pack is official
+     * @property isRtl True, if the language pack strings are RTL
+     * @property isBeta True, if the language pack is a beta language pack
+     * @property isInstalled True, if the language pack is installed by the current user
+     * @property totalStringCount Total number of non-deleted strings from the language pack
+     * @property translatedStringCount Total number of translated strings from the language pack
+     * @property localStringCount Total number of non-deleted strings from the language pack available locally
+     * @property translationUrl Link to language translation interface
+     *                          Empty for custom local language packs
+     * @property extra Extra data shared between request and response
      */
-    class LanguagePackInfo(
+    @Serializable
+    @SerialName("languagePackInfo")
+    data class LanguagePackInfo(
+        @SerialName("id")
         val id: String,
-        val baseLanguagePackId: String? = null,
+        @SerialName("base_language_pack_id")
+        val baseLanguagePackId: String?,
+        @SerialName("name")
         val name: String,
+        @SerialName("native_name")
         val nativeName: String,
+        @SerialName("plural_code")
         val pluralCode: String,
-        val isOfficial: Boolean = false,
-        val isRtl: Boolean = false,
-        val isBeta: Boolean = false,
-        val isInstalled: Boolean = false,
-        val totalStringCount: Int = 0,
-        val translatedStringCount: Int = 0,
-        val localStringCount: Int = 0,
-        val translationUrl: String
-    ) : Object()
+        @SerialName("is_official")
+        val isOfficial: Boolean,
+        @SerialName("is_rtl")
+        val isRtl: Boolean,
+        @SerialName("is_beta")
+        val isBeta: Boolean,
+        @SerialName("is_installed")
+        val isInstalled: Boolean,
+        @SerialName("total_string_count")
+        val totalStringCount: Int,
+        @SerialName("translated_string_count")
+        val translatedStringCount: Int,
+        @SerialName("local_string_count")
+        val localStringCount: Int,
+        @SerialName("translation_url")
+        val translationUrl: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about the current localization target
      *
-     * @languagePacks - List of available language packs for this application
+     * @property languagePacks List of available language packs for this application
+     * @property extra Extra data shared between request and response
      */
-    class LocalizationTargetInfo(
-        val languagePacks: Array<LanguagePackInfo>
-    ) : Object()
+    @Serializable
+    @SerialName("localizationTargetInfo")
+    data class LocalizationTargetInfo(
+        @SerialName("language_packs")
+        val languagePacks: Array<LanguagePackInfo>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a data needed to subscribe for push notifications through registerDevice method
      * To use specific push notification service, you must specify the correct application platform and upload valid server authentication data at https://my.telegram.org
      */
-    abstract class DeviceToken : null()
+    abstract class DeviceToken : Object()
 
     /**
      * A token for Firebase Cloud Messaging
      *
-     * @token - Device registration token
-     *          May be empty to de-register a device
-     * @encrypt - True, if push notifications should be additionally encrypted
+     * @property token Device registration token
+     *                 May be empty to de-register a device
+     * @property encrypt True, if push notifications should be additionally encrypted
      */
-    class DeviceTokenFirebaseCloudMessaging(
-        val token: String? = null,
-        val encrypt: Boolean = false
+    @Serializable
+    @SerialName("deviceTokenFirebaseCloudMessaging")
+    data class DeviceTokenFirebaseCloudMessaging(
+        @SerialName("token")
+        val token: String?,
+        @SerialName("encrypt")
+        val encrypt: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Apple Push Notification service
      *
-     * @deviceToken - Device token
-     *                May be empty to de-register a device
-     * @isAppSandbox - True, if App Sandbox is enabled
+     * @property deviceToken Device token
+     *                       May be empty to de-register a device
+     * @property isAppSandbox True, if App Sandbox is enabled
      */
-    class DeviceTokenApplePush(
-        val deviceToken: String? = null,
-        val isAppSandbox: Boolean = false
+    @Serializable
+    @SerialName("deviceTokenApplePush")
+    data class DeviceTokenApplePush(
+        @SerialName("device_token")
+        val deviceToken: String?,
+        @SerialName("is_app_sandbox")
+        val isAppSandbox: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Apple Push Notification service VoIP notifications
      *
-     * @deviceToken - Device token
-     *                May be empty to de-register a device
-     * @isAppSandbox - True, if App Sandbox is enabled
-     * @encrypt - True, if push notifications should be additionally encrypted
+     * @property deviceToken Device token
+     *                       May be empty to de-register a device
+     * @property isAppSandbox True, if App Sandbox is enabled
+     * @property encrypt True, if push notifications should be additionally encrypted
      */
-    class DeviceTokenApplePushVoIP(
-        val deviceToken: String? = null,
-        val isAppSandbox: Boolean = false,
-        val encrypt: Boolean = false
+    @Serializable
+    @SerialName("deviceTokenApplePushVoIP")
+    data class DeviceTokenApplePushVoIP(
+        @SerialName("device_token")
+        val deviceToken: String?,
+        @SerialName("is_app_sandbox")
+        val isAppSandbox: Boolean,
+        @SerialName("encrypt")
+        val encrypt: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Windows Push Notification Services
      *
-     * @accessToken - The access token that will be used to send notifications
-     *                May be empty to de-register a device
+     * @property accessToken The access token that will be used to send notifications
+     *                       May be empty to de-register a device
      */
-    class DeviceTokenWindowsPush(
-        val accessToken: String? = null
+    @Serializable
+    @SerialName("deviceTokenWindowsPush")
+    data class DeviceTokenWindowsPush(
+        @SerialName("access_token")
+        val accessToken: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Microsoft Push Notification Service
      *
-     * @channelUri - Push notification channel URI
-     *               May be empty to de-register a device
+     * @property channelUri Push notification channel URI
+     *                      May be empty to de-register a device
      */
-    class DeviceTokenMicrosoftPush(
-        val channelUri: String? = null
+    @Serializable
+    @SerialName("deviceTokenMicrosoftPush")
+    data class DeviceTokenMicrosoftPush(
+        @SerialName("channel_uri")
+        val channelUri: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Microsoft Push Notification Service VoIP channel
      *
-     * @channelUri - Push notification channel URI
-     *               May be empty to de-register a device
+     * @property channelUri Push notification channel URI
+     *                      May be empty to de-register a device
      */
-    class DeviceTokenMicrosoftPushVoIP(
-        val channelUri: String? = null
+    @Serializable
+    @SerialName("deviceTokenMicrosoftPushVoIP")
+    data class DeviceTokenMicrosoftPushVoIP(
+        @SerialName("channel_uri")
+        val channelUri: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for web Push API
      *
-     * @endpoint - Absolute URL exposed by the push service where the application server can send push messages
-     *             May be empty to de-register a device
-     * @p256dhBase64url - Base64url-encoded P-256 elliptic curve Diffie-Hellman public key
-     * @authBase64url - Base64url-encoded authentication secret
+     * @property endpoint Absolute URL exposed by the push service where the application server can send push messages
+     *                    May be empty to de-register a device
+     * @property p256dhBase64url Base64url-encoded P-256 elliptic curve Diffie-Hellman public key
+     * @property authBase64url Base64url-encoded authentication secret
      */
-    class DeviceTokenWebPush(
-        val endpoint: String? = null,
+    @Serializable
+    @SerialName("deviceTokenWebPush")
+    data class DeviceTokenWebPush(
+        @SerialName("endpoint")
+        val endpoint: String?,
+        @SerialName("p256dh_base64url")
         val p256dhBase64url: String,
-        val authBase64url: String
+        @SerialName("auth_base64url")
+        val authBase64url: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Simple Push API for Firefox OS
      *
-     * @endpoint - Absolute URL exposed by the push service where the application server can send push messages
-     *             May be empty to de-register a device
+     * @property endpoint Absolute URL exposed by the push service where the application server can send push messages
+     *                    May be empty to de-register a device
      */
-    class DeviceTokenSimplePush(
-        val endpoint: String? = null
+    @Serializable
+    @SerialName("deviceTokenSimplePush")
+    data class DeviceTokenSimplePush(
+        @SerialName("endpoint")
+        val endpoint: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Ubuntu Push Client service
      *
-     * @token - Token
-     *          May be empty to de-register a device
+     * @property token Token
+     *                 May be empty to de-register a device
      */
-    class DeviceTokenUbuntuPush(
-        val token: String? = null
+    @Serializable
+    @SerialName("deviceTokenUbuntuPush")
+    data class DeviceTokenUbuntuPush(
+        @SerialName("token")
+        val token: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for BlackBerry Push Service
      *
-     * @token - Token
-     *          May be empty to de-register a device
+     * @property token Token
+     *                 May be empty to de-register a device
      */
-    class DeviceTokenBlackBerryPush(
-        val token: String? = null
+    @Serializable
+    @SerialName("deviceTokenBlackBerryPush")
+    data class DeviceTokenBlackBerryPush(
+        @SerialName("token")
+        val token: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * A token for Tizen Push Service
      *
-     * @regId - Push service registration identifier
-     *          May be empty to de-register a device
+     * @property regId Push service registration identifier
+     *                 May be empty to de-register a device
      */
-    class DeviceTokenTizenPush(
-        val regId: String? = null
+    @Serializable
+    @SerialName("deviceTokenTizenPush")
+    data class DeviceTokenTizenPush(
+        @SerialName("reg_id")
+        val regId: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : DeviceToken()
 
     /**
      * Contains a globally unique push receiver identifier, which can be used to identify which account has received a push notification
      *
-     * @id - The globally unique identifier of push notification subscription
+     * @property id The globally unique identifier of push notification subscription
+     * @property extra Extra data shared between request and response
      */
-    class PushReceiverId(
-        val id: Long
-    ) : Object()
+    @Serializable
+    @SerialName("pushReceiverId")
+    data class PushReceiverId(
+        @SerialName("id")
+        val id: Long,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes a type of a background
      */
-    abstract class BackgroundType : null()
+    abstract class BackgroundType : Object()
 
     /**
      * A wallpaper in JPEG format
      *
-     * @isBlurred - True, if the wallpaper must be downscaled to fit in 450x450 square and then box-blurred with radius 12
-     * @isMoving - True, if the background needs to be slightly moved when device is rotated
+     * @property isBlurred True, if the wallpaper must be downscaled to fit in 450x450 square and then box-blurred with radius 12
+     * @property isMoving True, if the background needs to be slightly moved when device is rotated
      */
-    class BackgroundTypeWallpaper(
-        val isBlurred: Boolean = false,
-        val isMoving: Boolean = false
+    @Serializable
+    @SerialName("backgroundTypeWallpaper")
+    data class BackgroundTypeWallpaper(
+        @SerialName("is_blurred")
+        val isBlurred: Boolean,
+        @SerialName("is_moving")
+        val isMoving: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : BackgroundType()
 
     /**
      * A PNG pattern to be combined with the color chosen by the user
      *
-     * @isMoving - True, if the background needs to be slightly moved when device is rotated
-     * @color - Main color of the background in RGB24 format
-     * @intensity - Intensity of the pattern when it is shown above the main background color, 0-100
+     * @property isMoving True, if the background needs to be slightly moved when device is rotated
+     * @property color Main color of the background in RGB24 format
+     * @property intensity Intensity of the pattern when it is shown above the main background color, 0-100
      */
-    class BackgroundTypePattern(
-        val isMoving: Boolean = false,
-        val color: Int = 0,
-        val intensity: Int = 0
+    @Serializable
+    @SerialName("backgroundTypePattern")
+    data class BackgroundTypePattern(
+        @SerialName("is_moving")
+        val isMoving: Boolean,
+        @SerialName("color")
+        val color: Int,
+        @SerialName("intensity")
+        val intensity: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : BackgroundType()
 
     /**
      * A solid background
      *
-     * @color - A color of the background in RGB24 format
+     * @property color A color of the background in RGB24 format
      */
-    class BackgroundTypeSolid(
-        val color: Int = 0
+    @Serializable
+    @SerialName("backgroundTypeSolid")
+    data class BackgroundTypeSolid(
+        @SerialName("color")
+        val color: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : BackgroundType()
 
     /**
      * Describes a chat background
      *
-     * @id - Unique background identifier
-     * @isDefault - True, if this is one of default backgrounds
-     * @isDark - True, if the background is dark and is recommended to be used with dark theme
-     * @name - Unique background name
-     * @document - Document with the background
-     *             Null only for solid backgrounds
-     * @type - Type of the background
+     * @property id Unique background identifier
+     * @property isDefault True, if this is one of default backgrounds
+     * @property isDark True, if the background is dark and is recommended to be used with dark theme
+     * @property name Unique background name
+     * @property document Document with the background
+     *                    Null only for solid backgrounds
+     * @property type Type of the background
+     * @property extra Extra data shared between request and response
      */
-    class Background(
+    @Serializable
+    @SerialName("background")
+    data class Background(
+        @SerialName("id")
         val id: Long,
+        @SerialName("is_default")
         val isDefault: Boolean,
+        @SerialName("is_dark")
         val isDark: Boolean,
+        @SerialName("name")
         val name: String,
+        @SerialName("document")
         val document: Document?,
-        val type: BackgroundType
-    ) : Object()
+        @SerialName("type")
+        val type: BackgroundType,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a list of backgrounds
      *
-     * @backgrounds - A list of backgrounds
+     * @property backgrounds A list of backgrounds
+     * @property extra Extra data shared between request and response
      */
-    class Backgrounds(
-        val backgrounds: Array<Background>
-    ) : Object()
+    @Serializable
+    @SerialName("backgrounds")
+    data class Backgrounds(
+        @SerialName("backgrounds")
+        val backgrounds: Array<Background>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about background to set
      */
-    abstract class InputBackground : null()
+    abstract class InputBackground : Object()
 
     /**
      * A background from a local file
      *
-     * @background - Background file to use
-     *               Only inputFileLocal and inputFileGenerated are supported
-     *               The file nust be in JPEG format for wallpapers and in PNG format for patterns
+     * @property background Background file to use
+     *                      Only inputFileLocal and inputFileGenerated are supported
+     *                      The file nust be in JPEG format for wallpapers and in PNG format for patterns
      */
-    class InputBackgroundLocal(
-        val background: InputFile
+    @Serializable
+    @SerialName("inputBackgroundLocal")
+    data class InputBackgroundLocal(
+        @SerialName("background")
+        val background: InputFile,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputBackground()
 
     /**
      * A background from the server
      *
-     * @backgroundId - The background identifier
+     * @property backgroundId The background identifier
      */
-    class InputBackgroundRemote(
-        val backgroundId: Long = 0L
+    @Serializable
+    @SerialName("inputBackgroundRemote")
+    data class InputBackgroundRemote(
+        @SerialName("background_id")
+        val backgroundId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : InputBackground()
 
     /**
      * Contains a list of hashtags
      *
-     * @hashtags - A list of hashtags
+     * @property hashtags A list of hashtags
+     * @property extra Extra data shared between request and response
      */
-    class Hashtags(
-        val hashtags: Array<String>
-    ) : Object()
+    @Serializable
+    @SerialName("hashtags")
+    data class Hashtags(
+        @SerialName("hashtags")
+        val hashtags: Array<String>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents result of checking whether a username can be set for a chat
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class CheckChatUsernameResult : null()
+    abstract class CheckChatUsernameResult : Object(), TdResponse
 
     /**
      * The username can be set
      */
-    class CheckChatUsernameResultOk : CheckChatUsernameResult()
+    @Serializable
+    @SerialName("checkChatUsernameResultOk")
+    data class CheckChatUsernameResultOk(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CheckChatUsernameResult()
 
     /**
      * The username is invalid
      */
-    class CheckChatUsernameResultUsernameInvalid : CheckChatUsernameResult()
+    @Serializable
+    @SerialName("checkChatUsernameResultUsernameInvalid")
+    data class CheckChatUsernameResultUsernameInvalid(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CheckChatUsernameResult()
 
     /**
      * The username is occupied
      */
-    class CheckChatUsernameResultUsernameOccupied : CheckChatUsernameResult()
+    @Serializable
+    @SerialName("checkChatUsernameResultUsernameOccupied")
+    data class CheckChatUsernameResultUsernameOccupied(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CheckChatUsernameResult()
 
     /**
      * The user has too much chats with username, one of them should be made private first
      */
-    class CheckChatUsernameResultPublicChatsTooMuch : CheckChatUsernameResult()
+    @Serializable
+    @SerialName("checkChatUsernameResultPublicChatsTooMuch")
+    data class CheckChatUsernameResultPublicChatsTooMuch(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CheckChatUsernameResult()
 
     /**
      * The user can't be a member of a public supergroup
      */
-    class CheckChatUsernameResultPublicGroupsUnavailable : CheckChatUsernameResult()
+    @Serializable
+    @SerialName("checkChatUsernameResultPublicGroupsUnavailable")
+    data class CheckChatUsernameResultPublicGroupsUnavailable(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : CheckChatUsernameResult()
 
     /**
      * Contains content of a push message notification
      */
-    abstract class PushMessageContent : null()
+    abstract class PushMessageContent : Object()
 
     /**
      * A general message with hidden content
      *
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentHidden(
-        val isPinned: Boolean
+    @Serializable
+    @SerialName("pushMessageContentHidden")
+    data class PushMessageContentHidden(
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * An animation message (GIF-style).
      *
-     * @animation - Message content
-     * @caption - Animation caption
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property animation Message content
+     * @property caption Animation caption
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentAnimation(
+    @Serializable
+    @SerialName("pushMessageContentAnimation")
+    data class PushMessageContentAnimation(
+        @SerialName("animation")
         val animation: Animation?,
+        @SerialName("caption")
         val caption: String,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * An audio message
      *
-     * @audio - Message content
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property audio Message content
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentAudio(
+    @Serializable
+    @SerialName("pushMessageContentAudio")
+    data class PushMessageContentAudio(
+        @SerialName("audio")
         val audio: Audio?,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A message with a user contact
      *
-     * @name - Contact's name
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property name Contact's name
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentContact(
+    @Serializable
+    @SerialName("pushMessageContentContact")
+    data class PushMessageContentContact(
+        @SerialName("name")
         val name: String,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A contact has registered with Telegram
      */
-    class PushMessageContentContactRegistered : PushMessageContent()
+    @Serializable
+    @SerialName("pushMessageContentContactRegistered")
+    data class PushMessageContentContactRegistered(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PushMessageContent()
 
     /**
      * A document message (a general file)
      *
-     * @document - Message content
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property document Message content
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentDocument(
+    @Serializable
+    @SerialName("pushMessageContentDocument")
+    data class PushMessageContentDocument(
+        @SerialName("document")
         val document: Document?,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A message with a game
      *
-     * @title - Game title, empty for pinned game message
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property title Game title, empty for pinned game message
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentGame(
+    @Serializable
+    @SerialName("pushMessageContentGame")
+    data class PushMessageContentGame(
+        @SerialName("title")
         val title: String,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A new high score was achieved in a game
      *
-     * @title - Game title, empty for pinned message
-     * @score - New score, 0 for pinned message
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property title Game title, empty for pinned message
+     * @property score New score, 0 for pinned message
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentGameScore(
+    @Serializable
+    @SerialName("pushMessageContentGameScore")
+    data class PushMessageContentGameScore(
+        @SerialName("title")
         val title: String,
+        @SerialName("score")
         val score: Int,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A message with an invoice from a bot
      *
-     * @price - Product price
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property price Product price
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentInvoice(
+    @Serializable
+    @SerialName("pushMessageContentInvoice")
+    data class PushMessageContentInvoice(
+        @SerialName("price")
         val price: String,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A message with a location
      *
-     * @isLive - True, if the location is live
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property isLive True, if the location is live
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentLocation(
+    @Serializable
+    @SerialName("pushMessageContentLocation")
+    data class PushMessageContentLocation(
+        @SerialName("is_live")
         val isLive: Boolean,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A photo message
      *
-     * @photo - Message content
-     * @caption - Photo caption
-     * @isSecret - True, if the photo is secret
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property photo Message content
+     * @property caption Photo caption
+     * @property isSecret True, if the photo is secret
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentPhoto(
+    @Serializable
+    @SerialName("pushMessageContentPhoto")
+    data class PushMessageContentPhoto(
+        @SerialName("photo")
         val photo: Photo?,
+        @SerialName("caption")
         val caption: String,
+        @SerialName("is_secret")
         val isSecret: Boolean,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A message with a poll
      *
-     * @question - Poll question
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property question Poll question
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentPoll(
+    @Serializable
+    @SerialName("pushMessageContentPoll")
+    data class PushMessageContentPoll(
+        @SerialName("question")
         val question: String,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A screenshot of a message in the chat has been taken
      */
-    class PushMessageContentScreenshotTaken : PushMessageContent()
+    @Serializable
+    @SerialName("pushMessageContentScreenshotTaken")
+    data class PushMessageContentScreenshotTaken(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PushMessageContent()
 
     /**
      * A message with a sticker
      *
-     * @sticker - Message content
-     * @emoji - Emoji corresponding to the sticker
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property sticker Message content
+     * @property emoji Emoji corresponding to the sticker
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentSticker(
+    @Serializable
+    @SerialName("pushMessageContentSticker")
+    data class PushMessageContentSticker(
+        @SerialName("sticker")
         val sticker: Sticker?,
+        @SerialName("emoji")
         val emoji: String?,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A text message
      *
-     * @text - Message text
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property text Message text
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentText(
+    @Serializable
+    @SerialName("pushMessageContentText")
+    data class PushMessageContentText(
+        @SerialName("text")
         val text: String,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A video message
      *
-     * @video - Message content
-     * @caption - Video caption
-     * @isSecret - True, if the video is secret
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property video Message content
+     * @property caption Video caption
+     * @property isSecret True, if the video is secret
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentVideo(
+    @Serializable
+    @SerialName("pushMessageContentVideo")
+    data class PushMessageContentVideo(
+        @SerialName("video")
         val video: Video?,
+        @SerialName("caption")
         val caption: String,
+        @SerialName("is_secret")
         val isSecret: Boolean,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A video note message
      *
-     * @videoNote - Message content
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property videoNote Message content
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentVideoNote(
+    @Serializable
+    @SerialName("pushMessageContentVideoNote")
+    data class PushMessageContentVideoNote(
+        @SerialName("video_note")
         val videoNote: VideoNote?,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A voice note message
      *
-     * @voiceNote - Message content
-     * @isPinned - True, if the message is a pinned message with the specified content
+     * @property voiceNote Message content
+     * @property isPinned True, if the message is a pinned message with the specified content
      */
-    class PushMessageContentVoiceNote(
+    @Serializable
+    @SerialName("pushMessageContentVoiceNote")
+    data class PushMessageContentVoiceNote(
+        @SerialName("voice_note")
         val voiceNote: VoiceNote?,
-        val isPinned: Boolean
+        @SerialName("is_pinned")
+        val isPinned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A newly created basic group
      */
-    class PushMessageContentBasicGroupChatCreate : PushMessageContent()
+    @Serializable
+    @SerialName("pushMessageContentBasicGroupChatCreate")
+    data class PushMessageContentBasicGroupChatCreate(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PushMessageContent()
 
     /**
      * New chat members were invited to a group
      *
-     * @memberName - Name of the added member
-     * @isCurrentUser - True, if the current user was added to the group
-     * @isReturned - True, if the user has returned to the group himself
+     * @property memberName Name of the added member
+     * @property isCurrentUser True, if the current user was added to the group
+     * @property isReturned True, if the user has returned to the group himself
      */
-    class PushMessageContentChatAddMembers(
+    @Serializable
+    @SerialName("pushMessageContentChatAddMembers")
+    data class PushMessageContentChatAddMembers(
+        @SerialName("member_name")
         val memberName: String,
+        @SerialName("is_current_user")
         val isCurrentUser: Boolean,
-        val isReturned: Boolean
+        @SerialName("is_returned")
+        val isReturned: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A chat photo was edited
      */
-    class PushMessageContentChatChangePhoto : PushMessageContent()
+    @Serializable
+    @SerialName("pushMessageContentChatChangePhoto")
+    data class PushMessageContentChatChangePhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PushMessageContent()
 
     /**
      * A chat title was edited
      *
-     * @title - New chat title
+     * @property title New chat title
      */
-    class PushMessageContentChatChangeTitle(
-        val title: String
+    @Serializable
+    @SerialName("pushMessageContentChatChangeTitle")
+    data class PushMessageContentChatChangeTitle(
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A chat member was deleted
      *
-     * @memberName - Name of the deleted member
-     * @isCurrentUser - True, if the current user was deleted from the group
-     * @isLeft - True, if the user has left the group himself
+     * @property memberName Name of the deleted member
+     * @property isCurrentUser True, if the current user was deleted from the group
+     * @property isLeft True, if the user has left the group himself
      */
-    class PushMessageContentChatDeleteMember(
+    @Serializable
+    @SerialName("pushMessageContentChatDeleteMember")
+    data class PushMessageContentChatDeleteMember(
+        @SerialName("member_name")
         val memberName: String,
+        @SerialName("is_current_user")
         val isCurrentUser: Boolean,
-        val isLeft: Boolean
+        @SerialName("is_left")
+        val isLeft: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A new member joined the chat by invite link
      */
-    class PushMessageContentChatJoinByLink : PushMessageContent()
+    @Serializable
+    @SerialName("pushMessageContentChatJoinByLink")
+    data class PushMessageContentChatJoinByLink(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : PushMessageContent()
 
     /**
      * A forwarded messages
      *
-     * @totalCount - Number of forwarded messages
+     * @property totalCount Number of forwarded messages
      */
-    class PushMessageContentMessageForwards(
-        val totalCount: Int
+    @Serializable
+    @SerialName("pushMessageContentMessageForwards")
+    data class PushMessageContentMessageForwards(
+        @SerialName("total_count")
+        val totalCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * A media album
      *
-     * @totalCount - Number of messages in the album
-     * @hasPhotos - True, if the album has at least one photo
-     * @hasVideos - True, if the album has at least one video
+     * @property totalCount Number of messages in the album
+     * @property hasPhotos True, if the album has at least one photo
+     * @property hasVideos True, if the album has at least one video
      */
-    class PushMessageContentMediaAlbum(
+    @Serializable
+    @SerialName("pushMessageContentMediaAlbum")
+    data class PushMessageContentMediaAlbum(
+        @SerialName("total_count")
         val totalCount: Int,
+        @SerialName("has_photos")
         val hasPhotos: Boolean,
-        val hasVideos: Boolean
+        @SerialName("has_videos")
+        val hasVideos: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : PushMessageContent()
 
     /**
      * Contains detailed information about a notification
      */
-    abstract class NotificationType : null()
+    abstract class NotificationType : Object()
 
     /**
      * New message was received
      *
-     * @message - The message
+     * @property message The message
      */
-    class NotificationTypeNewMessage(
-        val message: Message
+    @Serializable
+    @SerialName("notificationTypeNewMessage")
+    data class NotificationTypeNewMessage(
+        @SerialName("message")
+        val message: Message,
+        extra: TdExtra = TdExtra.EMPTY
     ) : NotificationType()
 
     /**
      * New secret chat was created
      */
-    class NotificationTypeNewSecretChat : NotificationType()
+    @Serializable
+    @SerialName("notificationTypeNewSecretChat")
+    data class NotificationTypeNewSecretChat(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationType()
 
     /**
      * New call was received
      *
-     * @callId - Call identifier
+     * @property callId Call identifier
      */
-    class NotificationTypeNewCall(
-        val callId: Int
+    @Serializable
+    @SerialName("notificationTypeNewCall")
+    data class NotificationTypeNewCall(
+        @SerialName("call_id")
+        val callId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : NotificationType()
 
     /**
      * New message was received through a push notification
      *
-     * @messageId - The message identifier
-     *              The message will not be available in the chat history, but the ID can be used in viewMessages and as reply_to_message_id
-     * @senderUserId - Sender of the message
-     *                 Corresponding user may be inaccessible
-     * @content - Push message content
+     * @property messageId The message identifier
+     *                     The message will not be available in the chat history, but the ID can be used in viewMessages and as reply_to_message_id
+     * @property senderUserId Sender of the message
+     *                        Corresponding user may be inaccessible
+     * @property content Push message content
      */
-    class NotificationTypeNewPushMessage(
+    @Serializable
+    @SerialName("notificationTypeNewPushMessage")
+    data class NotificationTypeNewPushMessage(
+        @SerialName("message_id")
         val messageId: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
-        val content: PushMessageContent
+        @SerialName("content")
+        val content: PushMessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : NotificationType()
 
     /**
      * Describes type of notifications in the group
      */
-    abstract class NotificationGroupType : null()
+    abstract class NotificationGroupType : Object()
 
     /**
      * A group containing notifications of type notificationTypeNewMessage and notificationTypeNewPushMessage with ordinary unread messages
      */
-    class NotificationGroupTypeMessages : NotificationGroupType()
+    @Serializable
+    @SerialName("notificationGroupTypeMessages")
+    data class NotificationGroupTypeMessages(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationGroupType()
 
     /**
      * A group containing notifications of type notificationTypeNewMessage and notificationTypeNewPushMessage with unread mentions of the current user, replies to their messages, or a pinned message
      */
-    class NotificationGroupTypeMentions : NotificationGroupType()
+    @Serializable
+    @SerialName("notificationGroupTypeMentions")
+    data class NotificationGroupTypeMentions(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationGroupType()
 
     /**
      * A group containing a notification of type notificationTypeNewSecretChat
      */
-    class NotificationGroupTypeSecretChat : NotificationGroupType()
+    @Serializable
+    @SerialName("notificationGroupTypeSecretChat")
+    data class NotificationGroupTypeSecretChat(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationGroupType()
 
     /**
      * A group containing notifications of type notificationTypeNewCall
      */
-    class NotificationGroupTypeCalls : NotificationGroupType()
+    @Serializable
+    @SerialName("notificationGroupTypeCalls")
+    data class NotificationGroupTypeCalls(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NotificationGroupType()
 
     /**
      * Contains information about a notification
      *
-     * @id - Unique persistent identifier of this notification
-     * @date - Notification date
-     * @type - Notification type
+     * @property id Unique persistent identifier of this notification
+     * @property date Notification date
+     * @property type Notification type
      */
-    class Notification(
+    @Serializable
+    @SerialName("notification")
+    data class Notification(
+        @SerialName("id")
         val id: Int,
+        @SerialName("date")
         val date: Int,
-        val type: NotificationType
+        @SerialName("type")
+        val type: NotificationType,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Describes a group of notifications
      *
-     * @id - Unique persistent auto-incremented from 1 identifier of the notification group
-     * @type - Type of the group
-     * @chatId - Identifier of a chat to which all notifications in the group belong
-     * @totalCount - Total number of active notifications in the group
-     * @notifications - The list of active notifications
+     * @property id Unique persistent auto-incremented from 1 identifier of the notification group
+     * @property type Type of the group
+     * @property chatId Identifier of a chat to which all notifications in the group belong
+     * @property totalCount Total number of active notifications in the group
+     * @property notifications The list of active notifications
      */
-    class NotificationGroup(
+    @Serializable
+    @SerialName("notificationGroup")
+    data class NotificationGroup(
+        @SerialName("id")
         val id: Int,
+        @SerialName("type")
         val type: NotificationGroupType,
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("total_count")
         val totalCount: Int,
-        val notifications: Array<Notification>
+        @SerialName("notifications")
+        val notifications: Array<Notification>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents the value of an option
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class OptionValue : null()
+    abstract class OptionValue : Object(), TdResponse
 
     /**
      * Represents a boolean option
      *
-     * @value - The value of the option
+     * @property value The value of the option
      */
-    class OptionValueBoolean(
-        val value: Boolean = false
+    @Serializable
+    @SerialName("optionValueBoolean")
+    data class OptionValueBoolean(
+        @SerialName("value")
+        val value: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : OptionValue()
 
     /**
      * Represents an unknown option or an option which has a default value
      */
-    class OptionValueEmpty : OptionValue()
+    @Serializable
+    @SerialName("optionValueEmpty")
+    data class OptionValueEmpty(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : OptionValue()
 
     /**
      * Represents an integer option
      *
-     * @value - The value of the option
+     * @property value The value of the option
      */
-    class OptionValueInteger(
-        val value: Int = 0
+    @Serializable
+    @SerialName("optionValueInteger")
+    data class OptionValueInteger(
+        @SerialName("value")
+        val value: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : OptionValue()
 
     /**
      * Represents a string option
      *
-     * @value - The value of the option
+     * @property value The value of the option
      */
-    class OptionValueString(
-        val value: String
+    @Serializable
+    @SerialName("optionValueString")
+    data class OptionValueString(
+        @SerialName("value")
+        val value: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : OptionValue()
 
     /**
      * Represents one member of a JSON object
      *
-     * @key - Member's key
-     * @value - Member's value
+     * @property key Member's key
+     * @property value Member's value
      */
-    class JsonObjectMember(
+    @Serializable
+    @SerialName("jsonObjectMember")
+    data class JsonObjectMember(
+        @SerialName("key")
         val key: String,
-        val value: JsonValue
+        @SerialName("value")
+        val value: JsonValue,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Represents a JSON value
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class JsonValue : null()
+    abstract class JsonValue : Object(), TdResponse
 
     /**
      * Represents a null JSON value
      */
-    class JsonValueNull : JsonValue()
+    @Serializable
+    @SerialName("jsonValueNull")
+    data class JsonValueNull(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : JsonValue()
 
     /**
      * Represents a boolean JSON value
      *
-     * @value - The value
+     * @property value The value
      */
-    class JsonValueBoolean(
-        val value: Boolean = false
+    @Serializable
+    @SerialName("jsonValueBoolean")
+    data class JsonValueBoolean(
+        @SerialName("value")
+        val value: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : JsonValue()
 
     /**
      * Represents a numeric JSON value
      *
-     * @value - The value
+     * @property value The value
      */
-    class JsonValueNumber(
-        val value: Double = 0.0
+    @Serializable
+    @SerialName("jsonValueNumber")
+    data class JsonValueNumber(
+        @SerialName("value")
+        val value: Double,
+        extra: TdExtra = TdExtra.EMPTY
     ) : JsonValue()
 
     /**
      * Represents a string JSON value
      *
-     * @value - The value
+     * @property value The value
      */
-    class JsonValueString(
-        val value: String
+    @Serializable
+    @SerialName("jsonValueString")
+    data class JsonValueString(
+        @SerialName("value")
+        val value: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : JsonValue()
 
     /**
      * Represents a JSON array
      *
-     * @values - The list of array elements
+     * @property values The list of array elements
      */
-    class JsonValueArray(
-        val values: Array<JsonValue> = emptyArray()
+    @Serializable
+    @SerialName("jsonValueArray")
+    data class JsonValueArray(
+        @SerialName("values")
+        val values: Array<JsonValue>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : JsonValue()
 
     /**
      * Represents a JSON object
      *
-     * @members - The list of object members
+     * @property members The list of object members
      */
-    class JsonValueObject(
-        val members: Array<JsonObjectMember> = emptyArray()
+    @Serializable
+    @SerialName("jsonValueObject")
+    data class JsonValueObject(
+        @SerialName("members")
+        val members: Array<JsonObjectMember>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : JsonValue()
 
     /**
      * Represents a single rule for managing privacy settings
      */
-    abstract class UserPrivacySettingRule : null()
+    abstract class UserPrivacySettingRule : Object()
 
     /**
      * A rule to allow all users to do something
      */
-    class UserPrivacySettingRuleAllowAll : UserPrivacySettingRule()
+    @Serializable
+    @SerialName("userPrivacySettingRuleAllowAll")
+    data class UserPrivacySettingRuleAllowAll(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySettingRule()
 
     /**
      * A rule to allow all of a user's contacts to do something
      */
-    class UserPrivacySettingRuleAllowContacts : UserPrivacySettingRule()
+    @Serializable
+    @SerialName("userPrivacySettingRuleAllowContacts")
+    data class UserPrivacySettingRuleAllowContacts(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySettingRule()
 
     /**
      * A rule to allow certain specified users to do something
      *
-     * @userIds - The user identifiers
+     * @property userIds The user identifiers
      */
-    class UserPrivacySettingRuleAllowUsers(
-        val userIds: IntArray = intArrayOf()
+    @Serializable
+    @SerialName("userPrivacySettingRuleAllowUsers")
+    data class UserPrivacySettingRuleAllowUsers(
+        @SerialName("user_ids")
+        val userIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : UserPrivacySettingRule()
 
     /**
      * A rule to restrict all users from doing something
      */
-    class UserPrivacySettingRuleRestrictAll : UserPrivacySettingRule()
+    @Serializable
+    @SerialName("userPrivacySettingRuleRestrictAll")
+    data class UserPrivacySettingRuleRestrictAll(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySettingRule()
 
     /**
      * A rule to restrict all contacts of a user from doing something
      */
-    class UserPrivacySettingRuleRestrictContacts : UserPrivacySettingRule()
+    @Serializable
+    @SerialName("userPrivacySettingRuleRestrictContacts")
+    data class UserPrivacySettingRuleRestrictContacts(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySettingRule()
 
     /**
      * A rule to restrict all specified users from doing something
      *
-     * @userIds - The user identifiers
+     * @property userIds The user identifiers
      */
-    class UserPrivacySettingRuleRestrictUsers(
-        val userIds: IntArray = intArrayOf()
+    @Serializable
+    @SerialName("userPrivacySettingRuleRestrictUsers")
+    data class UserPrivacySettingRuleRestrictUsers(
+        @SerialName("user_ids")
+        val userIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : UserPrivacySettingRule()
 
     /**
@@ -6652,772 +9833,1214 @@ class TdApi {
      * The first matched rule defines the privacy setting for a given user
      * If no rule matches, the action is not allowed
      *
-     * @rules - A list of rules
+     * @property rules A list of rules
+     * @property extra Extra data shared between request and response
      */
-    class UserPrivacySettingRules(
-        val rules: Array<UserPrivacySettingRule> = emptyArray()
-    ) : Object()
+    @Serializable
+    @SerialName("userPrivacySettingRules")
+    data class UserPrivacySettingRules(
+        @SerialName("rules")
+        val rules: Array<UserPrivacySettingRule>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes available user privacy settings
      */
-    abstract class UserPrivacySetting : null()
+    abstract class UserPrivacySetting : Object()
 
     /**
      * A privacy setting for managing whether the user's online status is visible
      */
-    class UserPrivacySettingShowStatus : UserPrivacySetting()
+    @Serializable
+    @SerialName("userPrivacySettingShowStatus")
+    data class UserPrivacySettingShowStatus(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySetting()
 
     /**
      * A privacy setting for managing whether the user's profile photo is visible
      */
-    class UserPrivacySettingShowProfilePhoto : UserPrivacySetting()
+    @Serializable
+    @SerialName("userPrivacySettingShowProfilePhoto")
+    data class UserPrivacySettingShowProfilePhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySetting()
 
     /**
      * A privacy setting for managing whether a link to the user's account is included in forwarded messages
      */
-    class UserPrivacySettingShowLinkInForwardedMessages : UserPrivacySetting()
+    @Serializable
+    @SerialName("userPrivacySettingShowLinkInForwardedMessages")
+    data class UserPrivacySettingShowLinkInForwardedMessages(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySetting()
 
     /**
      * A privacy setting for managing whether the user can be invited to chats
      */
-    class UserPrivacySettingAllowChatInvites : UserPrivacySetting()
+    @Serializable
+    @SerialName("userPrivacySettingAllowChatInvites")
+    data class UserPrivacySettingAllowChatInvites(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySetting()
 
     /**
      * A privacy setting for managing whether the user can be called
      */
-    class UserPrivacySettingAllowCalls : UserPrivacySetting()
+    @Serializable
+    @SerialName("userPrivacySettingAllowCalls")
+    data class UserPrivacySettingAllowCalls(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySetting()
 
     /**
      * A privacy setting for managing whether peer-to-peer connections can be used for calls
      */
-    class UserPrivacySettingAllowPeerToPeerCalls : UserPrivacySetting()
+    @Serializable
+    @SerialName("userPrivacySettingAllowPeerToPeerCalls")
+    data class UserPrivacySettingAllowPeerToPeerCalls(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : UserPrivacySetting()
 
     /**
      * Contains information about the period of inactivity after which the current user's account will automatically be deleted
      *
-     * @days - Number of days of inactivity before the account will be flagged for deletion
-     *         Should range from 30-366 days
+     * @property days Number of days of inactivity before the account will be flagged for deletion
+     *                Should range from 30-366 days
+     * @property extra Extra data shared between request and response
      */
-    class AccountTtl(
-        val days: Int = 0
-    ) : Object()
+    @Serializable
+    @SerialName("accountTtl")
+    data class AccountTtl(
+        @SerialName("days")
+        val days: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about one session in a Telegram application used by the current user
      * Sessions should be shown to the user in the returned order
      *
-     * @id - Session identifier
-     * @isCurrent - True, if this session is the current session
-     * @isPasswordPending - True, if a password is needed to complete authorization of the session
-     * @apiId - Telegram API identifier, as provided by the application
-     * @applicationName - Name of the application, as provided by the application
-     * @applicationVersion - The version of the application, as provided by the application
-     * @isOfficialApplication - True, if the application is an official application or uses the api_id of an official application
-     * @deviceModel - Model of the device the application has been run or is running on, as provided by the application
-     * @platform - Operating system the application has been run or is running on, as provided by the application
-     * @systemVersion - Version of the operating system the application has been run or is running on, as provided by the application
-     * @logInDate - Point in time (Unix timestamp) when the user has logged in
-     * @lastActiveDate - Point in time (Unix timestamp) when the session was last used
-     * @ip - IP address from which the session was created, in human-readable format
-     * @country - A two-letter country code for the country from which the session was created, based on the IP address
-     * @region - Region code from which the session was created, based on the IP address
+     * @property id Session identifier
+     * @property isCurrent True, if this session is the current session
+     * @property isPasswordPending True, if a password is needed to complete authorization of the session
+     * @property apiId Telegram API identifier, as provided by the application
+     * @property applicationName Name of the application, as provided by the application
+     * @property applicationVersion The version of the application, as provided by the application
+     * @property isOfficialApplication True, if the application is an official application or uses the api_id of an official application
+     * @property deviceModel Model of the device the application has been run or is running on, as provided by the application
+     * @property platform Operating system the application has been run or is running on, as provided by the application
+     * @property systemVersion Version of the operating system the application has been run or is running on, as provided by the application
+     * @property logInDate Point in time (Unix timestamp) when the user has logged in
+     * @property lastActiveDate Point in time (Unix timestamp) when the session was last used
+     * @property ip IP address from which the session was created, in human-readable format
+     * @property country A two-letter country code for the country from which the session was created, based on the IP address
+     * @property region Region code from which the session was created, based on the IP address
      */
-    class Session(
+    @Serializable
+    @SerialName("session")
+    data class Session(
+        @SerialName("id")
         val id: Long,
+        @SerialName("is_current")
         val isCurrent: Boolean,
+        @SerialName("is_password_pending")
         val isPasswordPending: Boolean,
+        @SerialName("api_id")
         val apiId: Int,
+        @SerialName("application_name")
         val applicationName: String,
+        @SerialName("application_version")
         val applicationVersion: String,
+        @SerialName("is_official_application")
         val isOfficialApplication: Boolean,
+        @SerialName("device_model")
         val deviceModel: String,
+        @SerialName("platform")
         val platform: String,
+        @SerialName("system_version")
         val systemVersion: String,
+        @SerialName("log_in_date")
         val logInDate: Int,
+        @SerialName("last_active_date")
         val lastActiveDate: Int,
+        @SerialName("ip")
         val ip: String,
+        @SerialName("country")
         val country: String,
-        val region: String
+        @SerialName("region")
+        val region: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of sessions
      *
-     * @sessions - List of sessions
+     * @property sessions List of sessions
+     * @property extra Extra data shared between request and response
      */
-    class Sessions(
-        val sessions: Array<Session>
-    ) : Object()
+    @Serializable
+    @SerialName("sessions")
+    data class Sessions(
+        @SerialName("sessions")
+        val sessions: Array<Session>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about one website the current user is logged in with Telegram
      *
-     * @id - Website identifier
-     * @domainName - The domain name of the website
-     * @botUserId - User identifier of a bot linked with the website
-     * @browser - The version of a browser used to log in
-     * @platform - Operating system the browser is running on
-     * @logInDate - Point in time (Unix timestamp) when the user was logged in
-     * @lastActiveDate - Point in time (Unix timestamp) when obtained authorization was last used
-     * @ip - IP address from which the user was logged in, in human-readable format
-     * @location - Human-readable description of a country and a region, from which the user was logged in, based on the IP address
+     * @property id Website identifier
+     * @property domainName The domain name of the website
+     * @property botUserId User identifier of a bot linked with the website
+     * @property browser The version of a browser used to log in
+     * @property platform Operating system the browser is running on
+     * @property logInDate Point in time (Unix timestamp) when the user was logged in
+     * @property lastActiveDate Point in time (Unix timestamp) when obtained authorization was last used
+     * @property ip IP address from which the user was logged in, in human-readable format
+     * @property location Human-readable description of a country and a region, from which the user was logged in, based on the IP address
      */
-    class ConnectedWebsite(
+    @Serializable
+    @SerialName("connectedWebsite")
+    data class ConnectedWebsite(
+        @SerialName("id")
         val id: Long,
+        @SerialName("domain_name")
         val domainName: String,
+        @SerialName("bot_user_id")
         val botUserId: Int,
+        @SerialName("browser")
         val browser: String,
+        @SerialName("platform")
         val platform: String,
+        @SerialName("log_in_date")
         val logInDate: Int,
+        @SerialName("last_active_date")
         val lastActiveDate: Int,
+        @SerialName("ip")
         val ip: String,
-        val location: String
+        @SerialName("location")
+        val location: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of websites the current user is logged in with Telegram
      *
-     * @websites - List of connected websites
+     * @property websites List of connected websites
+     * @property extra Extra data shared between request and response
      */
-    class ConnectedWebsites(
-        val websites: Array<ConnectedWebsite>
-    ) : Object()
+    @Serializable
+    @SerialName("connectedWebsites")
+    data class ConnectedWebsites(
+        @SerialName("websites")
+        val websites: Array<ConnectedWebsite>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about the availability of the "Report spam" action for a chat
      *
-     * @canReportSpam - True, if a prompt with the "Report spam" action should be shown to the user
+     * @property canReportSpam True, if a prompt with the "Report spam" action should be shown to the user
+     * @property extra Extra data shared between request and response
      */
-    class ChatReportSpamState(
-        val canReportSpam: Boolean
-    ) : Object()
+    @Serializable
+    @SerialName("chatReportSpamState")
+    data class ChatReportSpamState(
+        @SerialName("can_report_spam")
+        val canReportSpam: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the reason why a chat is reported
      */
-    abstract class ChatReportReason : null()
+    abstract class ChatReportReason : Object()
 
     /**
      * The chat contains spam messages
      */
-    class ChatReportReasonSpam : ChatReportReason()
+    @Serializable
+    @SerialName("chatReportReasonSpam")
+    data class ChatReportReasonSpam(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatReportReason()
 
     /**
      * The chat promotes violence
      */
-    class ChatReportReasonViolence : ChatReportReason()
+    @Serializable
+    @SerialName("chatReportReasonViolence")
+    data class ChatReportReasonViolence(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatReportReason()
 
     /**
      * The chat contains pornographic messages
      */
-    class ChatReportReasonPornography : ChatReportReason()
+    @Serializable
+    @SerialName("chatReportReasonPornography")
+    data class ChatReportReasonPornography(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatReportReason()
 
     /**
      * The chat has child abuse related content
      */
-    class ChatReportReasonChildAbuse : ChatReportReason()
+    @Serializable
+    @SerialName("chatReportReasonChildAbuse")
+    data class ChatReportReasonChildAbuse(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatReportReason()
 
     /**
      * The chat contains copyrighted content
      */
-    class ChatReportReasonCopyright : ChatReportReason()
+    @Serializable
+    @SerialName("chatReportReasonCopyright")
+    data class ChatReportReasonCopyright(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ChatReportReason()
 
     /**
      * A custom reason provided by the user
      *
-     * @text - Report text
+     * @property text Report text
      */
-    class ChatReportReasonCustom(
-        val text: String
+    @Serializable
+    @SerialName("chatReportReasonCustom")
+    data class ChatReportReasonCustom(
+        @SerialName("text")
+        val text: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ChatReportReason()
 
     /**
      * Contains a public HTTPS link to a message in a public supergroup or channel with a username
      *
-     * @link - Message link
-     * @html - HTML-code for embedding the message
+     * @property link Message link
+     * @property html HTML-code for embedding the message
+     * @property extra Extra data shared between request and response
      */
-    class PublicMessageLink(
+    @Serializable
+    @SerialName("publicMessageLink")
+    data class PublicMessageLink(
+        @SerialName("link")
         val link: String,
-        val html: String
-    ) : Object()
+        @SerialName("html")
+        val html: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a link to a message in a chat
      *
-     * @isPublic - True, if the link is a public link for a message in a chat
-     * @chatId - If found, identifier of the chat to which the message belongs, 0 otherwise
-     * @message - If found, the linked message
-     * @forAlbum - True, if the whole media album to which the message belongs is linked
+     * @property isPublic True, if the link is a public link for a message in a chat
+     * @property chatId If found, identifier of the chat to which the message belongs, 0 otherwise
+     * @property message If found, the linked message
+     * @property forAlbum True, if the whole media album to which the message belongs is linked
+     * @property extra Extra data shared between request and response
      */
-    class MessageLinkInfo(
+    @Serializable
+    @SerialName("messageLinkInfo")
+    data class MessageLinkInfo(
+        @SerialName("is_public")
         val isPublic: Boolean,
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message")
         val message: Message?,
-        val forAlbum: Boolean
-    ) : Object()
+        @SerialName("for_album")
+        val forAlbum: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a part of a file
      *
-     * @data - File bytes
+     * @property data File bytes
+     * @property extra Extra data shared between request and response
      */
-    class FilePart(
-        val data: ByteArray
-    ) : Object()
+    @Serializable
+    @SerialName("filePart")
+    data class FilePart(
+        @SerialName("data")
+        val data: Array<Byte>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents the type of a file
      */
-    abstract class FileType : null()
+    abstract class FileType : Object()
 
     /**
      * The data is not a file
      */
-    class FileTypeNone : FileType()
+    @Serializable
+    @SerialName("fileTypeNone")
+    data class FileTypeNone(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is an animation
      */
-    class FileTypeAnimation : FileType()
+    @Serializable
+    @SerialName("fileTypeAnimation")
+    data class FileTypeAnimation(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is an audio file
      */
-    class FileTypeAudio : FileType()
+    @Serializable
+    @SerialName("fileTypeAudio")
+    data class FileTypeAudio(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a document
      */
-    class FileTypeDocument : FileType()
+    @Serializable
+    @SerialName("fileTypeDocument")
+    data class FileTypeDocument(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a photo
      */
-    class FileTypePhoto : FileType()
+    @Serializable
+    @SerialName("fileTypePhoto")
+    data class FileTypePhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a profile photo
      */
-    class FileTypeProfilePhoto : FileType()
+    @Serializable
+    @SerialName("fileTypeProfilePhoto")
+    data class FileTypeProfilePhoto(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file was sent to a secret chat (the file type is not known to the server)
      */
-    class FileTypeSecret : FileType()
+    @Serializable
+    @SerialName("fileTypeSecret")
+    data class FileTypeSecret(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a thumbnail of a file from a secret chat
      */
-    class FileTypeSecretThumbnail : FileType()
+    @Serializable
+    @SerialName("fileTypeSecretThumbnail")
+    data class FileTypeSecretThumbnail(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a file from Secure storage used for storing Telegram Passport files
      */
-    class FileTypeSecure : FileType()
+    @Serializable
+    @SerialName("fileTypeSecure")
+    data class FileTypeSecure(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a sticker
      */
-    class FileTypeSticker : FileType()
+    @Serializable
+    @SerialName("fileTypeSticker")
+    data class FileTypeSticker(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a thumbnail of another file
      */
-    class FileTypeThumbnail : FileType()
+    @Serializable
+    @SerialName("fileTypeThumbnail")
+    data class FileTypeThumbnail(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file type is not yet known
      */
-    class FileTypeUnknown : FileType()
+    @Serializable
+    @SerialName("fileTypeUnknown")
+    data class FileTypeUnknown(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a video
      */
-    class FileTypeVideo : FileType()
+    @Serializable
+    @SerialName("fileTypeVideo")
+    data class FileTypeVideo(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a video note
      */
-    class FileTypeVideoNote : FileType()
+    @Serializable
+    @SerialName("fileTypeVideoNote")
+    data class FileTypeVideoNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a voice note
      */
-    class FileTypeVoiceNote : FileType()
+    @Serializable
+    @SerialName("fileTypeVoiceNote")
+    data class FileTypeVoiceNote(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * The file is a wallpaper or a background pattern
      */
-    class FileTypeWallpaper : FileType()
+    @Serializable
+    @SerialName("fileTypeWallpaper")
+    data class FileTypeWallpaper(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : FileType()
 
     /**
      * Contains the storage usage statistics for a specific file type
      *
-     * @fileType - File type
-     * @size - Total size of the files
-     * @count - Total number of files
+     * @property fileType File type
+     * @property size Total size of the files
+     * @property count Total number of files
      */
-    class StorageStatisticsByFileType(
+    @Serializable
+    @SerialName("storageStatisticsByFileType")
+    data class StorageStatisticsByFileType(
+        @SerialName("file_type")
         val fileType: FileType,
+        @SerialName("size")
         val size: Long,
-        val count: Int
+        @SerialName("count")
+        val count: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the storage usage statistics for a specific chat
      *
-     * @chatId - Chat identifier
-     *           0 if none
-     * @size - Total size of the files in the chat
-     * @count - Total number of files in the chat
-     * @byFileType - Statistics split by file types
+     * @property chatId Chat identifier
+     *                  0 if none
+     * @property size Total size of the files in the chat
+     * @property count Total number of files in the chat
+     * @property byFileType Statistics split by file types
      */
-    class StorageStatisticsByChat(
+    @Serializable
+    @SerialName("storageStatisticsByChat")
+    data class StorageStatisticsByChat(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("size")
         val size: Long,
+        @SerialName("count")
         val count: Int,
-        val byFileType: Array<StorageStatisticsByFileType>
+        @SerialName("by_file_type")
+        val byFileType: Array<StorageStatisticsByFileType>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains the exact storage usage statistics split by chats and file type
      *
-     * @size - Total size of files
-     * @count - Total number of files
-     * @byChat - Statistics split by chats
+     * @property size Total size of files
+     * @property count Total number of files
+     * @property byChat Statistics split by chats
+     * @property extra Extra data shared between request and response
      */
-    class StorageStatistics(
+    @Serializable
+    @SerialName("storageStatistics")
+    data class StorageStatistics(
+        @SerialName("size")
         val size: Long,
+        @SerialName("count")
         val count: Int,
-        val byChat: Array<StorageStatisticsByChat>
-    ) : Object()
+        @SerialName("by_chat")
+        val byChat: Array<StorageStatisticsByChat>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains approximate storage usage statistics, excluding files of unknown file type
      *
-     * @filesSize - Approximate total size of files
-     * @fileCount - Approximate number of files
-     * @databaseSize - Size of the database
-     * @languagePackDatabaseSize - Size of the language pack database
-     * @logSize - Size of the TDLib internal log
+     * @property filesSize Approximate total size of files
+     * @property fileCount Approximate number of files
+     * @property databaseSize Size of the database
+     * @property languagePackDatabaseSize Size of the language pack database
+     * @property logSize Size of the TDLib internal log
+     * @property extra Extra data shared between request and response
      */
-    class StorageStatisticsFast(
+    @Serializable
+    @SerialName("storageStatisticsFast")
+    data class StorageStatisticsFast(
+        @SerialName("files_size")
         val filesSize: Long,
+        @SerialName("file_count")
         val fileCount: Int,
+        @SerialName("database_size")
         val databaseSize: Long,
+        @SerialName("language_pack_database_size")
         val languagePackDatabaseSize: Long,
-        val logSize: Long
-    ) : Object()
+        @SerialName("log_size")
+        val logSize: Long,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains database statistics
      *
-     * @statistics - Database statistics in an unspecified human-readable format
+     * @property statistics Database statistics in an unspecified human-readable format
+     * @property extra Extra data shared between request and response
      */
-    class DatabaseStatistics(
-        val statistics: String
-    ) : Object()
+    @Serializable
+    @SerialName("databaseStatistics")
+    data class DatabaseStatistics(
+        @SerialName("statistics")
+        val statistics: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents the type of a network
      */
-    abstract class NetworkType : null()
+    abstract class NetworkType : Object()
 
     /**
      * The network is not available
      */
-    class NetworkTypeNone : NetworkType()
+    @Serializable
+    @SerialName("networkTypeNone")
+    data class NetworkTypeNone(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NetworkType()
 
     /**
      * A mobile network
      */
-    class NetworkTypeMobile : NetworkType()
+    @Serializable
+    @SerialName("networkTypeMobile")
+    data class NetworkTypeMobile(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NetworkType()
 
     /**
      * A mobile roaming network
      */
-    class NetworkTypeMobileRoaming : NetworkType()
+    @Serializable
+    @SerialName("networkTypeMobileRoaming")
+    data class NetworkTypeMobileRoaming(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NetworkType()
 
     /**
      * A Wi-Fi network
      */
-    class NetworkTypeWiFi : NetworkType()
+    @Serializable
+    @SerialName("networkTypeWiFi")
+    data class NetworkTypeWiFi(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NetworkType()
 
     /**
      * A different network type (e.g., Ethernet network)
      */
-    class NetworkTypeOther : NetworkType()
+    @Serializable
+    @SerialName("networkTypeOther")
+    data class NetworkTypeOther(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : NetworkType()
 
     /**
      * Contains statistics about network usage
      */
-    abstract class NetworkStatisticsEntry : null()
+    abstract class NetworkStatisticsEntry : Object()
 
     /**
      * Contains information about the total amount of data that was used to send and receive files
      *
-     * @fileType - Type of the file the data is part of
-     * @networkType - Type of the network the data was sent through
-     *                Call setNetworkType to maintain the actual network type
-     * @sentBytes - Total number of bytes sent
-     * @receivedBytes - Total number of bytes received
+     * @property fileType Type of the file the data is part of
+     * @property networkType Type of the network the data was sent through
+     *                       Call setNetworkType to maintain the actual network type
+     * @property sentBytes Total number of bytes sent
+     * @property receivedBytes Total number of bytes received
      */
-    class NetworkStatisticsEntryFile(
+    @Serializable
+    @SerialName("networkStatisticsEntryFile")
+    data class NetworkStatisticsEntryFile(
+        @SerialName("file_type")
         val fileType: FileType,
+        @SerialName("network_type")
         val networkType: NetworkType,
-        val sentBytes: Long = 0L,
-        val receivedBytes: Long = 0L
+        @SerialName("sent_bytes")
+        val sentBytes: Long,
+        @SerialName("received_bytes")
+        val receivedBytes: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : NetworkStatisticsEntry()
 
     /**
      * Contains information about the total amount of data that was used for calls
      *
-     * @networkType - Type of the network the data was sent through
-     *                Call setNetworkType to maintain the actual network type
-     * @sentBytes - Total number of bytes sent
-     * @receivedBytes - Total number of bytes received
-     * @duration - Total call duration, in seconds
+     * @property networkType Type of the network the data was sent through
+     *                       Call setNetworkType to maintain the actual network type
+     * @property sentBytes Total number of bytes sent
+     * @property receivedBytes Total number of bytes received
+     * @property duration Total call duration, in seconds
      */
-    class NetworkStatisticsEntryCall(
+    @Serializable
+    @SerialName("networkStatisticsEntryCall")
+    data class NetworkStatisticsEntryCall(
+        @SerialName("network_type")
         val networkType: NetworkType,
-        val sentBytes: Long = 0L,
-        val receivedBytes: Long = 0L,
-        val duration: Double = 0.0
+        @SerialName("sent_bytes")
+        val sentBytes: Long,
+        @SerialName("received_bytes")
+        val receivedBytes: Long,
+        @SerialName("duration")
+        val duration: Double,
+        extra: TdExtra = TdExtra.EMPTY
     ) : NetworkStatisticsEntry()
 
     /**
      * A full list of available network statistic entries
      *
-     * @sinceDate - Point in time (Unix timestamp) when the app began collecting statistics
-     * @entries - Network statistics entries
+     * @property sinceDate Point in time (Unix timestamp) when the app began collecting statistics
+     * @property entries Network statistics entries
+     * @property extra Extra data shared between request and response
      */
-    class NetworkStatistics(
+    @Serializable
+    @SerialName("networkStatistics")
+    data class NetworkStatistics(
+        @SerialName("since_date")
         val sinceDate: Int,
-        val entries: Array<NetworkStatisticsEntry>
-    ) : Object()
+        @SerialName("entries")
+        val entries: Array<NetworkStatisticsEntry>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains auto-download settings
      *
-     * @isAutoDownloadEnabled - True, if the auto-download is enabled
-     * @maxPhotoFileSize - Maximum size of a photo file to be auto-downloaded
-     * @maxVideoFileSize - Maximum size of a video file to be auto-downloaded
-     * @maxOtherFileSize - Maximum size of other file types to be auto-downloaded
-     * @preloadLargeVideos - True, if the beginning of videos needs to be preloaded for instant playback
-     * @preloadNextAudio - True, if the next audio track needs to be preloaded while the user is listening to an audio file
-     * @useLessDataForCalls - True, if "use less data for calls" option needs to be enabled
+     * @property isAutoDownloadEnabled True, if the auto-download is enabled
+     * @property maxPhotoFileSize Maximum size of a photo file to be auto-downloaded
+     * @property maxVideoFileSize Maximum size of a video file to be auto-downloaded
+     * @property maxOtherFileSize Maximum size of other file types to be auto-downloaded
+     * @property preloadLargeVideos True, if the beginning of videos needs to be preloaded for instant playback
+     * @property preloadNextAudio True, if the next audio track needs to be preloaded while the user is listening to an audio file
+     * @property useLessDataForCalls True, if "use less data for calls" option needs to be enabled
      */
-    class AutoDownloadSettings(
-        val isAutoDownloadEnabled: Boolean = false,
-        val maxPhotoFileSize: Int = 0,
-        val maxVideoFileSize: Int = 0,
-        val maxOtherFileSize: Int = 0,
-        val preloadLargeVideos: Boolean = false,
-        val preloadNextAudio: Boolean = false,
-        val useLessDataForCalls: Boolean = false
+    @Serializable
+    @SerialName("autoDownloadSettings")
+    data class AutoDownloadSettings(
+        @SerialName("is_auto_download_enabled")
+        val isAutoDownloadEnabled: Boolean,
+        @SerialName("max_photo_file_size")
+        val maxPhotoFileSize: Int,
+        @SerialName("max_video_file_size")
+        val maxVideoFileSize: Int,
+        @SerialName("max_other_file_size")
+        val maxOtherFileSize: Int,
+        @SerialName("preload_large_videos")
+        val preloadLargeVideos: Boolean,
+        @SerialName("preload_next_audio")
+        val preloadNextAudio: Boolean,
+        @SerialName("use_less_data_for_calls")
+        val useLessDataForCalls: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains auto-download settings presets for the user
      *
-     * @low - Preset with lowest settings
-     *        Supposed to be used by default when roaming
-     * @medium - Preset with medium settings
-     *           Supposed to be used by default when using mobile data
-     * @high - Preset with highest settings
-     *         Supposed to be used by default when connected on Wi-Fi
+     * @property low Preset with lowest settings
+     *               Supposed to be used by default when roaming
+     * @property medium Preset with medium settings
+     *                  Supposed to be used by default when using mobile data
+     * @property high Preset with highest settings
+     *                Supposed to be used by default when connected on Wi-Fi
+     * @property extra Extra data shared between request and response
      */
-    class AutoDownloadSettingsPresets(
+    @Serializable
+    @SerialName("autoDownloadSettingsPresets")
+    data class AutoDownloadSettingsPresets(
+        @SerialName("low")
         val low: AutoDownloadSettings,
+        @SerialName("medium")
         val medium: AutoDownloadSettings,
-        val high: AutoDownloadSettings
-    ) : Object()
+        @SerialName("high")
+        val high: AutoDownloadSettings,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the current state of the connection to Telegram servers
      */
-    abstract class ConnectionState : null()
+    abstract class ConnectionState : Object()
 
     /**
      * Currently waiting for the network to become available
      * Use setNetworkType to change the available network type
      */
-    class ConnectionStateWaitingForNetwork : ConnectionState()
+    @Serializable
+    @SerialName("connectionStateWaitingForNetwork")
+    data class ConnectionStateWaitingForNetwork(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ConnectionState()
 
     /**
      * Currently establishing a connection with a proxy server
      */
-    class ConnectionStateConnectingToProxy : ConnectionState()
+    @Serializable
+    @SerialName("connectionStateConnectingToProxy")
+    data class ConnectionStateConnectingToProxy(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ConnectionState()
 
     /**
      * Currently establishing a connection to the Telegram servers
      */
-    class ConnectionStateConnecting : ConnectionState()
+    @Serializable
+    @SerialName("connectionStateConnecting")
+    data class ConnectionStateConnecting(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ConnectionState()
 
     /**
      * Downloading data received while the client was offline
      */
-    class ConnectionStateUpdating : ConnectionState()
+    @Serializable
+    @SerialName("connectionStateUpdating")
+    data class ConnectionStateUpdating(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ConnectionState()
 
     /**
      * There is a working connection to the Telegram servers
      */
-    class ConnectionStateReady : ConnectionState()
+    @Serializable
+    @SerialName("connectionStateReady")
+    data class ConnectionStateReady(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : ConnectionState()
 
     /**
      * Represents the categories of chats for which a list of frequently used chats can be retrieved
      */
-    abstract class TopChatCategory : null()
+    abstract class TopChatCategory : Object()
 
     /**
      * A category containing frequently used private chats with non-bot users
      */
-    class TopChatCategoryUsers : TopChatCategory()
+    @Serializable
+    @SerialName("topChatCategoryUsers")
+    data class TopChatCategoryUsers(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TopChatCategory()
 
     /**
      * A category containing frequently used private chats with bot users
      */
-    class TopChatCategoryBots : TopChatCategory()
+    @Serializable
+    @SerialName("topChatCategoryBots")
+    data class TopChatCategoryBots(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TopChatCategory()
 
     /**
      * A category containing frequently used basic groups and supergroups
      */
-    class TopChatCategoryGroups : TopChatCategory()
+    @Serializable
+    @SerialName("topChatCategoryGroups")
+    data class TopChatCategoryGroups(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TopChatCategory()
 
     /**
      * A category containing frequently used channels
      */
-    class TopChatCategoryChannels : TopChatCategory()
+    @Serializable
+    @SerialName("topChatCategoryChannels")
+    data class TopChatCategoryChannels(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TopChatCategory()
 
     /**
      * A category containing frequently used chats with inline bots sorted by their usage in inline mode
      */
-    class TopChatCategoryInlineBots : TopChatCategory()
+    @Serializable
+    @SerialName("topChatCategoryInlineBots")
+    data class TopChatCategoryInlineBots(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TopChatCategory()
 
     /**
      * A category containing frequently used chats used for calls
      */
-    class TopChatCategoryCalls : TopChatCategory()
+    @Serializable
+    @SerialName("topChatCategoryCalls")
+    data class TopChatCategoryCalls(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TopChatCategory()
 
     /**
      * Describes the type of a URL linking to an internal Telegram entity
      */
-    abstract class TMeUrlType : null()
+    abstract class TMeUrlType : Object()
 
     /**
      * A URL linking to a user
      *
-     * @userId - Identifier of the user
+     * @property userId Identifier of the user
      */
-    class TMeUrlTypeUser(
-        val userId: Int
+    @Serializable
+    @SerialName("tMeUrlTypeUser")
+    data class TMeUrlTypeUser(
+        @SerialName("user_id")
+        val userId: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TMeUrlType()
 
     /**
      * A URL linking to a public supergroup or channel
      *
-     * @supergroupId - Identifier of the supergroup or channel
+     * @property supergroupId Identifier of the supergroup or channel
      */
-    class TMeUrlTypeSupergroup(
-        val supergroupId: Long
+    @Serializable
+    @SerialName("tMeUrlTypeSupergroup")
+    data class TMeUrlTypeSupergroup(
+        @SerialName("supergroup_id")
+        val supergroupId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TMeUrlType()
 
     /**
      * A chat invite link
      *
-     * @info - Chat invite link info
+     * @property info Chat invite link info
      */
-    class TMeUrlTypeChatInvite(
-        val info: ChatInviteLinkInfo
+    @Serializable
+    @SerialName("tMeUrlTypeChatInvite")
+    data class TMeUrlTypeChatInvite(
+        @SerialName("info")
+        val info: ChatInviteLinkInfo,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TMeUrlType()
 
     /**
      * A URL linking to a sticker set
      *
-     * @stickerSetId - Identifier of the sticker set
+     * @property stickerSetId Identifier of the sticker set
      */
-    class TMeUrlTypeStickerSet(
-        val stickerSetId: Long
+    @Serializable
+    @SerialName("tMeUrlTypeStickerSet")
+    data class TMeUrlTypeStickerSet(
+        @SerialName("sticker_set_id")
+        val stickerSetId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : TMeUrlType()
 
     /**
      * Represents a URL linking to an internal Telegram entity
      *
-     * @url - URL
-     * @type - Type of the URL
+     * @property url URL
+     * @property type Type of the URL
      */
-    class TMeUrl(
+    @Serializable
+    @SerialName("tMeUrl")
+    data class TMeUrl(
+        @SerialName("url")
         val url: String,
-        val type: TMeUrlType
+        @SerialName("type")
+        val type: TMeUrlType,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains a list of t.me URLs
      *
-     * @urls - List of URLs
+     * @property urls List of URLs
+     * @property extra Extra data shared between request and response
      */
-    class TMeUrls(
-        val urls: Array<TMeUrl>
-    ) : Object()
+    @Serializable
+    @SerialName("tMeUrls")
+    data class TMeUrls(
+        @SerialName("urls")
+        val urls: Array<TMeUrl>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a counter
      *
-     * @count - Count
+     * @property count Count
+     * @property extra Extra data shared between request and response
      */
-    class Count(
-        val count: Int
-    ) : Object()
+    @Serializable
+    @SerialName("count")
+    data class Count(
+        @SerialName("count")
+        val count: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains some text
      *
-     * @text - Text
+     * @property text Text
+     * @property extra Extra data shared between request and response
      */
-    class Text(
-        val text: String
-    ) : Object()
+    @Serializable
+    @SerialName("text")
+    data class Text(
+        @SerialName("text")
+        val text: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a value representing a number of seconds
      *
-     * @seconds - Number of seconds
+     * @property seconds Number of seconds
+     * @property extra Extra data shared between request and response
      */
-    class Seconds(
-        val seconds: Double
-    ) : Object()
+    @Serializable
+    @SerialName("seconds")
+    data class Seconds(
+        @SerialName("seconds")
+        val seconds: Double,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains information about a tg:// deep link
      *
-     * @text - Text to be shown to the user
-     * @needUpdateApplication - True, if user should be asked to update the application
+     * @property text Text to be shown to the user
+     * @property needUpdateApplication True, if user should be asked to update the application
+     * @property extra Extra data shared between request and response
      */
-    class DeepLinkInfo(
+    @Serializable
+    @SerialName("deepLinkInfo")
+    data class DeepLinkInfo(
+        @SerialName("text")
         val text: FormattedText,
-        val needUpdateApplication: Boolean
-    ) : Object()
+        @SerialName("need_update_application")
+        val needUpdateApplication: Boolean,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes the way the text should be parsed for TextEntities
      */
-    abstract class TextParseMode : null()
+    abstract class TextParseMode : Object()
 
     /**
      * The text should be parsed in markdown-style
      */
-    class TextParseModeMarkdown : TextParseMode()
+    @Serializable
+    @SerialName("textParseModeMarkdown")
+    data class TextParseModeMarkdown(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextParseMode()
 
     /**
      * The text should be parsed in HTML-style
      */
-    class TextParseModeHTML : TextParseMode()
+    @Serializable
+    @SerialName("textParseModeHTML")
+    data class TextParseModeHTML(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : TextParseMode()
 
     /**
      * Describes the type of the proxy server
      */
-    abstract class ProxyType : null()
+    abstract class ProxyType : Object()
 
     /**
      * A SOCKS5 proxy server
      *
-     * @username - Username for logging in
-     * @password - Password for logging in
+     * @property username Username for logging in
+     * @property password Password for logging in
      */
-    class ProxyTypeSocks5(
-        val username: String? = null,
-        val password: String? = null
+    @Serializable
+    @SerialName("proxyTypeSocks5")
+    data class ProxyTypeSocks5(
+        @SerialName("username")
+        val username: String?,
+        @SerialName("password")
+        val password: String?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ProxyType()
 
     /**
      * A HTTP transparent proxy server
      *
-     * @username - Username for logging in
-     * @password - Password for logging in
-     * @httpOnly - Pass true, if the proxy supports only HTTP requests and doesn't support transparent TCP connections via HTTP CONNECT method
+     * @property username Username for logging in
+     * @property password Password for logging in
+     * @property httpOnly Pass true, if the proxy supports only HTTP requests and doesn't support transparent TCP connections via HTTP CONNECT method
      */
-    class ProxyTypeHttp(
-        val username: String? = null,
-        val password: String? = null,
-        val httpOnly: Boolean = false
+    @Serializable
+    @SerialName("proxyTypeHttp")
+    data class ProxyTypeHttp(
+        @SerialName("username")
+        val username: String?,
+        @SerialName("password")
+        val password: String?,
+        @SerialName("http_only")
+        val httpOnly: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ProxyType()
 
     /**
      * An MTProto proxy server
      *
-     * @secret - The proxy's secret in hexadecimal encoding
+     * @property secret The proxy's secret in hexadecimal encoding
      */
-    class ProxyTypeMtproto(
-        val secret: String
+    @Serializable
+    @SerialName("proxyTypeMtproto")
+    data class ProxyTypeMtproto(
+        @SerialName("secret")
+        val secret: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : ProxyType()
 
     /**
      * Contains information about a proxy server
      *
-     * @id - Unique identifier of the proxy
-     * @server - Proxy server IP address
-     * @port - Proxy server port
-     * @lastUsedDate - Point in time (Unix timestamp) when the proxy was last used
-     *                 0 if never
-     * @isEnabled - True, if the proxy is enabled now
-     * @type - Type of the proxy
+     * @property id Unique identifier of the proxy
+     * @property server Proxy server IP address
+     * @property port Proxy server port
+     * @property lastUsedDate Point in time (Unix timestamp) when the proxy was last used
+     *                        0 if never
+     * @property isEnabled True, if the proxy is enabled now
+     * @property type Type of the proxy
+     * @property extra Extra data shared between request and response
      */
-    class Proxy(
+    @Serializable
+    @SerialName("proxy")
+    data class Proxy(
+        @SerialName("id")
         val id: Int,
+        @SerialName("server")
         val server: String,
+        @SerialName("port")
         val port: Int,
+        @SerialName("last_used_date")
         val lastUsedDate: Int,
+        @SerialName("is_enabled")
         val isEnabled: Boolean,
-        val type: ProxyType
-    ) : Object()
+        @SerialName("type")
+        val type: ProxyType,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Represents a list of proxy servers
      *
-     * @proxies - List of proxy servers
+     * @property proxies List of proxy servers
+     * @property extra Extra data shared between request and response
      */
-    class Proxies(
-        val proxies: Array<Proxy>
-    ) : Object()
+    @Serializable
+    @SerialName("proxies")
+    data class Proxies(
+        @SerialName("proxies")
+        val proxies: Array<Proxy>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes a sticker that should be added to a sticker set
      *
-     * @pngSticker - PNG image with the sticker
-     *               Must be up to 512 kB in size and fit in a 512x512 square
-     * @emojis - Emoji corresponding to the sticker
-     * @maskPosition - For masks, position where the mask should be placed
+     * @property pngSticker PNG image with the sticker
+     *                      Must be up to 512 kB in size and fit in a 512x512 square
+     * @property emojis Emoji corresponding to the sticker
+     * @property maskPosition For masks, position where the mask should be placed
      */
-    class InputSticker(
+    @Serializable
+    @SerialName("inputSticker")
+    data class InputSticker(
+        @SerialName("png_sticker")
         val pngSticker: InputFile,
+        @SerialName("emojis")
         val emojis: String,
-        val maskPosition: MaskPosition? = null
+        @SerialName("mask_position")
+        val maskPosition: MaskPosition?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Object()
 
     /**
      * Contains notifications about data changes
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class Update : null()
+    abstract class Update : Object(), TdResponse
 
     /**
      * The user authorization state has changed
      *
-     * @authorizationState - New authorization state
+     * @property authorizationState New authorization state
      */
-    class UpdateAuthorizationState(
-        val authorizationState: AuthorizationState
+    @Serializable
+    @SerialName("updateAuthorizationState")
+    data class UpdateAuthorizationState(
+        @SerialName("authorization_state")
+        val authorizationState: AuthorizationState,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new message was received
      * Can also be an outgoing message
      *
-     * @message - The new message
+     * @property message The new message
      */
-    class UpdateNewMessage(
-        val message: Message
+    @Serializable
+    @SerialName("updateNewMessage")
+    data class UpdateNewMessage(
+        @SerialName("message")
+        val message: Message,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -7426,107 +11049,154 @@ class TdApi {
      * This update will be sent only if the option "use_quick_ack" is set to true
      * This update may be sent multiple times for the same message
      *
-     * @chatId - The chat identifier of the sent message
-     * @messageId - A temporary message identifier
+     * @property chatId The chat identifier of the sent message
+     * @property messageId A temporary message identifier
      */
-    class UpdateMessageSendAcknowledged(
+    @Serializable
+    @SerialName("updateMessageSendAcknowledged")
+    data class UpdateMessageSendAcknowledged(
+        @SerialName("chat_id")
         val chatId: Long,
-        val messageId: Long
+        @SerialName("message_id")
+        val messageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A message has been successfully sent
      *
-     * @message - Information about the sent message
-     *            Usually only the message identifier, date, and content are changed, but almost all other fields can also change
-     * @oldMessageId - The previous temporary message identifier
+     * @property message Information about the sent message
+     *                   Usually only the message identifier, date, and content are changed, but almost all other fields can also change
+     * @property oldMessageId The previous temporary message identifier
      */
-    class UpdateMessageSendSucceeded(
+    @Serializable
+    @SerialName("updateMessageSendSucceeded")
+    data class UpdateMessageSendSucceeded(
+        @SerialName("message")
         val message: Message,
-        val oldMessageId: Long
+        @SerialName("old_message_id")
+        val oldMessageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A message failed to send
      * Be aware that some messages being sent can be irrecoverably deleted, in which case updateDeleteMessages will be received instead of this update
      *
-     * @message - Contains information about the message which failed to send
-     * @oldMessageId - The previous temporary message identifier
-     * @errorCode - An error code
-     * @errorMessage - Error message
+     * @property message Contains information about the message which failed to send
+     * @property oldMessageId The previous temporary message identifier
+     * @property errorCode An error code
+     * @property errorMessage Error message
      */
-    class UpdateMessageSendFailed(
+    @Serializable
+    @SerialName("updateMessageSendFailed")
+    data class UpdateMessageSendFailed(
+        @SerialName("message")
         val message: Message,
+        @SerialName("old_message_id")
         val oldMessageId: Long,
+        @SerialName("error_code")
         val errorCode: Int,
-        val errorMessage: String
+        @SerialName("error_message")
+        val errorMessage: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The message content has changed
      *
-     * @chatId - Chat identifier
-     * @messageId - Message identifier
-     * @newContent - New message content
+     * @property chatId Chat identifier
+     * @property messageId Message identifier
+     * @property newContent New message content
      */
-    class UpdateMessageContent(
+    @Serializable
+    @SerialName("updateMessageContent")
+    data class UpdateMessageContent(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message_id")
         val messageId: Long,
-        val newContent: MessageContent
+        @SerialName("new_content")
+        val newContent: MessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A message was edited
      * Changes in the message content will come in a separate updateMessageContent
      *
-     * @chatId - Chat identifier
-     * @messageId - Message identifier
-     * @editDate - Point in time (Unix timestamp) when the message was edited
-     * @replyMarkup - New message reply markup
+     * @property chatId Chat identifier
+     * @property messageId Message identifier
+     * @property editDate Point in time (Unix timestamp) when the message was edited
+     * @property replyMarkup New message reply markup
      */
-    class UpdateMessageEdited(
+    @Serializable
+    @SerialName("updateMessageEdited")
+    data class UpdateMessageEdited(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message_id")
         val messageId: Long,
+        @SerialName("edit_date")
         val editDate: Int,
-        val replyMarkup: ReplyMarkup?
+        @SerialName("reply_markup")
+        val replyMarkup: ReplyMarkup?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The view count of the message has changed
      *
-     * @chatId - Chat identifier
-     * @messageId - Message identifier
-     * @views - New value of the view count
+     * @property chatId Chat identifier
+     * @property messageId Message identifier
+     * @property views New value of the view count
      */
-    class UpdateMessageViews(
+    @Serializable
+    @SerialName("updateMessageViews")
+    data class UpdateMessageViews(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message_id")
         val messageId: Long,
-        val views: Int
+        @SerialName("views")
+        val views: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The message content was opened
      * Updates voice note messages to "listened", video note messages to "viewed" and starts the TTL timer for self-destructing messages
      *
-     * @chatId - Chat identifier
-     * @messageId - Message identifier
+     * @property chatId Chat identifier
+     * @property messageId Message identifier
      */
-    class UpdateMessageContentOpened(
+    @Serializable
+    @SerialName("updateMessageContentOpened")
+    data class UpdateMessageContentOpened(
+        @SerialName("chat_id")
         val chatId: Long,
-        val messageId: Long
+        @SerialName("message_id")
+        val messageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A message with an unread mention was read
      *
-     * @chatId - Chat identifier
-     * @messageId - Message identifier
-     * @unreadMentionCount - The new number of unread mention messages left in the chat
+     * @property chatId Chat identifier
+     * @property messageId Message identifier
+     * @property unreadMentionCount The new number of unread mention messages left in the chat
      */
-    class UpdateMessageMentionRead(
+    @Serializable
+    @SerialName("updateMessageMentionRead")
+    data class UpdateMessageMentionRead(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message_id")
         val messageId: Long,
-        val unreadMentionCount: Int
+        @SerialName("unread_mention_count")
+        val unreadMentionCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -7534,43 +11204,62 @@ class TdApi {
      * This update is guaranteed to come before the chat identifier is returned to the client
      * The chat field changes will be reported through separate updates
      *
-     * @chat - The chat
+     * @property chat The chat
      */
-    class UpdateNewChat(
-        val chat: Chat
+    @Serializable
+    @SerialName("updateNewChat")
+    data class UpdateNewChat(
+        @SerialName("chat")
+        val chat: Chat,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The title of a chat was changed
      *
-     * @chatId - Chat identifier
-     * @title - The new chat title
+     * @property chatId Chat identifier
+     * @property title The new chat title
      */
-    class UpdateChatTitle(
+    @Serializable
+    @SerialName("updateChatTitle")
+    data class UpdateChatTitle(
+        @SerialName("chat_id")
         val chatId: Long,
-        val title: String
+        @SerialName("title")
+        val title: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A chat photo was changed
      *
-     * @chatId - Chat identifier
-     * @photo - The new chat photo
+     * @property chatId Chat identifier
+     * @property photo The new chat photo
      */
-    class UpdateChatPhoto(
+    @Serializable
+    @SerialName("updateChatPhoto")
+    data class UpdateChatPhoto(
+        @SerialName("chat_id")
         val chatId: Long,
-        val photo: ChatPhoto?
+        @SerialName("photo")
+        val photo: ChatPhoto?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Chat permissions was changed
      *
-     * @chatId - Chat identifier
-     * @permissions - The new chat permissions
+     * @property chatId Chat identifier
+     * @property permissions The new chat permissions
      */
-    class UpdateChatPermissions(
+    @Serializable
+    @SerialName("updateChatPermissions")
+    data class UpdateChatPermissions(
+        @SerialName("chat_id")
         val chatId: Long,
-        val permissions: ChatPermissions
+        @SerialName("permissions")
+        val permissions: ChatPermissions,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -7578,156 +11267,225 @@ class TdApi {
      * If last_message is null then the last message in the chat became unknown
      * Some new unknown messages might be added to the chat in this case
      *
-     * @chatId - Chat identifier
-     * @lastMessage - The new last message in the chat
-     * @order - New value of the chat order
+     * @property chatId Chat identifier
+     * @property lastMessage The new last message in the chat
+     * @property order New value of the chat order
      */
-    class UpdateChatLastMessage(
+    @Serializable
+    @SerialName("updateChatLastMessage")
+    data class UpdateChatLastMessage(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("last_message")
         val lastMessage: Message?,
-        val order: Long
+        @SerialName("order")
+        val order: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The order of the chat in the chat list has changed
      * Instead of this update updateChatLastMessage, updateChatIsPinned or updateChatDraftMessage might be sent
      *
-     * @chatId - Chat identifier
-     * @order - New value of the order
+     * @property chatId Chat identifier
+     * @property order New value of the order
      */
-    class UpdateChatOrder(
+    @Serializable
+    @SerialName("updateChatOrder")
+    data class UpdateChatOrder(
+        @SerialName("chat_id")
         val chatId: Long,
-        val order: Long
+        @SerialName("order")
+        val order: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A chat was pinned or unpinned
      *
-     * @chatId - Chat identifier
-     * @isPinned - New value of is_pinned
-     * @order - New value of the chat order
+     * @property chatId Chat identifier
+     * @property isPinned New value of is_pinned
+     * @property order New value of the chat order
      */
-    class UpdateChatIsPinned(
+    @Serializable
+    @SerialName("updateChatIsPinned")
+    data class UpdateChatIsPinned(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("is_pinned")
         val isPinned: Boolean,
-        val order: Long
+        @SerialName("order")
+        val order: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A chat was marked as unread or was read
      *
-     * @chatId - Chat identifier
-     * @isMarkedAsUnread - New value of is_marked_as_unread
+     * @property chatId Chat identifier
+     * @property isMarkedAsUnread New value of is_marked_as_unread
      */
-    class UpdateChatIsMarkedAsUnread(
+    @Serializable
+    @SerialName("updateChatIsMarkedAsUnread")
+    data class UpdateChatIsMarkedAsUnread(
+        @SerialName("chat_id")
         val chatId: Long,
-        val isMarkedAsUnread: Boolean
+        @SerialName("is_marked_as_unread")
+        val isMarkedAsUnread: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A chat's is_sponsored field has changed
      *
-     * @chatId - Chat identifier
-     * @isSponsored - New value of is_sponsored
-     * @order - New value of chat order
+     * @property chatId Chat identifier
+     * @property isSponsored New value of is_sponsored
+     * @property order New value of chat order
      */
-    class UpdateChatIsSponsored(
+    @Serializable
+    @SerialName("updateChatIsSponsored")
+    data class UpdateChatIsSponsored(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("is_sponsored")
         val isSponsored: Boolean,
-        val order: Long
+        @SerialName("order")
+        val order: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The value of the default disable_notification parameter, used when a message is sent to the chat, was changed
      *
-     * @chatId - Chat identifier
-     * @defaultDisableNotification - The new default_disable_notification value
+     * @property chatId Chat identifier
+     * @property defaultDisableNotification The new default_disable_notification value
      */
-    class UpdateChatDefaultDisableNotification(
+    @Serializable
+    @SerialName("updateChatDefaultDisableNotification")
+    data class UpdateChatDefaultDisableNotification(
+        @SerialName("chat_id")
         val chatId: Long,
-        val defaultDisableNotification: Boolean
+        @SerialName("default_disable_notification")
+        val defaultDisableNotification: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Incoming messages were read or number of unread messages has been changed
      *
-     * @chatId - Chat identifier
-     * @lastReadInboxMessageId - Identifier of the last read incoming message
-     * @unreadCount - The number of unread messages left in the chat
+     * @property chatId Chat identifier
+     * @property lastReadInboxMessageId Identifier of the last read incoming message
+     * @property unreadCount The number of unread messages left in the chat
      */
-    class UpdateChatReadInbox(
+    @Serializable
+    @SerialName("updateChatReadInbox")
+    data class UpdateChatReadInbox(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("last_read_inbox_message_id")
         val lastReadInboxMessageId: Long,
-        val unreadCount: Int
+        @SerialName("unread_count")
+        val unreadCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Outgoing messages were read
      *
-     * @chatId - Chat identifier
-     * @lastReadOutboxMessageId - Identifier of last read outgoing message
+     * @property chatId Chat identifier
+     * @property lastReadOutboxMessageId Identifier of last read outgoing message
      */
-    class UpdateChatReadOutbox(
+    @Serializable
+    @SerialName("updateChatReadOutbox")
+    data class UpdateChatReadOutbox(
+        @SerialName("chat_id")
         val chatId: Long,
-        val lastReadOutboxMessageId: Long
+        @SerialName("last_read_outbox_message_id")
+        val lastReadOutboxMessageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The chat unread_mention_count has changed
      *
-     * @chatId - Chat identifier
-     * @unreadMentionCount - The number of unread mention messages left in the chat
+     * @property chatId Chat identifier
+     * @property unreadMentionCount The number of unread mention messages left in the chat
      */
-    class UpdateChatUnreadMentionCount(
+    @Serializable
+    @SerialName("updateChatUnreadMentionCount")
+    data class UpdateChatUnreadMentionCount(
+        @SerialName("chat_id")
         val chatId: Long,
-        val unreadMentionCount: Int
+        @SerialName("unread_mention_count")
+        val unreadMentionCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Notification settings for a chat were changed
      *
-     * @chatId - Chat identifier
-     * @notificationSettings - The new notification settings
+     * @property chatId Chat identifier
+     * @property notificationSettings The new notification settings
      */
-    class UpdateChatNotificationSettings(
+    @Serializable
+    @SerialName("updateChatNotificationSettings")
+    data class UpdateChatNotificationSettings(
+        @SerialName("chat_id")
         val chatId: Long,
-        val notificationSettings: ChatNotificationSettings
+        @SerialName("notification_settings")
+        val notificationSettings: ChatNotificationSettings,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Notification settings for some type of chats were updated
      *
-     * @scope - Types of chats for which notification settings were updated
-     * @notificationSettings - The new notification settings
+     * @property scope Types of chats for which notification settings were updated
+     * @property notificationSettings The new notification settings
      */
-    class UpdateScopeNotificationSettings(
+    @Serializable
+    @SerialName("updateScopeNotificationSettings")
+    data class UpdateScopeNotificationSettings(
+        @SerialName("scope")
         val scope: NotificationSettingsScope,
-        val notificationSettings: ScopeNotificationSettings
+        @SerialName("notification_settings")
+        val notificationSettings: ScopeNotificationSettings,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The chat pinned message was changed
      *
-     * @chatId - Chat identifier
-     * @pinnedMessageId - The new identifier of the pinned message
-     *                    0 if there is no pinned message in the chat
+     * @property chatId Chat identifier
+     * @property pinnedMessageId The new identifier of the pinned message
+     *                           0 if there is no pinned message in the chat
      */
-    class UpdateChatPinnedMessage(
+    @Serializable
+    @SerialName("updateChatPinnedMessage")
+    data class UpdateChatPinnedMessage(
+        @SerialName("chat_id")
         val chatId: Long,
-        val pinnedMessageId: Long
+        @SerialName("pinned_message_id")
+        val pinnedMessageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The default chat reply markup was changed
      * Can occur because new messages with reply markup were received or because an old reply markup was hidden by the user
      *
-     * @chatId - Chat identifier
-     * @replyMarkupMessageId - Identifier of the message from which reply markup needs to be used
-     *                         0 if there is no default custom reply markup in the chat
+     * @property chatId Chat identifier
+     * @property replyMarkupMessageId Identifier of the message from which reply markup needs to be used
+     *                                0 if there is no default custom reply markup in the chat
      */
-    class UpdateChatReplyMarkup(
+    @Serializable
+    @SerialName("updateChatReplyMarkup")
+    data class UpdateChatReplyMarkup(
+        @SerialName("chat_id")
         val chatId: Long,
-        val replyMarkupMessageId: Long
+        @SerialName("reply_markup_message_id")
+        val replyMarkupMessageId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -7735,14 +11493,20 @@ class TdApi {
      * Be aware that the update may come in the currently opened chat but with old content of the draft
      * If the user has changed the content of the draft, this update shouldn't be applied
      *
-     * @chatId - Chat identifier
-     * @draftMessage - The new draft message
-     * @order - New value of the chat order
+     * @property chatId Chat identifier
+     * @property draftMessage The new draft message
+     * @property order New value of the chat order
      */
-    class UpdateChatDraftMessage(
+    @Serializable
+    @SerialName("updateChatDraftMessage")
+    data class UpdateChatDraftMessage(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("draft_message")
         val draftMessage: DraftMessage?,
-        val order: Long
+        @SerialName("order")
+        val order: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -7750,46 +11514,67 @@ class TdApi {
      * This update with non-zero count is sent only for currently opened chats
      * There is no guarantee that it will be sent just after the count has changed
      *
-     * @chatId - Identifier of the chat
-     * @onlineMemberCount - New number of online members in the chat, or 0 if unknown
+     * @property chatId Identifier of the chat
+     * @property onlineMemberCount New number of online members in the chat, or 0 if unknown
      */
-    class UpdateChatOnlineMemberCount(
+    @Serializable
+    @SerialName("updateChatOnlineMemberCount")
+    data class UpdateChatOnlineMemberCount(
+        @SerialName("chat_id")
         val chatId: Long,
-        val onlineMemberCount: Int
+        @SerialName("online_member_count")
+        val onlineMemberCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A notification was changed
      *
-     * @notificationGroupId - Unique notification group identifier
-     * @notification - Changed notification
+     * @property notificationGroupId Unique notification group identifier
+     * @property notification Changed notification
      */
-    class UpdateNotification(
+    @Serializable
+    @SerialName("updateNotification")
+    data class UpdateNotification(
+        @SerialName("notification_group_id")
         val notificationGroupId: Int,
-        val notification: Notification
+        @SerialName("notification")
+        val notification: Notification,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A list of active notifications in a notification group has changed
      *
-     * @notificationGroupId - Unique notification group identifier
-     * @type - New type of the notification group
-     * @chatId - Identifier of a chat to which all notifications in the group belong
-     * @notificationSettingsChatId - Chat identifier, which notification settings must be applied to the added notifications
-     * @isSilent - True, if the notifications should be shown without sound
-     * @totalCount - Total number of unread notifications in the group, can be bigger than number of active notifications
-     * @addedNotifications - List of added group notifications, sorted by notification ID
-     * @removedNotificationIds - Identifiers of removed group notifications, sorted by notification ID
+     * @property notificationGroupId Unique notification group identifier
+     * @property type New type of the notification group
+     * @property chatId Identifier of a chat to which all notifications in the group belong
+     * @property notificationSettingsChatId Chat identifier, which notification settings must be applied to the added notifications
+     * @property isSilent True, if the notifications should be shown without sound
+     * @property totalCount Total number of unread notifications in the group, can be bigger than number of active notifications
+     * @property addedNotifications List of added group notifications, sorted by notification ID
+     * @property removedNotificationIds Identifiers of removed group notifications, sorted by notification ID
      */
-    class UpdateNotificationGroup(
+    @Serializable
+    @SerialName("updateNotificationGroup")
+    data class UpdateNotificationGroup(
+        @SerialName("notification_group_id")
         val notificationGroupId: Int,
+        @SerialName("type")
         val type: NotificationGroupType,
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("notification_settings_chat_id")
         val notificationSettingsChatId: Long,
+        @SerialName("is_silent")
         val isSilent: Boolean,
+        @SerialName("total_count")
         val totalCount: Int,
+        @SerialName("added_notifications")
         val addedNotifications: Array<Notification>,
-        val removedNotificationIds: IntArray
+        @SerialName("removed_notification_ids")
+        val removedNotificationIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -7797,214 +11582,306 @@ class TdApi {
      * This update is sent only if a message database is used
      * In that case it comes once before any updateNotification and updateNotificationGroup update
      *
-     * @groups - Lists of active notification groups
+     * @property groups Lists of active notification groups
      */
-    class UpdateActiveNotifications(
-        val groups: Array<NotificationGroup>
+    @Serializable
+    @SerialName("updateActiveNotifications")
+    data class UpdateActiveNotifications(
+        @SerialName("groups")
+        val groups: Array<NotificationGroup>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Describes, whether there are some pending notification updates
      * Can be used to prevent application from killing, while there are some pending notifications
      *
-     * @haveDelayedNotifications - True, if there are some delayed notification updates, which will be sent soon
-     * @haveUnreceivedNotifications - True, if there can be some yet unreceived notifications, which are being fetched from the server
+     * @property haveDelayedNotifications True, if there are some delayed notification updates, which will be sent soon
+     * @property haveUnreceivedNotifications True, if there can be some yet unreceived notifications, which are being fetched from the server
      */
-    class UpdateHavePendingNotifications(
+    @Serializable
+    @SerialName("updateHavePendingNotifications")
+    data class UpdateHavePendingNotifications(
+        @SerialName("have_delayed_notifications")
         val haveDelayedNotifications: Boolean,
-        val haveUnreceivedNotifications: Boolean
+        @SerialName("have_unreceived_notifications")
+        val haveUnreceivedNotifications: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some messages were deleted
      *
-     * @chatId - Chat identifier
-     * @messageIds - Identifiers of the deleted messages
-     * @isPermanent - True, if the messages are permanently deleted by a user (as opposed to just becoming inaccessible)
-     * @fromCache - True, if the messages are deleted only from the cache and can possibly be retrieved again in the future
+     * @property chatId Chat identifier
+     * @property messageIds Identifiers of the deleted messages
+     * @property isPermanent True, if the messages are permanently deleted by a user (as opposed to just becoming inaccessible)
+     * @property fromCache True, if the messages are deleted only from the cache and can possibly be retrieved again in the future
      */
-    class UpdateDeleteMessages(
+    @Serializable
+    @SerialName("updateDeleteMessages")
+    data class UpdateDeleteMessages(
+        @SerialName("chat_id")
         val chatId: Long,
-        val messageIds: LongArray,
+        @SerialName("message_ids")
+        val messageIds: Array<Long>,
+        @SerialName("is_permanent")
         val isPermanent: Boolean,
-        val fromCache: Boolean
+        @SerialName("from_cache")
+        val fromCache: Boolean,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * User activity in the chat has changed
      *
-     * @chatId - Chat identifier
-     * @userId - Identifier of a user performing an action
-     * @action - The action description
+     * @property chatId Chat identifier
+     * @property userId Identifier of a user performing an action
+     * @property action The action description
      */
-    class UpdateUserChatAction(
+    @Serializable
+    @SerialName("updateUserChatAction")
+    data class UpdateUserChatAction(
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("user_id")
         val userId: Int,
-        val action: ChatAction
+        @SerialName("action")
+        val action: ChatAction,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The user went online or offline
      *
-     * @userId - User identifier
-     * @status - New status of the user
+     * @property userId User identifier
+     * @property status New status of the user
      */
-    class UpdateUserStatus(
+    @Serializable
+    @SerialName("updateUserStatus")
+    data class UpdateUserStatus(
+        @SerialName("user_id")
         val userId: Int,
-        val status: UserStatus
+        @SerialName("status")
+        val status: UserStatus,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data of a user has changed
      * This update is guaranteed to come before the user identifier is returned to the client
      *
-     * @user - New data about the user
+     * @property user New data about the user
      */
-    class UpdateUser(
-        val user: User
+    @Serializable
+    @SerialName("updateUser")
+    data class UpdateUser(
+        @SerialName("user")
+        val user: User,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data of a basic group has changed
      * This update is guaranteed to come before the basic group identifier is returned to the client
      *
-     * @basicGroup - New data about the group
+     * @property basicGroup New data about the group
      */
-    class UpdateBasicGroup(
-        val basicGroup: BasicGroup
+    @Serializable
+    @SerialName("updateBasicGroup")
+    data class UpdateBasicGroup(
+        @SerialName("basic_group")
+        val basicGroup: BasicGroup,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data of a supergroup or a channel has changed
      * This update is guaranteed to come before the supergroup identifier is returned to the client
      *
-     * @supergroup - New data about the supergroup
+     * @property supergroup New data about the supergroup
      */
-    class UpdateSupergroup(
-        val supergroup: Supergroup
+    @Serializable
+    @SerialName("updateSupergroup")
+    data class UpdateSupergroup(
+        @SerialName("supergroup")
+        val supergroup: Supergroup,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data of a secret chat has changed
      * This update is guaranteed to come before the secret chat identifier is returned to the client
      *
-     * @secretChat - New data about the secret chat
+     * @property secretChat New data about the secret chat
      */
-    class UpdateSecretChat(
-        val secretChat: SecretChat
+    @Serializable
+    @SerialName("updateSecretChat")
+    data class UpdateSecretChat(
+        @SerialName("secret_chat")
+        val secretChat: SecretChat,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data from userFullInfo has been changed
      *
-     * @userId - User identifier
-     * @userFullInfo - New full information about the user
+     * @property userId User identifier
+     * @property userFullInfo New full information about the user
      */
-    class UpdateUserFullInfo(
+    @Serializable
+    @SerialName("updateUserFullInfo")
+    data class UpdateUserFullInfo(
+        @SerialName("user_id")
         val userId: Int,
-        val userFullInfo: UserFullInfo
+        @SerialName("user_full_info")
+        val userFullInfo: UserFullInfo,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data from basicGroupFullInfo has been changed
      *
-     * @basicGroupId - Identifier of a basic group
-     * @basicGroupFullInfo - New full information about the group
+     * @property basicGroupId Identifier of a basic group
+     * @property basicGroupFullInfo New full information about the group
      */
-    class UpdateBasicGroupFullInfo(
+    @Serializable
+    @SerialName("updateBasicGroupFullInfo")
+    data class UpdateBasicGroupFullInfo(
+        @SerialName("basic_group_id")
         val basicGroupId: Int,
-        val basicGroupFullInfo: BasicGroupFullInfo
+        @SerialName("basic_group_full_info")
+        val basicGroupFullInfo: BasicGroupFullInfo,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some data from supergroupFullInfo has been changed
      *
-     * @supergroupId - Identifier of the supergroup or channel
-     * @supergroupFullInfo - New full information about the supergroup
+     * @property supergroupId Identifier of the supergroup or channel
+     * @property supergroupFullInfo New full information about the supergroup
      */
-    class UpdateSupergroupFullInfo(
+    @Serializable
+    @SerialName("updateSupergroupFullInfo")
+    data class UpdateSupergroupFullInfo(
+        @SerialName("supergroup_id")
         val supergroupId: Int,
-        val supergroupFullInfo: SupergroupFullInfo
+        @SerialName("supergroup_full_info")
+        val supergroupFullInfo: SupergroupFullInfo,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Service notification from the server
      * Upon receiving this the client must show a popup with the content of the notification
      *
-     * @type - Notification type
-     *         If type begins with "AUTH_KEY_DROP_", then two buttons "Cancel" and "Log out" should be shown under notification
-     *         If user presses the second, all local data should be destroyed using Destroy method
-     * @content - Notification content
+     * @property type Notification type
+     *                If type begins with "AUTH_KEY_DROP_", then two buttons "Cancel" and "Log out" should be shown under notification
+     *                If user presses the second, all local data should be destroyed using Destroy method
+     * @property content Notification content
      */
-    class UpdateServiceNotification(
+    @Serializable
+    @SerialName("updateServiceNotification")
+    data class UpdateServiceNotification(
+        @SerialName("type")
         val type: String,
-        val content: MessageContent
+        @SerialName("content")
+        val content: MessageContent,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Information about a file was updated
      *
-     * @file - New data about the file
+     * @property file New data about the file
      */
-    class UpdateFile(
-        val file: File
+    @Serializable
+    @SerialName("updateFile")
+    data class UpdateFile(
+        @SerialName("file")
+        val file: File,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The file generation process needs to be started by the client
      *
-     * @generationId - Unique identifier for the generation process
-     * @originalPath - The path to a file from which a new file is generated
-     * @destinationPath - The path to a file that should be created and where the new file should be generated
-     * @conversion - String specifying the conversion applied to the original file
-     *               If conversion is "#url#" than original_path contains an HTTP/HTTPS URL of a file, which should be downloaded by the client
+     * @property generationId Unique identifier for the generation process
+     * @property originalPath The path to a file from which a new file is generated
+     * @property destinationPath The path to a file that should be created and where the new file should be generated
+     * @property conversion String specifying the conversion applied to the original file
+     *                      If conversion is "#url#" than original_path contains an HTTP/HTTPS URL of a file, which should be downloaded by the client
      */
-    class UpdateFileGenerationStart(
+    @Serializable
+    @SerialName("updateFileGenerationStart")
+    data class UpdateFileGenerationStart(
+        @SerialName("generation_id")
         val generationId: Long,
+        @SerialName("original_path")
         val originalPath: String?,
+        @SerialName("destination_path")
         val destinationPath: String,
-        val conversion: String
+        @SerialName("conversion")
+        val conversion: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * File generation is no longer needed
      *
-     * @generationId - Unique identifier for the generation process
+     * @property generationId Unique identifier for the generation process
      */
-    class UpdateFileGenerationStop(
-        val generationId: Long
+    @Serializable
+    @SerialName("updateFileGenerationStop")
+    data class UpdateFileGenerationStop(
+        @SerialName("generation_id")
+        val generationId: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * New call was created or information about a call was updated
      *
-     * @call - New data about a call
+     * @property call New data about a call
      */
-    class UpdateCall(
-        val call: Call
+    @Serializable
+    @SerialName("updateCall")
+    data class UpdateCall(
+        @SerialName("call")
+        val call: Call,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some privacy setting rules have been changed
      *
-     * @setting - The privacy setting
-     * @rules - New privacy rules
+     * @property setting The privacy setting
+     * @property rules New privacy rules
      */
-    class UpdateUserPrivacySettingRules(
+    @Serializable
+    @SerialName("updateUserPrivacySettingRules")
+    data class UpdateUserPrivacySettingRules(
+        @SerialName("setting")
         val setting: UserPrivacySetting,
-        val rules: UserPrivacySettingRules
+        @SerialName("rules")
+        val rules: UserPrivacySettingRules,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Number of unread messages has changed
      * This update is sent only if a message database is used
      *
-     * @unreadCount - Total number of unread messages
-     * @unreadUnmutedCount - Total number of unread messages in unmuted chats
+     * @property unreadCount Total number of unread messages
+     * @property unreadUnmutedCount Total number of unread messages in unmuted chats
      */
-    class UpdateUnreadMessageCount(
+    @Serializable
+    @SerialName("updateUnreadMessageCount")
+    data class UpdateUnreadMessageCount(
+        @SerialName("unread_count")
         val unreadCount: Int,
-        val unreadUnmutedCount: Int
+        @SerialName("unread_unmuted_count")
+        val unreadUnmutedCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
@@ -8012,523 +11889,808 @@ class TdApi {
      * With unread messages or marked as unread, has changed
      * This update is sent only if a message database is used
      *
-     * @unreadCount - Total number of unread chats
-     * @unreadUnmutedCount - Total number of unread unmuted chats
-     * @markedAsUnreadCount - Total number of chats marked as unread
-     * @markedAsUnreadUnmutedCount - Total number of unmuted chats marked as unread
+     * @property unreadCount Total number of unread chats
+     * @property unreadUnmutedCount Total number of unread unmuted chats
+     * @property markedAsUnreadCount Total number of chats marked as unread
+     * @property markedAsUnreadUnmutedCount Total number of unmuted chats marked as unread
      */
-    class UpdateUnreadChatCount(
+    @Serializable
+    @SerialName("updateUnreadChatCount")
+    data class UpdateUnreadChatCount(
+        @SerialName("unread_count")
         val unreadCount: Int,
+        @SerialName("unread_unmuted_count")
         val unreadUnmutedCount: Int,
+        @SerialName("marked_as_unread_count")
         val markedAsUnreadCount: Int,
-        val markedAsUnreadUnmutedCount: Int
+        @SerialName("marked_as_unread_unmuted_count")
+        val markedAsUnreadUnmutedCount: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * An option changed its value
      *
-     * @name - The option name
-     * @value - The new option value
+     * @property name The option name
+     * @property value The new option value
      */
-    class UpdateOption(
+    @Serializable
+    @SerialName("updateOption")
+    data class UpdateOption(
+        @SerialName("name")
         val name: String,
-        val value: OptionValue
+        @SerialName("value")
+        val value: OptionValue,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The list of installed sticker sets was updated
      *
-     * @isMasks - True, if the list of installed mask sticker sets was updated
-     * @stickerSetIds - The new list of installed ordinary sticker sets
+     * @property isMasks True, if the list of installed mask sticker sets was updated
+     * @property stickerSetIds The new list of installed ordinary sticker sets
      */
-    class UpdateInstalledStickerSets(
+    @Serializable
+    @SerialName("updateInstalledStickerSets")
+    data class UpdateInstalledStickerSets(
+        @SerialName("is_masks")
         val isMasks: Boolean,
-        val stickerSetIds: LongArray
+        @SerialName("sticker_set_ids")
+        val stickerSetIds: Array<Long>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The list of trending sticker sets was updated or some of them were viewed
      *
-     * @stickerSets - The new list of trending sticker sets
+     * @property stickerSets The new list of trending sticker sets
      */
-    class UpdateTrendingStickerSets(
-        val stickerSets: StickerSets
+    @Serializable
+    @SerialName("updateTrendingStickerSets")
+    data class UpdateTrendingStickerSets(
+        @SerialName("sticker_sets")
+        val stickerSets: StickerSets,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The list of recently used stickers was updated
      *
-     * @isAttached - True, if the list of stickers attached to photo or video files was updated, otherwise the list of sent stickers is updated
-     * @stickerIds - The new list of file identifiers of recently used stickers
+     * @property isAttached True, if the list of stickers attached to photo or video files was updated, otherwise the list of sent stickers is updated
+     * @property stickerIds The new list of file identifiers of recently used stickers
      */
-    class UpdateRecentStickers(
+    @Serializable
+    @SerialName("updateRecentStickers")
+    data class UpdateRecentStickers(
+        @SerialName("is_attached")
         val isAttached: Boolean,
-        val stickerIds: IntArray
+        @SerialName("sticker_ids")
+        val stickerIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The list of favorite stickers was updated
      *
-     * @stickerIds - The new list of file identifiers of favorite stickers
+     * @property stickerIds The new list of file identifiers of favorite stickers
      */
-    class UpdateFavoriteStickers(
-        val stickerIds: IntArray
+    @Serializable
+    @SerialName("updateFavoriteStickers")
+    data class UpdateFavoriteStickers(
+        @SerialName("sticker_ids")
+        val stickerIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The list of saved animations was updated
      *
-     * @animationIds - The new list of file identifiers of saved animations
+     * @property animationIds The new list of file identifiers of saved animations
      */
-    class UpdateSavedAnimations(
-        val animationIds: IntArray
+    @Serializable
+    @SerialName("updateSavedAnimations")
+    data class UpdateSavedAnimations(
+        @SerialName("animation_ids")
+        val animationIds: Array<Int>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The selected background has changed
      *
-     * @forDarkTheme - True, if background for dark theme has changed
-     * @background - The new selected background
+     * @property forDarkTheme True, if background for dark theme has changed
+     * @property background The new selected background
      */
-    class UpdateSelectedBackground(
+    @Serializable
+    @SerialName("updateSelectedBackground")
+    data class UpdateSelectedBackground(
+        @SerialName("for_dark_theme")
         val forDarkTheme: Boolean,
-        val background: Background?
+        @SerialName("background")
+        val background: Background?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Some language pack strings have been updated
      *
-     * @localizationTarget - Localization target to which the language pack belongs
-     * @languagePackId - Identifier of the updated language pack
-     * @strings - List of changed language pack strings
+     * @property localizationTarget Localization target to which the language pack belongs
+     * @property languagePackId Identifier of the updated language pack
+     * @property strings List of changed language pack strings
      */
-    class UpdateLanguagePackStrings(
+    @Serializable
+    @SerialName("updateLanguagePackStrings")
+    data class UpdateLanguagePackStrings(
+        @SerialName("localization_target")
         val localizationTarget: String,
+        @SerialName("language_pack_id")
         val languagePackId: String,
-        val strings: Array<LanguagePackString>
+        @SerialName("strings")
+        val strings: Array<LanguagePackString>,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The connection state has changed
      *
-     * @state - The new connection state
+     * @property state The new connection state
      */
-    class UpdateConnectionState(
-        val state: ConnectionState
+    @Serializable
+    @SerialName("updateConnectionState")
+    data class UpdateConnectionState(
+        @SerialName("state")
+        val state: ConnectionState,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * New terms of service must be accepted by the user
      * If the terms of service are declined, then the deleteAccount method should be called with the reason "Decline ToS update"
      *
-     * @termsOfServiceId - Identifier of the terms of service
-     * @termsOfService - The new terms of service
+     * @property termsOfServiceId Identifier of the terms of service
+     * @property termsOfService The new terms of service
      */
-    class UpdateTermsOfService(
+    @Serializable
+    @SerialName("updateTermsOfService")
+    data class UpdateTermsOfService(
+        @SerialName("terms_of_service_id")
         val termsOfServiceId: String,
-        val termsOfService: TermsOfService
+        @SerialName("terms_of_service")
+        val termsOfService: TermsOfService,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming inline query
      *
-     * @id - Unique query identifier
-     * @senderUserId - Identifier of the user who sent the query
-     * @userLocation - User location, provided by the client
-     * @query - Text of the query
-     * @offset - Offset of the first entry to return
+     * @property id Unique query identifier
+     * @property senderUserId Identifier of the user who sent the query
+     * @property userLocation User location, provided by the client
+     * @property query Text of the query
+     * @property offset Offset of the first entry to return
      */
+    @Serializable
+    @SerialName("updateNewInlineQuery")
     @BotsOnly
-    class UpdateNewInlineQuery(
+    data class UpdateNewInlineQuery(
+        @SerialName("id")
         val id: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("user_location")
         val userLocation: Location?,
+        @SerialName("query")
         val query: String,
-        val offset: String
+        @SerialName("offset")
+        val offset: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * The user has chosen a result of an inline query
      *
-     * @senderUserId - Identifier of the user who sent the query
-     * @userLocation - User location, provided by the client
-     * @query - Text of the query
-     * @resultId - Identifier of the chosen result
-     * @inlineMessageId - Identifier of the sent inline message, if known
+     * @property senderUserId Identifier of the user who sent the query
+     * @property userLocation User location, provided by the client
+     * @property query Text of the query
+     * @property resultId Identifier of the chosen result
+     * @property inlineMessageId Identifier of the sent inline message, if known
      */
+    @Serializable
+    @SerialName("updateNewChosenInlineResult")
     @BotsOnly
-    class UpdateNewChosenInlineResult(
+    data class UpdateNewChosenInlineResult(
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("user_location")
         val userLocation: Location?,
+        @SerialName("query")
         val query: String,
+        @SerialName("result_id")
         val resultId: String,
-        val inlineMessageId: String
+        @SerialName("inline_message_id")
+        val inlineMessageId: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming callback query
      *
-     * @id - Unique query identifier
-     * @senderUserId - Identifier of the user who sent the query
-     * @chatId - Identifier of the chat, in which the query was sent
-     * @messageId - Identifier of the message, from which the query originated
-     * @chatInstance - Identifier that uniquely corresponds to the chat to which the message was sent
-     * @payload - Query payload
+     * @property id Unique query identifier
+     * @property senderUserId Identifier of the user who sent the query
+     * @property chatId Identifier of the chat, in which the query was sent
+     * @property messageId Identifier of the message, from which the query originated
+     * @property chatInstance Identifier that uniquely corresponds to the chat to which the message was sent
+     * @property payload Query payload
      */
+    @Serializable
+    @SerialName("updateNewCallbackQuery")
     @BotsOnly
-    class UpdateNewCallbackQuery(
+    data class UpdateNewCallbackQuery(
+        @SerialName("id")
         val id: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("chat_id")
         val chatId: Long,
+        @SerialName("message_id")
         val messageId: Long,
+        @SerialName("chat_instance")
         val chatInstance: Long,
-        val payload: CallbackQueryPayload
+        @SerialName("payload")
+        val payload: CallbackQueryPayload,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming callback query from a message sent via a bot
      *
-     * @id - Unique query identifier
-     * @senderUserId - Identifier of the user who sent the query
-     * @inlineMessageId - Identifier of the inline message, from which the query originated
-     * @chatInstance - An identifier uniquely corresponding to the chat a message was sent to
-     * @payload - Query payload
+     * @property id Unique query identifier
+     * @property senderUserId Identifier of the user who sent the query
+     * @property inlineMessageId Identifier of the inline message, from which the query originated
+     * @property chatInstance An identifier uniquely corresponding to the chat a message was sent to
+     * @property payload Query payload
      */
+    @Serializable
+    @SerialName("updateNewInlineCallbackQuery")
     @BotsOnly
-    class UpdateNewInlineCallbackQuery(
+    data class UpdateNewInlineCallbackQuery(
+        @SerialName("id")
         val id: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("inline_message_id")
         val inlineMessageId: String,
+        @SerialName("chat_instance")
         val chatInstance: Long,
-        val payload: CallbackQueryPayload
+        @SerialName("payload")
+        val payload: CallbackQueryPayload,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming shipping query
      * Only for invoices with flexible price
      *
-     * @id - Unique query identifier
-     * @senderUserId - Identifier of the user who sent the query
-     * @invoicePayload - Invoice payload
-     * @shippingAddress - User shipping address
+     * @property id Unique query identifier
+     * @property senderUserId Identifier of the user who sent the query
+     * @property invoicePayload Invoice payload
+     * @property shippingAddress User shipping address
      */
+    @Serializable
+    @SerialName("updateNewShippingQuery")
     @BotsOnly
-    class UpdateNewShippingQuery(
+    data class UpdateNewShippingQuery(
+        @SerialName("id")
         val id: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("invoice_payload")
         val invoicePayload: String,
-        val shippingAddress: Address
+        @SerialName("shipping_address")
+        val shippingAddress: Address,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming pre-checkout query
      * Contains full information about a checkout
      *
-     * @id - Unique query identifier
-     * @senderUserId - Identifier of the user who sent the query
-     * @currency - Currency for the product price
-     * @totalAmount - Total price for the product, in the minimal quantity of the currency
-     * @invoicePayload - Invoice payload
-     * @shippingOptionId - Identifier of a shipping option chosen by the user
-     *                     May be empty if not applicable
-     * @orderInfo - Information about the order
+     * @property id Unique query identifier
+     * @property senderUserId Identifier of the user who sent the query
+     * @property currency Currency for the product price
+     * @property totalAmount Total price for the product, in the minimal quantity of the currency
+     * @property invoicePayload Invoice payload
+     * @property shippingOptionId Identifier of a shipping option chosen by the user
+     *                            May be empty if not applicable
+     * @property orderInfo Information about the order
      */
+    @Serializable
+    @SerialName("updateNewPreCheckoutQuery")
     @BotsOnly
-    class UpdateNewPreCheckoutQuery(
+    data class UpdateNewPreCheckoutQuery(
+        @SerialName("id")
         val id: Long,
+        @SerialName("sender_user_id")
         val senderUserId: Int,
+        @SerialName("currency")
         val currency: String,
+        @SerialName("total_amount")
         val totalAmount: Long,
-        val invoicePayload: ByteArray,
+        @SerialName("invoice_payload")
+        val invoicePayload: Array<Byte>,
+        @SerialName("shipping_option_id")
         val shippingOptionId: String?,
-        val orderInfo: OrderInfo?
+        @SerialName("order_info")
+        val orderInfo: OrderInfo?,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming event
      *
-     * @event - A JSON-serialized event
+     * @property event A JSON-serialized event
      */
+    @Serializable
+    @SerialName("updateNewCustomEvent")
     @BotsOnly
-    class UpdateNewCustomEvent(
-        val event: String
+    data class UpdateNewCustomEvent(
+        @SerialName("event")
+        val event: String,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * A new incoming query
      *
-     * @id - The query identifier
-     * @data - JSON-serialized query data
-     * @timeout - Query timeout
+     * @property id The query identifier
+     * @property data JSON-serialized query data
+     * @property timeout Query timeout
      */
+    @Serializable
+    @SerialName("updateNewCustomQuery")
     @BotsOnly
-    class UpdateNewCustomQuery(
+    data class UpdateNewCustomQuery(
+        @SerialName("id")
         val id: Long,
+        @SerialName("data")
         val data: String,
-        val timeout: Int
+        @SerialName("timeout")
+        val timeout: Int,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Information about a poll was updated
      *
-     * @poll - New data about the poll
+     * @property poll New data about the poll
      */
+    @Serializable
+    @SerialName("updatePoll")
     @BotsOnly
-    class UpdatePoll(
-        val poll: Poll
+    data class UpdatePoll(
+        @SerialName("poll")
+        val poll: Poll,
+        extra: TdExtra = TdExtra.EMPTY
     ) : Update()
 
     /**
      * Contains a list of updates
      *
-     * @updates - List of updates
+     * @property updates List of updates
+     * @property extra Extra data shared between request and response
      */
-    class Updates(
-        val updates: Array<Update>
-    ) : Object()
+    @Serializable
+    @SerialName("updates")
+    data class Updates(
+        @SerialName("updates")
+        val updates: Array<Update>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Describes a stream to which TDLib internal log is written
+     *
+     * @property extra Extra data shared between request and response
      */
-    abstract class LogStream : null()
+    abstract class LogStream : Object(), TdResponse
 
     /**
      * The log is written to stderr or an OS specific log
      */
-    class LogStreamDefault : LogStream()
+    @Serializable
+    @SerialName("logStreamDefault")
+    data class LogStreamDefault(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : LogStream()
 
     /**
      * The log is written to a file
      *
-     * @path - Path to the file to where the internal TDLib log will be written
-     * @maxFileSize - Maximum size of the file to where the internal TDLib log is written before the file will be auto-rotated
+     * @property path Path to the file to where the internal TDLib log will be written
+     * @property maxFileSize Maximum size of the file to where the internal TDLib log is written before the file will be auto-rotated
      */
-    class LogStreamFile(
+    @Serializable
+    @SerialName("logStreamFile")
+    data class LogStreamFile(
+        @SerialName("path")
         val path: String,
-        val maxFileSize: Long = 0L
+        @SerialName("max_file_size")
+        val maxFileSize: Long,
+        extra: TdExtra = TdExtra.EMPTY
     ) : LogStream()
 
     /**
      * The log is written nowhere
      */
-    class LogStreamEmpty : LogStream()
+    @Serializable
+    @SerialName("logStreamEmpty")
+    data class LogStreamEmpty(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : LogStream()
 
     /**
      * Contains a TDLib internal log verbosity level
      *
-     * @verbosityLevel - Log verbosity level
+     * @property verbosityLevel Log verbosity level
+     * @property extra Extra data shared between request and response
      */
-    class LogVerbosityLevel(
-        val verbosityLevel: Int
-    ) : Object()
+    @Serializable
+    @SerialName("logVerbosityLevel")
+    data class LogVerbosityLevel(
+        @SerialName("verbosity_level")
+        val verbosityLevel: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Contains a list of available TDLib internal log tags
      *
-     * @tags - List of log tags
+     * @property tags List of log tags
+     * @property extra Extra data shared between request and response
      */
-    class LogTags(
-        val tags: Array<String>
-    ) : Object()
+    @Serializable
+    @SerialName("logTags")
+    data class LogTags(
+        @SerialName("tags")
+        val tags: Array<String>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a number
      *
-     * @value - Number
+     * @property value Number
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testInt")
     @TestingOnly
-    class TestInt(
-        val value: Int = 0
-    ) : Object()
+    data class TestInt(
+        @SerialName("value")
+        val value: Int,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a string
      *
-     * @value - String
+     * @property value String
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testString")
     @TestingOnly
-    class TestString(
-        val value: String
-    ) : Object()
+    data class TestString(
+        @SerialName("value")
+        val value: String,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a sequence of bytes
      *
-     * @value - Bytes
+     * @property value Bytes
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testBytes")
     @TestingOnly
-    class TestBytes(
-        val value: ByteArray
-    ) : Object()
+    data class TestBytes(
+        @SerialName("value")
+        val value: Array<Byte>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a vector of numbers
      *
-     * @value - Vector of numbers
+     * @property value Vector of numbers
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testVectorInt")
     @TestingOnly
-    class TestVectorInt(
-        val value: IntArray
-    ) : Object()
+    data class TestVectorInt(
+        @SerialName("value")
+        val value: Array<Int>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a vector of objects that hold a number
      *
-     * @value - Vector of objects
+     * @property value Vector of objects
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testVectorIntObject")
     @TestingOnly
-    class TestVectorIntObject(
-        val value: Array<TestInt>
-    ) : Object()
+    data class TestVectorIntObject(
+        @SerialName("value")
+        val value: Array<TestInt>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a vector of strings
      *
-     * @value - Vector of strings
+     * @property value Vector of strings
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testVectorString")
     @TestingOnly
-    class TestVectorString(
-        val value: Array<String>
-    ) : Object()
+    data class TestVectorString(
+        @SerialName("value")
+        val value: Array<String>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * A simple object containing a vector of objects that hold a string
      *
-     * @value - Vector of objects
+     * @property value Vector of objects
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testVectorStringObject")
     @TestingOnly
-    class TestVectorStringObject(
-        val value: Array<TestString>
-    ) : Object()
+    data class TestVectorStringObject(
+        @SerialName("value")
+        val value: Array<TestString>,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Object(), TdResponse
 
     /**
      * Returns the current authorization state
      * This is an offline request
      * For informational purposes only
      * Use updateAuthorizationState instead to maintain the current authorization state
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetAuthorizationState : null()
+    @Serializable
+    @SerialName("getAuthorizationState")
+    data class GetAuthorizationState(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthorizationState>
 
     /**
      * Sets the parameters for TDLib initialization
      * Works only when the current authorization state is authorizationStateWaitTdlibParameters
      *
-     * @parameters - Parameters
+     * @property parameters Parameters
+     * @property extra Extra data shared between request and response
      */
-    class SetTdlibParameters(
-        val parameters: TdlibParameters? = null
-    ) : null()
+    @Serializable
+    @SerialName("setTdlibParameters")
+    data class SetTdlibParameters(
+        @SerialName("parameters")
+        val parameters: TdlibParameters? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Checks the database encryption key for correctness
      * Works only when the current authorization state is authorizationStateWaitEncryptionKey
      *
-     * @encryptionKey - Encryption key to check or set up
+     * @property encryptionKey Encryption key to check or set up
+     * @property extra Extra data shared between request and response
      */
-    class CheckDatabaseEncryptionKey(
-        val encryptionKey: ByteArray = byteArrayOf()
-    ) : null()
+    @Serializable
+    @SerialName("checkDatabaseEncryptionKey")
+    data class CheckDatabaseEncryptionKey(
+        @SerialName("encryption_key")
+        val encryptionKey: Array<Byte> = byteArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sets the phone number of the user and sends an authentication code to the user
      * Works only when the current authorization state is authorizationStateWaitPhoneNumber, or if there is no pending authentication query and the current authorization state is authorizationStateWaitCode or authorizationStateWaitPassword
      *
-     * @phoneNumber - The phone number of the user, in international format
-     * @settings - Settings for the authentication of the user's phone number
+     * @property phoneNumber The phone number of the user, in international format
+     * @property settings Settings for the authentication of the user's phone number
+     * @property extra Extra data shared between request and response
      */
-    class SetAuthenticationPhoneNumber(
+    @Serializable
+    @SerialName("setAuthenticationPhoneNumber")
+    data class SetAuthenticationPhoneNumber(
+        @SerialName("phone_number")
         val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
-    ) : null()
+        @SerialName("settings")
+        val settings: PhoneNumberAuthenticationSettings? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Re-sends an authentication code to the user
      * Works only when the current authorization state is authorizationStateWaitCode and the next_code_type of the result is not null
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResendAuthenticationCode : null()
+    @Serializable
+    @SerialName("resendAuthenticationCode")
+    data class ResendAuthenticationCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Checks the authentication code
      * Works only when the current authorization state is authorizationStateWaitCode
      *
-     * @code - The verification code received via SMS, Telegram message, phone call, or flash call
+     * @property code The verification code received via SMS, Telegram message, phone call, or flash call
+     * @property extra Extra data shared between request and response
      */
-    class CheckAuthenticationCode(
-        val code: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkAuthenticationCode")
+    data class CheckAuthenticationCode(
+        @SerialName("code")
+        val code: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Finishes user registration
      * Works only when the current authorization state is authorizationStateWaitRegistration
      *
-     * @firstName - The first name of the user
-     * @lastName - The last name of the user
+     * @property firstName The first name of the user
+     * @property lastName The last name of the user
+     * @property extra Extra data shared between request and response
      */
-    class RegisterUser(
+    @Serializable
+    @SerialName("registerUser")
+    data class RegisterUser(
+        @SerialName("first_name")
         val firstName: String? = null,
-        val lastName: String? = null
-    ) : null()
+        @SerialName("last_name")
+        val lastName: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Checks the authentication password for correctness
      * Works only when the current authorization state is authorizationStateWaitPassword
      *
-     * @password - The password to check
+     * @property password The password to check
+     * @property extra Extra data shared between request and response
      */
-    class CheckAuthenticationPassword(
-        val password: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkAuthenticationPassword")
+    data class CheckAuthenticationPassword(
+        @SerialName("password")
+        val password: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Requests to send a password recovery code to an email address that was previously set up
      * Works only when the current authorization state is authorizationStateWaitPassword
+     *
+     * @property extra Extra data shared between request and response
      */
-    class RequestAuthenticationPasswordRecovery : null()
+    @Serializable
+    @SerialName("requestAuthenticationPasswordRecovery")
+    data class RequestAuthenticationPasswordRecovery(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Recovers the password with a password recovery code sent to an email address that was previously set up
      * Works only when the current authorization state is authorizationStateWaitPassword
      *
-     * @recoveryCode - Recovery code to check
+     * @property recoveryCode Recovery code to check
+     * @property extra Extra data shared between request and response
      */
-    class RecoverAuthenticationPassword(
-        val recoveryCode: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("recoverAuthenticationPassword")
+    data class RecoverAuthenticationPassword(
+        @SerialName("recovery_code")
+        val recoveryCode: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Checks the authentication token of a bot
      * Works only when the current authorization state is authorizationStateWaitPhoneNumber
      * Can be used instead of setAuthenticationPhoneNumber and checkAuthenticationCode to log in
      *
-     * @token - The bot token
+     * @property token The bot token
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("checkAuthenticationBotToken")
     @BotsOnly
-    class CheckAuthenticationBotToken(
-        val token: String? = null
-    ) : null()
+    data class CheckAuthenticationBotToken(
+        @SerialName("token")
+        val token: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Closes the TDLib instance after a proper logout
      * Requires an available network connection
      * All local data will be destroyed
      * After the logout completes, updateAuthorizationState with authorizationStateClosed will be sent
+     *
+     * @property extra Extra data shared between request and response
      */
-    class LogOut : null()
+    @Serializable
+    @SerialName("logOut")
+    data class LogOut(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Closes the TDLib instance
      * All databases will be flushed to disk and properly closed
      * After the close completes, updateAuthorizationState with authorizationStateClosed will be sent
+     *
+     * @property extra Extra data shared between request and response
      */
-    class Close : null()
+    @Serializable
+    @SerialName("close")
+    data class Close(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Closes the TDLib instance, destroying all local data without a proper logout
      * The current user session will remain in the list of all active sessions
      * All local data will be destroyed
      * After the destruction completes updateAuthorizationState with authorizationStateClosed will be sent
+     *
+     * @property extra Extra data shared between request and response
      */
-    class Destroy : null()
+    @Serializable
+    @SerialName("destroy")
+    data class Destroy(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns all updates needed to restore current TDLib state, i.e
@@ -8536,269 +12698,454 @@ class TdApi {
      * This is especially usefull if TDLib is run in a separate process
      * This is an offline method
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetCurrentState : null()
+    @Serializable
+    @SerialName("getCurrentState")
+    data class GetCurrentState(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Updates>
 
     /**
      * Changes the database encryption key
      * Usually the encryption key is never changed and is stored in some OS keychain
      *
-     * @newEncryptionKey - New encryption key
+     * @property newEncryptionKey New encryption key
+     * @property extra Extra data shared between request and response
      */
-    class SetDatabaseEncryptionKey(
-        val newEncryptionKey: ByteArray = byteArrayOf()
-    ) : null()
+    @Serializable
+    @SerialName("setDatabaseEncryptionKey")
+    data class SetDatabaseEncryptionKey(
+        @SerialName("new_encryption_key")
+        val newEncryptionKey: Array<Byte> = byteArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the current state of 2-step verification
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetPasswordState : null()
+    @Serializable
+    @SerialName("getPasswordState")
+    data class GetPasswordState(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PasswordState>
 
     /**
      * Changes the password for the user
      * If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed
      *
-     * @oldPassword - Previous password of the user
-     * @newPassword - New password of the user
-     *                May be empty to remove the password
-     * @newHint - New password hint
-     * @setRecoveryEmailAddress - Pass true if the recovery email address should be changed
-     * @newRecoveryEmailAddress - New recovery email address
+     * @property oldPassword Previous password of the user
+     * @property newPassword New password of the user
+     *                       May be empty to remove the password
+     * @property newHint New password hint
+     * @property setRecoveryEmailAddress Pass true if the recovery email address should be changed
+     * @property newRecoveryEmailAddress New recovery email address
+     * @property extra Extra data shared between request and response
      */
-    class SetPassword(
+    @Serializable
+    @SerialName("setPassword")
+    data class SetPassword(
+        @SerialName("old_password")
         val oldPassword: String? = null,
+        @SerialName("new_password")
         val newPassword: String? = null,
+        @SerialName("new_hint")
         val newHint: String? = null,
+        @SerialName("set_recovery_email_address")
         val setRecoveryEmailAddress: Boolean = false,
-        val newRecoveryEmailAddress: String? = null
-    ) : null()
+        @SerialName("new_recovery_email_address")
+        val newRecoveryEmailAddress: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PasswordState>
 
     /**
      * Returns a 2-step verification recovery email address that was previously set up
      * This method can be used to verify a password provided by the user
      *
-     * @password - The password for the current user
+     * @property password The password for the current user
+     * @property extra Extra data shared between request and response
      */
-    class GetRecoveryEmailAddress(
-        val password: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getRecoveryEmailAddress")
+    data class GetRecoveryEmailAddress(
+        @SerialName("password")
+        val password: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<RecoveryEmailAddress>
 
     /**
      * Changes the 2-step verification recovery email address of the user
      * If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed
      * If new_recovery_email_address is the same as the email address that is currently set up, this call succeeds immediately and aborts all other requests waiting for an email confirmation
      *
-     * @password - Password of the current user
-     * @newRecoveryEmailAddress - New recovery email address
+     * @property password Password of the current user
+     * @property newRecoveryEmailAddress New recovery email address
+     * @property extra Extra data shared between request and response
      */
-    class SetRecoveryEmailAddress(
+    @Serializable
+    @SerialName("setRecoveryEmailAddress")
+    data class SetRecoveryEmailAddress(
+        @SerialName("password")
         val password: String? = null,
-        val newRecoveryEmailAddress: String? = null
-    ) : null()
+        @SerialName("new_recovery_email_address")
+        val newRecoveryEmailAddress: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PasswordState>
 
     /**
      * Checks the 2-step verification recovery email address verification code
      *
-     * @code - Verification code
+     * @property code Verification code
+     * @property extra Extra data shared between request and response
      */
-    class CheckRecoveryEmailAddressCode(
-        val code: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkRecoveryEmailAddressCode")
+    data class CheckRecoveryEmailAddressCode(
+        @SerialName("code")
+        val code: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PasswordState>
 
     /**
      * Resends the 2-step verification recovery email address verification code
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResendRecoveryEmailAddressCode : null()
+    @Serializable
+    @SerialName("resendRecoveryEmailAddressCode")
+    data class ResendRecoveryEmailAddressCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PasswordState>
 
     /**
      * Requests to send a password recovery code to an email address that was previously set up
+     *
+     * @property extra Extra data shared between request and response
      */
-    class RequestPasswordRecovery : null()
+    @Serializable
+    @SerialName("requestPasswordRecovery")
+    data class RequestPasswordRecovery(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<EmailAddressAuthenticationCodeInfo>
 
     /**
      * Recovers the password using a recovery code sent to an email address that was previously set up
      *
-     * @recoveryCode - Recovery code to check
+     * @property recoveryCode Recovery code to check
+     * @property extra Extra data shared between request and response
      */
-    class RecoverPassword(
-        val recoveryCode: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("recoverPassword")
+    data class RecoverPassword(
+        @SerialName("recovery_code")
+        val recoveryCode: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PasswordState>
 
     /**
      * Creates a new temporary password for processing payments
      *
-     * @password - Persistent user password
-     * @validFor - Time during which the temporary password will be valid, in seconds
-     *             Should be between 60 and 86400
+     * @property password Persistent user password
+     * @property validFor Time during which the temporary password will be valid, in seconds
+     *                    Should be between 60 and 86400
+     * @property extra Extra data shared between request and response
      */
-    class CreateTemporaryPassword(
+    @Serializable
+    @SerialName("createTemporaryPassword")
+    data class CreateTemporaryPassword(
+        @SerialName("password")
         val password: String? = null,
-        val validFor: Int = 0
-    ) : null()
+        @SerialName("valid_for")
+        val validFor: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TemporaryPasswordState>
 
     /**
      * Returns information about the current temporary password
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetTemporaryPasswordState : null()
+    @Serializable
+    @SerialName("getTemporaryPasswordState")
+    data class GetTemporaryPasswordState(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TemporaryPasswordState>
 
     /**
      * Returns the current user
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetMe : null()
+    @Serializable
+    @SerialName("getMe")
+    data class GetMe(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<User>
 
     /**
      * Returns information about a user by their identifier
      * This is an offline request if the current user is not a bot
      *
-     * @userId - User identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetUser(
-        val userId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getUser")
+    data class GetUser(
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<User>
 
     /**
      * Returns full information about a user by their identifier
      *
-     * @userId - User identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetUserFullInfo(
-        val userId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getUserFullInfo")
+    data class GetUserFullInfo(
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<UserFullInfo>
 
     /**
      * Returns information about a basic group by its identifier
      * This is an offline request if the current user is not a bot
      *
-     * @basicGroupId - Basic group identifier
+     * @property basicGroupId Basic group identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetBasicGroup(
-        val basicGroupId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getBasicGroup")
+    data class GetBasicGroup(
+        @SerialName("basic_group_id")
+        val basicGroupId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<BasicGroup>
 
     /**
      * Returns full information about a basic group by its identifier
      *
-     * @basicGroupId - Basic group identifier
+     * @property basicGroupId Basic group identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetBasicGroupFullInfo(
-        val basicGroupId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getBasicGroupFullInfo")
+    data class GetBasicGroupFullInfo(
+        @SerialName("basic_group_id")
+        val basicGroupId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<BasicGroupFullInfo>
 
     /**
      * Returns information about a supergroup or channel by its identifier
      * This is an offline request if the current user is not a bot
      *
-     * @supergroupId - Supergroup or channel identifier
+     * @property supergroupId Supergroup or channel identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetSupergroup(
-        val supergroupId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getSupergroup")
+    data class GetSupergroup(
+        @SerialName("supergroup_id")
+        val supergroupId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Supergroup>
 
     /**
      * Returns full information about a supergroup or channel by its identifier, cached for up to 1 minute
      *
-     * @supergroupId - Supergroup or channel identifier
+     * @property supergroupId Supergroup or channel identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetSupergroupFullInfo(
-        val supergroupId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getSupergroupFullInfo")
+    data class GetSupergroupFullInfo(
+        @SerialName("supergroup_id")
+        val supergroupId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<SupergroupFullInfo>
 
     /**
      * Returns information about a secret chat by its identifier
      * This is an offline request
      *
-     * @secretChatId - Secret chat identifier
+     * @property secretChatId Secret chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetSecretChat(
-        val secretChatId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getSecretChat")
+    data class GetSecretChat(
+        @SerialName("secret_chat_id")
+        val secretChatId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<SecretChat>
 
     /**
      * Returns information about a chat by its identifier, this is an offline request if the current user is not a bot
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("getChat")
+    data class GetChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Returns information about a message
      *
-     * @chatId - Identifier of the chat the message belongs to
-     * @messageId - Identifier of the message to get
+     * @property chatId Identifier of the chat the message belongs to
+     * @property messageId Identifier of the message to get
+     * @property extra Extra data shared between request and response
      */
-    class GetMessage(
+    @Serializable
+    @SerialName("getMessage")
+    data class GetMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Returns information about a message, if it is available locally without sending network request
      * This is an offline request
      *
-     * @chatId - Identifier of the chat the message belongs to
-     * @messageId - Identifier of the message to get
+     * @property chatId Identifier of the chat the message belongs to
+     * @property messageId Identifier of the message to get
+     * @property extra Extra data shared between request and response
      */
-    class GetMessageLocally(
+    @Serializable
+    @SerialName("getMessageLocally")
+    data class GetMessageLocally(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Returns information about a message that is replied by given message
      *
-     * @chatId - Identifier of the chat the message belongs to
-     * @messageId - Identifier of the message reply to which get
+     * @property chatId Identifier of the chat the message belongs to
+     * @property messageId Identifier of the message reply to which get
+     * @property extra Extra data shared between request and response
      */
-    class GetRepliedMessage(
+    @Serializable
+    @SerialName("getRepliedMessage")
+    data class GetRepliedMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Returns information about a pinned chat message
      *
-     * @chatId - Identifier of the chat the message belongs to
+     * @property chatId Identifier of the chat the message belongs to
+     * @property extra Extra data shared between request and response
      */
-    class GetChatPinnedMessage(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("getChatPinnedMessage")
+    data class GetChatPinnedMessage(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Returns information about messages
      * If a message is not found, returns null on the corresponding position of the result
      *
-     * @chatId - Identifier of the chat the messages belong to
-     * @messageIds - Identifiers of the messages to get
+     * @property chatId Identifier of the chat the messages belong to
+     * @property messageIds Identifiers of the messages to get
+     * @property extra Extra data shared between request and response
      */
-    class GetMessages(
+    @Serializable
+    @SerialName("getMessages")
+    data class GetMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageIds: LongArray = longArrayOf()
-    ) : null()
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Returns information about a file
      * This is an offline request
      *
-     * @fileId - Identifier of the file to get
+     * @property fileId Identifier of the file to get
+     * @property extra Extra data shared between request and response
      */
-    class GetFile(
-        val fileId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getFile")
+    data class GetFile(
+        @SerialName("file_id")
+        val fileId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<File>
 
     /**
      * Returns information about a file by its remote ID
      * This is an offline request
      * Can be used to register a URL as a file for further uploading, or sending as a message
      *
-     * @remoteFileId - Remote identifier of the file to get
-     * @fileType - File type, if known
+     * @property remoteFileId Remote identifier of the file to get
+     * @property fileType File type, if known
+     * @property extra Extra data shared between request and response
      */
-    class GetRemoteFile(
+    @Serializable
+    @SerialName("getRemoteFile")
+    data class GetRemoteFile(
+        @SerialName("remote_file_id")
         val remoteFileId: String? = null,
-        val fileType: FileType? = null
-    ) : null()
+        @SerialName("file_type")
+        val fileType: FileType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<File>
 
     /**
      * Returns an ordered list of chats
@@ -8806,16 +13153,24 @@ class TdApi {
      * (For example, to get a list of chats from the beginning, the offset_order should be equal to a biggest signed 64-bit number 9223372036854775807 == 2^63 - 1)
      * For optimal performance the number of returned chats is chosen by the library
      *
-     * @offsetOrder - Chat order to return chats from
-     * @offsetChatId - Chat identifier to return chats from
-     * @limit - The maximum number of chats to be returned
-     *          It is possible that fewer chats than the limit are returned even if the end of the list is not reached
+     * @property offsetOrder Chat order to return chats from
+     * @property offsetChatId Chat identifier to return chats from
+     * @property limit The maximum number of chats to be returned
+     *                 It is possible that fewer chats than the limit are returned even if the end of the list is not reached
+     * @property extra Extra data shared between request and response
      */
-    class GetChats(
+    @Serializable
+    @SerialName("getChats")
+    data class GetChats(
+        @SerialName("offset_order")
         val offsetOrder: Long = 0L,
+        @SerialName("offset_chat_id")
         val offsetChatId: Long = 0L,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Searches a public chat by its username
@@ -8823,11 +13178,17 @@ class TdApi {
      * Returns the chat if found
      * Otherwise an error is returned
      *
-     * @username - Username to be resolved
+     * @property username Username to be resolved
+     * @property extra Extra data shared between request and response
      */
-    class SearchPublicChat(
-        val username: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("searchPublicChat")
+    data class SearchPublicChat(
+        @SerialName("username")
+        val username: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Searches public chats by looking for specified query in their username and title
@@ -8836,118 +13197,193 @@ class TdApi {
      * Returns nothing if the length of the searched username prefix is less than 5
      * Excludes private chats with contacts and chats from the chat list from the results
      *
-     * @query - Query to search for
+     * @property query Query to search for
+     * @property extra Extra data shared between request and response
      */
-    class SearchPublicChats(
-        val query: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("searchPublicChats")
+    data class SearchPublicChats(
+        @SerialName("query")
+        val query: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Searches for the specified query in the title and username of already known chats, this is an offline request
      * Returns chats in the order seen in the chat list
      *
-     * @query - Query to search for
-     *          If the query is empty, returns up to 20 recently found chats
-     * @limit - Maximum number of chats to be returned
+     * @property query Query to search for
+     *                 If the query is empty, returns up to 20 recently found chats
+     * @property limit Maximum number of chats to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchChats(
+    @Serializable
+    @SerialName("searchChats")
+    data class SearchChats(
+        @SerialName("query")
         val query: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Searches for the specified query in the title and username of already known chats via request to the server
      * Returns chats in the order seen in the chat list
      *
-     * @query - Query to search for
-     * @limit - Maximum number of chats to be returned
+     * @property query Query to search for
+     * @property limit Maximum number of chats to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchChatsOnServer(
+    @Serializable
+    @SerialName("searchChatsOnServer")
+    data class SearchChatsOnServer(
+        @SerialName("query")
         val query: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Returns a list of frequently used chats
      * Supported only if the chat info database is enabled
      *
-     * @category - Category of chats to be returned
-     * @limit - Maximum number of chats to be returned
-     *          Up to 30
+     * @property category Category of chats to be returned
+     * @property limit Maximum number of chats to be returned
+     *                 Up to 30
+     * @property extra Extra data shared between request and response
      */
-    class GetTopChats(
+    @Serializable
+    @SerialName("getTopChats")
+    data class GetTopChats(
+        @SerialName("category")
         val category: TopChatCategory? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Removes a chat from the list of frequently used chats
      * Supported only if the chat info database is enabled
      *
-     * @category - Category of frequently used chats
-     * @chatId - Chat identifier
+     * @property category Category of frequently used chats
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class RemoveTopChat(
+    @Serializable
+    @SerialName("removeTopChat")
+    data class RemoveTopChat(
+        @SerialName("category")
         val category: TopChatCategory? = null,
-        val chatId: Long = 0L
-    ) : null()
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds a chat to the list of recently found chats
      * The chat is added to the beginning of the list
      * If the chat is already in the list, it will be removed from the list first
      *
-     * @chatId - Identifier of the chat to add
+     * @property chatId Identifier of the chat to add
+     * @property extra Extra data shared between request and response
      */
-    class AddRecentlyFoundChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("addRecentlyFoundChat")
+    data class AddRecentlyFoundChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes a chat from the list of recently found chats
      *
-     * @chatId - Identifier of the chat to be removed
+     * @property chatId Identifier of the chat to be removed
+     * @property extra Extra data shared between request and response
      */
-    class RemoveRecentlyFoundChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("removeRecentlyFoundChat")
+    data class RemoveRecentlyFoundChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Clears the list of recently found chats
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ClearRecentlyFoundChats : null()
+    @Serializable
+    @SerialName("clearRecentlyFoundChats")
+    data class ClearRecentlyFoundChats(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Checks whether a username can be set for a chat
      *
-     * @chatId - Chat identifier
-     *           Should be identifier of a supergroup chat, or a channel chat, or a private chat with self, or zero if chat is being created
-     * @username - Username to be checked
+     * @property chatId Chat identifier
+     *                  Should be identifier of a supergroup chat, or a channel chat, or a private chat with self, or zero if chat is being created
+     * @property username Username to be checked
+     * @property extra Extra data shared between request and response
      */
-    class CheckChatUsername(
+    @Serializable
+    @SerialName("checkChatUsername")
+    data class CheckChatUsername(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val username: String? = null
-    ) : null()
+        @SerialName("username")
+        val username: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<CheckChatUsernameResult>
 
     /**
      * Returns a list of public chats with username created by the user
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetCreatedPublicChats : null()
+    @Serializable
+    @SerialName("getCreatedPublicChats")
+    data class GetCreatedPublicChats(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Returns a list of common group chats with a given user
      * Chats are sorted by their type and creation date
      *
-     * @userId - User identifier
-     * @offsetChatId - Chat identifier starting from which to return chats
-     *                 Use 0 for the first request
-     * @limit - Maximum number of chats to be returned
+     * @property userId User identifier
+     * @property offsetChatId Chat identifier starting from which to return chats
+     *                        Use 0 for the first request
+     * @property limit Maximum number of chats to be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetGroupsInCommon(
+    @Serializable
+    @SerialName("getGroupsInCommon")
+    data class GetGroupsInCommon(
+        @SerialName("user_id")
         val userId: Int = 0,
+        @SerialName("offset_chat_id")
         val offsetChatId: Long = 0L,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Returns messages in a chat
@@ -8955,37 +13391,55 @@ class TdApi {
      * For optimal performance the number of returned messages is chosen by the library
      * This is an offline request if only_local is true
      *
-     * @chatId - Chat identifier
-     * @fromMessageId - Identifier of the message starting from which history must be fetched
-     *                  Use 0 to get results from the last message
-     * @offset - Specify 0 to get results from exactly the from_message_id or a negative offset up to 99 to get additionally some newer messages
-     * @limit - The maximum number of messages to be returned
-     *          Must be positive and can't be greater than 100
-     *          If the offset is negative, the limit must be greater or equal to -offset
-     *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
-     * @onlyLocal - If true, returns only messages that are available locally without sending network requests
+     * @property chatId Chat identifier
+     * @property fromMessageId Identifier of the message starting from which history must be fetched
+     *                         Use 0 to get results from the last message
+     * @property offset Specify 0 to get results from exactly the from_message_id or a negative offset up to 99 to get additionally some newer messages
+     * @property limit The maximum number of messages to be returned
+     *                 Must be positive and can't be greater than 100
+     *                 If the offset is negative, the limit must be greater or equal to -offset
+     *                 Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
+     * @property onlyLocal If true, returns only messages that are available locally without sending network requests
+     * @property extra Extra data shared between request and response
      */
-    class GetChatHistory(
+    @Serializable
+    @SerialName("getChatHistory")
+    data class GetChatHistory(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("from_message_id")
         val fromMessageId: Long = 0L,
+        @SerialName("offset")
         val offset: Int = 0,
+        @SerialName("limit")
         val limit: Int = 0,
-        val onlyLocal: Boolean = false
-    ) : null()
+        @SerialName("only_local")
+        val onlyLocal: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Deletes all messages in the chat
      * Use Chat.can_be_deleted_only_for_self and Chat.can_be_deleted_for_all_users fields to find whether and how the method can be applied to the chat
      *
-     * @chatId - Chat identifier
-     * @removeFromChatList - Pass true if the chat should be removed from the chat list
-     * @revoke - Pass true to try to delete chat history for all users
+     * @property chatId Chat identifier
+     * @property removeFromChatList Pass true if the chat should be removed from the chat list
+     * @property revoke Pass true to try to delete chat history for all users
+     * @property extra Extra data shared between request and response
      */
-    class DeleteChatHistory(
+    @Serializable
+    @SerialName("deleteChatHistory")
+    data class DeleteChatHistory(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("remove_from_chat_list")
         val removeFromChatList: Boolean = false,
-        val revoke: Boolean = false
-    ) : null()
+        @SerialName("revoke")
+        val revoke: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Searches for messages with given words in the chat
@@ -8994,71 +13448,103 @@ class TdApi {
      * Cannot be used in secret chats with a non-empty query (searchSecretMessages should be used instead), or without an enabled message database
      * For optimal performance the number of returned messages is chosen by the library
      *
-     * @chatId - Identifier of the chat in which to search messages
-     * @query - Query to search for
-     * @senderUserId - If not 0, only messages sent by the specified user will be returned
-     *                 Not supported in secret chats
-     * @fromMessageId - Identifier of the message starting from which history must be fetched
-     *                  Use 0 to get results from the last message
-     * @offset - Specify 0 to get results from exactly the from_message_id or a negative offset to get the specified message and some newer messages
-     * @limit - The maximum number of messages to be returned
-     *          Must be positive and can't be greater than 100
-     *          If the offset is negative, the limit must be greater than -offset
-     *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
-     * @filter - Filter for message content in the search results
+     * @property chatId Identifier of the chat in which to search messages
+     * @property query Query to search for
+     * @property senderUserId If not 0, only messages sent by the specified user will be returned
+     *                        Not supported in secret chats
+     * @property fromMessageId Identifier of the message starting from which history must be fetched
+     *                         Use 0 to get results from the last message
+     * @property offset Specify 0 to get results from exactly the from_message_id or a negative offset to get the specified message and some newer messages
+     * @property limit The maximum number of messages to be returned
+     *                 Must be positive and can't be greater than 100
+     *                 If the offset is negative, the limit must be greater than -offset
+     *                 Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
+     * @property filter Filter for message content in the search results
+     * @property extra Extra data shared between request and response
      */
-    class SearchChatMessages(
+    @Serializable
+    @SerialName("searchChatMessages")
+    data class SearchChatMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("query")
         val query: String? = null,
+        @SerialName("sender_user_id")
         val senderUserId: Int = 0,
+        @SerialName("from_message_id")
         val fromMessageId: Long = 0L,
+        @SerialName("offset")
         val offset: Int = 0,
+        @SerialName("limit")
         val limit: Int = 0,
-        val filter: SearchMessagesFilter? = null
-    ) : null()
+        @SerialName("filter")
+        val filter: SearchMessagesFilter? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Searches for messages in all chats except secret chats
      * Returns the results in reverse chronological order (i.e., in order of decreasing (date, chat_id, message_id))
      * For optimal performance the number of returned messages is chosen by the library
      *
-     * @query - Query to search for
-     * @offsetDate - The date of the message starting from which the results should be fetched
-     *               Use 0 or any date in the future to get results from the last message
-     * @offsetChatId - The chat identifier of the last found message, or 0 for the first request
-     * @offsetMessageId - The message identifier of the last found message, or 0 for the first request
-     * @limit - The maximum number of messages to be returned, up to 100
-     *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
+     * @property query Query to search for
+     * @property offsetDate The date of the message starting from which the results should be fetched
+     *                      Use 0 or any date in the future to get results from the last message
+     * @property offsetChatId The chat identifier of the last found message, or 0 for the first request
+     * @property offsetMessageId The message identifier of the last found message, or 0 for the first request
+     * @property limit The maximum number of messages to be returned, up to 100
+     *                 Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
+     * @property extra Extra data shared between request and response
      */
-    class SearchMessages(
+    @Serializable
+    @SerialName("searchMessages")
+    data class SearchMessages(
+        @SerialName("query")
         val query: String? = null,
+        @SerialName("offset_date")
         val offsetDate: Int = 0,
+        @SerialName("offset_chat_id")
         val offsetChatId: Long = 0L,
+        @SerialName("offset_message_id")
         val offsetMessageId: Long = 0L,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Searches for messages in secret chats
      * Returns the results in reverse chronological order
      * For optimal performance the number of returned messages is chosen by the library
      *
-     * @chatId - Identifier of the chat in which to search
-     *           Specify 0 to search in all secret chats
-     * @query - Query to search for
-     *          If empty, searchChatMessages should be used instead
-     * @fromSearchId - The identifier from the result of a previous request, use 0 to get results from the last message
-     * @limit - Maximum number of messages to be returned
-     *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
-     * @filter - A filter for the content of messages in the search results
+     * @property chatId Identifier of the chat in which to search
+     *                  Specify 0 to search in all secret chats
+     * @property query Query to search for
+     *                 If empty, searchChatMessages should be used instead
+     * @property fromSearchId The identifier from the result of a previous request, use 0 to get results from the last message
+     * @property limit Maximum number of messages to be returned
+     *                 Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
+     * @property filter A filter for the content of messages in the search results
+     * @property extra Extra data shared between request and response
      */
-    class SearchSecretMessages(
+    @Serializable
+    @SerialName("searchSecretMessages")
+    data class SearchSecretMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("query")
         val query: String? = null,
+        @SerialName("from_search_id")
         val fromSearchId: Long = 0L,
+        @SerialName("limit")
         val limit: Int = 0,
-        val filter: SearchMessagesFilter? = null
-    ) : null()
+        @SerialName("filter")
+        val filter: SearchMessagesFilter? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<FoundMessages>
 
     /**
      * Searches for call messages
@@ -9066,161 +13552,255 @@ class TdApi {
      * E., in order of decreasing message_id)
      * For optimal performance the number of returned messages is chosen by the library
      *
-     * @fromMessageId - Identifier of the message from which to search
-     *                  Use 0 to get results from the last message
-     * @limit - The maximum number of messages to be returned
-     *          Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
-     * @onlyMissed - If true, returns only messages with missed calls
+     * @property fromMessageId Identifier of the message from which to search
+     *                         Use 0 to get results from the last message
+     * @property limit The maximum number of messages to be returned
+     *                 Fewer messages may be returned than specified by the limit, even if the end of the message history has not been reached
+     * @property onlyMissed If true, returns only messages with missed calls
+     * @property extra Extra data shared between request and response
      */
-    class SearchCallMessages(
+    @Serializable
+    @SerialName("searchCallMessages")
+    data class SearchCallMessages(
+        @SerialName("from_message_id")
         val fromMessageId: Long = 0L,
+        @SerialName("limit")
         val limit: Int = 0,
-        val onlyMissed: Boolean = false
-    ) : null()
+        @SerialName("only_missed")
+        val onlyMissed: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Returns information about the recent locations of chat members that were sent to the chat
      * Returns up to 1 location message per user
      *
-     * @chatId - Chat identifier
-     * @limit - Maximum number of messages to be returned
+     * @property chatId Chat identifier
+     * @property limit Maximum number of messages to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchChatRecentLocationMessages(
+    @Serializable
+    @SerialName("searchChatRecentLocationMessages")
+    data class SearchChatRecentLocationMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Returns all active live locations that should be updated by the client
      * The list is persistent across application restarts only if the message database is used
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetActiveLiveLocationMessages : null()
+    @Serializable
+    @SerialName("getActiveLiveLocationMessages")
+    data class GetActiveLiveLocationMessages(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Returns the last message sent in a chat no later than the specified date
      *
-     * @chatId - Chat identifier
-     * @date - Point in time (Unix timestamp) relative to which to search for messages
+     * @property chatId Chat identifier
+     * @property date Point in time (Unix timestamp) relative to which to search for messages
+     * @property extra Extra data shared between request and response
      */
-    class GetChatMessageByDate(
+    @Serializable
+    @SerialName("getChatMessageByDate")
+    data class GetChatMessageByDate(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val date: Int = 0
-    ) : null()
+        @SerialName("date")
+        val date: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Returns approximate number of messages of the specified type in the chat
      *
-     * @chatId - Identifier of the chat in which to count messages
-     * @filter - Filter for message content
-     *           SearchMessagesFilterEmpty is unsupported in this function
-     * @returnLocal - If true, returns count that is available locally without sending network requests, returning -1 if the number of messages is unknown
+     * @property chatId Identifier of the chat in which to count messages
+     * @property filter Filter for message content
+     *                  SearchMessagesFilterEmpty is unsupported in this function
+     * @property returnLocal If true, returns count that is available locally without sending network requests, returning -1 if the number of messages is unknown
+     * @property extra Extra data shared between request and response
      */
-    class GetChatMessageCount(
+    @Serializable
+    @SerialName("getChatMessageCount")
+    data class GetChatMessageCount(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("filter")
         val filter: SearchMessagesFilter? = null,
-        val returnLocal: Boolean = false
-    ) : null()
+        @SerialName("return_local")
+        val returnLocal: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Count>
 
     /**
      * Removes an active notification from notification list
      * Needs to be called only if the notification is removed by the current user
      *
-     * @notificationGroupId - Identifier of notification group to which the notification belongs
-     * @notificationId - Identifier of removed notification
+     * @property notificationGroupId Identifier of notification group to which the notification belongs
+     * @property notificationId Identifier of removed notification
+     * @property extra Extra data shared between request and response
      */
-    class RemoveNotification(
+    @Serializable
+    @SerialName("removeNotification")
+    data class RemoveNotification(
+        @SerialName("notification_group_id")
         val notificationGroupId: Int = 0,
-        val notificationId: Int = 0
-    ) : null()
+        @SerialName("notification_id")
+        val notificationId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes a group of active notifications
      * Needs to be called only if the notification group is removed by the current user
      *
-     * @notificationGroupId - Notification group identifier
-     * @maxNotificationId - Maximum identifier of removed notifications
+     * @property notificationGroupId Notification group identifier
+     * @property maxNotificationId Maximum identifier of removed notifications
+     * @property extra Extra data shared between request and response
      */
-    class RemoveNotificationGroup(
+    @Serializable
+    @SerialName("removeNotificationGroup")
+    data class RemoveNotificationGroup(
+        @SerialName("notification_group_id")
         val notificationGroupId: Int = 0,
-        val maxNotificationId: Int = 0
-    ) : null()
+        @SerialName("max_notification_id")
+        val maxNotificationId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a public HTTPS link to a message
      * Available only for messages in supergroups and channels with username
      *
-     * @chatId - Identifier of the chat to which the message belongs
-     * @messageId - Identifier of the message
-     * @forAlbum - Pass true if a link for a whole media album should be returned
+     * @property chatId Identifier of the chat to which the message belongs
+     * @property messageId Identifier of the message
+     * @property forAlbum Pass true if a link for a whole media album should be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetPublicMessageLink(
+    @Serializable
+    @SerialName("getPublicMessageLink")
+    data class GetPublicMessageLink(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        val forAlbum: Boolean = false
-    ) : null()
+        @SerialName("for_album")
+        val forAlbum: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PublicMessageLink>
 
     /**
      * Returns a private HTTPS link to a message in a chat
      * Available only for already sent messages in supergroups and channels
      * The link will work only for members of the chat
      *
-     * @chatId - Identifier of the chat to which the message belongs
-     * @messageId - Identifier of the message
+     * @property chatId Identifier of the chat to which the message belongs
+     * @property messageId Identifier of the message
+     * @property extra Extra data shared between request and response
      */
-    class GetMessageLink(
+    @Serializable
+    @SerialName("getMessageLink")
+    data class GetMessageLink(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<HttpUrl>
 
     /**
      * Returns information about a public or private message link
      *
-     * @url - The message link in the format "https://t.me/c/...", or "tg://privatepost?...", or "https://t.me/username/...", or "tg://resolve?..."
+     * @property url The message link in the format "https://t.me/c/...", or "tg://privatepost?...", or "https://t.me/username/...", or "tg://resolve?..."
+     * @property extra Extra data shared between request and response
      */
-    class GetMessageLinkInfo(
-        val url: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getMessageLinkInfo")
+    data class GetMessageLinkInfo(
+        @SerialName("url")
+        val url: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<MessageLinkInfo>
 
     /**
      * Sends a message
      * Returns the sent message
      *
-     * @chatId - Target chat
-     * @replyToMessageId - Identifier of the message to reply to or 0
-     * @disableNotification - Pass true to disable notification for the message
-     *                        Not supported in secret chats
-     * @fromBackground - Pass true if the message is sent from the background
-     * @replyMarkup - Markup for replying to the message
-     * @inputMessageContent - The content of the message to be sent
+     * @property chatId Target chat
+     * @property replyToMessageId Identifier of the message to reply to or 0
+     * @property disableNotification Pass true to disable notification for the message
+     *                               Not supported in secret chats
+     * @property fromBackground Pass true if the message is sent from the background
+     * @property replyMarkup Markup for replying to the message
+     * @property inputMessageContent The content of the message to be sent
+     * @property extra Extra data shared between request and response
      */
-    class SendMessage(
+    @Serializable
+    @SerialName("sendMessage")
+    data class SendMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("reply_to_message_id")
         val replyToMessageId: Long = 0L,
+        @SerialName("disable_notification")
         val disableNotification: Boolean = false,
+        @SerialName("from_background")
         val fromBackground: Boolean = false,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Sends messages grouped together into an album
      * Currently only photo and video messages can be grouped into an album
      * Returns sent messages
      *
-     * @chatId - Target chat
-     * @replyToMessageId - Identifier of a message to reply to or 0
-     * @disableNotification - Pass true to disable notification for the messages
-     *                        Not supported in secret chats
-     * @fromBackground - Pass true if the messages are sent from the background
-     * @inputMessageContents - Contents of messages to be sent
+     * @property chatId Target chat
+     * @property replyToMessageId Identifier of a message to reply to or 0
+     * @property disableNotification Pass true to disable notification for the messages
+     *                               Not supported in secret chats
+     * @property fromBackground Pass true if the messages are sent from the background
+     * @property inputMessageContents Contents of messages to be sent
+     * @property extra Extra data shared between request and response
      */
-    class SendMessageAlbum(
+    @Serializable
+    @SerialName("sendMessageAlbum")
+    data class SendMessageAlbum(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("reply_to_message_id")
         val replyToMessageId: Long = 0L,
+        @SerialName("disable_notification")
         val disableNotification: Boolean = false,
+        @SerialName("from_background")
         val fromBackground: Boolean = false,
-        val inputMessageContents: Array<InputMessageContent> = emptyArray()
-    ) : null()
+        @SerialName("input_message_contents")
+        val inputMessageContents: Array<InputMessageContent> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Invites a bot to a chat (if it is not yet a member) and sends it the /start command
@@ -9228,68 +13808,101 @@ class TdApi {
      * Bots can't be invited to channels (although they can be added as admins) and secret chats
      * Returns the sent message
      *
-     * @botUserId - Identifier of the bot
-     * @chatId - Identifier of the target chat
-     * @parameter - A hidden parameter sent to the bot for deep linking purposes (https://core.telegram.org/bots#deep-linking)
+     * @property botUserId Identifier of the bot
+     * @property chatId Identifier of the target chat
+     * @property parameter A hidden parameter sent to the bot for deep linking purposes (https://core.telegram.org/bots#deep-linking)
+     * @property extra Extra data shared between request and response
      */
-    class SendBotStartMessage(
+    @Serializable
+    @SerialName("sendBotStartMessage")
+    data class SendBotStartMessage(
+        @SerialName("bot_user_id")
         val botUserId: Int = 0,
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val parameter: String? = null
-    ) : null()
+        @SerialName("parameter")
+        val parameter: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Sends the result of an inline query as a message
      * Returns the sent message
      * Always clears a chat draft message
      *
-     * @chatId - Target chat
-     * @replyToMessageId - Identifier of a message to reply to or 0
-     * @disableNotification - Pass true to disable notification for the message
-     *                        Not supported in secret chats
-     * @fromBackground - Pass true if the message is sent from background
-     * @queryId - Identifier of the inline query
-     * @resultId - Identifier of the inline result
-     * @hideViaBot - If true, there will be no mention of a bot, via which the message is sent
-     *               Can be used only for bots GetOption("animation_search_bot_username"), GetOption("photo_search_bot_username") and GetOption("venue_search_bot_username")
+     * @property chatId Target chat
+     * @property replyToMessageId Identifier of a message to reply to or 0
+     * @property disableNotification Pass true to disable notification for the message
+     *                               Not supported in secret chats
+     * @property fromBackground Pass true if the message is sent from background
+     * @property queryId Identifier of the inline query
+     * @property resultId Identifier of the inline result
+     * @property hideViaBot If true, there will be no mention of a bot, via which the message is sent
+     *                      Can be used only for bots GetOption("animation_search_bot_username"), GetOption("photo_search_bot_username") and GetOption("venue_search_bot_username")
+     * @property extra Extra data shared between request and response
      */
-    class SendInlineQueryResultMessage(
+    @Serializable
+    @SerialName("sendInlineQueryResultMessage")
+    data class SendInlineQueryResultMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("reply_to_message_id")
         val replyToMessageId: Long = 0L,
+        @SerialName("disable_notification")
         val disableNotification: Boolean = false,
+        @SerialName("from_background")
         val fromBackground: Boolean = false,
+        @SerialName("query_id")
         val queryId: Long = 0L,
+        @SerialName("result_id")
         val resultId: String? = null,
-        val hideViaBot: Boolean = false
-    ) : null()
+        @SerialName("hide_via_bot")
+        val hideViaBot: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Forwards previously sent messages
      * Returns the forwarded messages in the same order as the message identifiers passed in message_ids
      * If a message can't be forwarded, null will be returned instead of the message
      *
-     * @chatId - Identifier of the chat to which to forward messages
-     * @fromChatId - Identifier of the chat from which to forward messages
-     * @messageIds - Identifiers of the messages to forward
-     * @disableNotification - Pass true to disable notification for the message, doesn't work if messages are forwarded to a secret chat
-     * @fromBackground - Pass true if the messages are sent from the background
-     * @asAlbum - True, if the messages should be grouped into an album after forwarding
-     *            For this to work, no more than 10 messages may be forwarded, and all of them must be photo or video messages
-     * @sendCopy - True, if content of the messages needs to be copied without links to the original messages
-     *             Always true if the messages are forwarded to a secret chat
-     * @removeCaption - True, if media captions of message copies needs to be removed
-     *                  Ignored if send_copy is false
+     * @property chatId Identifier of the chat to which to forward messages
+     * @property fromChatId Identifier of the chat from which to forward messages
+     * @property messageIds Identifiers of the messages to forward
+     * @property disableNotification Pass true to disable notification for the message, doesn't work if messages are forwarded to a secret chat
+     * @property fromBackground Pass true if the messages are sent from the background
+     * @property asAlbum True, if the messages should be grouped into an album after forwarding
+     *                   For this to work, no more than 10 messages may be forwarded, and all of them must be photo or video messages
+     * @property sendCopy True, if content of the messages needs to be copied without links to the original messages
+     *                    Always true if the messages are forwarded to a secret chat
+     * @property removeCaption True, if media captions of message copies needs to be removed
+     *                         Ignored if send_copy is false
+     * @property extra Extra data shared between request and response
      */
-    class ForwardMessages(
+    @Serializable
+    @SerialName("forwardMessages")
+    data class ForwardMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("from_chat_id")
         val fromChatId: Long = 0L,
-        val messageIds: LongArray = longArrayOf(),
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("disable_notification")
         val disableNotification: Boolean = false,
+        @SerialName("from_background")
         val fromBackground: Boolean = false,
+        @SerialName("as_album")
         val asAlbum: Boolean = false,
+        @SerialName("send_copy")
         val sendCopy: Boolean = false,
-        val removeCaption: Boolean = false
-    ) : null()
+        @SerialName("remove_caption")
+        val removeCaption: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Resends messages which failed to send
@@ -9298,117 +13911,182 @@ class TdApi {
      * Returns the sent messages in the same order as the message identifiers passed in message_ids
      * If a message can't be re-sent, null will be returned instead of the message
      *
-     * @chatId - Identifier of the chat to send messages
-     * @messageIds - Identifiers of the messages to resend
-     *               Message identifiers must be in a strictly increasing order
+     * @property chatId Identifier of the chat to send messages
+     * @property messageIds Identifiers of the messages to resend
+     *                      Message identifiers must be in a strictly increasing order
+     * @property extra Extra data shared between request and response
      */
-    class ResendMessages(
+    @Serializable
+    @SerialName("resendMessages")
+    data class ResendMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageIds: LongArray = longArrayOf()
-    ) : null()
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Messages>
 
     /**
      * Changes the current TTL setting (sets a new self-destruct timer) in a secret chat and sends the corresponding message
      *
-     * @chatId - Chat identifier
-     * @ttl - New TTL value, in seconds
+     * @property chatId Chat identifier
+     * @property ttl New TTL value, in seconds
+     * @property extra Extra data shared between request and response
      */
-    class SendChatSetTtlMessage(
+    @Serializable
+    @SerialName("sendChatSetTtlMessage")
+    data class SendChatSetTtlMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val ttl: Int = 0
-    ) : null()
+        @SerialName("ttl")
+        val ttl: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Sends a notification about a screenshot taken in a chat
      * Supported only in private and secret chats
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class SendChatScreenshotTakenNotification(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("sendChatScreenshotTakenNotification")
+    data class SendChatScreenshotTakenNotification(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds a local message to a chat
      * The message is persistent across application restarts only if the message database is used
      * Returns the added message
      *
-     * @chatId - Target chat
-     * @senderUserId - Identifier of the user who will be shown as the sender of the message
-     *                 May be 0 for channel posts
-     * @replyToMessageId - Identifier of the message to reply to or 0
-     * @disableNotification - Pass true to disable notification for the message
-     * @inputMessageContent - The content of the message to be added
+     * @property chatId Target chat
+     * @property senderUserId Identifier of the user who will be shown as the sender of the message
+     *                        May be 0 for channel posts
+     * @property replyToMessageId Identifier of the message to reply to or 0
+     * @property disableNotification Pass true to disable notification for the message
+     * @property inputMessageContent The content of the message to be added
+     * @property extra Extra data shared between request and response
      */
-    class AddLocalMessage(
+    @Serializable
+    @SerialName("addLocalMessage")
+    data class AddLocalMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("sender_user_id")
         val senderUserId: Int = 0,
+        @SerialName("reply_to_message_id")
         val replyToMessageId: Long = 0L,
+        @SerialName("disable_notification")
         val disableNotification: Boolean = false,
-        val inputMessageContent: InputMessageContent? = null
-    ) : null()
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Deletes messages
      *
-     * @chatId - Chat identifier
-     * @messageIds - Identifiers of the messages to be deleted
-     * @revoke - Pass true to try to delete messages for all chat members
-     *           Always true for supergroups, channels and secret chats
+     * @property chatId Chat identifier
+     * @property messageIds Identifiers of the messages to be deleted
+     * @property revoke Pass true to try to delete messages for all chat members
+     *                  Always true for supergroups, channels and secret chats
+     * @property extra Extra data shared between request and response
      */
-    class DeleteMessages(
+    @Serializable
+    @SerialName("deleteMessages")
+    data class DeleteMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageIds: LongArray = longArrayOf(),
-        val revoke: Boolean = false
-    ) : null()
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("revoke")
+        val revoke: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Deletes all messages sent by the specified user to a chat
      * Supported only in supergroups
      * Requires can_delete_messages administrator privileges
      *
-     * @chatId - Chat identifier
-     * @userId - User identifier
+     * @property chatId Chat identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
-    class DeleteChatMessagesFromUser(
+    @Serializable
+    @SerialName("deleteChatMessagesFromUser")
+    data class DeleteChatMessagesFromUser(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val userId: Int = 0
-    ) : null()
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Edits the text of a message (or a text of a game message)
      * Returns the edited message after the edit is completed on the server side
      *
-     * @chatId - The chat the message belongs to
-     * @messageId - Identifier of the message
-     * @replyMarkup - The new message reply markup
-     * @inputMessageContent - New text content of the message
-     *                        Should be of type InputMessageText
+     * @property chatId The chat the message belongs to
+     * @property messageId Identifier of the message
+     * @property replyMarkup The new message reply markup
+     * @property inputMessageContent New text content of the message
+     *                               Should be of type InputMessageText
+     * @property extra Extra data shared between request and response
      */
-    class EditMessageText(
+    @Serializable
+    @SerialName("editMessageText")
+    data class EditMessageText(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Edits the message content of a live location
      * Messages can be edited for a limited period of time specified in the live location
      * Returns the edited message after the edit is completed on the server side
      *
-     * @chatId - The chat the message belongs to
-     * @messageId - Identifier of the message
-     * @replyMarkup - The new message reply markup
-     * @location - New location content of the message
-     *             Pass null to stop sharing the live location
+     * @property chatId The chat the message belongs to
+     * @property messageId Identifier of the message
+     * @property replyMarkup The new message reply markup
+     * @property location New location content of the message
+     *                    Pass null to stop sharing the live location
+     * @property extra Extra data shared between request and response
      */
-    class EditMessageLiveLocation(
+    @Serializable
+    @SerialName("editMessageLiveLocation")
+    data class EditMessageLiveLocation(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val location: Location? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("location")
+        val location: Location? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Edits the content of a message with an animation, an audio, a document, a photo or a video
@@ -9417,146 +14095,223 @@ class TdApi {
      * Media in an album can be edited only to contain a photo or a video
      * Returns the edited message after the edit is completed on the server side
      *
-     * @chatId - The chat the message belongs to
-     * @messageId - Identifier of the message
-     * @replyMarkup - The new message reply markup
-     * @inputMessageContent - New content of the message
-     *                        Must be one of the following types: InputMessageAnimation, InputMessageAudio, InputMessageDocument, InputMessagePhoto or InputMessageVideo
+     * @property chatId The chat the message belongs to
+     * @property messageId Identifier of the message
+     * @property replyMarkup The new message reply markup
+     * @property inputMessageContent New content of the message
+     *                               Must be one of the following types: InputMessageAnimation, InputMessageAudio, InputMessageDocument, InputMessagePhoto or InputMessageVideo
+     * @property extra Extra data shared between request and response
      */
-    class EditMessageMedia(
+    @Serializable
+    @SerialName("editMessageMedia")
+    data class EditMessageMedia(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Edits the message content caption
      * Returns the edited message after the edit is completed on the server side
      *
-     * @chatId - The chat the message belongs to
-     * @messageId - Identifier of the message
-     * @replyMarkup - The new message reply markup
-     * @caption - New message content caption
-     *            0-GetOption("message_caption_length_max") characters
+     * @property chatId The chat the message belongs to
+     * @property messageId Identifier of the message
+     * @property replyMarkup The new message reply markup
+     * @property caption New message content caption
+     *                   0-GetOption("message_caption_length_max") characters
+     * @property extra Extra data shared between request and response
      */
-    class EditMessageCaption(
+    @Serializable
+    @SerialName("editMessageCaption")
+    data class EditMessageCaption(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val caption: FormattedText? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("caption")
+        val caption: FormattedText? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Edits the message reply markup
      * Returns the edited message after the edit is completed on the server side
      *
-     * @chatId - The chat the message belongs to
-     * @messageId - Identifier of the message
-     * @replyMarkup - The new message reply markup
+     * @property chatId The chat the message belongs to
+     * @property messageId Identifier of the message
+     * @property replyMarkup The new message reply markup
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("editMessageReplyMarkup")
     @BotsOnly
-    class EditMessageReplyMarkup(
+    data class EditMessageReplyMarkup(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        val replyMarkup: ReplyMarkup? = null
-    ) : null()
+        @SerialName("reply_markup")
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Edits the text of an inline text or game message sent via a bot
      *
-     * @inlineMessageId - Inline message identifier
-     * @replyMarkup - The new message reply markup
-     * @inputMessageContent - New text content of the message
-     *                        Should be of type InputMessageText
+     * @property inlineMessageId Inline message identifier
+     * @property replyMarkup The new message reply markup
+     * @property inputMessageContent New text content of the message
+     *                               Should be of type InputMessageText
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("editInlineMessageText")
     @BotsOnly
-    class EditInlineMessageText(
+    data class EditInlineMessageText(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
-    ) : null()
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Edits the content of a live location in an inline message sent via a bot
      *
-     * @inlineMessageId - Inline message identifier
-     * @replyMarkup - The new message reply markup
-     * @location - New location content of the message
-     *             Pass null to stop sharing the live location
+     * @property inlineMessageId Inline message identifier
+     * @property replyMarkup The new message reply markup
+     * @property location New location content of the message
+     *                    Pass null to stop sharing the live location
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("editInlineMessageLiveLocation")
     @BotsOnly
-    class EditInlineMessageLiveLocation(
+    data class EditInlineMessageLiveLocation(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup? = null,
-        val location: Location? = null
-    ) : null()
+        @SerialName("location")
+        val location: Location? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Edits the content of a message with an animation, an audio, a document, a photo or a video in an inline message sent via a bot
      *
-     * @inlineMessageId - Inline message identifier
-     * @replyMarkup - The new message reply markup
-     * @inputMessageContent - New content of the message
-     *                        Must be one of the following types: InputMessageAnimation, InputMessageAudio, InputMessageDocument, InputMessagePhoto or InputMessageVideo
+     * @property inlineMessageId Inline message identifier
+     * @property replyMarkup The new message reply markup
+     * @property inputMessageContent New content of the message
+     *                               Must be one of the following types: InputMessageAnimation, InputMessageAudio, InputMessageDocument, InputMessagePhoto or InputMessageVideo
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("editInlineMessageMedia")
     @BotsOnly
-    class EditInlineMessageMedia(
+    data class EditInlineMessageMedia(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null,
-        val inputMessageContent: InputMessageContent? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("input_message_content")
+        val inputMessageContent: InputMessageContent? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Edits the caption of an inline message sent via a bot
      *
-     * @inlineMessageId - Inline message identifier
-     * @replyMarkup - The new message reply markup
-     * @caption - New message content caption
-     *            0-GetOption("message_caption_length_max") characters
+     * @property inlineMessageId Inline message identifier
+     * @property replyMarkup The new message reply markup
+     * @property caption New message content caption
+     *                   0-GetOption("message_caption_length_max") characters
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("editInlineMessageCaption")
     @BotsOnly
-    class EditInlineMessageCaption(
+    data class EditInlineMessageCaption(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
+        @SerialName("reply_markup")
         val replyMarkup: ReplyMarkup? = null,
-        val caption: FormattedText? = null
-    ) : null()
+        @SerialName("caption")
+        val caption: FormattedText? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Edits the reply markup of an inline message sent via a bot
      *
-     * @inlineMessageId - Inline message identifier
-     * @replyMarkup - The new message reply markup
+     * @property inlineMessageId Inline message identifier
+     * @property replyMarkup The new message reply markup
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("editInlineMessageReplyMarkup")
     @BotsOnly
-    class EditInlineMessageReplyMarkup(
+    data class EditInlineMessageReplyMarkup(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
-        val replyMarkup: ReplyMarkup? = null
-    ) : null()
+        @SerialName("reply_markup")
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns all entities (mentions, hashtags, cashtags, bot commands, URLs, and email addresses) contained in the text
      * This is an offline method
      * Can be called before authorization
      *
-     * @text - The text in which to look for entites
+     * @property text The text in which to look for entites
      */
-    class GetTextEntities(
-        val text: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getTextEntities")
+    data class GetTextEntities(
+        @SerialName("text")
+        val text: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<TextEntities>
 
     /**
      * Parses Bold, Italic, Code, Pre, PreCode and TextUrl entities contained in the text
      * This is an offline method
      * Can be called before authorization
      *
-     * @text - The text which should be parsed
-     * @parseMode - Text parse mode
+     * @property text The text which should be parsed
+     * @property parseMode Text parse mode
      */
-    class ParseTextEntities(
+    @Serializable
+    @SerialName("parseTextEntities")
+    data class ParseTextEntities(
+        @SerialName("text")
         val text: String? = null,
-        val parseMode: TextParseMode? = null
-    ) : null()
+        @SerialName("parse_mode")
+        val parseMode: TextParseMode? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<FormattedText>
 
     /**
      * Returns the MIME type of a file, guessed by its extension
@@ -9564,11 +14319,15 @@ class TdApi {
      * This is an offline method
      * Can be called before authorization
      *
-     * @fileName - The name of the file or path to the file
+     * @property fileName The name of the file or path to the file
      */
-    class GetFileMimeType(
-        val fileName: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getFileMimeType")
+    data class GetFileMimeType(
+        @SerialName("file_name")
+        val fileName: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Text>
 
     /**
      * Returns the extension of a file, guessed by its MIME type
@@ -9576,11 +14335,15 @@ class TdApi {
      * This is an offline method
      * Can be called before authorization
      *
-     * @mimeType - The MIME type of the file
+     * @property mimeType The MIME type of the file
      */
-    class GetFileExtension(
-        val mimeType: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getFileExtension")
+    data class GetFileExtension(
+        @SerialName("mime_type")
+        val mimeType: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Text>
 
     /**
      * Removes potentially dangerous characters from the name of a file
@@ -9589,11 +14352,15 @@ class TdApi {
      * This is an offline method
      * Can be called before authorization
      *
-     * @fileName - File name or path to the file
+     * @property fileName File name or path to the file
      */
-    class CleanFileName(
-        val fileName: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("cleanFileName")
+    data class CleanFileName(
+        @SerialName("file_name")
+        val fileName: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Text>
 
     /**
      * Returns a string stored in the local database from the specified localization target and language pack by its key
@@ -9601,403 +14368,627 @@ class TdApi {
      * This is an offline method
      * Can be called before authorization
      *
-     * @languagePackDatabasePath - Path to the language pack database in which strings are stored
-     * @localizationTarget - Localization target to which the language pack belongs
-     * @languagePackId - Language pack identifier
-     * @key - Language pack key of the string to be returned
+     * @property languagePackDatabasePath Path to the language pack database in which strings are stored
+     * @property localizationTarget Localization target to which the language pack belongs
+     * @property languagePackId Language pack identifier
+     * @property key Language pack key of the string to be returned
      */
-    class GetLanguagePackString(
+    @Serializable
+    @SerialName("getLanguagePackString")
+    data class GetLanguagePackString(
+        @SerialName("language_pack_database_path")
         val languagePackDatabasePath: String? = null,
+        @SerialName("localization_target")
         val localizationTarget: String? = null,
+        @SerialName("language_pack_id")
         val languagePackId: String? = null,
-        val key: String? = null
-    ) : null()
+        @SerialName("key")
+        val key: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<LanguagePackStringValue>
 
     /**
      * Converts a JSON-serialized string to corresponding JsonValue object
      * This is an offline method
      * Can be called before authorization
      *
-     * @json - The JSON-serialized string
+     * @property json The JSON-serialized string
      */
-    class GetJsonValue(
-        val json: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getJsonValue")
+    data class GetJsonValue(
+        @SerialName("json")
+        val json: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<JsonValue>
 
     /**
      * Converts a JsonValue object to corresponding JSON-serialized string
      * This is an offline method
      * Can be called before authorization
      *
-     * @jsonValue - The JsonValue object
+     * @property jsonValue The JsonValue object
      */
-    class GetJsonString(
-        val jsonValue: JsonValue? = null
-    ) : null()
+    @Serializable
+    @SerialName("getJsonString")
+    data class GetJsonString(
+        @SerialName("json_value")
+        val jsonValue: JsonValue? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Text>
 
     /**
      * Changes user answer to a poll
      *
-     * @chatId - Identifier of the chat to which the poll belongs
-     * @messageId - Identifier of the message containing the poll
-     * @optionIds - 0-based identifiers of options, chosen by the user
-     *              Currently user can't choose more than 1 option
+     * @property chatId Identifier of the chat to which the poll belongs
+     * @property messageId Identifier of the message containing the poll
+     * @property optionIds 0-based identifiers of options, chosen by the user
+     *                     Currently user can't choose more than 1 option
+     * @property extra Extra data shared between request and response
      */
-    class SetPollAnswer(
+    @Serializable
+    @SerialName("setPollAnswer")
+    data class SetPollAnswer(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        val optionIds: IntArray = intArrayOf()
-    ) : null()
+        @SerialName("option_ids")
+        val optionIds: Array<Int> = intArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Stops a poll
      * A poll in a message can be stopped when the message has can_be_edited flag set
      *
-     * @chatId - Identifier of the chat to which the poll belongs
-     * @messageId - Identifier of the message containing the poll
-     * @replyMarkup - The new message reply markup
+     * @property chatId Identifier of the chat to which the poll belongs
+     * @property messageId Identifier of the message containing the poll
+     * @property replyMarkup The new message reply markup
+     * @property extra Extra data shared between request and response
      */
-    class StopPoll(
+    @Serializable
+    @SerialName("stopPoll")
+    data class StopPoll(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        @BotsOnly val replyMarkup: ReplyMarkup? = null
-    ) : null()
+        @SerialName("reply_markup")
+        @BotsOnly
+        val replyMarkup: ReplyMarkup? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends an inline query to a bot and returns its results
      * Returns an error with code 502 if the bot fails to answer the query before the query timeout expires
      *
-     * @botUserId - The identifier of the target bot
-     * @chatId - Identifier of the chat, where the query was sent
-     * @userLocation - Location of the user, only if needed
-     * @query - Text of the query
-     * @offset - Offset of the first entry to return
+     * @property botUserId The identifier of the target bot
+     * @property chatId Identifier of the chat, where the query was sent
+     * @property userLocation Location of the user, only if needed
+     * @property query Text of the query
+     * @property offset Offset of the first entry to return
+     * @property extra Extra data shared between request and response
      */
-    class GetInlineQueryResults(
+    @Serializable
+    @SerialName("getInlineQueryResults")
+    data class GetInlineQueryResults(
+        @SerialName("bot_user_id")
         val botUserId: Int = 0,
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("user_location")
         val userLocation: Location? = null,
+        @SerialName("query")
         val query: String? = null,
-        val offset: String? = null
-    ) : null()
+        @SerialName("offset")
+        val offset: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<InlineQueryResults>
 
     /**
      * Sets the result of an inline query
      *
-     * @inlineQueryId - Identifier of the inline query
-     * @isPersonal - True, if the result of the query can be cached for the specified user
-     * @results - The results of the query
-     * @cacheTime - Allowed time to cache the results of the query, in seconds
-     * @nextOffset - Offset for the next inline query
-     *               Pass an empty string if there are no more results
-     * @switchPmText - If non-empty, this text should be shown on the button that opens a private chat with the bot and sends a start message to the bot with the parameter switch_pm_parameter
-     * @switchPmParameter - The parameter for the bot start message
+     * @property inlineQueryId Identifier of the inline query
+     * @property isPersonal True, if the result of the query can be cached for the specified user
+     * @property results The results of the query
+     * @property cacheTime Allowed time to cache the results of the query, in seconds
+     * @property nextOffset Offset for the next inline query
+     *                      Pass an empty string if there are no more results
+     * @property switchPmText If non-empty, this text should be shown on the button that opens a private chat with the bot and sends a start message to the bot with the parameter switch_pm_parameter
+     * @property switchPmParameter The parameter for the bot start message
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("answerInlineQuery")
     @BotsOnly
-    class AnswerInlineQuery(
+    data class AnswerInlineQuery(
+        @SerialName("inline_query_id")
         val inlineQueryId: Long = 0L,
+        @SerialName("is_personal")
         val isPersonal: Boolean = false,
+        @SerialName("results")
         val results: Array<InputInlineQueryResult> = emptyArray(),
+        @SerialName("cache_time")
         val cacheTime: Int = 0,
+        @SerialName("next_offset")
         val nextOffset: String? = null,
+        @SerialName("switch_pm_text")
         val switchPmText: String? = null,
-        val switchPmParameter: String? = null
-    ) : null()
+        @SerialName("switch_pm_parameter")
+        val switchPmParameter: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends a callback query to a bot and returns an answer
      * Returns an error with code 502 if the bot fails to answer the query before the query timeout expires
      *
-     * @chatId - Identifier of the chat with the message
-     * @messageId - Identifier of the message from which the query originated
-     * @payload - Query payload
+     * @property chatId Identifier of the chat with the message
+     * @property messageId Identifier of the message from which the query originated
+     * @property payload Query payload
+     * @property extra Extra data shared between request and response
      */
-    class GetCallbackQueryAnswer(
+    @Serializable
+    @SerialName("getCallbackQueryAnswer")
+    data class GetCallbackQueryAnswer(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        val payload: CallbackQueryPayload? = null
-    ) : null()
+        @SerialName("payload")
+        val payload: CallbackQueryPayload? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<CallbackQueryAnswer>
 
     /**
      * Sets the result of a callback query
      *
-     * @callbackQueryId - Identifier of the callback query
-     * @text - Text of the answer
-     * @showAlert - If true, an alert should be shown to the user instead of a toast notification
-     * @url - URL to be opened
-     * @cacheTime - Time during which the result of the query can be cached, in seconds
+     * @property callbackQueryId Identifier of the callback query
+     * @property text Text of the answer
+     * @property showAlert If true, an alert should be shown to the user instead of a toast notification
+     * @property url URL to be opened
+     * @property cacheTime Time during which the result of the query can be cached, in seconds
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("answerCallbackQuery")
     @BotsOnly
-    class AnswerCallbackQuery(
+    data class AnswerCallbackQuery(
+        @SerialName("callback_query_id")
         val callbackQueryId: Long = 0L,
+        @SerialName("text")
         val text: String? = null,
+        @SerialName("show_alert")
         val showAlert: Boolean = false,
+        @SerialName("url")
         val url: String? = null,
-        val cacheTime: Int = 0
-    ) : null()
+        @SerialName("cache_time")
+        val cacheTime: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sets the result of a shipping query
      *
-     * @shippingQueryId - Identifier of the shipping query
-     * @shippingOptions - Available shipping options
-     * @errorMessage - An error message, empty on success
+     * @property shippingQueryId Identifier of the shipping query
+     * @property shippingOptions Available shipping options
+     * @property errorMessage An error message, empty on success
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("answerShippingQuery")
     @BotsOnly
-    class AnswerShippingQuery(
+    data class AnswerShippingQuery(
+        @SerialName("shipping_query_id")
         val shippingQueryId: Long = 0L,
+        @SerialName("shipping_options")
         val shippingOptions: Array<ShippingOption> = emptyArray(),
-        val errorMessage: String? = null
-    ) : null()
+        @SerialName("error_message")
+        val errorMessage: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sets the result of a pre-checkout query
      *
-     * @preCheckoutQueryId - Identifier of the pre-checkout query
-     * @errorMessage - An error message, empty on success
+     * @property preCheckoutQueryId Identifier of the pre-checkout query
+     * @property errorMessage An error message, empty on success
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("answerPreCheckoutQuery")
     @BotsOnly
-    class AnswerPreCheckoutQuery(
+    data class AnswerPreCheckoutQuery(
+        @SerialName("pre_checkout_query_id")
         val preCheckoutQueryId: Long = 0L,
-        val errorMessage: String? = null
-    ) : null()
+        @SerialName("error_message")
+        val errorMessage: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Updates the game score of the specified user in the game
      *
-     * @chatId - The chat to which the message with the game belongs
-     * @messageId - Identifier of the message
-     * @editMessage - True, if the message should be edited
-     * @userId - User identifier
-     * @score - The new score
-     * @force - Pass true to update the score even if it decreases
-     *          If the score is 0, the user will be deleted from the high score table
+     * @property chatId The chat to which the message with the game belongs
+     * @property messageId Identifier of the message
+     * @property editMessage True, if the message should be edited
+     * @property userId User identifier
+     * @property score The new score
+     * @property force Pass true to update the score even if it decreases
+     *                 If the score is 0, the user will be deleted from the high score table
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("setGameScore")
     @BotsOnly
-    class SetGameScore(
+    data class SetGameScore(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
+        @SerialName("edit_message")
         val editMessage: Boolean = false,
+        @SerialName("user_id")
         val userId: Int = 0,
+        @SerialName("score")
         val score: Int = 0,
-        val force: Boolean = false
-    ) : null()
+        @SerialName("force")
+        val force: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Message>
 
     /**
      * Updates the game score of the specified user in a game
      *
-     * @inlineMessageId - Inline message identifier
-     * @editMessage - True, if the message should be edited
-     * @userId - User identifier
-     * @score - The new score
-     * @force - Pass true to update the score even if it decreases
-     *          If the score is 0, the user will be deleted from the high score table
+     * @property inlineMessageId Inline message identifier
+     * @property editMessage True, if the message should be edited
+     * @property userId User identifier
+     * @property score The new score
+     * @property force Pass true to update the score even if it decreases
+     *                 If the score is 0, the user will be deleted from the high score table
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("setInlineGameScore")
     @BotsOnly
-    class SetInlineGameScore(
+    data class SetInlineGameScore(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
+        @SerialName("edit_message")
         val editMessage: Boolean = false,
+        @SerialName("user_id")
         val userId: Int = 0,
+        @SerialName("score")
         val score: Int = 0,
-        val force: Boolean = false
-    ) : null()
+        @SerialName("force")
+        val force: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the high scores for a game and some part of the high score table in the range of the specified user
      *
-     * @chatId - The chat that contains the message with the game
-     * @messageId - Identifier of the message
-     * @userId - User identifier
+     * @property chatId The chat that contains the message with the game
+     * @property messageId Identifier of the message
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("getGameHighScores")
     @BotsOnly
-    class GetGameHighScores(
+    data class GetGameHighScores(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        val userId: Int = 0
-    ) : null()
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<GameHighScores>
 
     /**
      * Returns game high scores and some part of the high score table in the range of the specified user
      *
-     * @inlineMessageId - Inline message identifier
-     * @userId - User identifier
+     * @property inlineMessageId Inline message identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("getInlineGameHighScores")
     @BotsOnly
-    class GetInlineGameHighScores(
+    data class GetInlineGameHighScores(
+        @SerialName("inline_message_id")
         val inlineMessageId: String? = null,
-        val userId: Int = 0
-    ) : null()
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<GameHighScores>
 
     /**
      * Deletes the default reply markup from a chat
      * Must be called after a one-time keyboard or a ForceReply reply markup has been used
      * UpdateChatReplyMarkup will be sent if the reply markup will be changed
      *
-     * @chatId - Chat identifier
-     * @messageId - The message identifier of the used keyboard
+     * @property chatId Chat identifier
+     * @property messageId The message identifier of the used keyboard
+     * @property extra Extra data shared between request and response
      */
-    class DeleteChatReplyMarkup(
+    @Serializable
+    @SerialName("deleteChatReplyMarkup")
+    data class DeleteChatReplyMarkup(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends a notification about user activity in a chat
      *
-     * @chatId - Chat identifier
-     * @action - The action description
+     * @property chatId Chat identifier
+     * @property action The action description
+     * @property extra Extra data shared between request and response
      */
-    class SendChatAction(
+    @Serializable
+    @SerialName("sendChatAction")
+    data class SendChatAction(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val action: ChatAction? = null
-    ) : null()
+        @SerialName("action")
+        val action: ChatAction? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs TDLib that the chat is opened by the user
      * Many useful activities depend on the chat being opened or closed (e.g., in supergroups and channels all updates are received only for opened chats)
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class OpenChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("openChat")
+    data class OpenChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs TDLib that the chat is closed by the user
      * Many useful activities depend on the chat being opened or closed
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class CloseChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("closeChat")
+    data class CloseChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs TDLib that messages are being viewed by the user
      * Many useful activities depend on whether the messages are currently being viewed or not (e.g., marking messages as read, incrementing a view counter, updating a view counter, removing deleted messages in supergroups and channels)
      *
-     * @chatId - Chat identifier
-     * @messageIds - The identifiers of the messages being viewed
-     * @forceRead - True, if messages in closed chats should be marked as read
+     * @property chatId Chat identifier
+     * @property messageIds The identifiers of the messages being viewed
+     * @property forceRead True, if messages in closed chats should be marked as read
+     * @property extra Extra data shared between request and response
      */
-    class ViewMessages(
+    @Serializable
+    @SerialName("viewMessages")
+    data class ViewMessages(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageIds: LongArray = longArrayOf(),
-        val forceRead: Boolean = false
-    ) : null()
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("force_read")
+        val forceRead: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs TDLib that the message content has been opened (e.g., the user has opened a photo, video, document, location or venue, or has listened to an audio file or voice note message)
      * An updateMessageContentOpened update will be generated if something has changed
      *
-     * @chatId - Chat identifier of the message
-     * @messageId - Identifier of the message with the opened content
+     * @property chatId Chat identifier of the message
+     * @property messageId Identifier of the message with the opened content
+     * @property extra Extra data shared between request and response
      */
-    class OpenMessageContent(
+    @Serializable
+    @SerialName("openMessageContent")
+    data class OpenMessageContent(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Marks all mentions in a chat as read
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class ReadAllChatMentions(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("readAllChatMentions")
+    data class ReadAllChatMentions(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns an existing chat corresponding to a given user
      *
-     * @userId - User identifier
-     * @force - If true, the chat will be created without network request
-     *          In this case all information about the chat except its type, title and photo can be incorrect
+     * @property userId User identifier
+     * @property force If true, the chat will be created without network request
+     *                 In this case all information about the chat except its type, title and photo can be incorrect
+     * @property extra Extra data shared between request and response
      */
-    class CreatePrivateChat(
+    @Serializable
+    @SerialName("createPrivateChat")
+    data class CreatePrivateChat(
+        @SerialName("user_id")
         val userId: Int = 0,
-        val force: Boolean = false
-    ) : null()
+        @SerialName("force")
+        val force: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Returns an existing chat corresponding to a known basic group
      *
-     * @basicGroupId - Basic group identifier
-     * @force - If true, the chat will be created without network request
-     *          In this case all information about the chat except its type, title and photo can be incorrect
+     * @property basicGroupId Basic group identifier
+     * @property force If true, the chat will be created without network request
+     *                 In this case all information about the chat except its type, title and photo can be incorrect
+     * @property extra Extra data shared between request and response
      */
-    class CreateBasicGroupChat(
+    @Serializable
+    @SerialName("createBasicGroupChat")
+    data class CreateBasicGroupChat(
+        @SerialName("basic_group_id")
         val basicGroupId: Int = 0,
-        val force: Boolean = false
-    ) : null()
+        @SerialName("force")
+        val force: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Returns an existing chat corresponding to a known supergroup or channel
      *
-     * @supergroupId - Supergroup or channel identifier
-     * @force - If true, the chat will be created without network request
-     *          In this case all information about the chat except its type, title and photo can be incorrect
+     * @property supergroupId Supergroup or channel identifier
+     * @property force If true, the chat will be created without network request
+     *                 In this case all information about the chat except its type, title and photo can be incorrect
+     * @property extra Extra data shared between request and response
      */
-    class CreateSupergroupChat(
+    @Serializable
+    @SerialName("createSupergroupChat")
+    data class CreateSupergroupChat(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
-        val force: Boolean = false
-    ) : null()
+        @SerialName("force")
+        val force: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Returns an existing chat corresponding to a known secret chat
      *
-     * @secretChatId - Secret chat identifier
+     * @property secretChatId Secret chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class CreateSecretChat(
-        val secretChatId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("createSecretChat")
+    data class CreateSecretChat(
+        @SerialName("secret_chat_id")
+        val secretChatId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Creates a new basic group and sends a corresponding messageBasicGroupChatCreate
      * Returns the newly created chat
      *
-     * @userIds - Identifiers of users to be added to the basic group
-     * @title - Title of the new basic group
+     * @property userIds Identifiers of users to be added to the basic group
+     * @property title Title of the new basic group
+     * @property extra Extra data shared between request and response
      */
-    class CreateNewBasicGroupChat(
-        val userIds: IntArray = intArrayOf(),
-        val title: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("createNewBasicGroupChat")
+    data class CreateNewBasicGroupChat(
+        @SerialName("user_ids")
+        val userIds: Array<Int> = intArrayOf(),
+        @SerialName("title")
+        val title: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Creates a new supergroup or channel and sends a corresponding messageSupergroupChatCreate
      * Returns the newly created chat
      *
-     * @title - Title of the new chat
-     * @isChannel - True, if a channel chat should be created
-     * @description - Chat description
+     * @property title Title of the new chat
+     * @property isChannel True, if a channel chat should be created
+     * @property description Chat description
+     * @property extra Extra data shared between request and response
      */
-    class CreateNewSupergroupChat(
+    @Serializable
+    @SerialName("createNewSupergroupChat")
+    data class CreateNewSupergroupChat(
+        @SerialName("title")
         val title: String? = null,
+        @SerialName("is_channel")
         val isChannel: Boolean = false,
-        val description: String? = null
-    ) : null()
+        @SerialName("description")
+        val description: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Creates a new secret chat
      * Returns the newly created chat
      *
-     * @userId - Identifier of the target user
+     * @property userId Identifier of the target user
+     * @property extra Extra data shared between request and response
      */
-    class CreateNewSecretChat(
-        val userId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("createNewSecretChat")
+    data class CreateNewSecretChat(
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom
      * Requires creator privileges
      * Deactivates the original basic group
      *
-     * @chatId - Identifier of the chat to upgrade
+     * @property chatId Identifier of the chat to upgrade
+     * @property extra Extra data shared between request and response
      */
-    class UpgradeBasicGroupChatToSupergroupChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("upgradeBasicGroupChatToSupergroupChat")
+    data class UpgradeBasicGroupChatToSupergroupChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Changes the chat title
@@ -10005,13 +14996,20 @@ class TdApi {
      * Requires can_change_info rights
      * The title will not be changed until the request to the server has been completed
      *
-     * @chatId - Chat identifier
-     * @title - New title of the chat
+     * @property chatId Chat identifier
+     * @property title New title of the chat
+     * @property extra Extra data shared between request and response
      */
-    class SetChatTitle(
+    @Serializable
+    @SerialName("setChatTitle")
+    data class SetChatTitle(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val title: String? = null
-    ) : null()
+        @SerialName("title")
+        val title: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the photo of a chat
@@ -10019,168 +15017,265 @@ class TdApi {
      * Requires can_change_info rights
      * The photo will not be changed before request to the server has been completed
      *
-     * @chatId - Chat identifier
-     * @photo - New chat photo
-     *          You can use a zero InputFileId to delete the chat photo
-     *          Files that are accessible only by HTTP URL are not acceptable
+     * @property chatId Chat identifier
+     * @property photo New chat photo
+     *                 You can use a zero InputFileId to delete the chat photo
+     *                 Files that are accessible only by HTTP URL are not acceptable
+     * @property extra Extra data shared between request and response
      */
-    class SetChatPhoto(
+    @Serializable
+    @SerialName("setChatPhoto")
+    data class SetChatPhoto(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val photo: InputFile? = null
-    ) : null()
+        @SerialName("photo")
+        val photo: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the chat members permissions
      * Supported only for basic groups and supergroups
      * Requires can_restrict_members administrator right
      *
-     * @chatId - Chat identifier
-     * @permissions - New non-administrator members permissions in the chat
+     * @property chatId Chat identifier
+     * @property permissions New non-administrator members permissions in the chat
+     * @property extra Extra data shared between request and response
      */
-    class SetChatPermissions(
+    @Serializable
+    @SerialName("setChatPermissions")
+    data class SetChatPermissions(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val permissions: ChatPermissions? = null
-    ) : null()
+        @SerialName("permissions")
+        val permissions: ChatPermissions? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the draft message in a chat
      *
-     * @chatId - Chat identifier
-     * @draftMessage - New draft message
+     * @property chatId Chat identifier
+     * @property draftMessage New draft message
+     * @property extra Extra data shared between request and response
      */
-    class SetChatDraftMessage(
+    @Serializable
+    @SerialName("setChatDraftMessage")
+    data class SetChatDraftMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val draftMessage: DraftMessage? = null
-    ) : null()
+        @SerialName("draft_message")
+        val draftMessage: DraftMessage? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the notification settings of a chat
      *
-     * @chatId - Chat identifier
-     * @notificationSettings - New notification settings for the chat
+     * @property chatId Chat identifier
+     * @property notificationSettings New notification settings for the chat
+     * @property extra Extra data shared between request and response
      */
-    class SetChatNotificationSettings(
+    @Serializable
+    @SerialName("setChatNotificationSettings")
+    data class SetChatNotificationSettings(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val notificationSettings: ChatNotificationSettings? = null
-    ) : null()
+        @SerialName("notification_settings")
+        val notificationSettings: ChatNotificationSettings? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the pinned state of a chat
      * You can pin up to GetOption("pinned_chat_count_max") non-secret chats and the same number of secret chats
      *
-     * @chatId - Chat identifier
-     * @isPinned - New value of is_pinned
+     * @property chatId Chat identifier
+     * @property isPinned New value of is_pinned
+     * @property extra Extra data shared between request and response
      */
-    class ToggleChatIsPinned(
+    @Serializable
+    @SerialName("toggleChatIsPinned")
+    data class ToggleChatIsPinned(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val isPinned: Boolean = false
-    ) : null()
+        @SerialName("is_pinned")
+        val isPinned: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the marked as unread state of a chat
      *
-     * @chatId - Chat identifier
-     * @isMarkedAsUnread - New value of is_marked_as_unread
+     * @property chatId Chat identifier
+     * @property isMarkedAsUnread New value of is_marked_as_unread
+     * @property extra Extra data shared between request and response
      */
-    class ToggleChatIsMarkedAsUnread(
+    @Serializable
+    @SerialName("toggleChatIsMarkedAsUnread")
+    data class ToggleChatIsMarkedAsUnread(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val isMarkedAsUnread: Boolean = false
-    ) : null()
+        @SerialName("is_marked_as_unread")
+        val isMarkedAsUnread: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the value of the default disable_notification parameter, used when a message is sent to a chat
      *
-     * @chatId - Chat identifier
-     * @defaultDisableNotification - New value of default_disable_notification
+     * @property chatId Chat identifier
+     * @property defaultDisableNotification New value of default_disable_notification
+     * @property extra Extra data shared between request and response
      */
-    class ToggleChatDefaultDisableNotification(
+    @Serializable
+    @SerialName("toggleChatDefaultDisableNotification")
+    data class ToggleChatDefaultDisableNotification(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val defaultDisableNotification: Boolean = false
-    ) : null()
+        @SerialName("default_disable_notification")
+        val defaultDisableNotification: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes client data associated with a chat
      *
-     * @chatId - Chat identifier
-     * @clientData - New value of client_data
+     * @property chatId Chat identifier
+     * @property clientData New value of client_data
+     * @property extra Extra data shared between request and response
      */
-    class SetChatClientData(
+    @Serializable
+    @SerialName("setChatClientData")
+    data class SetChatClientData(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val clientData: String? = null
-    ) : null()
+        @SerialName("client_data")
+        val clientData: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes information about a chat
      * Available for basic groups, supergroups, and channels
      * Requires can_change_info rights
      *
-     * @chatId - Identifier of the chat
-     * @description - New chat description
+     * @property chatId Identifier of the chat
+     * @property description New chat description
+     * @property extra Extra data shared between request and response
      */
-    class SetChatDescription(
+    @Serializable
+    @SerialName("setChatDescription")
+    data class SetChatDescription(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val description: String? = null
-    ) : null()
+        @SerialName("description")
+        val description: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Pins a message in a chat
      * Requires can_pin_messages rights
      *
-     * @chatId - Identifier of the chat
-     * @messageId - Identifier of the new pinned message
-     * @disableNotification - True, if there should be no notification about the pinned message
+     * @property chatId Identifier of the chat
+     * @property messageId Identifier of the new pinned message
+     * @property disableNotification True, if there should be no notification about the pinned message
+     * @property extra Extra data shared between request and response
      */
-    class PinChatMessage(
+    @Serializable
+    @SerialName("pinChatMessage")
+    data class PinChatMessage(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
-        val disableNotification: Boolean = false
-    ) : null()
+        @SerialName("disable_notification")
+        val disableNotification: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes the pinned message from a chat
      * Requires can_pin_messages rights in the group or channel
      *
-     * @chatId - Identifier of the chat
+     * @property chatId Identifier of the chat
+     * @property extra Extra data shared between request and response
      */
-    class UnpinChatMessage(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("unpinChatMessage")
+    data class UnpinChatMessage(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds current user as a new member to a chat
      * Private and secret chats can't be joined using this method
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class JoinChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("joinChat")
+    data class JoinChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes current user from chat members
      * Private and secret chats can't be left using this method
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class LeaveChat(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("leaveChat")
+    data class LeaveChat(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds a new member to a chat
      * Members can't be added to private or secret chats
      * Members will not be added until the chat state has been synchronized with the server
      *
-     * @chatId - Chat identifier
-     * @userId - Identifier of the user
-     * @forwardLimit - The number of earlier messages from the chat to be forwarded to the new member
-     *                 Ignored for supergroups and channels
+     * @property chatId Chat identifier
+     * @property userId Identifier of the user
+     * @property forwardLimit The number of earlier messages from the chat to be forwarded to the new member
+     *                        Ignored for supergroups and channels
+     * @property extra Extra data shared between request and response
      */
-    class AddChatMember(
+    @Serializable
+    @SerialName("addChatMember")
+    data class AddChatMember(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("user_id")
         val userId: Int = 0,
-        val forwardLimit: Int = 0
-    ) : null()
+        @SerialName("forward_limit")
+        val forwardLimit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds multiple new members to a chat
@@ -10189,13 +15284,20 @@ class TdApi {
      * Members can't be added to a channel if it has more than 200 members
      * Members will not be added until the chat state has been synchronized with the server
      *
-     * @chatId - Chat identifier
-     * @userIds - Identifiers of the users to be added to the chat
+     * @property chatId Chat identifier
+     * @property userIds Identifiers of the users to be added to the chat
+     * @property extra Extra data shared between request and response
      */
-    class AddChatMembers(
+    @Serializable
+    @SerialName("addChatMembers")
+    data class AddChatMembers(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val userIds: IntArray = intArrayOf()
-    ) : null()
+        @SerialName("user_ids")
+        val userIds: Array<Int> = intArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the status of a chat member, needs appropriate privileges
@@ -10203,246 +15305,390 @@ class TdApi {
      * Instead, use addChatMember
      * The chat member status will not be changed until it has been synchronized with the server
      *
-     * @chatId - Chat identifier
-     * @userId - User identifier
-     * @status - The new status of the member in the chat
+     * @property chatId Chat identifier
+     * @property userId User identifier
+     * @property status The new status of the member in the chat
+     * @property extra Extra data shared between request and response
      */
-    class SetChatMemberStatus(
+    @Serializable
+    @SerialName("setChatMemberStatus")
+    data class SetChatMemberStatus(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("user_id")
         val userId: Int = 0,
-        val status: ChatMemberStatus? = null
-    ) : null()
+        @SerialName("status")
+        val status: ChatMemberStatus? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns information about a single member of a chat
      *
-     * @chatId - Chat identifier
-     * @userId - User identifier
+     * @property chatId Chat identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetChatMember(
+    @Serializable
+    @SerialName("getChatMember")
+    data class GetChatMember(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val userId: Int = 0
-    ) : null()
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatMember>
 
     /**
      * Searches for a specified query in the first name, last name and username of the members of a specified chat
      * Requires administrator rights in channels
      *
-     * @chatId - Chat identifier
-     * @query - Query to search for
-     * @limit - The maximum number of users to be returned
-     * @filter - The type of users to return
-     *           By default, chatMembersFilterMembers
+     * @property chatId Chat identifier
+     * @property query Query to search for
+     * @property limit The maximum number of users to be returned
+     * @property filter The type of users to return
+     *                  By default, chatMembersFilterMembers
+     * @property extra Extra data shared between request and response
      */
-    class SearchChatMembers(
+    @Serializable
+    @SerialName("searchChatMembers")
+    data class SearchChatMembers(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("query")
         val query: String? = null,
+        @SerialName("limit")
         val limit: Int = 0,
-        val filter: ChatMembersFilter? = null
-    ) : null()
+        @SerialName("filter")
+        val filter: ChatMembersFilter? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatMembers>
 
     /**
      * Returns a list of users who are administrators of the chat
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetChatAdministrators(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("getChatAdministrators")
+    data class GetChatAdministrators(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Users>
 
     /**
      * Clears draft messages in all chats
      *
-     * @excludeSecretChats - If true, local draft messages in secret chats will not be cleared
+     * @property excludeSecretChats If true, local draft messages in secret chats will not be cleared
+     * @property extra Extra data shared between request and response
      */
-    class ClearAllDraftMessages(
-        val excludeSecretChats: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("clearAllDraftMessages")
+    data class ClearAllDraftMessages(
+        @SerialName("exclude_secret_chats")
+        val excludeSecretChats: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns list of chats with non-default notification settings
      *
-     * @scope - If specified, only chats from the specified scope will be returned
-     * @compareSound - If true, also chats with non-default sound will be returned
+     * @property scope If specified, only chats from the specified scope will be returned
+     * @property compareSound If true, also chats with non-default sound will be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetChatNotificationSettingsExceptions(
+    @Serializable
+    @SerialName("getChatNotificationSettingsExceptions")
+    data class GetChatNotificationSettingsExceptions(
+        @SerialName("scope")
         val scope: NotificationSettingsScope? = null,
-        val compareSound: Boolean = false
-    ) : null()
+        @SerialName("compare_sound")
+        val compareSound: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chats>
 
     /**
      * Returns the notification settings for chats of a given type
      *
-     * @scope - Types of chats for which to return the notification settings information
+     * @property scope Types of chats for which to return the notification settings information
+     * @property extra Extra data shared between request and response
      */
-    class GetScopeNotificationSettings(
-        val scope: NotificationSettingsScope? = null
-    ) : null()
+    @Serializable
+    @SerialName("getScopeNotificationSettings")
+    data class GetScopeNotificationSettings(
+        @SerialName("scope")
+        val scope: NotificationSettingsScope? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ScopeNotificationSettings>
 
     /**
      * Changes notification settings for chats of a given type
      *
-     * @scope - Types of chats for which to change the notification settings
-     * @notificationSettings - The new notification settings for the given scope
+     * @property scope Types of chats for which to change the notification settings
+     * @property notificationSettings The new notification settings for the given scope
+     * @property extra Extra data shared between request and response
      */
-    class SetScopeNotificationSettings(
+    @Serializable
+    @SerialName("setScopeNotificationSettings")
+    data class SetScopeNotificationSettings(
+        @SerialName("scope")
         val scope: NotificationSettingsScope? = null,
-        val notificationSettings: ScopeNotificationSettings? = null
-    ) : null()
+        @SerialName("notification_settings")
+        val notificationSettings: ScopeNotificationSettings? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Resets all notification settings to their default values
      * By default, all chats are unmuted, the sound is set to "default" and message previews are shown
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResetAllNotificationSettings : null()
+    @Serializable
+    @SerialName("resetAllNotificationSettings")
+    data class ResetAllNotificationSettings(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the order of pinned chats
      *
-     * @chatIds - The new list of pinned chats
+     * @property chatIds The new list of pinned chats
+     * @property extra Extra data shared between request and response
      */
-    class SetPinnedChats(
-        val chatIds: LongArray = longArrayOf()
-    ) : null()
+    @Serializable
+    @SerialName("setPinnedChats")
+    data class SetPinnedChats(
+        @SerialName("chat_ids")
+        val chatIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Downloads a file from the cloud
      * Download progress and completion of the download will be notified through updateFile updates
      *
-     * @fileId - Identifier of the file to download
-     * @priority - Priority of the download (1-32)
-     *             The higher the priority, the earlier the file will be downloaded
-     *             If the priorities of two files are equal, then the last one for which downloadFile was called will be downloaded first
-     * @offset - The starting position from which the file should be downloaded
-     * @limit - Number of bytes which should be downloaded starting from the "offset" position before the download will be automatically cancelled
-     *          Use 0 to download without a limit
-     * @synchronous - If false, this request returns file state just after the download has been started
-     *                If true, this request returns file state only after the download has succeeded, has failed, has been cancelled or a new downloadFile request with different offset/limit parameters was sent
+     * @property fileId Identifier of the file to download
+     * @property priority Priority of the download (1-32)
+     *                    The higher the priority, the earlier the file will be downloaded
+     *                    If the priorities of two files are equal, then the last one for which downloadFile was called will be downloaded first
+     * @property offset The starting position from which the file should be downloaded
+     * @property limit Number of bytes which should be downloaded starting from the "offset" position before the download will be automatically cancelled
+     *                 Use 0 to download without a limit
+     * @property synchronous If false, this request returns file state just after the download has been started
+     *                       If true, this request returns file state only after the download has succeeded, has failed, has been cancelled or a new downloadFile request with different offset/limit parameters was sent
+     * @property extra Extra data shared between request and response
      */
-    class DownloadFile(
+    @Serializable
+    @SerialName("downloadFile")
+    data class DownloadFile(
+        @SerialName("file_id")
         val fileId: Int = 0,
+        @SerialName("priority")
         val priority: Int = 0,
+        @SerialName("offset")
         val offset: Int = 0,
+        @SerialName("limit")
         val limit: Int = 0,
-        val synchronous: Boolean = false
-    ) : null()
+        @SerialName("synchronous")
+        val synchronous: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<File>
 
     /**
      * Returns file downloaded prefix size from a given offset
      *
-     * @fileId - Identifier of the file
-     * @offset - Offset from which downloaded prefix size should be calculated
+     * @property fileId Identifier of the file
+     * @property offset Offset from which downloaded prefix size should be calculated
+     * @property extra Extra data shared between request and response
      */
-    class GetFileDownloadedPrefixSize(
+    @Serializable
+    @SerialName("getFileDownloadedPrefixSize")
+    data class GetFileDownloadedPrefixSize(
+        @SerialName("file_id")
         val fileId: Int = 0,
-        val offset: Int = 0
-    ) : null()
+        @SerialName("offset")
+        val offset: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Count>
 
     /**
      * Stops the downloading of a file
      * If a file has already been downloaded, does nothing
      *
-     * @fileId - Identifier of a file to stop downloading
-     * @onlyIfPending - Pass true to stop downloading only if it hasn't been started, i.e
-     *                  Request hasn't been sent to server
+     * @property fileId Identifier of a file to stop downloading
+     * @property onlyIfPending Pass true to stop downloading only if it hasn't been started, i.e
+     *                         Request hasn't been sent to server
+     * @property extra Extra data shared between request and response
      */
-    class CancelDownloadFile(
+    @Serializable
+    @SerialName("cancelDownloadFile")
+    data class CancelDownloadFile(
+        @SerialName("file_id")
         val fileId: Int = 0,
-        val onlyIfPending: Boolean = false
-    ) : null()
+        @SerialName("only_if_pending")
+        val onlyIfPending: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Asynchronously uploads a file to the cloud without sending it in a message
      * UpdateFile will be used to notify about upload progress and successful completion of the upload
      * The file will not have a persistent remote identifier until it will be sent in a message
      *
-     * @file - File to upload
-     * @fileType - File type
-     * @priority - Priority of the upload (1-32)
-     *             The higher the priority, the earlier the file will be uploaded
-     *             If the priorities of two files are equal, then the first one for which uploadFile was called will be uploaded first
+     * @property file File to upload
+     * @property fileType File type
+     * @property priority Priority of the upload (1-32)
+     *                    The higher the priority, the earlier the file will be uploaded
+     *                    If the priorities of two files are equal, then the first one for which uploadFile was called will be uploaded first
+     * @property extra Extra data shared between request and response
      */
-    class UploadFile(
+    @Serializable
+    @SerialName("uploadFile")
+    data class UploadFile(
+        @SerialName("file")
         val file: InputFile? = null,
+        @SerialName("file_type")
         val fileType: FileType? = null,
-        val priority: Int = 0
-    ) : null()
+        @SerialName("priority")
+        val priority: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<File>
 
     /**
      * Stops the uploading of a file
      * Supported only for files uploaded by using uploadFile
      * For other files the behavior is undefined
      *
-     * @fileId - Identifier of the file to stop uploading
+     * @property fileId Identifier of the file to stop uploading
+     * @property extra Extra data shared between request and response
      */
-    class CancelUploadFile(
-        val fileId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("cancelUploadFile")
+    data class CancelUploadFile(
+        @SerialName("file_id")
+        val fileId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Writes a part of a generated file
      * This method is intended to be used only if the client has no direct access to TDLib's file system, because it is usually slower than a direct write to the destination file
      *
-     * @generationId - The identifier of the generation process
-     * @offset - The offset from which to write the data to the file
-     * @data - The data to write
+     * @property generationId The identifier of the generation process
+     * @property offset The offset from which to write the data to the file
+     * @property data The data to write
+     * @property extra Extra data shared between request and response
      */
-    class WriteGeneratedFilePart(
+    @Serializable
+    @SerialName("writeGeneratedFilePart")
+    data class WriteGeneratedFilePart(
+        @SerialName("generation_id")
         val generationId: Long = 0L,
+        @SerialName("offset")
         val offset: Int = 0,
-        val data: ByteArray = byteArrayOf()
-    ) : null()
+        @SerialName("data")
+        val data: Array<Byte> = byteArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs TDLib on a file generation prograss
      *
-     * @generationId - The identifier of the generation process
-     * @expectedSize - Expected size of the generated file, in bytes
-     *                 0 if unknown
-     * @localPrefixSize - The number of bytes already generated
+     * @property generationId The identifier of the generation process
+     * @property expectedSize Expected size of the generated file, in bytes
+     *                        0 if unknown
+     * @property localPrefixSize The number of bytes already generated
+     * @property extra Extra data shared between request and response
      */
-    class SetFileGenerationProgress(
+    @Serializable
+    @SerialName("setFileGenerationProgress")
+    data class SetFileGenerationProgress(
+        @SerialName("generation_id")
         val generationId: Long = 0L,
+        @SerialName("expected_size")
         val expectedSize: Int = 0,
-        val localPrefixSize: Int = 0
-    ) : null()
+        @SerialName("local_prefix_size")
+        val localPrefixSize: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Finishes the file generation
      *
-     * @generationId - The identifier of the generation process
-     * @error - If set, means that file generation has failed and should be terminated
+     * @property generationId The identifier of the generation process
+     * @property error If set, means that file generation has failed and should be terminated
+     * @property extra Extra data shared between request and response
      */
-    class FinishFileGeneration(
+    @Serializable
+    @SerialName("finishFileGeneration")
+    data class FinishFileGeneration(
+        @SerialName("generation_id")
         val generationId: Long = 0L,
-        val error: Error? = null
-    ) : null()
+        @SerialName("error")
+        val error: Error? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Reads a part of a file from the TDLib file cache and returns read bytes
      * This method is intended to be used only if the client has no direct access to TDLib's file system, because it is usually slower than a direct read from the file
      *
-     * @fileId - Identifier of the file
-     *           The file must be located in the TDLib file cache
-     * @offset - The offset from which to read the file
-     * @count - Number of bytes to read
-     *          An error will be returned if there are not enough bytes available in the file from the specified position
-     *          Pass 0 to read all available data from the specified position
+     * @property fileId Identifier of the file
+     *                  The file must be located in the TDLib file cache
+     * @property offset The offset from which to read the file
+     * @property count Number of bytes to read
+     *                 An error will be returned if there are not enough bytes available in the file from the specified position
+     *                 Pass 0 to read all available data from the specified position
+     * @property extra Extra data shared between request and response
      */
-    class ReadFilePart(
+    @Serializable
+    @SerialName("readFilePart")
+    data class ReadFilePart(
+        @SerialName("file_id")
         val fileId: Int = 0,
+        @SerialName("offset")
         val offset: Int = 0,
-        val count: Int = 0
-    ) : null()
+        @SerialName("count")
+        val count: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<FilePart>
 
     /**
      * Deletes a file from the TDLib file cache
      *
-     * @fileId - Identifier of the file to delete
+     * @property fileId Identifier of the file to delete
+     * @property extra Extra data shared between request and response
      */
-    class DeleteFile(
-        val fileId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("deleteFile")
+    data class DeleteFile(
+        @SerialName("file_id")
+        val fileId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Generates a new invite link for a chat
@@ -10450,343 +15696,567 @@ class TdApi {
      * Available for basic groups, supergroups, and channels
      * Requires administrator privileges and can_invite_users right
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class GenerateChatInviteLink(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("generateChatInviteLink")
+    data class GenerateChatInviteLink(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatInviteLink>
 
     /**
      * Checks the validity of an invite link for a chat and returns information about the corresponding chat
      *
-     * @inviteLink - Invite link to be checked
+     * @property inviteLink Invite link to be checked
+     * @property extra Extra data shared between request and response
      */
-    class CheckChatInviteLink(
-        val inviteLink: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkChatInviteLink")
+    data class CheckChatInviteLink(
+        @SerialName("invite_link")
+        val inviteLink: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatInviteLinkInfo>
 
     /**
      * Uses an invite link to add the current user to the chat if possible
      * The new member will not be added until the chat state has been synchronized with the server
      *
-     * @inviteLink - Invite link to import
+     * @property inviteLink Invite link to import
+     * @property extra Extra data shared between request and response
      */
-    class JoinChatByInviteLink(
-        val inviteLink: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("joinChatByInviteLink")
+    data class JoinChatByInviteLink(
+        @SerialName("invite_link")
+        val inviteLink: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Chat>
 
     /**
      * Creates a new call
      *
-     * @userId - Identifier of the user to be called
-     * @protocol - Description of the call protocols supported by the client
+     * @property userId Identifier of the user to be called
+     * @property protocol Description of the call protocols supported by the client
+     * @property extra Extra data shared between request and response
      */
-    class CreateCall(
+    @Serializable
+    @SerialName("createCall")
+    data class CreateCall(
+        @SerialName("user_id")
         val userId: Int = 0,
-        val protocol: CallProtocol? = null
-    ) : null()
+        @SerialName("protocol")
+        val protocol: CallProtocol? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<CallId>
 
     /**
      * Accepts an incoming call
      *
-     * @callId - Call identifier
-     * @protocol - Description of the call protocols supported by the client
+     * @property callId Call identifier
+     * @property protocol Description of the call protocols supported by the client
+     * @property extra Extra data shared between request and response
      */
-    class AcceptCall(
+    @Serializable
+    @SerialName("acceptCall")
+    data class AcceptCall(
+        @SerialName("call_id")
         val callId: Int = 0,
-        val protocol: CallProtocol? = null
-    ) : null()
+        @SerialName("protocol")
+        val protocol: CallProtocol? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Discards a call
      *
-     * @callId - Call identifier
-     * @isDisconnected - True, if the user was disconnected
-     * @duration - The call duration, in seconds
-     * @connectionId - Identifier of the connection used during the call
+     * @property callId Call identifier
+     * @property isDisconnected True, if the user was disconnected
+     * @property duration The call duration, in seconds
+     * @property connectionId Identifier of the connection used during the call
+     * @property extra Extra data shared between request and response
      */
-    class DiscardCall(
+    @Serializable
+    @SerialName("discardCall")
+    data class DiscardCall(
+        @SerialName("call_id")
         val callId: Int = 0,
+        @SerialName("is_disconnected")
         val isDisconnected: Boolean = false,
+        @SerialName("duration")
         val duration: Int = 0,
-        val connectionId: Long = 0L
-    ) : null()
+        @SerialName("connection_id")
+        val connectionId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends a call rating
      *
-     * @callId - Call identifier
-     * @rating - Call rating
-     * @comment - An optional user comment if the rating is less than 5
-     * @problems - List of the exact types of problems with the call, specified by the user
+     * @property callId Call identifier
+     * @property rating Call rating
+     * @property comment An optional user comment if the rating is less than 5
+     * @property problems List of the exact types of problems with the call, specified by the user
+     * @property extra Extra data shared between request and response
      */
-    class SendCallRating(
+    @Serializable
+    @SerialName("sendCallRating")
+    data class SendCallRating(
+        @SerialName("call_id")
         val callId: Int = 0,
+        @SerialName("rating")
         val rating: Int = 0,
+        @SerialName("comment")
         val comment: String? = null,
-        val problems: Array<CallProblem> = emptyArray()
-    ) : null()
+        @SerialName("problems")
+        val problems: Array<CallProblem> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends debug information for a call
      *
-     * @callId - Call identifier
-     * @debugInformation - Debug information in application-specific format
+     * @property callId Call identifier
+     * @property debugInformation Debug information in application-specific format
+     * @property extra Extra data shared between request and response
      */
-    class SendCallDebugInformation(
+    @Serializable
+    @SerialName("sendCallDebugInformation")
+    data class SendCallDebugInformation(
+        @SerialName("call_id")
         val callId: Int = 0,
-        val debugInformation: String? = null
-    ) : null()
+        @SerialName("debug_information")
+        val debugInformation: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds a user to the blacklist
      *
-     * @userId - User identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
-    class BlockUser(
-        val userId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("blockUser")
+    data class BlockUser(
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes a user from the blacklist
      *
-     * @userId - User identifier
+     * @property userId User identifier
+     * @property extra Extra data shared between request and response
      */
-    class UnblockUser(
-        val userId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("unblockUser")
+    data class UnblockUser(
+        @SerialName("user_id")
+        val userId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns users that were blocked by the current user
      *
-     * @offset - Number of users to skip in the result
-     * @limit - Maximum number of users to return
+     * @property offset Number of users to skip in the result
+     * @property limit Maximum number of users to return
+     * @property extra Extra data shared between request and response
      */
-    class GetBlockedUsers(
+    @Serializable
+    @SerialName("getBlockedUsers")
+    data class GetBlockedUsers(
+        @SerialName("offset")
         val offset: Int = 0,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Users>
 
     /**
      * Adds new contacts or edits existing contacts
      * Contacts' user identifiers are ignored
      *
-     * @contacts - The list of contacts to import or edit, contact's vCard are ignored and are not imported
+     * @property contacts The list of contacts to import or edit, contact's vCard are ignored and are not imported
+     * @property extra Extra data shared between request and response
      */
-    class ImportContacts(
-        val contacts: Array<Contact> = emptyArray()
-    ) : null()
+    @Serializable
+    @SerialName("importContacts")
+    data class ImportContacts(
+        @SerialName("contacts")
+        val contacts: Array<Contact> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ImportedContacts>
 
     /**
      * Returns all user contacts
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetContacts : null()
+    @Serializable
+    @SerialName("getContacts")
+    data class GetContacts(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Users>
 
     /**
      * Searches for the specified query in the first names, last names and usernames of the known user contacts
      *
-     * @query - Query to search for
-     *          May be empty to return all contacts
-     * @limit - Maximum number of users to be returned
+     * @property query Query to search for
+     *                 May be empty to return all contacts
+     * @property limit Maximum number of users to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchContacts(
+    @Serializable
+    @SerialName("searchContacts")
+    data class SearchContacts(
+        @SerialName("query")
         val query: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Users>
 
     /**
      * Removes users from the contact list
      *
-     * @userIds - Identifiers of users to be deleted
+     * @property userIds Identifiers of users to be deleted
+     * @property extra Extra data shared between request and response
      */
-    class RemoveContacts(
-        val userIds: IntArray = intArrayOf()
-    ) : null()
+    @Serializable
+    @SerialName("removeContacts")
+    data class RemoveContacts(
+        @SerialName("user_ids")
+        val userIds: Array<Int> = intArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the total number of imported contacts
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetImportedContactCount : null()
+    @Serializable
+    @SerialName("getImportedContactCount")
+    data class GetImportedContactCount(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Count>
 
     /**
      * Changes imported contacts using the list of current user contacts saved on the device
      * Imports newly added contacts and, if at least the file database is enabled, deletes recently deleted contacts
      * Query result depends on the result of the previous query, so only one query is possible at the same time
      *
-     * @contacts - The new list of contacts, contact's vCard are ignored and are not imported
+     * @property contacts The new list of contacts, contact's vCard are ignored and are not imported
+     * @property extra Extra data shared between request and response
      */
-    class ChangeImportedContacts(
-        val contacts: Array<Contact> = emptyArray()
-    ) : null()
+    @Serializable
+    @SerialName("changeImportedContacts")
+    data class ChangeImportedContacts(
+        @SerialName("contacts")
+        val contacts: Array<Contact> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ImportedContacts>
 
     /**
      * Clears all imported contacts, contact list remains unchanged
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ClearImportedContacts : null()
+    @Serializable
+    @SerialName("clearImportedContacts")
+    data class ClearImportedContacts(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the profile photos of a user
      * The result of this query may be outdated: some photos might have been deleted already
      *
-     * @userId - User identifier
-     * @offset - The number of photos to skip
-     * @limit - Maximum number of photos to be returned
+     * @property userId User identifier
+     * @property offset The number of photos to skip
+     * @property limit Maximum number of photos to be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetUserProfilePhotos(
+    @Serializable
+    @SerialName("getUserProfilePhotos")
+    data class GetUserProfilePhotos(
+        @SerialName("user_id")
         val userId: Int = 0,
+        @SerialName("offset")
         val offset: Int = 0,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<UserProfilePhotos>
 
     /**
      * Returns stickers from the installed sticker sets that correspond to a given emoji
      * If the emoji is not empty, favorite and recently used stickers may also be returned
      *
-     * @emoji - String representation of emoji
-     *          If empty, returns all known installed stickers
-     * @limit - Maximum number of stickers to be returned
+     * @property emoji String representation of emoji
+     *                 If empty, returns all known installed stickers
+     * @property limit Maximum number of stickers to be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetStickers(
+    @Serializable
+    @SerialName("getStickers")
+    data class GetStickers(
+        @SerialName("emoji")
         val emoji: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Stickers>
 
     /**
      * Searches for stickers from public sticker sets that correspond to a given emoji
      *
-     * @emoji - String representation of emoji
-     * @limit - Maximum number of stickers to be returned
+     * @property emoji String representation of emoji
+     * @property limit Maximum number of stickers to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchStickers(
+    @Serializable
+    @SerialName("searchStickers")
+    data class SearchStickers(
+        @SerialName("emoji")
         val emoji: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Stickers>
 
     /**
      * Returns a list of installed sticker sets
      *
-     * @isMasks - Pass true to return mask sticker sets
-     *            Pass false to return ordinary sticker sets
+     * @property isMasks Pass true to return mask sticker sets
+     *                   Pass false to return ordinary sticker sets
+     * @property extra Extra data shared between request and response
      */
-    class GetInstalledStickerSets(
-        val isMasks: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("getInstalledStickerSets")
+    data class GetInstalledStickerSets(
+        @SerialName("is_masks")
+        val isMasks: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSets>
 
     /**
      * Returns a list of archived sticker sets
      *
-     * @isMasks - Pass true to return mask stickers sets
-     *            Pass false to return ordinary sticker sets
-     * @offsetStickerSetId - Identifier of the sticker set from which to return the result
-     * @limit - Maximum number of sticker sets to return
+     * @property isMasks Pass true to return mask stickers sets
+     *                   Pass false to return ordinary sticker sets
+     * @property offsetStickerSetId Identifier of the sticker set from which to return the result
+     * @property limit Maximum number of sticker sets to return
+     * @property extra Extra data shared between request and response
      */
-    class GetArchivedStickerSets(
+    @Serializable
+    @SerialName("getArchivedStickerSets")
+    data class GetArchivedStickerSets(
+        @SerialName("is_masks")
         val isMasks: Boolean = false,
+        @SerialName("offset_sticker_set_id")
         val offsetStickerSetId: Long = 0L,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSets>
 
     /**
      * Returns a list of trending sticker sets
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetTrendingStickerSets : null()
+    @Serializable
+    @SerialName("getTrendingStickerSets")
+    data class GetTrendingStickerSets(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSets>
 
     /**
      * Returns a list of sticker sets attached to a file
      * Currently only photos and videos can have attached sticker sets
      *
-     * @fileId - File identifier
+     * @property fileId File identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetAttachedStickerSets(
-        val fileId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getAttachedStickerSets")
+    data class GetAttachedStickerSets(
+        @SerialName("file_id")
+        val fileId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSets>
 
     /**
      * Returns information about a sticker set by its identifier
      *
-     * @setId - Identifier of the sticker set
+     * @property setId Identifier of the sticker set
+     * @property extra Extra data shared between request and response
      */
-    class GetStickerSet(
-        val setId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("getStickerSet")
+    data class GetStickerSet(
+        @SerialName("set_id")
+        val setId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSet>
 
     /**
      * Searches for a sticker set by its name
      *
-     * @name - Name of the sticker set
+     * @property name Name of the sticker set
+     * @property extra Extra data shared between request and response
      */
-    class SearchStickerSet(
-        val name: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("searchStickerSet")
+    data class SearchStickerSet(
+        @SerialName("name")
+        val name: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSet>
 
     /**
      * Searches for installed sticker sets by looking for specified query in their title and name
      *
-     * @isMasks - Pass true to return mask sticker sets
-     *            Pass false to return ordinary sticker sets
-     * @query - Query to search for
-     * @limit - Maximum number of sticker sets to return
+     * @property isMasks Pass true to return mask sticker sets
+     *                   Pass false to return ordinary sticker sets
+     * @property query Query to search for
+     * @property limit Maximum number of sticker sets to return
+     * @property extra Extra data shared between request and response
      */
-    class SearchInstalledStickerSets(
+    @Serializable
+    @SerialName("searchInstalledStickerSets")
+    data class SearchInstalledStickerSets(
+        @SerialName("is_masks")
         val isMasks: Boolean = false,
+        @SerialName("query")
         val query: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSets>
 
     /**
      * Searches for ordinary sticker sets by looking for specified query in their title and name
      * Excludes installed sticker sets from the results
      *
-     * @query - Query to search for
+     * @property query Query to search for
+     * @property extra Extra data shared between request and response
      */
-    class SearchStickerSets(
-        val query: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("searchStickerSets")
+    data class SearchStickerSets(
+        @SerialName("query")
+        val query: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSets>
 
     /**
      * Installs/uninstalls or activates/archives a sticker set
      *
-     * @setId - Identifier of the sticker set
-     * @isInstalled - The new value of is_installed
-     * @isArchived - The new value of is_archived
-     *               A sticker set can't be installed and archived simultaneously
+     * @property setId Identifier of the sticker set
+     * @property isInstalled The new value of is_installed
+     * @property isArchived The new value of is_archived
+     *                      A sticker set can't be installed and archived simultaneously
+     * @property extra Extra data shared between request and response
      */
-    class ChangeStickerSet(
+    @Serializable
+    @SerialName("changeStickerSet")
+    data class ChangeStickerSet(
+        @SerialName("set_id")
         val setId: Long = 0L,
+        @SerialName("is_installed")
         val isInstalled: Boolean = false,
-        val isArchived: Boolean = false
-    ) : null()
+        @SerialName("is_archived")
+        val isArchived: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs the server that some trending sticker sets have been viewed by the user
      *
-     * @stickerSetIds - Identifiers of viewed trending sticker sets
+     * @property stickerSetIds Identifiers of viewed trending sticker sets
+     * @property extra Extra data shared between request and response
      */
-    class ViewTrendingStickerSets(
-        val stickerSetIds: LongArray = longArrayOf()
-    ) : null()
+    @Serializable
+    @SerialName("viewTrendingStickerSets")
+    data class ViewTrendingStickerSets(
+        @SerialName("sticker_set_ids")
+        val stickerSetIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the order of installed sticker sets
      *
-     * @isMasks - Pass true to change the order of mask sticker sets
-     *            Pass false to change the order of ordinary sticker sets
-     * @stickerSetIds - Identifiers of installed sticker sets in the new correct order
+     * @property isMasks Pass true to change the order of mask sticker sets
+     *                   Pass false to change the order of ordinary sticker sets
+     * @property stickerSetIds Identifiers of installed sticker sets in the new correct order
+     * @property extra Extra data shared between request and response
      */
-    class ReorderInstalledStickerSets(
+    @Serializable
+    @SerialName("reorderInstalledStickerSets")
+    data class ReorderInstalledStickerSets(
+        @SerialName("is_masks")
         val isMasks: Boolean = false,
-        val stickerSetIds: LongArray = longArrayOf()
-    ) : null()
+        @SerialName("sticker_set_ids")
+        val stickerSetIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a list of recently used stickers
      *
-     * @isAttached - Pass true to return stickers and masks that were recently attached to photos or video files
-     *               Pass false to return recently sent stickers
+     * @property isAttached Pass true to return stickers and masks that were recently attached to photos or video files
+     *                      Pass false to return recently sent stickers
+     * @property extra Extra data shared between request and response
      */
-    class GetRecentStickers(
-        val isAttached: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("getRecentStickers")
+    data class GetRecentStickers(
+        @SerialName("is_attached")
+        val isAttached: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Stickers>
 
     /**
      * Manually adds a new sticker to the list of recently used stickers
@@ -10794,41 +16264,68 @@ class TdApi {
      * If the sticker was already in the list, it is removed from the list first
      * Only stickers belonging to a sticker set can be added to this list
      *
-     * @isAttached - Pass true to add the sticker to the list of stickers recently attached to photo or video files
-     *               Pass false to add the sticker to the list of recently sent stickers
-     * @sticker - Sticker file to add
+     * @property isAttached Pass true to add the sticker to the list of stickers recently attached to photo or video files
+     *                      Pass false to add the sticker to the list of recently sent stickers
+     * @property sticker Sticker file to add
+     * @property extra Extra data shared between request and response
      */
-    class AddRecentSticker(
+    @Serializable
+    @SerialName("addRecentSticker")
+    data class AddRecentSticker(
+        @SerialName("is_attached")
         val isAttached: Boolean = false,
-        val sticker: InputFile? = null
-    ) : null()
+        @SerialName("sticker")
+        val sticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Stickers>
 
     /**
      * Removes a sticker from the list of recently used stickers
      *
-     * @isAttached - Pass true to remove the sticker from the list of stickers recently attached to photo or video files
-     *               Pass false to remove the sticker from the list of recently sent stickers
-     * @sticker - Sticker file to delete
+     * @property isAttached Pass true to remove the sticker from the list of stickers recently attached to photo or video files
+     *                      Pass false to remove the sticker from the list of recently sent stickers
+     * @property sticker Sticker file to delete
+     * @property extra Extra data shared between request and response
      */
-    class RemoveRecentSticker(
+    @Serializable
+    @SerialName("removeRecentSticker")
+    data class RemoveRecentSticker(
+        @SerialName("is_attached")
         val isAttached: Boolean = false,
-        val sticker: InputFile? = null
-    ) : null()
+        @SerialName("sticker")
+        val sticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Clears the list of recently used stickers
      *
-     * @isAttached - Pass true to clear the list of stickers recently attached to photo or video files
-     *               Pass false to clear the list of recently sent stickers
+     * @property isAttached Pass true to clear the list of stickers recently attached to photo or video files
+     *                      Pass false to clear the list of recently sent stickers
+     * @property extra Extra data shared between request and response
      */
-    class ClearRecentStickers(
-        val isAttached: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("clearRecentStickers")
+    data class ClearRecentStickers(
+        @SerialName("is_attached")
+        val isAttached: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns favorite stickers
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetFavoriteStickers : null()
+    @Serializable
+    @SerialName("getFavoriteStickers")
+    data class GetFavoriteStickers(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Stickers>
 
     /**
      * Adds a new sticker to the list of favorite stickers
@@ -10836,57 +16333,95 @@ class TdApi {
      * If the sticker was already in the list, it is removed from the list first
      * Only stickers belonging to a sticker set can be added to this list
      *
-     * @sticker - Sticker file to add
+     * @property sticker Sticker file to add
+     * @property extra Extra data shared between request and response
      */
-    class AddFavoriteSticker(
-        val sticker: InputFile? = null
-    ) : null()
+    @Serializable
+    @SerialName("addFavoriteSticker")
+    data class AddFavoriteSticker(
+        @SerialName("sticker")
+        val sticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes a sticker from the list of favorite stickers
      *
-     * @sticker - Sticker file to delete from the list
+     * @property sticker Sticker file to delete from the list
+     * @property extra Extra data shared between request and response
      */
-    class RemoveFavoriteSticker(
-        val sticker: InputFile? = null
-    ) : null()
+    @Serializable
+    @SerialName("removeFavoriteSticker")
+    data class RemoveFavoriteSticker(
+        @SerialName("sticker")
+        val sticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns emoji corresponding to a sticker
      * The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
      *
-     * @sticker - Sticker file identifier
+     * @property sticker Sticker file identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetStickerEmojis(
-        val sticker: InputFile? = null
-    ) : null()
+    @Serializable
+    @SerialName("getStickerEmojis")
+    data class GetStickerEmojis(
+        @SerialName("sticker")
+        val sticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Emojis>
 
     /**
      * Searches for emojis by keywords
      * Supported only if the file database is enabled
      *
-     * @text - Text to search for
-     * @exactMatch - True, if only emojis, which exactly match text needs to be returned
+     * @property text Text to search for
+     * @property exactMatch True, if only emojis, which exactly match text needs to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchEmojis(
+    @Serializable
+    @SerialName("searchEmojis")
+    data class SearchEmojis(
+        @SerialName("text")
         val text: String? = null,
-        val exactMatch: Boolean = false
-    ) : null()
+        @SerialName("exact_match")
+        val exactMatch: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Emojis>
 
     /**
      * Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements
      * The URL will be valid for 30 seconds after generation
      *
-     * @languageCode - Language code for which the emoji replacements will be suggested
+     * @property languageCode Language code for which the emoji replacements will be suggested
+     * @property extra Extra data shared between request and response
      */
-    class GetEmojiSuggestionsUrl(
-        val languageCode: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getEmojiSuggestionsUrl")
+    data class GetEmojiSuggestionsUrl(
+        @SerialName("language_code")
+        val languageCode: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<HttpUrl>
 
     /**
      * Returns saved animations
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetSavedAnimations : null()
+    @Serializable
+    @SerialName("getSavedAnimations")
+    data class GetSavedAnimations(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Animations>
 
     /**
      * Manually adds a new animation to the list of saved animations
@@ -10894,271 +16429,452 @@ class TdApi {
      * If the animation was already in the list, it is removed first
      * Only non-secret video animations with MIME type "video/mp4" can be added to the list
      *
-     * @animation - The animation file to be added
-     *              Only animations known to the server (i.e
-     *              Successfully sent via a message) can be added to the list
+     * @property animation The animation file to be added
+     *                     Only animations known to the server (i.e
+     *                     Successfully sent via a message) can be added to the list
+     * @property extra Extra data shared between request and response
      */
-    class AddSavedAnimation(
-        val animation: InputFile? = null
-    ) : null()
+    @Serializable
+    @SerialName("addSavedAnimation")
+    data class AddSavedAnimation(
+        @SerialName("animation")
+        val animation: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes an animation from the list of saved animations
      *
-     * @animation - Animation file to be removed
+     * @property animation Animation file to be removed
+     * @property extra Extra data shared between request and response
      */
-    class RemoveSavedAnimation(
-        val animation: InputFile? = null
-    ) : null()
+    @Serializable
+    @SerialName("removeSavedAnimation")
+    data class RemoveSavedAnimation(
+        @SerialName("animation")
+        val animation: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns up to 20 recently used inline bots in the order of their last usage
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetRecentInlineBots : null()
+    @Serializable
+    @SerialName("getRecentInlineBots")
+    data class GetRecentInlineBots(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Users>
 
     /**
      * Searches for recently used hashtags by their prefix
      *
-     * @prefix - Hashtag prefix to search for
-     * @limit - Maximum number of hashtags to be returned
+     * @property prefix Hashtag prefix to search for
+     * @property limit Maximum number of hashtags to be returned
+     * @property extra Extra data shared between request and response
      */
-    class SearchHashtags(
+    @Serializable
+    @SerialName("searchHashtags")
+    data class SearchHashtags(
+        @SerialName("prefix")
         val prefix: String? = null,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Hashtags>
 
     /**
      * Removes a hashtag from the list of recently used hashtags
      *
-     * @hashtag - Hashtag to delete
+     * @property hashtag Hashtag to delete
+     * @property extra Extra data shared between request and response
      */
-    class RemoveRecentHashtag(
-        val hashtag: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("removeRecentHashtag")
+    data class RemoveRecentHashtag(
+        @SerialName("hashtag")
+        val hashtag: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a web page preview by the text of the message
      * Do not call this function too often
      * Returns a 404 error if the web page has no preview
      *
-     * @text - Message text with formatting
+     * @property text Message text with formatting
+     * @property extra Extra data shared between request and response
      */
-    class GetWebPagePreview(
-        val text: FormattedText? = null
-    ) : null()
+    @Serializable
+    @SerialName("getWebPagePreview")
+    data class GetWebPagePreview(
+        @SerialName("text")
+        val text: FormattedText? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<WebPage>
 
     /**
      * Returns an instant view version of a web page if available
      * Returns a 404 error if the web page has no instant view page
      *
-     * @url - The web page URL
-     * @forceFull - If true, the full instant view for the web page will be returned
+     * @property url The web page URL
+     * @property forceFull If true, the full instant view for the web page will be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetWebPageInstantView(
+    @Serializable
+    @SerialName("getWebPageInstantView")
+    data class GetWebPageInstantView(
+        @SerialName("url")
         val url: String? = null,
-        val forceFull: Boolean = false
-    ) : null()
+        @SerialName("force_full")
+        val forceFull: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<WebPageInstantView>
 
     /**
      * Uploads a new profile photo for the current user
      * If something changes, updateUser will be sent
      *
-     * @photo - Profile photo to set
-     *          InputFileId and inputFileRemote may still be unsupported
+     * @property photo Profile photo to set
+     *                 InputFileId and inputFileRemote may still be unsupported
+     * @property extra Extra data shared between request and response
      */
-    class SetProfilePhoto(
-        val photo: InputFile? = null
-    ) : null()
+    @Serializable
+    @SerialName("setProfilePhoto")
+    data class SetProfilePhoto(
+        @SerialName("photo")
+        val photo: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Deletes a profile photo
      * If something changes, updateUser will be sent
      *
-     * @profilePhotoId - Identifier of the profile photo to delete
+     * @property profilePhotoId Identifier of the profile photo to delete
+     * @property extra Extra data shared between request and response
      */
-    class DeleteProfilePhoto(
-        val profilePhotoId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("deleteProfilePhoto")
+    data class DeleteProfilePhoto(
+        @SerialName("profile_photo_id")
+        val profilePhotoId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the first and last name of the current user
      * If something changes, updateUser will be sent
      *
-     * @firstName - The new value of the first name for the user
-     * @lastName - The new value of the optional last name for the user
+     * @property firstName The new value of the first name for the user
+     * @property lastName The new value of the optional last name for the user
+     * @property extra Extra data shared between request and response
      */
-    class SetName(
+    @Serializable
+    @SerialName("setName")
+    data class SetName(
+        @SerialName("first_name")
         val firstName: String? = null,
-        val lastName: String? = null
-    ) : null()
+        @SerialName("last_name")
+        val lastName: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the bio of the current user
      *
-     * @bio - The new value of the user bio
+     * @property bio The new value of the user bio
+     * @property extra Extra data shared between request and response
      */
-    class SetBio(
-        val bio: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("setBio")
+    data class SetBio(
+        @SerialName("bio")
+        val bio: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the username of the current user
      * If something changes, updateUser will be sent
      *
-     * @username - The new value of the username
-     *             Use an empty string to remove the username
+     * @property username The new value of the username
+     *                    Use an empty string to remove the username
+     * @property extra Extra data shared between request and response
      */
-    class SetUsername(
-        val username: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("setUsername")
+    data class SetUsername(
+        @SerialName("username")
+        val username: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the phone number of the user and sends an authentication code to the user's new phone number
      * On success, returns information about the sent code
      *
-     * @phoneNumber - The new phone number of the user in international format
-     * @settings - Settings for the authentication of the user's phone number
+     * @property phoneNumber The new phone number of the user in international format
+     * @property settings Settings for the authentication of the user's phone number
+     * @property extra Extra data shared between request and response
      */
-    class ChangePhoneNumber(
+    @Serializable
+    @SerialName("changePhoneNumber")
+    data class ChangePhoneNumber(
+        @SerialName("phone_number")
         val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
-    ) : null()
+        @SerialName("settings")
+        val settings: PhoneNumberAuthenticationSettings? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthenticationCodeInfo>
 
     /**
      * Re-sends the authentication code sent to confirm a new phone number for the user
      * Works only if the previously received authenticationCodeInfo next_code_type was not null
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResendChangePhoneNumberCode : null()
+    @Serializable
+    @SerialName("resendChangePhoneNumberCode")
+    data class ResendChangePhoneNumberCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthenticationCodeInfo>
 
     /**
      * Checks the authentication code sent to confirm a new phone number of the user
      *
-     * @code - Verification code received by SMS, phone call or flash call
+     * @property code Verification code received by SMS, phone call or flash call
+     * @property extra Extra data shared between request and response
      */
-    class CheckChangePhoneNumberCode(
-        val code: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkChangePhoneNumberCode")
+    data class CheckChangePhoneNumberCode(
+        @SerialName("code")
+        val code: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns all active sessions of the current user
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetActiveSessions : null()
+    @Serializable
+    @SerialName("getActiveSessions")
+    data class GetActiveSessions(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Sessions>
 
     /**
      * Terminates a session of the current user
      *
-     * @sessionId - Session identifier
+     * @property sessionId Session identifier
+     * @property extra Extra data shared between request and response
      */
-    class TerminateSession(
-        val sessionId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("terminateSession")
+    data class TerminateSession(
+        @SerialName("session_id")
+        val sessionId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Terminates all other sessions of the current user
+     *
+     * @property extra Extra data shared between request and response
      */
-    class TerminateAllOtherSessions : null()
+    @Serializable
+    @SerialName("terminateAllOtherSessions")
+    data class TerminateAllOtherSessions(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns all website where the current user used Telegram to log in
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetConnectedWebsites : null()
+    @Serializable
+    @SerialName("getConnectedWebsites")
+    data class GetConnectedWebsites(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ConnectedWebsites>
 
     /**
      * Disconnects website from the current user's Telegram account
      *
-     * @websiteId - Website identifier
+     * @property websiteId Website identifier
+     * @property extra Extra data shared between request and response
      */
-    class DisconnectWebsite(
-        val websiteId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("disconnectWebsite")
+    data class DisconnectWebsite(
+        @SerialName("website_id")
+        val websiteId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Disconnects all websites from the current user's Telegram account
+     *
+     * @property extra Extra data shared between request and response
      */
-    class DisconnectAllWebsites : null()
+    @Serializable
+    @SerialName("disconnectAllWebsites")
+    data class DisconnectAllWebsites(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the username of a supergroup or channel, requires creator privileges in the supergroup or channel
      *
-     * @supergroupId - Identifier of the supergroup or channel
-     * @username - New value of the username
-     *             Use an empty string to remove the username
+     * @property supergroupId Identifier of the supergroup or channel
+     * @property username New value of the username
+     *                    Use an empty string to remove the username
+     * @property extra Extra data shared between request and response
      */
-    class SetSupergroupUsername(
+    @Serializable
+    @SerialName("setSupergroupUsername")
+    data class SetSupergroupUsername(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
-        val username: String? = null
-    ) : null()
+        @SerialName("username")
+        val username: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the sticker set of a supergroup
      * Requires can_change_info rights
      *
-     * @supergroupId - Identifier of the supergroup
-     * @stickerSetId - New value of the supergroup sticker set identifier
-     *                 Use 0 to remove the supergroup sticker set
+     * @property supergroupId Identifier of the supergroup
+     * @property stickerSetId New value of the supergroup sticker set identifier
+     *                        Use 0 to remove the supergroup sticker set
+     * @property extra Extra data shared between request and response
      */
-    class SetSupergroupStickerSet(
+    @Serializable
+    @SerialName("setSupergroupStickerSet")
+    data class SetSupergroupStickerSet(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
-        val stickerSetId: Long = 0L
-    ) : null()
+        @SerialName("sticker_set_id")
+        val stickerSetId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Toggles sender signatures messages sent in a channel
      * Requires can_change_info rights
      *
-     * @supergroupId - Identifier of the channel
-     * @signMessages - New value of sign_messages
+     * @property supergroupId Identifier of the channel
+     * @property signMessages New value of sign_messages
+     * @property extra Extra data shared between request and response
      */
-    class ToggleSupergroupSignMessages(
+    @Serializable
+    @SerialName("toggleSupergroupSignMessages")
+    data class ToggleSupergroupSignMessages(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
-        val signMessages: Boolean = false
-    ) : null()
+        @SerialName("sign_messages")
+        val signMessages: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Toggles whether the message history of a supergroup is available to new members
      * Requires can_change_info rights
      *
-     * @supergroupId - The identifier of the supergroup
-     * @isAllHistoryAvailable - The new value of is_all_history_available
+     * @property supergroupId The identifier of the supergroup
+     * @property isAllHistoryAvailable The new value of is_all_history_available
+     * @property extra Extra data shared between request and response
      */
-    class ToggleSupergroupIsAllHistoryAvailable(
+    @Serializable
+    @SerialName("toggleSupergroupIsAllHistoryAvailable")
+    data class ToggleSupergroupIsAllHistoryAvailable(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
-        val isAllHistoryAvailable: Boolean = false
-    ) : null()
+        @SerialName("is_all_history_available")
+        val isAllHistoryAvailable: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Reports some messages from a user in a supergroup as spam
      * Requires administrator rights in the supergroup
      *
-     * @supergroupId - Supergroup identifier
-     * @userId - User identifier
-     * @messageIds - Identifiers of messages sent in the supergroup by the user
-     *               This list must be non-empty
+     * @property supergroupId Supergroup identifier
+     * @property userId User identifier
+     * @property messageIds Identifiers of messages sent in the supergroup by the user
+     *                      This list must be non-empty
+     * @property extra Extra data shared between request and response
      */
-    class ReportSupergroupSpam(
+    @Serializable
+    @SerialName("reportSupergroupSpam")
+    data class ReportSupergroupSpam(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
+        @SerialName("user_id")
         val userId: Int = 0,
-        val messageIds: LongArray = longArrayOf()
-    ) : null()
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns information about members or banned users in a supergroup or channel
      * Can be used only if SupergroupFullInfo.can_get_members == true
      * Additionally, administrator privileges may be required for some filters
      *
-     * @supergroupId - Identifier of the supergroup or channel
-     * @filter - The type of users to return
-     *           By default, supergroupMembersRecent
-     * @offset - Number of users to skip
-     * @limit - The maximum number of users be returned
-     *          Up to 200
+     * @property supergroupId Identifier of the supergroup or channel
+     * @property filter The type of users to return
+     *                  By default, supergroupMembersRecent
+     * @property offset Number of users to skip
+     * @property limit The maximum number of users be returned
+     *                 Up to 200
+     * @property extra Extra data shared between request and response
      */
-    class GetSupergroupMembers(
+    @Serializable
+    @SerialName("getSupergroupMembers")
+    data class GetSupergroupMembers(
+        @SerialName("supergroup_id")
         val supergroupId: Int = 0,
+        @SerialName("filter")
         val filter: SupergroupMembersFilter? = null,
+        @SerialName("offset")
         val offset: Int = 0,
-        val limit: Int = 0
-    ) : null()
+        @SerialName("limit")
+        val limit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatMembers>
 
     /**
      * Deletes a supergroup or channel along with all messages in the corresponding chat
@@ -11166,20 +16882,32 @@ class TdApi {
      * Requires creator privileges in the supergroup or channel
      * Chats with more than 1000 members can't be deleted using this method
      *
-     * @supergroupId - Identifier of the supergroup or channel
+     * @property supergroupId Identifier of the supergroup or channel
+     * @property extra Extra data shared between request and response
      */
-    class DeleteSupergroup(
-        val supergroupId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("deleteSupergroup")
+    data class DeleteSupergroup(
+        @SerialName("supergroup_id")
+        val supergroupId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Closes a secret chat, effectively transfering its state to secretChatStateClosed
      *
-     * @secretChatId - Secret chat identifier
+     * @property secretChatId Secret chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class CloseSecretChat(
-        val secretChatId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("closeSecretChat")
+    data class CloseSecretChat(
+        @SerialName("secret_chat_id")
+        val secretChatId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a list of service actions taken by chat members and administrators in the last 48 hours
@@ -11188,479 +16916,778 @@ class TdApi {
      * Returns results in reverse chronological order (i
      * E., in order of decreasing event_id)
      *
-     * @chatId - Chat identifier
-     * @query - Search query by which to filter events
-     * @fromEventId - Identifier of an event from which to return results
-     *                Use 0 to get results from the latest events
-     * @limit - Maximum number of events to return
-     * @filters - The types of events to return
-     *            By default, all types will be returned
-     * @userIds - User identifiers by which to filter events
-     *            By default, events relating to all users will be returned
+     * @property chatId Chat identifier
+     * @property query Search query by which to filter events
+     * @property fromEventId Identifier of an event from which to return results
+     *                       Use 0 to get results from the latest events
+     * @property limit Maximum number of events to return
+     * @property filters The types of events to return
+     *                   By default, all types will be returned
+     * @property userIds User identifiers by which to filter events
+     *                   By default, events relating to all users will be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetChatEventLog(
+    @Serializable
+    @SerialName("getChatEventLog")
+    data class GetChatEventLog(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("query")
         val query: String? = null,
+        @SerialName("from_event_id")
         val fromEventId: Long = 0L,
+        @SerialName("limit")
         val limit: Int = 0,
+        @SerialName("filters")
         val filters: ChatEventLogFilters? = null,
-        val userIds: IntArray = intArrayOf()
-    ) : null()
+        @SerialName("user_ids")
+        val userIds: Array<Int> = intArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatEvents>
 
     /**
      * Returns an invoice payment form
      * This method should be called when the user presses inlineKeyboardButtonBuy
      *
-     * @chatId - Chat identifier of the Invoice message
-     * @messageId - Message identifier
+     * @property chatId Chat identifier of the Invoice message
+     * @property messageId Message identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetPaymentForm(
+    @Serializable
+    @SerialName("getPaymentForm")
+    data class GetPaymentForm(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PaymentForm>
 
     /**
      * Validates the order information provided by a user and returns the available shipping options for a flexible invoice
      *
-     * @chatId - Chat identifier of the Invoice message
-     * @messageId - Message identifier
-     * @orderInfo - The order information, provided by the user
-     * @allowSave - True, if the order information can be saved
+     * @property chatId Chat identifier of the Invoice message
+     * @property messageId Message identifier
+     * @property orderInfo The order information, provided by the user
+     * @property allowSave True, if the order information can be saved
+     * @property extra Extra data shared between request and response
      */
-    class ValidateOrderInfo(
+    @Serializable
+    @SerialName("validateOrderInfo")
+    data class ValidateOrderInfo(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
+        @SerialName("order_info")
         val orderInfo: OrderInfo? = null,
-        val allowSave: Boolean = false
-    ) : null()
+        @SerialName("allow_save")
+        val allowSave: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ValidatedOrderInfo>
 
     /**
      * Sends a filled-out payment form to the bot for final verification
      *
-     * @chatId - Chat identifier of the Invoice message
-     * @messageId - Message identifier
-     * @orderInfoId - Identifier returned by ValidateOrderInfo, or an empty string
-     * @shippingOptionId - Identifier of a chosen shipping option, if applicable
-     * @credentials - The credentials chosen by user for payment
+     * @property chatId Chat identifier of the Invoice message
+     * @property messageId Message identifier
+     * @property orderInfoId Identifier returned by ValidateOrderInfo, or an empty string
+     * @property shippingOptionId Identifier of a chosen shipping option, if applicable
+     * @property credentials The credentials chosen by user for payment
+     * @property extra Extra data shared between request and response
      */
-    class SendPaymentForm(
+    @Serializable
+    @SerialName("sendPaymentForm")
+    data class SendPaymentForm(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("message_id")
         val messageId: Long = 0L,
+        @SerialName("order_info_id")
         val orderInfoId: String? = null,
+        @SerialName("shipping_option_id")
         val shippingOptionId: String? = null,
-        val credentials: InputCredentials? = null
-    ) : null()
+        @SerialName("credentials")
+        val credentials: InputCredentials? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PaymentResult>
 
     /**
      * Returns information about a successful payment
      *
-     * @chatId - Chat identifier of the PaymentSuccessful message
-     * @messageId - Message identifier
+     * @property chatId Chat identifier of the PaymentSuccessful message
+     * @property messageId Message identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetPaymentReceipt(
+    @Serializable
+    @SerialName("getPaymentReceipt")
+    data class GetPaymentReceipt(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val messageId: Long = 0L
-    ) : null()
+        @SerialName("message_id")
+        val messageId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PaymentReceipt>
 
     /**
      * Returns saved order info, if any
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetSavedOrderInfo : null()
+    @Serializable
+    @SerialName("getSavedOrderInfo")
+    data class GetSavedOrderInfo(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<OrderInfo>
 
     /**
      * Deletes saved order info
+     *
+     * @property extra Extra data shared between request and response
      */
-    class DeleteSavedOrderInfo : null()
+    @Serializable
+    @SerialName("deleteSavedOrderInfo")
+    data class DeleteSavedOrderInfo(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Deletes saved credentials for all payment provider bots
+     *
+     * @property extra Extra data shared between request and response
      */
-    class DeleteSavedCredentials : null()
+    @Serializable
+    @SerialName("deleteSavedCredentials")
+    data class DeleteSavedCredentials(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a user that can be contacted to get support
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetSupportUser : null()
+    @Serializable
+    @SerialName("getSupportUser")
+    data class GetSupportUser(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<User>
 
     /**
      * Returns backgrounds installed by the user
      *
-     * @forDarkTheme - True, if the backgrounds needs to be ordered for dark theme
+     * @property forDarkTheme True, if the backgrounds needs to be ordered for dark theme
+     * @property extra Extra data shared between request and response
      */
-    class GetBackgrounds(
-        val forDarkTheme: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("getBackgrounds")
+    data class GetBackgrounds(
+        @SerialName("for_dark_theme")
+        val forDarkTheme: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Backgrounds>
 
     /**
      * Constructs a persistent HTTP URL for a background
      *
-     * @name - Background name
-     * @type - Background type
+     * @property name Background name
+     * @property type Background type
+     * @property extra Extra data shared between request and response
      */
-    class GetBackgroundUrl(
+    @Serializable
+    @SerialName("getBackgroundUrl")
+    data class GetBackgroundUrl(
+        @SerialName("name")
         val name: String? = null,
-        val type: BackgroundType? = null
-    ) : null()
+        @SerialName("type")
+        val type: BackgroundType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<HttpUrl>
 
     /**
      * Searches for a background by its name
      *
-     * @name - The name of the background
+     * @property name The name of the background
+     * @property extra Extra data shared between request and response
      */
-    class SearchBackground(
-        val name: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("searchBackground")
+    data class SearchBackground(
+        @SerialName("name")
+        val name: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Background>
 
     /**
      * Changes the background selected by the user
      * Adds background to the list of installed backgrounds
      *
-     * @background - The input background to use, null for solid backgrounds
-     * @type - Background type
-     *         Null for default background
-     *         The method will return error 404 if type is null
-     * @forDarkTheme - True, if the background is chosen for dark theme
+     * @property background The input background to use, null for solid backgrounds
+     * @property type Background type
+     *                Null for default background
+     *                The method will return error 404 if type is null
+     * @property forDarkTheme True, if the background is chosen for dark theme
+     * @property extra Extra data shared between request and response
      */
-    class SetBackground(
+    @Serializable
+    @SerialName("setBackground")
+    data class SetBackground(
+        @SerialName("background")
         val background: InputBackground? = null,
+        @SerialName("type")
         val type: BackgroundType? = null,
-        val forDarkTheme: Boolean = false
-    ) : null()
+        @SerialName("for_dark_theme")
+        val forDarkTheme: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Background>
 
     /**
      * Removes background from the list of installed backgrounds
      *
-     * @backgroundId - The background indentifier
+     * @property backgroundId The background indentifier
+     * @property extra Extra data shared between request and response
      */
-    class RemoveBackground(
-        val backgroundId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("removeBackground")
+    data class RemoveBackground(
+        @SerialName("background_id")
+        val backgroundId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Resets list of installed backgrounds to its default value
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResetBackgrounds : null()
+    @Serializable
+    @SerialName("resetBackgrounds")
+    data class ResetBackgrounds(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns information about the current localization target
      * This is an offline request if only_local is true
      * Can be called before authorization
      *
-     * @onlyLocal - If true, returns only locally available information without sending network requests
+     * @property onlyLocal If true, returns only locally available information without sending network requests
+     * @property extra Extra data shared between request and response
      */
-    class GetLocalizationTargetInfo(
-        val onlyLocal: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("getLocalizationTargetInfo")
+    data class GetLocalizationTargetInfo(
+        @SerialName("only_local")
+        val onlyLocal: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<LocalizationTargetInfo>
 
     /**
      * Returns information about a language pack
      * Returned language pack identifier may be different from a provided one
      * Can be called before authorization
      *
-     * @languagePackId - Language pack identifier
+     * @property languagePackId Language pack identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetLanguagePackInfo(
-        val languagePackId: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getLanguagePackInfo")
+    data class GetLanguagePackInfo(
+        @SerialName("language_pack_id")
+        val languagePackId: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<LanguagePackInfo>
 
     /**
      * Returns strings from a language pack in the current localization target by their keys
      * Can be called before authorization
      *
-     * @languagePackId - Language pack identifier of the strings to be returned
-     * @keys - Language pack keys of the strings to be returned
-     *         Leave empty to request all available strings
+     * @property languagePackId Language pack identifier of the strings to be returned
+     * @property keys Language pack keys of the strings to be returned
+     *                Leave empty to request all available strings
+     * @property extra Extra data shared between request and response
      */
-    class GetLanguagePackStrings(
+    @Serializable
+    @SerialName("getLanguagePackStrings")
+    data class GetLanguagePackStrings(
+        @SerialName("language_pack_id")
         val languagePackId: String? = null,
-        val keys: Array<String> = emptyArray()
-    ) : null()
+        @SerialName("keys")
+        val keys: Array<String> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<LanguagePackStrings>
 
     /**
      * Fetches the latest versions of all strings from a language pack in the current localization target from the server
      * This method doesn't need to be called explicitly for the current used/base language packs
      * Can be called before authorization
      *
-     * @languagePackId - Language pack identifier
+     * @property languagePackId Language pack identifier
+     * @property extra Extra data shared between request and response
      */
-    class SynchronizeLanguagePack(
-        val languagePackId: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("synchronizeLanguagePack")
+    data class SynchronizeLanguagePack(
+        @SerialName("language_pack_id")
+        val languagePackId: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds a custom server language pack to the list of installed language packs in current localization target
      * Can be called before authorization
      *
-     * @languagePackId - Identifier of a language pack to be added
-     *                   May be different from a name that is used in an "https://t.me/setlanguage/" link
+     * @property languagePackId Identifier of a language pack to be added
+     *                          May be different from a name that is used in an "https://t.me/setlanguage/" link
+     * @property extra Extra data shared between request and response
      */
-    class AddCustomServerLanguagePack(
-        val languagePackId: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("addCustomServerLanguagePack")
+    data class AddCustomServerLanguagePack(
+        @SerialName("language_pack_id")
+        val languagePackId: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds or changes a custom local language pack to the current localization target
      *
-     * @info - Information about the language pack
-     *         Language pack ID must start with 'X', consist only of English letters, digits and hyphens, and must not exceed 64 characters
-     *         Can be called before authorization
-     * @strings - Strings of the new language pack
+     * @property info Information about the language pack
+     *                Language pack ID must start with 'X', consist only of English letters, digits and hyphens, and must not exceed 64 characters
+     *                Can be called before authorization
+     * @property strings Strings of the new language pack
+     * @property extra Extra data shared between request and response
      */
-    class SetCustomLanguagePack(
+    @Serializable
+    @SerialName("setCustomLanguagePack")
+    data class SetCustomLanguagePack(
+        @SerialName("info")
         val info: LanguagePackInfo? = null,
-        val strings: Array<LanguagePackString> = emptyArray()
-    ) : null()
+        @SerialName("strings")
+        val strings: Array<LanguagePackString> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Edits information about a custom local language pack in the current localization target
      * Can be called before authorization
      *
-     * @info - New information about the custom local language pack
+     * @property info New information about the custom local language pack
+     * @property extra Extra data shared between request and response
      */
-    class EditCustomLanguagePackInfo(
-        val info: LanguagePackInfo? = null
-    ) : null()
+    @Serializable
+    @SerialName("editCustomLanguagePackInfo")
+    data class EditCustomLanguagePackInfo(
+        @SerialName("info")
+        val info: LanguagePackInfo? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds, edits or deletes a string in a custom local language pack
      * Can be called before authorization
      *
-     * @languagePackId - Identifier of a previously added custom local language pack in the current localization target
-     * @newString - New language pack string
+     * @property languagePackId Identifier of a previously added custom local language pack in the current localization target
+     * @property newString New language pack string
+     * @property extra Extra data shared between request and response
      */
-    class SetCustomLanguagePackString(
+    @Serializable
+    @SerialName("setCustomLanguagePackString")
+    data class SetCustomLanguagePackString(
+        @SerialName("language_pack_id")
         val languagePackId: String? = null,
-        val newString: LanguagePackString? = null
-    ) : null()
+        @SerialName("new_string")
+        val newString: LanguagePackString? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Deletes all information about a language pack in the current localization target
      * The language pack which is currently in use (including base language pack) or is being synchronized can't be deleted
      * Can be called before authorization
      *
-     * @languagePackId - Identifier of the language pack to delete
+     * @property languagePackId Identifier of the language pack to delete
+     * @property extra Extra data shared between request and response
      */
-    class DeleteLanguagePack(
-        val languagePackId: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("deleteLanguagePack")
+    data class DeleteLanguagePack(
+        @SerialName("language_pack_id")
+        val languagePackId: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Registers the currently used device for receiving push notifications
      * Returns a globally unique identifier of the push notification subscription
      *
-     * @deviceToken - Device token
-     * @otherUserIds - List of user identifiers of other users currently using the client
+     * @property deviceToken Device token
+     * @property otherUserIds List of user identifiers of other users currently using the client
+     * @property extra Extra data shared between request and response
      */
-    class RegisterDevice(
+    @Serializable
+    @SerialName("registerDevice")
+    data class RegisterDevice(
+        @SerialName("device_token")
         val deviceToken: DeviceToken? = null,
-        val otherUserIds: IntArray = intArrayOf()
-    ) : null()
+        @SerialName("other_user_ids")
+        val otherUserIds: Array<Int> = intArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PushReceiverId>
 
     /**
      * Handles a push notification
      * Returns error with code 406 if the push notification is not supported and connection to the server is required to fetch new data
      * Can be called before authorization
      *
-     * @payload - JSON-encoded push notification payload with all fields sent by the server, and "google.sent_time" and "google.notification.sound" fields added
+     * @property payload JSON-encoded push notification payload with all fields sent by the server, and "google.sent_time" and "google.notification.sound" fields added
+     * @property extra Extra data shared between request and response
      */
-    class ProcessPushNotification(
-        val payload: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("processPushNotification")
+    data class ProcessPushNotification(
+        @SerialName("payload")
+        val payload: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification
      * This is an offline method
      * Can be called before authorization
      *
-     * @payload - JSON-encoded push notification payload
+     * @property payload JSON-encoded push notification payload
      */
-    class GetPushReceiverId(
-        val payload: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getPushReceiverId")
+    data class GetPushReceiverId(
+        @SerialName("payload")
+        val payload: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<PushReceiverId>
 
     /**
      * Returns t.me URLs recently visited by a newly registered user
      *
-     * @referrer - Google Play referrer to identify the user
+     * @property referrer Google Play referrer to identify the user
+     * @property extra Extra data shared between request and response
      */
-    class GetRecentlyVisitedTMeUrls(
-        val referrer: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getRecentlyVisitedTMeUrls")
+    data class GetRecentlyVisitedTMeUrls(
+        @SerialName("referrer")
+        val referrer: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TMeUrls>
 
     /**
      * Changes user privacy settings
      *
-     * @setting - The privacy setting
-     * @rules - The new privacy rules
+     * @property setting The privacy setting
+     * @property rules The new privacy rules
+     * @property extra Extra data shared between request and response
      */
-    class SetUserPrivacySettingRules(
+    @Serializable
+    @SerialName("setUserPrivacySettingRules")
+    data class SetUserPrivacySettingRules(
+        @SerialName("setting")
         val setting: UserPrivacySetting? = null,
-        val rules: UserPrivacySettingRules? = null
-    ) : null()
+        @SerialName("rules")
+        val rules: UserPrivacySettingRules? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the current privacy settings
      *
-     * @setting - The privacy setting
+     * @property setting The privacy setting
+     * @property extra Extra data shared between request and response
      */
-    class GetUserPrivacySettingRules(
-        val setting: UserPrivacySetting? = null
-    ) : null()
+    @Serializable
+    @SerialName("getUserPrivacySettingRules")
+    data class GetUserPrivacySettingRules(
+        @SerialName("setting")
+        val setting: UserPrivacySetting? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<UserPrivacySettingRules>
 
     /**
      * Returns the value of an option by its name
      * (Check the list of available options on https://core.telegram.org/tdlib/options.) Can be called before authorization
      *
-     * @name - The name of the option
+     * @property name The name of the option
+     * @property extra Extra data shared between request and response
      */
-    class GetOption(
-        val name: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getOption")
+    data class GetOption(
+        @SerialName("name")
+        val name: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<OptionValue>
 
     /**
      * Sets the value of an option
      * (Check the list of available options on https://core.telegram.org/tdlib/options.) Only writable options can be set
      * Can be called before authorization
      *
-     * @name - The name of the option
-     * @value - The new value of the option
+     * @property name The name of the option
+     * @property value The new value of the option
+     * @property extra Extra data shared between request and response
      */
-    class SetOption(
+    @Serializable
+    @SerialName("setOption")
+    data class SetOption(
+        @SerialName("name")
         val name: String? = null,
-        val value: OptionValue? = null
-    ) : null()
+        @SerialName("value")
+        val value: OptionValue? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Changes the period of inactivity after which the account of the current user will automatically be deleted
      *
-     * @ttl - New account TTL
+     * @property ttl New account TTL
+     * @property extra Extra data shared between request and response
      */
-    class SetAccountTtl(
-        val ttl: AccountTtl? = null
-    ) : null()
+    @Serializable
+    @SerialName("setAccountTtl")
+    data class SetAccountTtl(
+        @SerialName("ttl")
+        val ttl: AccountTtl? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the period of inactivity after which the account of the current user will automatically be deleted
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetAccountTtl : null()
+    @Serializable
+    @SerialName("getAccountTtl")
+    data class GetAccountTtl(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AccountTtl>
 
     /**
      * Deletes the account of the current user, deleting all information associated with the user from the server
      * The phone number of the account can be used to create a new account
      * Can be called before authorization when the current authorization state is authorizationStateWaitPassword
      *
-     * @reason - The reason why the account was deleted
+     * @property reason The reason why the account was deleted
+     * @property extra Extra data shared between request and response
      */
-    class DeleteAccount(
-        val reason: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("deleteAccount")
+    data class DeleteAccount(
+        @SerialName("reason")
+        val reason: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns information on whether the current chat can be reported as spam
      *
-     * @chatId - Chat identifier
+     * @property chatId Chat identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetChatReportSpamState(
-        val chatId: Long = 0L
-    ) : null()
+    @Serializable
+    @SerialName("getChatReportSpamState")
+    data class GetChatReportSpamState(
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<ChatReportSpamState>
 
     /**
      * Reports to the server whether a chat is a spam chat or not
      * Can be used only if ChatReportSpamState.can_report_spam is true
      * After this request, ChatReportSpamState.can_report_spam becomes false forever
      *
-     * @chatId - Chat identifier
-     * @isSpamChat - If true, the chat will be reported as spam
-     *               Otherwise it will be marked as not spam
+     * @property chatId Chat identifier
+     * @property isSpamChat If true, the chat will be reported as spam
+     *                      Otherwise it will be marked as not spam
+     * @property extra Extra data shared between request and response
      */
-    class ChangeChatReportSpamState(
+    @Serializable
+    @SerialName("changeChatReportSpamState")
+    data class ChangeChatReportSpamState(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val isSpamChat: Boolean = false
-    ) : null()
+        @SerialName("is_spam_chat")
+        val isSpamChat: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Reports a chat to the Telegram moderators
      * Supported only for supergroups, channels, or private chats with bots, since other chats can't be checked by moderators
      *
-     * @chatId - Chat identifier
-     * @reason - The reason for reporting the chat
-     * @messageIds - Identifiers of reported messages, if any
+     * @property chatId Chat identifier
+     * @property reason The reason for reporting the chat
+     * @property messageIds Identifiers of reported messages, if any
+     * @property extra Extra data shared between request and response
      */
-    class ReportChat(
+    @Serializable
+    @SerialName("reportChat")
+    data class ReportChat(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("reason")
         val reason: ChatReportReason? = null,
-        val messageIds: LongArray = longArrayOf()
-    ) : null()
+        @SerialName("message_ids")
+        val messageIds: Array<Long> = longArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns an HTTP URL with the chat statistics
      * Currently this method can be used only for channels
      *
-     * @chatId - Chat identifier
-     * @parameters - Parameters from "tg://statsrefresh?params=******" link
-     * @isDark - Pass true if a URL with the dark theme must be returned
+     * @property chatId Chat identifier
+     * @property parameters Parameters from "tg://statsrefresh?params=******" link
+     * @property isDark Pass true if a URL with the dark theme must be returned
+     * @property extra Extra data shared between request and response
      */
-    class GetChatStatisticsUrl(
+    @Serializable
+    @SerialName("getChatStatisticsUrl")
+    data class GetChatStatisticsUrl(
+        @SerialName("chat_id")
         val chatId: Long = 0L,
+        @SerialName("parameters")
         val parameters: String? = null,
-        val isDark: Boolean = false
-    ) : null()
+        @SerialName("is_dark")
+        val isDark: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<HttpUrl>
 
     /**
      * Returns storage usage statistics
      * Can be called before authorization
      *
-     * @chatLimit - Maximum number of chats with the largest storage usage for which separate statistics should be returned
-     *              All other chats will be grouped in entries with chat_id == 0
-     *              If the chat info database is not used, the chat_limit is ignored and is always set to 0
+     * @property chatLimit Maximum number of chats with the largest storage usage for which separate statistics should be returned
+     *                     All other chats will be grouped in entries with chat_id == 0
+     *                     If the chat info database is not used, the chat_limit is ignored and is always set to 0
+     * @property extra Extra data shared between request and response
      */
-    class GetStorageStatistics(
-        val chatLimit: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getStorageStatistics")
+    data class GetStorageStatistics(
+        @SerialName("chat_limit")
+        val chatLimit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StorageStatistics>
 
     /**
      * Quickly returns approximate storage usage statistics
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetStorageStatisticsFast : null()
+    @Serializable
+    @SerialName("getStorageStatisticsFast")
+    data class GetStorageStatisticsFast(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StorageStatisticsFast>
 
     /**
      * Returns database statistics
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetDatabaseStatistics : null()
+    @Serializable
+    @SerialName("getDatabaseStatistics")
+    data class GetDatabaseStatistics(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<DatabaseStatistics>
 
     /**
      * Optimizes storage usage, i.e
      * Deletes some files and returns new storage usage statistics
      * Secret thumbnails can't be deleted
      *
-     * @size - Limit on the total size of files after deletion
-     *         Pass -1 to use the default limit
-     * @ttl - Limit on the time that has passed since the last time a file was accessed (or creation time for some filesystems)
-     *        Pass -1 to use the default limit
-     * @count - Limit on the total count of files after deletion
-     *          Pass -1 to use the default limit
-     * @immunityDelay - The amount of time after the creation of a file during which it can't be deleted, in seconds
-     *                  Pass -1 to use the default value
-     * @fileTypes - If not empty, only files with the given type(s) are considered
-     *              By default, all types except thumbnails, profile photos, stickers and wallpapers are deleted
-     * @chatIds - If not empty, only files from the given chats are considered
-     *            Use 0 as chat identifier to delete files not belonging to any chat (e.g., profile photos)
-     * @excludeChatIds - If not empty, files from the given chats are excluded
-     *                   Use 0 as chat identifier to exclude all files not belonging to any chat (e.g., profile photos)
-     * @chatLimit - Same as in getStorageStatistics
-     *              Affects only returned statistics
+     * @property size Limit on the total size of files after deletion
+     *                Pass -1 to use the default limit
+     * @property ttl Limit on the time that has passed since the last time a file was accessed (or creation time for some filesystems)
+     *               Pass -1 to use the default limit
+     * @property count Limit on the total count of files after deletion
+     *                 Pass -1 to use the default limit
+     * @property immunityDelay The amount of time after the creation of a file during which it can't be deleted, in seconds
+     *                         Pass -1 to use the default value
+     * @property fileTypes If not empty, only files with the given type(s) are considered
+     *                     By default, all types except thumbnails, profile photos, stickers and wallpapers are deleted
+     * @property chatIds If not empty, only files from the given chats are considered
+     *                   Use 0 as chat identifier to delete files not belonging to any chat (e.g., profile photos)
+     * @property excludeChatIds If not empty, files from the given chats are excluded
+     *                          Use 0 as chat identifier to exclude all files not belonging to any chat (e.g., profile photos)
+     * @property chatLimit Same as in getStorageStatistics
+     *                     Affects only returned statistics
+     * @property extra Extra data shared between request and response
      */
-    class OptimizeStorage(
+    @Serializable
+    @SerialName("optimizeStorage")
+    data class OptimizeStorage(
+        @SerialName("size")
         val size: Long = 0L,
+        @SerialName("ttl")
         val ttl: Int = 0,
+        @SerialName("count")
         val count: Int = 0,
+        @SerialName("immunity_delay")
         val immunityDelay: Int = 0,
+        @SerialName("file_types")
         val fileTypes: Array<FileType> = emptyArray(),
-        val chatIds: LongArray = longArrayOf(),
-        val excludeChatIds: LongArray = longArrayOf(),
-        val chatLimit: Int = 0
-    ) : null()
+        @SerialName("chat_ids")
+        val chatIds: Array<Long> = longArrayOf(),
+        @SerialName("exclude_chat_ids")
+        val excludeChatIds: Array<Long> = longArrayOf(),
+        @SerialName("chat_limit")
+        val chatLimit: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StorageStatistics>
 
     /**
      * Sets the current network type
@@ -11668,396 +17695,653 @@ class TdApi {
      * Calling this method forces all network connections to reopen, mitigating the delay in switching between different networks, so it should be called whenever the network is changed, even if the network type remains the same
      * Network type is used to check whether the library can use the network at all and also for collecting detailed network data usage statistics
      *
-     * @type - The new network type
-     *         By default, networkTypeOther
+     * @property type The new network type
+     *                By default, networkTypeOther
+     * @property extra Extra data shared between request and response
      */
-    class SetNetworkType(
-        val type: NetworkType? = null
-    ) : null()
+    @Serializable
+    @SerialName("setNetworkType")
+    data class SetNetworkType(
+        @SerialName("type")
+        val type: NetworkType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns network data usage statistics
      * Can be called before authorization
      *
-     * @onlyCurrent - If true, returns only data for the current library launch
+     * @property onlyCurrent If true, returns only data for the current library launch
+     * @property extra Extra data shared between request and response
      */
-    class GetNetworkStatistics(
-        val onlyCurrent: Boolean = false
-    ) : null()
+    @Serializable
+    @SerialName("getNetworkStatistics")
+    data class GetNetworkStatistics(
+        @SerialName("only_current")
+        val onlyCurrent: Boolean = false,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<NetworkStatistics>
 
     /**
      * Adds the specified data to data usage statistics
      * Can be called before authorization
      *
-     * @entry - The network statistics entry with the data to be added to statistics
+     * @property entry The network statistics entry with the data to be added to statistics
+     * @property extra Extra data shared between request and response
      */
-    class AddNetworkStatistics(
-        val entry: NetworkStatisticsEntry? = null
-    ) : null()
+    @Serializable
+    @SerialName("addNetworkStatistics")
+    data class AddNetworkStatistics(
+        @SerialName("entry")
+        val entry: NetworkStatisticsEntry? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Resets all network data usage statistics to zero
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResetNetworkStatistics : null()
+    @Serializable
+    @SerialName("resetNetworkStatistics")
+    data class ResetNetworkStatistics(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns auto-download settings presets for the currently logged in user
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetAutoDownloadSettingsPresets : null()
+    @Serializable
+    @SerialName("getAutoDownloadSettingsPresets")
+    data class GetAutoDownloadSettingsPresets(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AutoDownloadSettingsPresets>
 
     /**
      * Sets auto-download settings
      *
-     * @settings - New user auto-download settings
-     * @type - Type of the network for which the new settings are applied
+     * @property settings New user auto-download settings
+     * @property type Type of the network for which the new settings are applied
+     * @property extra Extra data shared between request and response
      */
-    class SetAutoDownloadSettings(
+    @Serializable
+    @SerialName("setAutoDownloadSettings")
+    data class SetAutoDownloadSettings(
+        @SerialName("settings")
         val settings: AutoDownloadSettings? = null,
-        val type: NetworkType? = null
-    ) : null()
+        @SerialName("type")
+        val type: NetworkType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns one of the available Telegram Passport elements
      *
-     * @type - Telegram Passport element type
-     * @password - Password of the current user
+     * @property type Telegram Passport element type
+     * @property password Password of the current user
+     * @property extra Extra data shared between request and response
      */
-    class GetPassportElement(
+    @Serializable
+    @SerialName("getPassportElement")
+    data class GetPassportElement(
+        @SerialName("type")
         val type: PassportElementType? = null,
-        val password: String? = null
-    ) : null()
+        @SerialName("password")
+        val password: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PassportElement>
 
     /**
      * Returns all available Telegram Passport elements
      *
-     * @password - Password of the current user
+     * @property password Password of the current user
+     * @property extra Extra data shared between request and response
      */
-    class GetAllPassportElements(
-        val password: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getAllPassportElements")
+    data class GetAllPassportElements(
+        @SerialName("password")
+        val password: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PassportElements>
 
     /**
      * Adds an element to the user's Telegram Passport
      * May return an error with a message "PHONE_VERIFICATION_NEEDED" or "EMAIL_VERIFICATION_NEEDED" if the chosen phone number or the chosen email address must be verified first
      *
-     * @element - Input Telegram Passport element
-     * @password - Password of the current user
+     * @property element Input Telegram Passport element
+     * @property password Password of the current user
+     * @property extra Extra data shared between request and response
      */
-    class SetPassportElement(
+    @Serializable
+    @SerialName("setPassportElement")
+    data class SetPassportElement(
+        @SerialName("element")
         val element: InputPassportElement? = null,
-        val password: String? = null
-    ) : null()
+        @SerialName("password")
+        val password: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PassportElement>
 
     /**
      * Deletes a Telegram Passport element
      *
-     * @type - Element type
+     * @property type Element type
+     * @property extra Extra data shared between request and response
      */
-    class DeletePassportElement(
-        val type: PassportElementType? = null
-    ) : null()
+    @Serializable
+    @SerialName("deletePassportElement")
+    data class DeletePassportElement(
+        @SerialName("type")
+        val type: PassportElementType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs the user that some of the elements in their Telegram Passport contain errors
      * The user will not be able to resend the elements, until the errors are fixed
      *
-     * @userId - User identifier
-     * @errors - The errors
+     * @property userId User identifier
+     * @property errors The errors
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("setPassportElementErrors")
     @BotsOnly
-    class SetPassportElementErrors(
+    data class SetPassportElementErrors(
+        @SerialName("user_id")
         val userId: Int = 0,
-        val errors: Array<InputPassportElementError> = emptyArray()
-    ) : null()
+        @SerialName("errors")
+        val errors: Array<InputPassportElementError> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns an IETF language tag of the language preferred in the country, which should be used to fill native fields in Telegram Passport personal details
      * Returns a 404 error if unknown
      *
-     * @countryCode - A two-letter ISO 3166-1 alpha-2 country code
+     * @property countryCode A two-letter ISO 3166-1 alpha-2 country code
+     * @property extra Extra data shared between request and response
      */
-    class GetPreferredCountryLanguage(
-        val countryCode: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getPreferredCountryLanguage")
+    data class GetPreferredCountryLanguage(
+        @SerialName("country_code")
+        val countryCode: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Text>
 
     /**
      * Sends a code to verify a phone number to be added to a user's Telegram Passport
      *
-     * @phoneNumber - The phone number of the user, in international format
-     * @settings - Settings for the authentication of the user's phone number
+     * @property phoneNumber The phone number of the user, in international format
+     * @property settings Settings for the authentication of the user's phone number
+     * @property extra Extra data shared between request and response
      */
-    class SendPhoneNumberVerificationCode(
+    @Serializable
+    @SerialName("sendPhoneNumberVerificationCode")
+    data class SendPhoneNumberVerificationCode(
+        @SerialName("phone_number")
         val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
-    ) : null()
+        @SerialName("settings")
+        val settings: PhoneNumberAuthenticationSettings? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthenticationCodeInfo>
 
     /**
      * Re-sends the code to verify a phone number to be added to a user's Telegram Passport
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResendPhoneNumberVerificationCode : null()
+    @Serializable
+    @SerialName("resendPhoneNumberVerificationCode")
+    data class ResendPhoneNumberVerificationCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthenticationCodeInfo>
 
     /**
      * Checks the phone number verification code for Telegram Passport
      *
-     * @code - Verification code
+     * @property code Verification code
+     * @property extra Extra data shared between request and response
      */
-    class CheckPhoneNumberVerificationCode(
-        val code: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkPhoneNumberVerificationCode")
+    data class CheckPhoneNumberVerificationCode(
+        @SerialName("code")
+        val code: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends a code to verify an email address to be added to a user's Telegram Passport
      *
-     * @emailAddress - Email address
+     * @property emailAddress Email address
+     * @property extra Extra data shared between request and response
      */
-    class SendEmailAddressVerificationCode(
-        val emailAddress: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("sendEmailAddressVerificationCode")
+    data class SendEmailAddressVerificationCode(
+        @SerialName("email_address")
+        val emailAddress: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<EmailAddressAuthenticationCodeInfo>
 
     /**
      * Re-sends the code to verify an email address to be added to a user's Telegram Passport
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResendEmailAddressVerificationCode : null()
+    @Serializable
+    @SerialName("resendEmailAddressVerificationCode")
+    data class ResendEmailAddressVerificationCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<EmailAddressAuthenticationCodeInfo>
 
     /**
      * Checks the email address verification code for Telegram Passport
      *
-     * @code - Verification code
+     * @property code Verification code
+     * @property extra Extra data shared between request and response
      */
-    class CheckEmailAddressVerificationCode(
-        val code: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkEmailAddressVerificationCode")
+    data class CheckEmailAddressVerificationCode(
+        @SerialName("code")
+        val code: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns a Telegram Passport authorization form for sharing data with a service
      *
-     * @botUserId - User identifier of the service's bot
-     * @scope - Telegram Passport element types requested by the service
-     * @publicKey - Service's public_key
-     * @nonce - Authorization form nonce provided by the service
+     * @property botUserId User identifier of the service's bot
+     * @property scope Telegram Passport element types requested by the service
+     * @property publicKey Service's public_key
+     * @property nonce Authorization form nonce provided by the service
+     * @property extra Extra data shared between request and response
      */
-    class GetPassportAuthorizationForm(
+    @Serializable
+    @SerialName("getPassportAuthorizationForm")
+    data class GetPassportAuthorizationForm(
+        @SerialName("bot_user_id")
         val botUserId: Int = 0,
+        @SerialName("scope")
         val scope: String? = null,
+        @SerialName("public_key")
         val publicKey: String? = null,
-        val nonce: String? = null
-    ) : null()
+        @SerialName("nonce")
+        val nonce: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PassportAuthorizationForm>
 
     /**
      * Returns already available Telegram Passport elements suitable for completing a Telegram Passport authorization form
      * Result can be received only once for each authorization form
      *
-     * @autorizationFormId - Authorization form identifier
-     * @password - Password of the current user
+     * @property autorizationFormId Authorization form identifier
+     * @property password Password of the current user
+     * @property extra Extra data shared between request and response
      */
-    class GetPassportAuthorizationFormAvailableElements(
+    @Serializable
+    @SerialName("getPassportAuthorizationFormAvailableElements")
+    data class GetPassportAuthorizationFormAvailableElements(
+        @SerialName("autorization_form_id")
         val autorizationFormId: Int = 0,
-        val password: String? = null
-    ) : null()
+        @SerialName("password")
+        val password: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<PassportElementsWithErrors>
 
     /**
      * Sends a Telegram Passport authorization form, effectively sharing data with the service
      * This method must be called after getPassportAuthorizationFormAvailableElements if some previously available elements need to be used
      *
-     * @autorizationFormId - Authorization form identifier
-     * @types - Types of Telegram Passport elements chosen by user to complete the authorization form
+     * @property autorizationFormId Authorization form identifier
+     * @property types Types of Telegram Passport elements chosen by user to complete the authorization form
+     * @property extra Extra data shared between request and response
      */
-    class SendPassportAuthorizationForm(
+    @Serializable
+    @SerialName("sendPassportAuthorizationForm")
+    data class SendPassportAuthorizationForm(
+        @SerialName("autorization_form_id")
         val autorizationFormId: Int = 0,
-        val types: Array<PassportElementType> = emptyArray()
-    ) : null()
+        @SerialName("types")
+        val types: Array<PassportElementType> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends phone number confirmation code
      * Should be called when user presses "https://t.me/confirmphone?phone=*******&hash=**********" or "tg://confirmphone?phone=*******&hash=**********" link
      *
-     * @hash - Value of the "hash" parameter from the link
-     * @phoneNumber - Value of the "phone" parameter from the link
-     * @settings - Settings for the authentication of the user's phone number
+     * @property hash Value of the "hash" parameter from the link
+     * @property phoneNumber Value of the "phone" parameter from the link
+     * @property settings Settings for the authentication of the user's phone number
+     * @property extra Extra data shared between request and response
      */
-    class SendPhoneNumberConfirmationCode(
+    @Serializable
+    @SerialName("sendPhoneNumberConfirmationCode")
+    data class SendPhoneNumberConfirmationCode(
+        @SerialName("hash")
         val hash: String? = null,
+        @SerialName("phone_number")
         val phoneNumber: String? = null,
-        val settings: PhoneNumberAuthenticationSettings? = null
-    ) : null()
+        @SerialName("settings")
+        val settings: PhoneNumberAuthenticationSettings? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthenticationCodeInfo>
 
     /**
      * Resends phone number confirmation code
+     *
+     * @property extra Extra data shared between request and response
      */
-    class ResendPhoneNumberConfirmationCode : null()
+    @Serializable
+    @SerialName("resendPhoneNumberConfirmationCode")
+    data class ResendPhoneNumberConfirmationCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<AuthenticationCodeInfo>
 
     /**
      * Checks phone number confirmation code
      *
-     * @code - The phone number confirmation code
+     * @property code The phone number confirmation code
+     * @property extra Extra data shared between request and response
      */
-    class CheckPhoneNumberConfirmationCode(
-        val code: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("checkPhoneNumberConfirmationCode")
+    data class CheckPhoneNumberConfirmationCode(
+        @SerialName("code")
+        val code: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Informs the server about the number of pending bot updates if they haven't been processed for a long time
      *
-     * @pendingUpdateCount - The number of pending updates
-     * @errorMessage - The last error message
+     * @property pendingUpdateCount The number of pending updates
+     * @property errorMessage The last error message
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("setBotUpdatesStatus")
     @BotsOnly
-    class SetBotUpdatesStatus(
+    data class SetBotUpdatesStatus(
+        @SerialName("pending_update_count")
         val pendingUpdateCount: Int = 0,
-        val errorMessage: String? = null
-    ) : null()
+        @SerialName("error_message")
+        val errorMessage: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Uploads a PNG image with a sticker
      * Returns the uploaded file
      *
-     * @userId - Sticker file owner
-     * @pngSticker - PNG image with the sticker
-     *               Must be up to 512 kB in size and fit in 512x512 square
+     * @property userId Sticker file owner
+     * @property pngSticker PNG image with the sticker
+     *                      Must be up to 512 kB in size and fit in 512x512 square
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("uploadStickerFile")
     @BotsOnly
-    class UploadStickerFile(
+    data class UploadStickerFile(
+        @SerialName("user_id")
         val userId: Int = 0,
-        val pngSticker: InputFile? = null
-    ) : null()
+        @SerialName("png_sticker")
+        val pngSticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<File>
 
     /**
      * Creates a new sticker set
      * Returns the newly created sticker set
      *
-     * @userId - Sticker set owner
-     * @title - Sticker set title
-     * @name - Sticker set name
-     *         Can contain only English letters, digits and underscores
-     *         Must end with *"_by_<bot username>"* (*<bot_username>* is case insensitive)
-     * @isMasks - True, if stickers are masks
-     * @stickers - List of stickers to be added to the set
+     * @property userId Sticker set owner
+     * @property title Sticker set title
+     * @property name Sticker set name
+     *                Can contain only English letters, digits and underscores
+     *                Must end with *"_by_<bot username>"* (*<bot_username>* is case insensitive)
+     * @property isMasks True, if stickers are masks
+     * @property stickers List of stickers to be added to the set
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("createNewStickerSet")
     @BotsOnly
-    class CreateNewStickerSet(
+    data class CreateNewStickerSet(
+        @SerialName("user_id")
         val userId: Int = 0,
+        @SerialName("title")
         val title: String? = null,
+        @SerialName("name")
         val name: String? = null,
+        @SerialName("is_masks")
         val isMasks: Boolean = false,
-        val stickers: Array<InputSticker> = emptyArray()
-    ) : null()
+        @SerialName("stickers")
+        val stickers: Array<InputSticker> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSet>
 
     /**
      * Adds a new sticker to a set
      * Returns the sticker set
      *
-     * @userId - Sticker set owner
-     * @name - Sticker set name
-     * @sticker - Sticker to add to the set
+     * @property userId Sticker set owner
+     * @property name Sticker set name
+     * @property sticker Sticker to add to the set
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("addStickerToSet")
     @BotsOnly
-    class AddStickerToSet(
+    data class AddStickerToSet(
+        @SerialName("user_id")
         val userId: Int = 0,
+        @SerialName("name")
         val name: String? = null,
-        val sticker: InputSticker? = null
-    ) : null()
+        @SerialName("sticker")
+        val sticker: InputSticker? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<StickerSet>
 
     /**
      * Changes the position of a sticker in the set to which it belongs
      * The sticker set must have been created by the bot
      *
-     * @sticker - Sticker
-     * @position - New position of the sticker in the set, zero-based
+     * @property sticker Sticker
+     * @property position New position of the sticker in the set, zero-based
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("setStickerPositionInSet")
     @BotsOnly
-    class SetStickerPositionInSet(
+    data class SetStickerPositionInSet(
+        @SerialName("sticker")
         val sticker: InputFile? = null,
-        val position: Int = 0
-    ) : null()
+        @SerialName("position")
+        val position: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes a sticker from the set to which it belongs
      * The sticker set must have been created by the bot
      *
-     * @sticker - Sticker
+     * @property sticker Sticker
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("removeStickerFromSet")
     @BotsOnly
-    class RemoveStickerFromSet(
-        val sticker: InputFile? = null
-    ) : null()
+    data class RemoveStickerFromSet(
+        @SerialName("sticker")
+        val sticker: InputFile? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns information about a file with a map thumbnail in PNG format
      * Only map thumbnail files with size less than 1MB can be downloaded
      *
-     * @location - Location of the map center
-     * @zoom - Map zoom level
-     * @width - Map width in pixels before applying scale
-     * @height - Map height in pixels before applying scale
-     * @scale - Map scale
-     * @chatId - Identifier of a chat, in which the thumbnail will be shown
-     *           Use 0 if unknown
+     * @property location Location of the map center
+     * @property zoom Map zoom level
+     * @property width Map width in pixels before applying scale
+     * @property height Map height in pixels before applying scale
+     * @property scale Map scale
+     * @property chatId Identifier of a chat, in which the thumbnail will be shown
+     *                  Use 0 if unknown
+     * @property extra Extra data shared between request and response
      */
-    class GetMapThumbnailFile(
+    @Serializable
+    @SerialName("getMapThumbnailFile")
+    data class GetMapThumbnailFile(
+        @SerialName("location")
         val location: Location? = null,
+        @SerialName("zoom")
         val zoom: Int = 0,
+        @SerialName("width")
         val width: Int = 0,
+        @SerialName("height")
         val height: Int = 0,
+        @SerialName("scale")
         val scale: Int = 0,
-        val chatId: Long = 0L
-    ) : null()
+        @SerialName("chat_id")
+        val chatId: Long = 0L,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<File>
 
     /**
      * Accepts Telegram terms of services
      *
-     * @termsOfServiceId - Terms of service identifier
+     * @property termsOfServiceId Terms of service identifier
+     * @property extra Extra data shared between request and response
      */
-    class AcceptTermsOfService(
-        val termsOfServiceId: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("acceptTermsOfService")
+    data class AcceptTermsOfService(
+        @SerialName("terms_of_service_id")
+        val termsOfServiceId: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends a custom request
      *
-     * @method - The method name
-     * @parameters - JSON-serialized method parameters
+     * @property method The method name
+     * @property parameters JSON-serialized method parameters
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("sendCustomRequest")
     @BotsOnly
-    class SendCustomRequest(
+    data class SendCustomRequest(
+        @SerialName("method")
         val method: String? = null,
-        val parameters: String? = null
-    ) : null()
+        @SerialName("parameters")
+        val parameters: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<CustomRequestResult>
 
     /**
      * Answers a custom query
      *
-     * @customQueryId - Identifier of a custom query
-     * @data - JSON-serialized answer to the query
+     * @property customQueryId Identifier of a custom query
+     * @property data JSON-serialized answer to the query
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("answerCustomQuery")
     @BotsOnly
-    class AnswerCustomQuery(
+    data class AnswerCustomQuery(
+        @SerialName("custom_query_id")
         val customQueryId: Long = 0L,
-        val data: String? = null
-    ) : null()
+        @SerialName("data")
+        val data: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Succeeds after a specified amount of time has passed
      * Can be called before authorization
      * Can be called before initialization
      *
-     * @seconds - Number of seconds before the function returns
+     * @property seconds Number of seconds before the function returns
+     * @property extra Extra data shared between request and response
      */
-    class SetAlarm(
-        val seconds: Double = 0.0
-    ) : null()
+    @Serializable
+    @SerialName("setAlarm")
+    data class SetAlarm(
+        @SerialName("seconds")
+        val seconds: Double = 0.0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Uses current user IP to found their country
      * Returns two-letter ISO 3166-1 alpha-2 country code
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetCountryCode : null()
+    @Serializable
+    @SerialName("getCountryCode")
+    data class GetCountryCode(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Text>
 
     /**
      * Returns the default text for invitation messages to be used as a placeholder when the current user invites friends to Telegram
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetInviteText : null()
+    @Serializable
+    @SerialName("getInviteText")
+    data class GetInviteText(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Text>
 
     /**
      * Returns information about a tg:// deep link
@@ -12065,340 +18349,533 @@ class TdApi {
      * Returns a 404 error for unknown links
      * Can be called before authorization
      *
-     * @link - The link
+     * @property link The link
+     * @property extra Extra data shared between request and response
      */
-    class GetDeepLinkInfo(
-        val link: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getDeepLinkInfo")
+    data class GetDeepLinkInfo(
+        @SerialName("link")
+        val link: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<DeepLinkInfo>
 
     /**
      * Returns application config, provided by the server
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetApplicationConfig : null()
+    @Serializable
+    @SerialName("getApplicationConfig")
+    data class GetApplicationConfig(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<JsonValue>
 
     /**
      * Saves application log event on the server
      * Can be called before authorization
      *
-     * @type - Event type
-     * @chatId - Optional chat identifier, associated with the event
-     * @data - The log event data
+     * @property type Event type
+     * @property chatId Optional chat identifier, associated with the event
+     * @property data The log event data
+     * @property extra Extra data shared between request and response
      */
-    class SaveApplicationLogEvent(
+    @Serializable
+    @SerialName("saveApplicationLogEvent")
+    data class SaveApplicationLogEvent(
+        @SerialName("type")
         val type: String? = null,
+        @SerialName("chat_id")
         val chatId: Long = 0L,
-        val data: JsonValue? = null
-    ) : null()
+        @SerialName("data")
+        val data: JsonValue? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Adds a proxy server for network requests
      * Can be called before authorization
      *
-     * @server - Proxy server IP address
-     * @port - Proxy server port
-     * @enable - True, if the proxy should be enabled
-     * @type - Proxy type
+     * @property server Proxy server IP address
+     * @property port Proxy server port
+     * @property enable True, if the proxy should be enabled
+     * @property type Proxy type
+     * @property extra Extra data shared between request and response
      */
-    class AddProxy(
+    @Serializable
+    @SerialName("addProxy")
+    data class AddProxy(
+        @SerialName("server")
         val server: String? = null,
+        @SerialName("port")
         val port: Int = 0,
+        @SerialName("enable")
         val enable: Boolean = false,
-        val type: ProxyType? = null
-    ) : null()
+        @SerialName("type")
+        val type: ProxyType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Proxy>
 
     /**
      * Edits an existing proxy server for network requests
      * Can be called before authorization
      *
-     * @proxyId - Proxy identifier
-     * @server - Proxy server IP address
-     * @port - Proxy server port
-     * @enable - True, if the proxy should be enabled
-     * @type - Proxy type
+     * @property proxyId Proxy identifier
+     * @property server Proxy server IP address
+     * @property port Proxy server port
+     * @property enable True, if the proxy should be enabled
+     * @property type Proxy type
+     * @property extra Extra data shared between request and response
      */
-    class EditProxy(
+    @Serializable
+    @SerialName("editProxy")
+    data class EditProxy(
+        @SerialName("proxy_id")
         val proxyId: Int = 0,
+        @SerialName("server")
         val server: String? = null,
+        @SerialName("port")
         val port: Int = 0,
+        @SerialName("enable")
         val enable: Boolean = false,
-        val type: ProxyType? = null
-    ) : null()
+        @SerialName("type")
+        val type: ProxyType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Proxy>
 
     /**
      * Enables a proxy
      * Only one proxy can be enabled at a time
      * Can be called before authorization
      *
-     * @proxyId - Proxy identifier
+     * @property proxyId Proxy identifier
+     * @property extra Extra data shared between request and response
      */
-    class EnableProxy(
-        val proxyId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("enableProxy")
+    data class EnableProxy(
+        @SerialName("proxy_id")
+        val proxyId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Disables the currently enabled proxy
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class DisableProxy : null()
+    @Serializable
+    @SerialName("disableProxy")
+    data class DisableProxy(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Removes a proxy server
      * Can be called before authorization
      *
-     * @proxyId - Proxy identifier
+     * @property proxyId Proxy identifier
+     * @property extra Extra data shared between request and response
      */
-    class RemoveProxy(
-        val proxyId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("removeProxy")
+    data class RemoveProxy(
+        @SerialName("proxy_id")
+        val proxyId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns list of proxies that are currently set up
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
-    class GetProxies : null()
+    @Serializable
+    @SerialName("getProxies")
+    data class GetProxies(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Proxies>
 
     /**
      * Returns an HTTPS link, which can be used to add a proxy
      * Available only for SOCKS5 and MTProto proxies
      * Can be called before authorization
      *
-     * @proxyId - Proxy identifier
+     * @property proxyId Proxy identifier
+     * @property extra Extra data shared between request and response
      */
-    class GetProxyLink(
-        val proxyId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("getProxyLink")
+    data class GetProxyLink(
+        @SerialName("proxy_id")
+        val proxyId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Text>
 
     /**
      * Computes time needed to receive a response from a Telegram server through a proxy
      * Can be called before authorization
      *
-     * @proxyId - Proxy identifier
-     *            Use 0 to ping a Telegram server without a proxy
+     * @property proxyId Proxy identifier
+     *                   Use 0 to ping a Telegram server without a proxy
+     * @property extra Extra data shared between request and response
      */
-    class PingProxy(
-        val proxyId: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("pingProxy")
+    data class PingProxy(
+        @SerialName("proxy_id")
+        val proxyId: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Seconds>
 
     /**
      * Sets new log stream for internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
      *
-     * @logStream - New log stream
+     * @property logStream New log stream
      */
-    class SetLogStream(
-        val logStream: LogStream? = null
-    ) : null()
+    @Serializable
+    @SerialName("setLogStream")
+    data class SetLogStream(
+        @SerialName("log_stream")
+        val logStream: LogStream? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Ok>
 
     /**
      * Returns information about currently used log stream for internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
      */
-    class GetLogStream : null()
+    @Serializable
+    @SerialName("getLogStream")
+    data class GetLogStream(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<LogStream>
 
     /**
      * Sets the verbosity level of the internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
      *
-     * @newVerbosityLevel - New value of the verbosity level for logging
-     *                      Value 0 corresponds to fatal errors, value 1 corresponds to errors, value 2 corresponds to warnings and debug warnings, value 3 corresponds to informational, value 4 corresponds to debug, value 5 corresponds to verbose debug, value greater than 5 and up to 1023 can be used to enable even more logging
+     * @property newVerbosityLevel New value of the verbosity level for logging
+     *                             Value 0 corresponds to fatal errors, value 1 corresponds to errors, value 2 corresponds to warnings and debug warnings, value 3 corresponds to informational, value 4 corresponds to debug, value 5 corresponds to verbose debug, value greater than 5 and up to 1023 can be used to enable even more logging
      */
-    class SetLogVerbosityLevel(
-        val newVerbosityLevel: Int = 0
-    ) : null()
+    @Serializable
+    @SerialName("setLogVerbosityLevel")
+    data class SetLogVerbosityLevel(
+        @SerialName("new_verbosity_level")
+        val newVerbosityLevel: Int = 0,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Ok>
 
     /**
      * Returns current verbosity level of the internal logging of TDLib
      * This is an offline method
      * Can be called before authorization
      */
-    class GetLogVerbosityLevel : null()
+    @Serializable
+    @SerialName("getLogVerbosityLevel")
+    data class GetLogVerbosityLevel(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<LogVerbosityLevel>
 
     /**
      * Returns list of available TDLib internal log tags, for example, ["actor", "binlog", "connections", "notifications", "proxy"]
      * This is an offline method
      * Can be called before authorization
      */
-    class GetLogTags : null()
+    @Serializable
+    @SerialName("getLogTags")
+    data class GetLogTags(
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<LogTags>
 
     /**
      * Sets the verbosity level for a specified TDLib internal log tag
      * This is an offline method
      * Can be called before authorization
      *
-     * @tag - Logging tag to change verbosity level
-     * @newVerbosityLevel - New verbosity level
+     * @property tag Logging tag to change verbosity level
+     * @property newVerbosityLevel New verbosity level
      */
-    class SetLogTagVerbosityLevel(
+    @Serializable
+    @SerialName("setLogTagVerbosityLevel")
+    data class SetLogTagVerbosityLevel(
+        @SerialName("tag")
         val tag: String? = null,
-        val newVerbosityLevel: Int = 0
-    ) : null()
+        @SerialName("new_verbosity_level")
+        val newVerbosityLevel: Int = 0,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Ok>
 
     /**
      * Returns current verbosity level for a specified TDLib internal log tag
      * This is an offline method
      * Can be called before authorization
      *
-     * @tag - Logging tag to change verbosity level
+     * @property tag Logging tag to change verbosity level
      */
-    class GetLogTagVerbosityLevel(
-        val tag: String? = null
-    ) : null()
+    @Serializable
+    @SerialName("getLogTagVerbosityLevel")
+    data class GetLogTagVerbosityLevel(
+        @SerialName("tag")
+        val tag: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<LogVerbosityLevel>
 
     /**
      * Adds a message to TDLib internal log
      * This is an offline method
      * Can be called before authorization
      *
-     * @verbosityLevel - Minimum verbosity level needed for the message to be logged, 0-1023
-     * @text - Text of a message to log
+     * @property verbosityLevel Minimum verbosity level needed for the message to be logged, 0-1023
+     * @property text Text of a message to log
      */
-    class AddLogMessage(
+    @Serializable
+    @SerialName("addLogMessage")
+    data class AddLogMessage(
+        @SerialName("verbosity_level")
         val verbosityLevel: Int = 0,
-        val text: String? = null
-    ) : null()
+        @SerialName("text")
+        val text: String? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Ok>
 
     /**
      * Does nothing
      * This is an offline method
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallEmpty")
     @TestingOnly
-    class TestCallEmpty : null()
+    data class TestCallEmpty(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Returns the received string
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - String to return
+     * @property x String to return
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallString")
     @TestingOnly
-    class TestCallString(
-        val x: String? = null
-    ) : null()
+    data class TestCallString(
+        @SerialName("x")
+        val x: String? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestString>
 
     /**
      * Returns the received bytes
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - Bytes to return
+     * @property x Bytes to return
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallBytes")
     @TestingOnly
-    class TestCallBytes(
-        val x: ByteArray = byteArrayOf()
-    ) : null()
+    data class TestCallBytes(
+        @SerialName("x")
+        val x: Array<Byte> = byteArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestBytes>
 
     /**
      * Returns the received vector of numbers
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - Vector of numbers to return
+     * @property x Vector of numbers to return
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallVectorInt")
     @TestingOnly
-    class TestCallVectorInt(
-        val x: IntArray = intArrayOf()
-    ) : null()
+    data class TestCallVectorInt(
+        @SerialName("x")
+        val x: Array<Int> = intArrayOf(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestVectorInt>
 
     /**
      * Returns the received vector of objects containing a number
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - Vector of objects to return
+     * @property x Vector of objects to return
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallVectorIntObject")
     @TestingOnly
-    class TestCallVectorIntObject(
-        val x: Array<TestInt> = emptyArray()
-    ) : null()
+    data class TestCallVectorIntObject(
+        @SerialName("x")
+        val x: Array<TestInt> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestVectorIntObject>
 
     /**
      * Returns the received vector of strings
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - Vector of strings to return
+     * @property x Vector of strings to return
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallVectorString")
     @TestingOnly
-    class TestCallVectorString(
-        val x: Array<String> = emptyArray()
-    ) : null()
+    data class TestCallVectorString(
+        @SerialName("x")
+        val x: Array<String> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestVectorString>
 
     /**
      * Returns the received vector of objects containing a string
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - Vector of objects to return
+     * @property x Vector of objects to return
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testCallVectorStringObject")
     @TestingOnly
-    class TestCallVectorStringObject(
-        val x: Array<TestString> = emptyArray()
-    ) : null()
+    data class TestCallVectorStringObject(
+        @SerialName("x")
+        val x: Array<TestString> = emptyArray(),
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestVectorStringObject>
 
     /**
      * Returns the squared received number
      * This is an offline method
      * Can be called before authorization
      *
-     * @x - Number to square
+     * @property x Number to square
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testSquareInt")
     @TestingOnly
-    class TestSquareInt(
-        val x: Int = 0
-    ) : null()
+    data class TestSquareInt(
+        @SerialName("x")
+        val x: Int = 0,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<TestInt>
 
     /**
      * Sends a simple network request to the Telegram servers
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testNetwork")
     @TestingOnly
-    class TestNetwork : null()
+    data class TestNetwork(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Sends a simple network request to the Telegram servers via proxy
      * Can be called before authorization
      *
-     * @server - Proxy server IP address
-     * @port - Proxy server port
-     * @type - Proxy type
+     * @property server Proxy server IP address
+     * @property port Proxy server port
+     * @property type Proxy type
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testProxy")
     @TestingOnly
-    class TestProxy(
+    data class TestProxy(
+        @SerialName("server")
         val server: String? = null,
+        @SerialName("port")
         val port: Int = 0,
-        val type: ProxyType? = null
-    ) : null()
+        @SerialName("type")
+        val type: ProxyType? = null,
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Forces an updates.getDifference call to the Telegram servers
+     *
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testGetDifference")
     @TestingOnly
-    class TestGetDifference : null()
+    data class TestGetDifference(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Ok>
 
     /**
      * Does nothing and ensures that the Update object is used
      * This is an offline method
      * Can be called before authorization
+     *
+     * @property extra Extra data shared between request and response
      */
+    @Serializable
+    @SerialName("testUseUpdate")
     @TestingOnly
-    class TestUseUpdate : null()
+    data class TestUseUpdate(
+        @SerialName("@extra")
+        val extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdRequest<Update>
 
     /**
      * Returns the specified error and ensures that the Error object is used
      * This is an offline method
      * Can be called before authorization
      *
-     * @error - The error to be returned
+     * @property error The error to be returned
      */
+    @Serializable
+    @SerialName("testReturnError")
     @TestingOnly
-    class TestReturnError(
-        val error: Error? = null
-    ) : null()
-
+    data class TestReturnError(
+        @SerialName("error")
+        val error: Error? = null,
+        extra: TdExtra = TdExtra.EMPTY
+    ) : Function(), TdSyncRequest<Error>
 }

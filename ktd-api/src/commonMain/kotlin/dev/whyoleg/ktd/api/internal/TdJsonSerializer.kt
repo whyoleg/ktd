@@ -12,7 +12,11 @@ internal class TdJsonSerializer(module: SerialModule) {
     fun stringify(request: TdApiRequest): String = json.stringify(requestSerializer, request)
 
     companion object {
-        private val jsonConfiguration = JsonConfiguration.Stable.copy(classDiscriminator = "@type", strictMode = false) //TODO check it
+        private val jsonConfiguration = JsonConfiguration.Stable.copy(
+            classDiscriminator = "@type",
+            strictMode = false,
+            encodeDefaults = false
+        )
         private val responseSerializer = PolymorphicSerializer(TdApiResponse::class)
         private val requestSerializer = PolymorphicSerializer(TdRequest::class)
     }

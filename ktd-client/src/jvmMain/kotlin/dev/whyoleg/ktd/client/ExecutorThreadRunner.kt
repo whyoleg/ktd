@@ -14,7 +14,7 @@ class CachedThreadRunner(
     companion object : ExecutorThreadRunner(Executors.newCachedThreadPool())
 }
 
-abstract class ExecutorThreadRunner(private val executor: Executor) : SynchronizedRunner {
+abstract class ExecutorThreadRunner(private val executor: ExecutorService) : SynchronizedRunner {
     final override fun run(id: Long, onClose: () -> Unit, block: () -> Boolean) {
         executor.execute {
             try {
@@ -23,5 +23,9 @@ abstract class ExecutorThreadRunner(private val executor: Executor) : Synchroniz
                 onClose()
             }
         }
+    }
+
+    fun shutdown() {
+        executor.shutdown()
     }
 }

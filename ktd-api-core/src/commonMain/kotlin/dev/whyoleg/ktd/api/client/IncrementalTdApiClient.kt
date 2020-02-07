@@ -8,10 +8,12 @@ class IncrementalTdApiClient(api: StaticTdApi) {
     @PublishedApi
     internal val client by lazy { TdApiClient(api) }
 
-    @PublishedApi
-    internal val requestId = atomic(0L)
+    private val requestId = atomic(0L)
 
     val id: Long get() = client.id
+
+    @PublishedApi
+    internal fun nextRequestId() = requestId.incrementAndGet()
 
     fun unsafeDestroy(): Unit = client.unsafeDestroy()
 
@@ -20,7 +22,7 @@ class IncrementalTdApiClient(api: StaticTdApi) {
      */
     @PublishedApi
     internal inline fun send2(request: TdApiRequest, preconfigure: (requestId: Long) -> Unit = {}): Long {
-        val requestId = requestId.incrementAndGet()
+        val requestId = nextRequestId()
         preconfigure(requestId)
         @Suppress("DEPRECATION_ERROR")
         client.send(request.withRequestId(requestId))

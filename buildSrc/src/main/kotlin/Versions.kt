@@ -6,6 +6,7 @@ object Versions {
     const val kotlinShell = "0.2"
     const val dotenv = "5.1.3"
     const val kotlinPoet = "1.5.0"
+    const val benchmarks = "0.2.0-dev-7"
 
     const val ktdVersion = "0.5.0"
 

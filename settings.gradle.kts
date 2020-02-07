@@ -17,16 +17,6 @@ buildscript {
     }
 }
 
-val tdOnlyVersion = startParameter.projectProperties["tdOnlyVersion"]
-
-val tdVersions = tdOnlyVersion?.let(::listOf) ?: listOf(
-    "1.5.0",
-    "1.5.1",
-    "1.5.2",
-    "1.5.3",
-    "1.5.4"
-)
-
 inline fun ModuleContext.m(name: String, path: String? = null, block: ModuleContext.() -> Unit = {}) {
     val p = path?.let { "$it/" } ?: ""
     name("${p}ktd-$name", block = block)
@@ -36,8 +26,11 @@ modules {
     "cli"()
 
     m("json")
-    m("api")
+    m("api-core")
     m("client")
+    m("tdlib")
+
+    m("api") // latest: 1.6.0
 
     "clients" {
         m("client-deferred", "clients")

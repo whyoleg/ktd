@@ -5,8 +5,10 @@ import dev.whyoleg.kamp.project.*
 object ProjectModules {
     val cli = ProjectModule(":cli")
     val json = ProjectModule(":json")
-    val api = ProjectModule(":api")
+    val api_core = ProjectModule(":api-core")
     val client = ProjectModule(":client")
+    val tdlib = ProjectModule(":tdlib")
+    val api = ProjectModule(":api")
     val clients = ProjectModule(":clients")
 
     object Clients {

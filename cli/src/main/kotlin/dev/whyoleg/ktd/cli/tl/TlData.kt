@@ -20,7 +20,7 @@ sealed class TlClass(
 
 data class TlObject(
     override val type: String,
-    override val parentType: String,
+    override val parentType: String?,
     override val metadata: TlMetadata,
     override val crc: Int
 ) : TlClass(type, parentType, metadata, crc)

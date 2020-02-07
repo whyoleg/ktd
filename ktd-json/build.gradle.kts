@@ -12,4 +12,9 @@ kotlin {
         implementation(Dependencies.kotlin.test)
         implementation(Dependencies.kotlin.annotations)
     }
+    metadata {
+        dependenciesMain {
+            api(ProjectModules.tdlib)
+        }
+    }
 }

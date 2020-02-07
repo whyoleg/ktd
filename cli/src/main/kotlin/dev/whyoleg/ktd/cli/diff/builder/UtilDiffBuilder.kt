@@ -32,8 +32,8 @@ fun <T> List<T>.joinWithIndent(buffer: StringBuilder, transform: ((T) -> String)
 
 fun StringBuilder.typeDiff(text: String, type: TlTypeDiff) {
     append("\n").append(text)
-    withIndentMinus { append(type.old) }
-    withIndentPlus { append(type.new) }
+    type.old?.let { withIndentMinus { append(it) } }
+    type.old?.let { withIndentPlus { append(it) } }
 }
 
 fun StringBuilder.additionListDiff(additionList: TlAdditionListDiff) {

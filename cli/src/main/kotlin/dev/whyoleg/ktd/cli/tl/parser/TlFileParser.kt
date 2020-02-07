@@ -44,7 +44,7 @@ private fun RawTlData.toAbstract(): TlAbstract {
 private fun RawTlData.toObject(): TlObject {
     val type = expression.substringBefore(spaceToken).trim().capitalize()
     val expressionParentType = expression.substringAfter(equalToken).trim()
-    val parentType = if (expressionParentType == type) "Object" else expressionParentType
+    val parentType = if (expressionParentType == type) null else expressionParentType
     val metadata = extractMetadata()
     return TlObject(type, parentType, metadata, expression.crc())
 }

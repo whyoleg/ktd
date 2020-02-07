@@ -16,12 +16,12 @@ sealed class TlAddition {
     }
 
     object BotsOnly : TlAddition(), Annotation {
-        override val annotation: String = "BotsOnly"
+        override val annotation: String = "TdBotsOnly"
         override fun toString(): String = "BotsOnly"
     }
 
     object TestingOnly : TlAddition(), Annotation {
-        override val annotation: String = "TestingOnly"
+        override val annotation: String = "TdTestingOnly"
         override fun toString(): String = "TestingOnly"
     }
 

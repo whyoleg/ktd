@@ -20,10 +20,10 @@ val serializableAnnotation = ClassName("kotlinx.serialization", "Serializable")
 val serialNameAnnotation = ClassName("kotlinx.serialization", "SerialName")
 fun serialName(string: String): AnnotationSpec = AnnotationSpec.builder(serialNameAnnotation).addMember("%S", string).build()
 
-
 val tdApiClass = ClassName(pcg, "TdApi")
 
 val tdResponseClass = ClassName(pcg, "TdResponse")
+val tdUpdateClass = ClassName(pcg, "TdUpdate")
 val tdObjectClass = ClassName(pcg, "TdObject")
 val tdRequestClass = ClassName(pcg, "TdRequest")
 val tdSyncRequestClass = ClassName(pcg, "TdSyncRequest")
@@ -33,6 +33,7 @@ fun tdSyncRequestParameterized(t: String) = tdSyncRequestClass.parameterizedBy(C
 val extraProperty =
     PropertySpec.builder("extra", ClassName(pcg, "TdExtra"))
         .initializer("extra")
+        .addModifiers(KModifier.OVERRIDE)
         .addAnnotation(serialName("@extra"))
         .build()
 val extraParameter =
@@ -40,13 +41,13 @@ val extraParameter =
         .defaultValue("TdExtra.EMPTY")
         .build()
 
-fun tdConstructor(block: FunSpec.Builder.() -> Unit): FunSpec = FunSpec.constructorBuilder()
+fun tdConstructor(extraNeeded: Boolean, block: FunSpec.Builder.() -> Unit): FunSpec = FunSpec.constructorBuilder()
     .apply(block)
-    .addParameter(extraParameter)
+    .apply { if (extraNeeded) addParameter(extraParameter) }
     .build()
 
-fun TypeSpec.Builder.constructor(data: TlData, type: TdType): TypeSpec.Builder = apply {
-    primaryConstructor(tdConstructor {
+fun TypeSpec.Builder.constructor(data: TlData, extraNeeded: Boolean): TypeSpec.Builder = apply {
+    primaryConstructor(tdConstructor(extraNeeded) {
         parameters += data.metadata.properties.map {
             it.parameter(
                 it.additions.any { it is TlAddition.Nullable } || data is TlFunction,
@@ -59,7 +60,7 @@ fun TypeSpec.Builder.constructor(data: TlData, type: TdType): TypeSpec.Builder =
     }
 }
 
-fun TypeSpec.Builder.dataKdoc(data: TlData, type: TdType): TypeSpec.Builder = apply {
+fun TypeSpec.Builder.dataKdoc(data: TlData, extraNeeded: Boolean): TypeSpec.Builder = apply {
     val classDescription = data.metadata.descriptions + data.metadata.additions.strings()
     val propertiesDescription = data.metadata.properties.flatMap {
         val link = "@property ${it.name.snakeToCamel()} "
@@ -67,9 +68,9 @@ fun TypeSpec.Builder.dataKdoc(data: TlData, type: TdType): TypeSpec.Builder = ap
         val firstLine = link + it.descriptions.first()
         val otherLines = (it.descriptions.drop(1) + it.additions.strings()).map(spaces::plus)
         listOf(firstLine) + otherLines
-    } + when (type) {
-        TdType.Response, TdType.Request -> listOf("@property extra Extra data shared between request and response")
-        else                            -> emptyList()
+    } + when (extraNeeded) {
+        true  -> listOf("@property extra Extra data shared between request and response")
+        false -> emptyList()
     }
 
     val lines = classDescription + when {
@@ -82,26 +83,47 @@ fun TypeSpec.Builder.dataKdoc(data: TlData, type: TdType): TypeSpec.Builder = ap
     }
 }
 
-fun tdDataClass(data: TlData, type: TdType, block: TypeSpec.Builder.() -> Unit): TypeSpec =
-    TypeSpec.classBuilder(tdApiClass.nestedClass(data.type))
-        .addModifiers(KModifier.DATA)
-        .addAnnotation(serializableAnnotation)
-        .addAnnotation(serialName(data.type.decapitalize()))
-        .constructor(data, type)
-        .dataKdoc(data, type)
-        .apply(block)
-        .apply { if (type == TdType.Response || type == TdType.Request) addProperty(extraProperty) }
-        .apply {
-            data.metadata.additions.filterIsInstance<TlAddition.Annotation>()
-                .map { ClassName(pcg, it.annotation) }
-                .forEach(::addAnnotation)
-        }
-        .build()
+fun tdDataType(data: TlData, type: TdType, block: TypeSpec.Builder.() -> Unit): TypeSpec {
+    val extraNeeded = type == TdType.Response || type == TdType.Request || type == TdType.SyncRequest
+    val isObject = data.metadata.properties.isEmpty() && !extraNeeded
+    val className = tdApiClass.nestedClass(data.type)
+    val defaultSpec = when {
+        isObject -> TypeSpec.objectBuilder(className)
+        else     -> TypeSpec.classBuilder(className).addModifiers(KModifier.DATA)
+    }
+    val typeSpec =
+        defaultSpec.addAnnotation(serializableAnnotation)
+            .addAnnotation(serialName(data.type.decapitalize()))
+            .dataKdoc(data, extraNeeded)
+            .apply(block)
+            .apply {
+                data.metadata.additions.filterIsInstance<TlAddition.Annotation>()
+                    .map { ClassName(pcg, it.annotation) }
+                    .forEach(::addAnnotation)
+                if (type == TdType.Request || type == TdType.SyncRequest) {
+                    addFunction(
+                        FunSpec.builder("withRequestId")
+                            .addModifiers(KModifier.OVERRIDE)
+                            .addParameter("id", ClassName("kotlin", "Long"))
+                            .returns(ClassName("", data.type))
+                            .addCode(CodeBlock.of("return·copy(extra·=·extra.copy(id·=·id))\n"))
+                            .build()
+                    )
+                }
+            }
+    return when {
+        isObject -> typeSpec
+        else     -> typeSpec.constructor(data, extraNeeded).apply { if (extraNeeded) addProperty(extraProperty) }
+    }.build()
+}
 
 fun TlType.className(nullable: Boolean): TypeName = when (this) {
-    is TlPrimitiveType -> ClassName("kotlin", kotlinType)
     is TlRefType       -> ClassName(kotlinType.takeIf { it == "String" }?.let { "kotlin" } ?: "", kotlinType).copy(nullable = nullable)
-    is TlArrayType     -> ClassName("kotlin", "Array").parameterizedBy(type.className(false)) //TODO use lists
+    is TlPrimitiveType -> ClassName("kotlin", kotlinType)
+    is TlArrayType     -> when (type) { //TODO use lists
+        is TlPrimitiveType -> ClassName("kotlin", kotlinType)
+        else               -> ClassName("kotlin", "Array").parameterizedBy(type.className(false))
+    }
 }
 
 fun TlProperty.parameter(nullable: Boolean, default: Boolean): ParameterSpec =
@@ -119,6 +141,51 @@ fun TlProperty.property(nullable: Boolean): PropertySpec =
                 .forEach(::addAnnotation)
         }
         .build()
+
+fun TypeSpec.Builder.setParents(
+    data: TlData,
+    responseTypes: Set<String>,
+    requestsTypes: Map<String, String>
+): TypeSpec.Builder = apply {
+    val parent = data.parentType
+    val type = when {
+        data.type in requestsTypes.keys                       -> when {
+            TlAddition.Sync in data.metadata.additions -> TdType.SyncRequest
+            else                                       -> TdType.Request
+        }
+        data.type in responseTypes || parent in responseTypes -> TdType.Response
+        data.type.startsWith("Update")                        -> TdType.Update
+        else                                                  -> TdType.Object
+    }
+    when (type) {
+        TdType.Object      -> {
+            if (parent != null) superclass(ClassName.bestGuess(parent))
+            else {
+                superclass(ClassName.bestGuess("Object"))
+                addSuperinterface(tdObjectClass)
+            }
+        }
+        TdType.Response    -> {
+            if (parent != null) superclass(ClassName.bestGuess(parent))
+            else {
+                superclass(ClassName.bestGuess("Object"))
+                addSuperinterface(tdResponseClass)
+            }
+        }
+        TdType.Request     -> {
+            superclass(ClassName.bestGuess("Function"))
+            addSuperinterface(tdRequestParameterized(requestsTypes.getValue(data.type)))
+        }
+        TdType.SyncRequest -> {
+            superclass(ClassName.bestGuess("Function"))
+            addSuperinterface(tdSyncRequestParameterized(requestsTypes.getValue(data.type)))
+        }
+        TdType.Update      -> {
+            superclass(ClassName.bestGuess("Object"))
+            addSuperinterface(tdUpdateClass)
+        }
+    }
+}
 
 fun nestedTypes(map: Map<String, TlData>, types: Set<String>): Set<String> = types.flatMap {
     val data = map.getValue(it)
@@ -198,53 +265,35 @@ fun main() {
         //        .filter { !allSealedResgjgponses.contains(it.type) }
         //        .take(10)
         .forEach { data ->
+            val parent = data.parentType
             val type = when {
-                data.type in requestsTypes.keys -> when {
+                data.type in requestsTypes.keys                       -> when {
                     TlAddition.Sync in data.metadata.additions -> TdType.SyncRequest
                     else                                       -> TdType.Request
                 }
-                data.type in responseTypes      -> TdType.Response
-                data.type.startsWith("Update")  -> TdType.Update
-                else                            -> TdType.Object
+                data.type in responseTypes || parent in responseTypes -> TdType.Response
+                data.type.startsWith("Update")                        -> TdType.Update
+                else                                                  -> TdType.Object
             }
-            //            println(data)
+            //            println("[$type]${data.type}: $parent")
             val spec = if (data is TlAbstract) {
                 val sealedClassName = tdApiClass.nestedClass(data.type)
                 TypeSpec.classBuilder(sealedClassName)
                     .addModifiers(KModifier.ABSTRACT) //TODO use sealed
-                    .superclass(ClassName.bestGuess("Object"))
-                    .dataKdoc(data, type)
-                    .apply {
-                        if (type == TdType.Response) addSuperinterface(tdResponseClass)
-                    }
+                    .addAnnotation(serializableAnnotation)
+                    .dataKdoc(data, false)
+                    .setParents(data, responseTypes, requestsTypes)
                     .build()
-            } else tdDataClass(data, type) {
-                val parent = data.parentType
-                if (parent != null) superclass(ClassName.bestGuess(parent))
-                when (type) {
-                    TdType.Object      -> if (parent == null) {
-                        superclass(ClassName.bestGuess("Object"))
-                        addSuperinterface(tdObjectClass)
-                    }
-                    TdType.Response    -> addSuperinterface(tdResponseClass)
-                    TdType.Request     -> {
-                        superclass(ClassName.bestGuess("Function"))
-                        addSuperinterface(tdRequestParameterized(requestsTypes.getValue(data.type)))
-                    }
-                    TdType.SyncRequest -> {
-                        superclass(ClassName.bestGuess("Function"))
-                        addSuperinterface(tdSyncRequestParameterized(requestsTypes.getValue(data.type)))
-                    }
-                    TdType.Update      -> Unit
-                }
+            } else tdDataType(data, type) {
+                setParents(data, responseTypes, requestsTypes)
             }
             tdApiSpec.addType(spec)
         }
     FileSpec.builder("dev.whyoleg.ktd.api", "TdApi")
         .addAnnotation(
             AnnotationSpec.builder(ClassName("kotlin", "UseExperimental"))
-                .addMember("BotsOnly::class")
-                .addMember("TestingOnly::class")
+                .addMember("TdBotsOnly::class")
+                .addMember("TdTestingOnly::class")
                 .build()
         )
         .addAnnotation(
@@ -260,7 +309,8 @@ fun main() {
         }
         .addType(tdApiSpec.build())
         .build()
-        .writeTo(System.out)
+        .writeTo(File("ktd-api/src/commonMain/kotlin"))
+    //        .writeTo(System.out)
 }
 
 //Sealed

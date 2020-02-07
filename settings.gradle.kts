@@ -51,7 +51,4 @@ modules {
         m("updates-flow", "updates") //experimental
     }
 
-    "runners" {
-        m("runner-coroutines", "runners") //experimental
-    }
 }

@@ -4,10 +4,11 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
 
 class DeferredTdClient internal constructor(
-    job: Job,
+    private val job: Job,
     api: StaticTdApi,
+    runner: SynchronizedRunner,
     updatesCallback: TdUpdatesCallback
-) : AbstractTdClient(api, CoroutinesSingleThreadRunner(job), updatesCallback), Job by job {
+) : AbstractTdClient(api, runner, updatesCallback), Job by job {
     @Suppress("UNCHECKED_CAST")
     private val requestsJob = SupervisorJob(job)
     internal val requestsScope = CoroutineScope(Dispatchers.Default + requestsJob)
@@ -16,6 +17,15 @@ class DeferredTdClient internal constructor(
     internal suspend fun <R : TdResponse> sendImmediate(request: TdRequest<R>): R = CompletableDeferred<R>(requestsJob).also {
         sendCallback(request, it::complete, it::completeExceptionally)
     }.await()
+
+    override fun cancel(cause: CancellationException?) {
+        close()
+        job.cancel(cause)
+    }
+
+    override fun onClose() {
+        job.cancel()
+    }
 
 }
 
@@ -29,5 +39,6 @@ fun <R : TdResponse> DeferredTdClient.sendAsync(request: TdRequest<R>): Deferred
 fun DeferredTdClient(
     api: StaticTdApi,
     parentJob: Job? = null,
+    runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {}
-): DeferredTdClient = DeferredTdClient(Job(parentJob), api, updatesCallback)
+): DeferredTdClient = DeferredTdClient(Job(parentJob), api, runner, updatesCallback)

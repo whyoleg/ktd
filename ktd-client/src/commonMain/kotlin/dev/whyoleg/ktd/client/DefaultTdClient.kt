@@ -7,7 +7,8 @@ import kotlinx.atomicfu.*
 class DefaultTdClient(
     api: StaticTdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
-    updatesCallback: TdUpdatesCallback = {}
+    updatesCallback: TdUpdatesCallback = {},
+    onClose: () -> Unit = {}
 ) : TdClient {
     private val clientClosing = atomic(false)
     private val clientClosed = atomic(false)
@@ -18,24 +19,22 @@ class DefaultTdClient(
 
     private val client by lazy {
         val client = IncrementalTdApiClient(api)
-        runner.run(client.id) {
+        runner.run(client.id, {
+            runCatching(client::unsafeDestroy)
+            runCatching(onClose)
+        }) {
             when (val response = client.receive(runner.timeout)) {
                 null                 -> Unit
                 is TdUpdate          -> {
-                    updatesCallback(response)
+                    response.runCatching(updatesCallback)
                     if (response is TdStateUpdated) when (response.state) {
                         is TdClosing -> clientClosing.value = true
                         is TdClosed  -> clientClosed.value = true
                     }
                 }
-                is TdResponseOrError -> callbacks.remove(response.extra.id)?.invoke(TdResult(response))
+                is TdResponseOrError -> callbacks.remove(response.extra.id)?.runCatching { this(TdResult(response)) }
             }
-            if (clientClosed.value && callbacks.isEmpty()) {
-                client.unsafeDestroy()
-                false
-            } else {
-                true
-            }
+            !clientClosed.value || !callbacks.isEmpty()
         }
         client
     }
@@ -46,8 +45,7 @@ class DefaultTdClient(
     override fun destroy(callback: TypedTdCallback<TdOk>?): Unit = closeWith(TdDestroy(), callback)
 
     private fun <R : TdResponse> closeWith(request: TdRequest<R>, callback: TypedTdCallback<R>? = null) {
-        if (clientClosing.value) return
-        if (!clientClosed.value) sendCallback(request, callback)
+        sendCallback(request, callback)
         clientClosing.value = true
     }
 

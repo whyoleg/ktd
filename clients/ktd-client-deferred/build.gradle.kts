@@ -12,7 +12,6 @@ kotlin {
     metadata {
         dependenciesMain {
             api(ProjectModules.client)
-            api(ProjectModules.Runners.runner_coroutines)
         }
     }
 }

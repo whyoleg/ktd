@@ -21,9 +21,4 @@ object ProjectModules {
     object Updates {
         val updates_flow = ProjectModule(":updates-updates-flow")
     }
-    val runners = ProjectModule(":runners")
-
-    object Runners {
-        val runner_coroutines = ProjectModule(":runners-runner-coroutines")
-    }
 }

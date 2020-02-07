@@ -28,9 +28,9 @@ benchmark {
     }
     configurations {
         getByName("main") {
-            warmups = 5 // number of warmup iterations
-            iterations = 5 // number of iterations
-            iterationTime = 5 // time in seconds per iteration
+            warmups = 3 // number of warmup iterations
+            //            iterations = 5 // number of iterations
+            //            iterationTime = 5 // time in seconds per iteration
         }
     }
 }

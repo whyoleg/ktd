@@ -11,5 +11,16 @@ fun InternalTdApi(
     builder: SerializersModuleBuilder.() -> Unit
 ): Lazy<StaticTdApi> = lazy {
     TdJson.init()
-    StaticTdApi(version, TdJsonSerializer(SerializersModule(builder)))
+    StaticTdApi(version, TdJsonSerializer(SerializersModule {
+        polymorphic<TdApiRequest> {
+            addSubclass(TdClose.serializer())
+            addSubclass(TdDestroy.serializer())
+            addSubclass(TdLogOut.serializer())
+        }
+        polymorphic<TdApiResponse> {
+            addSubclass(TdOk.serializer())
+            addSubclass(TdError.serializer())
+        }
+        apply(builder)
+    }))
 }

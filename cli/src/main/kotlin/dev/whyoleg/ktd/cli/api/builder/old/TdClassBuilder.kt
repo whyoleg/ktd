@@ -241,11 +241,30 @@ fun main() {
     println("NestedReq: ${nestedTypes.size}")
     println("NestedRes: ${nestedTypes2.size}")
 
-    //    val sealedTypes = list.filterIsInstance<TlAbstract>().map(TlAbstract::type)
-    //    val sealedResponses = sealedTypes.associateWith { t ->
-    //        list.filter { it.parentType == t }
-    //    }
+    val sealedTypes = list.filterIsInstance<TlAbstract>().map(TlAbstract::type)
+    val sealedResponses = sealedTypes.associateWith { t ->
+        list.filter { it.parentType == t }
+    }
     //    val allSealedResponses = sealedResponses.values.flatten().map(TlData::type)
+
+    val requestsBlock =
+        CodeBlock.builder()
+            .beginControlFlow("polymorphic<TdApiRequest>")
+
+    val responseBlock =
+        CodeBlock.builder()
+            .beginControlFlow("polymorphic<TdApiResponse>")
+
+    fun responseBlock(name: String) =
+        CodeBlock.builder()
+            .beginControlFlow("polymorphic(TdApiResponse::class, $name::class)")
+
+    val updateBlock =
+        responseBlock("Update")
+
+    val allResponseBlock =
+        CodeBlock.builder()
+
 
     val tdApiSpec = TypeSpec.classBuilder(tdApiClass)
         .addTypes(
@@ -261,18 +280,18 @@ fun main() {
             )
         )
     list
-        //        .filter { it.type !in existed }
+        .filter { it.type !in existed }
         //        .filter { !allSealedResgjgponses.contains(it.type) }
         //        .take(10)
         .forEach { data ->
             val parent = data.parentType
             val type = when {
+                data.type.startsWith("Update")                        -> TdType.Update
                 data.type in requestsTypes.keys                       -> when {
                     TlAddition.Sync in data.metadata.additions -> TdType.SyncRequest
                     else                                       -> TdType.Request
                 }
                 data.type in responseTypes || parent in responseTypes -> TdType.Response
-                data.type.startsWith("Update")                        -> TdType.Update
                 else                                                  -> TdType.Object
             }
             //            println("[$type]${data.type}: $parent")
@@ -288,28 +307,74 @@ fun main() {
                 setParents(data, responseTypes, requestsTypes)
             }
             tdApiSpec.addType(spec)
-        }
-    FileSpec.builder("dev.whyoleg.ktd.api", "TdApi")
-        .addAnnotation(
-            AnnotationSpec.builder(ClassName("kotlin", "UseExperimental"))
-                .addMember("TdBotsOnly::class")
-                .addMember("TdTestingOnly::class")
-                .build()
-        )
-        .addAnnotation(
-            AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
-                .addMember("\"unused\"")
-                .build()
-        )
-        .indent("    ")
-        .apply {
-            listOf("Object", "Function", "Update", "Error").forEach {
-                addTypeAlias(TypeAliasSpec.builder("Telegram$it", ClassName(pcg, "TdApi.$it")).build())
+
+
+            when (type) {
+                TdType.Request, TdType.SyncRequest -> {
+                    requestsBlock.addStatement("addSubclass(${data.type}.serializer())")
+                }
+                TdType.Response                    -> {
+                    if (data !is TlAbstract && parent == null) {
+                        responseBlock.addStatement("addSubclass(${data.type}.serializer())")
+                    } else if (data is TlAbstract) {
+                        allResponseBlock.add(
+                            responseBlock(data.type).apply {
+                                sealedResponses.getValue(data.type).forEach {
+                                    addStatement("addSubclass(${it.type}.serializer())")
+                                }
+                            }.endControlFlow().build()
+                        )
+                    }
+                }
+                TdType.Update                      -> {
+                    updateBlock.addStatement("addSubclass(${data.type}.serializer())")
+                }
             }
         }
-        .addType(tdApiSpec.build())
+
+    val builderSpec =
+        PropertySpec.builder("TdApiV150", ClassName("dev.whyoleg.ktd.api.internal", "StaticTdApi"))
+            .addAnnotation(AnnotationSpec.builder(ClassName("kotlin", "Suppress")).addMember("\"DEPRECATION_ERROR\"").build())
+            .initializer(
+                CodeBlock.builder()
+                    .beginControlFlow("InternalTdApi(\"1.5.0\")")
+                    .add(requestsBlock.endControlFlow().build())
+                    .add(responseBlock.endControlFlow().build())
+                    .add(updateBlock.endControlFlow().build())
+                    .add(allResponseBlock.build())
+                    .endControlFlow()
+                    .build()
+            )
+
+
+    FileSpec.builder("dev.whyoleg.ktd.api", "TdApiV150")
+        .addProperty(builderSpec.build())
+        //        .addImport("dev.whyoleg.ktd.api.TdApi.*")
+        .indent("    ")
         .build()
         .writeTo(File("ktd-api/src/commonMain/kotlin"))
+    if (false)
+        FileSpec.builder("dev.whyoleg.ktd.api", "TdApi")
+            .addAnnotation(
+                AnnotationSpec.builder(ClassName("kotlin", "UseExperimental"))
+                    .addMember("TdBotsOnly::class")
+                    .addMember("TdTestingOnly::class")
+                    .build()
+            )
+            .addAnnotation(
+                AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
+                    .addMember("\"unused\"")
+                    .build()
+            )
+            .indent("    ")
+            .apply {
+                listOf("Object", "Function", "Update", "Error").forEach {
+                    addTypeAlias(TypeAliasSpec.builder("Telegram$it", ClassName(pcg, "TdApi.$it")).build())
+                }
+            }
+            .addType(tdApiSpec.build())
+            .build()
+            .writeTo(File("ktd-api/src/commonMain/kotlin"))
     //        .writeTo(System.out)
 }
 

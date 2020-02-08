@@ -1,4 +1,6 @@
-package dev.whyoleg.ktd.api
+package dev.whyoleg.ktd
+
+import dev.whyoleg.ktd.api.*
 
 inline class TdResult<T : TdResponse>(private val responseOrError: TdResponseOrError) {
     @Suppress("UNCHECKED_CAST")

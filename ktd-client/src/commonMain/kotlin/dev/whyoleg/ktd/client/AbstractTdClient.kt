@@ -1,5 +1,6 @@
 package dev.whyoleg.ktd.client
 
+import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 
 abstract class AbstractTdClient(

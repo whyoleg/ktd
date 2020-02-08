@@ -1,5 +1,6 @@
-package dev.whyoleg.ktd.api.internal
+package dev.whyoleg.ktd.internal
 
+import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import dev.whyoleg.ktd.json.*
 import kotlinx.serialization.modules.*

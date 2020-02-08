@@ -1,5 +1,6 @@
-package dev.whyoleg.ktd.api.client
+package dev.whyoleg.ktd.client
 
+import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.locks.*
 import kotlin.contracts.*

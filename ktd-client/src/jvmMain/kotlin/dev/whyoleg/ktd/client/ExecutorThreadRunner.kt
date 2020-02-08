@@ -1,6 +1,6 @@
 package dev.whyoleg.ktd.client
 
-import dev.whyoleg.ktd.api.*
+import dev.whyoleg.ktd.*
 import java.util.concurrent.*
 
 class SingleThreadRunner(

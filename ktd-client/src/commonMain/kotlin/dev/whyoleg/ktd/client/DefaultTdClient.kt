@@ -1,7 +1,7 @@
 package dev.whyoleg.ktd.client
 
+import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
-import dev.whyoleg.ktd.api.client.*
 import kotlinx.atomicfu.*
 
 class DefaultTdClient(

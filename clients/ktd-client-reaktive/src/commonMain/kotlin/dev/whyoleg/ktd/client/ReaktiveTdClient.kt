@@ -1,6 +1,7 @@
 package dev.whyoleg.ktd.client
 
 import com.badoo.reaktive.single.*
+import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 
 class ReaktiveTdClient(

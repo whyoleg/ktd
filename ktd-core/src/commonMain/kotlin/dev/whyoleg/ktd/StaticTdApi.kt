@@ -1,6 +1,7 @@
-package dev.whyoleg.ktd.api
+package dev.whyoleg.ktd
 
-import dev.whyoleg.ktd.api.internal.*
+import dev.whyoleg.ktd.api.*
+import dev.whyoleg.ktd.internal.*
 import dev.whyoleg.ktd.json.*
 
 @Deprecated(

@@ -9,11 +9,9 @@ class DeferredTdClient internal constructor(
     runner: SynchronizedRunner,
     updatesCallback: TdUpdatesCallback
 ) : AbstractTdClient(api, runner, updatesCallback), Job by job {
-    @Suppress("UNCHECKED_CAST")
     private val requestsJob = SupervisorJob(job)
     internal val requestsScope = CoroutineScope(Dispatchers.Default + requestsJob)
 
-    @Suppress("DeferredIsResult")
     internal suspend fun <R : TdResponse> sendImmediate(request: TdRequest<R>): R = CompletableDeferred<R>(requestsJob).also {
         sendCallback(request, it::complete, it::completeExceptionally)
     }.await()

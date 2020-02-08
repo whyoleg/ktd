@@ -29,11 +29,10 @@ modules {
     "cli"()
     "benchmarks"()
 
-    m("json")
-    m("api-core")
-    m("client")
     m("tdlib")
-
+    m("json")
+    m("core")
+    m("client")
     m("api") // latest: 1.6.0
 
     "clients" {

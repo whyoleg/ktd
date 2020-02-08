@@ -8,6 +8,5 @@ class Rx3TdClient(
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {}
 ) : AbstractTdClient(api, runner, updatesCallback) {
-    @Suppress("UNCHECKED_CAST")
     fun <R : TdResponse> send(request: TdRequest<R>): Single<R> = Single.create { sendCallback(request, it::onSuccess, it::onError) }
 }

@@ -8,6 +8,5 @@ class ReaktiveTdClient(
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {}
 ) : AbstractTdClient(api, runner, updatesCallback) {
-    @Suppress("UNCHECKED_CAST")
     fun <R : TdResponse> send(request: TdRequest<R>): Single<R> = single { sendCallback(request, it::onSuccess, it::onError) }
 }

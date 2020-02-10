@@ -1,7 +1,6 @@
 package dev.whyoleg.ktd.cli.tdlib
 
 import com.typesafe.config.*
-import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.tdlib.jvm.*
 import kotlinx.cli.*
 import kotlinx.coroutines.*
@@ -12,13 +11,11 @@ import java.io.*
 class TdlibCommand : Subcommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
-    private val version by option(ArgType.String, "version", "v", "Version of tdlib")
-    private val configPath by option(ArgType.String, "config", "c", "Path to .conf file").default("cli/config/tdlib.default.conf")
+    private val configPath by option(ArgType.String, "config", "c", "Path to .conf file").default("cli/tdlib.conf")
 
     override fun execute(): Unit = runBlocking {
-        println("Start build tdlib $version for $platform/$target ")
-        version?.let { checkoutVersion(it) }
-        if (target !in platform.targets) error("Can't build tdlib for $platform/$target")
+        println("Start build TdLib for $platform/$target ")
+        if (target !in platform.targets) error("Can't build TdLib for $platform/$target")
         when (platform) {
             BuildPlatform.Jvm    -> {
                 val config = config<JniConfig>("jni").also(::println)

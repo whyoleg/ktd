@@ -1,5 +1,3 @@
-import dev.whyoleg.kamp.project.*
-
 plugins {
     use(Plugins.mppAndroidModule)
 }

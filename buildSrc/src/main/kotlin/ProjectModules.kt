@@ -10,14 +10,15 @@ object ProjectModules {
     val core = ProjectModule(":core")
     val client = ProjectModule(":client")
     val api = ProjectModule(":api")
+    val core_api = ProjectModule(":core-api")
+    val bots_api = ProjectModule(":bots-api")
+    val test_api = ProjectModule(":test-api")
+    val deprecated_api = ProjectModule(":deprecated-api")
     val clients = ProjectModule(":clients")
 
     object Clients {
         val client_deferred = ProjectModule(":clients-client-deferred")
-        val client_rx2 = ProjectModule(":clients-client-rx2")
-        val client_rx3 = ProjectModule(":clients-client-rx3")
-        val client_reactor = ProjectModule(":clients-client-reactor")
-        val client_reaktive = ProjectModule(":clients-client-reaktive")
+        val client_coroutines = ProjectModule(":clients-client-coroutines")
     }
     val updates = ProjectModule(":updates")
 

@@ -3,14 +3,16 @@ package dev.whyoleg.ktd.client
 import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
-class DeferredTdClient internal constructor(
+class CoroutinesTdClient internal constructor(
     private val job: Job,
     api: AnyTdApi,
-    runner: SynchronizedRunner,
-    private val updatesCallback: TdUpdatesCallback
+    runner: SynchronizedRunner
 ) : AbstractTdClient(api, runner), Job by job {
     private val requestsJob = SupervisorJob(job)
+    private val cache = FlowUpdatesCache(job)
+    val updates: Flow<TdUpdate> = cache.updates
 
     override fun cancel(cause: CancellationException?) {
         close()
@@ -21,7 +23,9 @@ class DeferredTdClient internal constructor(
         job.cancel()
     }
 
-    override fun onUpdate(update: TdUpdate): Unit = updatesCallback(update)
+    override fun onUpdate(update: TdUpdate) {
+        cache.save(update)
+    }
 
     fun send(request: TdApiRequest) {
         sendCallback(request)
@@ -32,12 +36,9 @@ class DeferredTdClient internal constructor(
     }
 }
 
-
-//TODO ext on [AnyTdApi]
 @Suppress("FunctionName")
-fun DeferredTdClient(
+fun CoroutinesTdClient(
     api: AnyTdApi,
     parentJob: Job? = null,
-    runner: SynchronizedRunner = DefaultSynchronizedRunner(),
-    updatesCallback: TdUpdatesCallback = {}
-): DeferredTdClient = DeferredTdClient(Job(parentJob), api, runner, updatesCallback)
+    runner: SynchronizedRunner = DefaultSynchronizedRunner()
+): CoroutinesTdClient = CoroutinesTdClient(Job(parentJob), api, runner)

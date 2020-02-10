@@ -1,7 +1,6 @@
 package dev.whyoleg.ktd.api.benchmarks
 
 import dev.whyoleg.ktd.api.*
-import dev.whyoleg.ktd.api.TdApi.*
 import dev.whyoleg.ktd.client.*
 import kotlinx.benchmark.*
 import kotlinx.coroutines.*
@@ -25,13 +24,12 @@ private object TestRunner : SynchronizedRunner {
 @BenchmarkMode(Mode.AverageTime)
 class GetCurrentStateBenchmark {
     @Suppress("DEPRECATION_ERROR")
-    private val api = TdApiV150.value
 
     private lateinit var client: DeferredTdClient
 
     @Setup
     fun setUp() {
-        client = DeferredTdClient(api, runner = TestRunner)
+        client = DeferredTdClient(TdApi, runner = TestRunner)
         println(client.id)
     }
 
@@ -45,7 +43,7 @@ class GetCurrentStateBenchmark {
     @Benchmark
     fun getCurrentState(): Unit = runBlocking {
         repeat(10) {
-            client.send(GetCurrentState())
+            client.exec(TdGetCurrentState()).updates.also(::println)
         }
     }
 }

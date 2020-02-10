@@ -28,19 +28,28 @@ inline fun ModuleContext.m(name: String, path: String? = null, block: ModuleCont
 modules {
     "cli"()
     "benchmarks"()
+    //    "integration"()
+    //    "samples"()
 
     m("tdlib")
     m("json")
     m("core")
     m("client")
-    m("api") // latest: 1.6.0
+
+    // latest: 1.6.0
+    m("api")
+    m("core-api")
+    m("bots-api")
+    m("test-api")
+    m("deprecated-api") //TODO remove in 0.6.1
 
     "clients" {
         m("client-deferred", "clients")
-        m("client-rx2", "clients") //experimental
-        m("client-rx3", "clients") //experimental
-        m("client-reactor", "clients") //experimental
-        m("client-reaktive", "clients") //experimental
+        m("client-coroutines", "clients")
+        //        m("client-rx2", "clients") //experimental
+        //        m("client-rx3", "clients") //experimental
+        //        m("client-reactor", "clients") //experimental
+        //        m("client-reaktive", "clients") //experimental
     }
 
     "updates" {

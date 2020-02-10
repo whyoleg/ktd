@@ -1,24 +1,62 @@
+@file:Suppress(
+    "unused",
+    "DEPRECATION"
+)
 @file:UseExperimental(
     TdBotsOnly::class,
-    TdTestingOnly::class
+    TdTestOnly::class
 )
-@file:Suppress("unused")
 
 package dev.whyoleg.ktd.api
 
+import dev.whyoleg.ktd.*
 import kotlinx.serialization.*
 
+const val abstractTdDeprecatedMessage: String =
+    "Classes under TdApi will be removed in 0.6.1, use Td-prefixed typealises"
+
+@Deprecated(
+    message = "Deprecated, use TdObject instead",
+    replaceWith = ReplaceWith("TdObject"),
+    level = DeprecationLevel.WARNING
+)
 typealias TelegramObject = TdApi.Object
 
+@Deprecated(
+    message = "Deprecated, use TdApiRequest instead",
+    replaceWith = ReplaceWith("TdApiRequest"),
+    level = DeprecationLevel.WARNING
+)
 typealias TelegramFunction = TdApi.Function
 
+@Deprecated(
+    message = "Deprecated, use TdUpdate instead",
+    replaceWith = ReplaceWith("TdUpdate"),
+    level = DeprecationLevel.WARNING
+)
 typealias TelegramUpdate = TdApi.Update
 
+@Deprecated(
+    message = "Deprecated, use TdError instead",
+    replaceWith = ReplaceWith("TdError"),
+    level = DeprecationLevel.WARNING
+)
 typealias TelegramError = TdApi.Error
 
-class TdApi {
+@Suppress("DEPRECATION_ERROR")
+object TdApi : AnyTdApi("1.5.0", apiBuilder) {
+    @Deprecated(
+        message = "Deprecated, use TdObject instead",
+        replaceWith = ReplaceWith("TdObject"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class Object : TdObject
 
+    @Deprecated(
+        message = "Deprecated, use TdApiRequest instead",
+        replaceWith = ReplaceWith("TdApiRequest"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class Function : Object()
 
     /**
@@ -33,6 +71,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("error")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdError"),
+        level = DeprecationLevel.WARNING
+    )
     data class Error(
         @SerialName("code")
         val code: Int,
@@ -49,6 +92,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("ok")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOk"),
+        level = DeprecationLevel.WARNING
+    )
     data class Ok(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -80,6 +128,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tdlibParameters")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTdlibParameters"),
+        level = DeprecationLevel.WARNING
+    )
     data class TdlibParameters(
         @SerialName("use_test_dc")
         val useTestDc: Boolean,
@@ -117,6 +170,11 @@ class TdApi {
      * Provides information about the method by which an authentication code is delivered to the user
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthenticationCodeType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class AuthenticationCodeType : Object(), TdObject
 
     /**
@@ -126,6 +184,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authenticationCodeTypeTelegramMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthenticationCodeTypeTelegramMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthenticationCodeTypeTelegramMessage(
         @SerialName("length")
         val length: Int
@@ -138,6 +201,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authenticationCodeTypeSms")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthenticationCodeTypeSms"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthenticationCodeTypeSms(
         @SerialName("length")
         val length: Int
@@ -150,6 +218,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authenticationCodeTypeCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthenticationCodeTypeCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthenticationCodeTypeCall(
         @SerialName("length")
         val length: Int
@@ -163,6 +236,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authenticationCodeTypeFlashCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthenticationCodeTypeFlashCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthenticationCodeTypeFlashCall(
         @SerialName("pattern")
         val pattern: String
@@ -179,6 +257,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authenticationCodeInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthenticationCodeInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthenticationCodeInfo(
         @SerialName("phone_number")
         val phoneNumber: String,
@@ -202,6 +285,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("emailAddressAuthenticationCodeInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEmailAddressAuthenticationCodeInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class EmailAddressAuthenticationCodeInfo(
         @SerialName("email_address_pattern")
         val emailAddressPattern: String,
@@ -220,6 +308,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntity")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntity"),
+        level = DeprecationLevel.WARNING
+    )
     data class TextEntity(
         @SerialName("offset")
         val offset: Int,
@@ -237,6 +330,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntities")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntities"),
+        level = DeprecationLevel.WARNING
+    )
     data class TextEntities(
         @SerialName("entities")
         val entities: Array<TextEntity>,
@@ -253,6 +351,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("formattedText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFormattedText"),
+        level = DeprecationLevel.WARNING
+    )
     data class FormattedText(
         @SerialName("text")
         val text: String,
@@ -272,6 +375,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("termsOfService")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTermsOfService"),
+        level = DeprecationLevel.WARNING
+    )
     data class TermsOfService(
         @SerialName("text")
         val text: FormattedText,
@@ -285,6 +393,11 @@ class TdApi {
      * Represents the current authorization state of the client
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationState"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class AuthorizationState : Object(), TdResponse
 
     /**
@@ -294,6 +407,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateWaitTdlibParameters")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateWaitTdlibParameters"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateWaitTdlibParameters(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -307,6 +425,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateWaitEncryptionKey")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateWaitEncryptionKey"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateWaitEncryptionKey(
         @SerialName("is_encrypted")
         val isEncrypted: Boolean,
@@ -321,6 +444,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateWaitPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateWaitPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateWaitPhoneNumber(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -334,6 +462,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateWaitCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateWaitCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateWaitCode(
         @SerialName("code_info")
         val codeInfo: AuthenticationCodeInfo,
@@ -349,6 +482,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateWaitRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateWaitRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateWaitRegistration(
         @SerialName("terms_of_service")
         val termsOfService: TermsOfService,
@@ -367,6 +505,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateWaitPassword")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateWaitPassword"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateWaitPassword(
         @SerialName("password_hint")
         val passwordHint: String?,
@@ -386,6 +529,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateReady")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateReady"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateReady(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -398,6 +546,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateLoggingOut")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateLoggingOut"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateLoggingOut(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -412,6 +565,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateClosing")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateClosing"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateClosing(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -428,6 +586,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("authorizationStateClosed")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAuthorizationStateClosed"),
+        level = DeprecationLevel.WARNING
+    )
     data class AuthorizationStateClosed(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -445,6 +608,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passwordState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPasswordState"),
+        level = DeprecationLevel.WARNING
+    )
     data class PasswordState(
         @SerialName("has_password")
         val hasPassword: Boolean,
@@ -468,6 +636,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("recoveryEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRecoveryEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class RecoveryEmailAddress(
         @SerialName("recovery_email_address")
         val recoveryEmailAddress: String,
@@ -484,6 +657,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("temporaryPasswordState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTemporaryPasswordState"),
+        level = DeprecationLevel.WARNING
+    )
     data class TemporaryPasswordState(
         @SerialName("has_password")
         val hasPassword: Boolean,
@@ -511,6 +689,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("localFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLocalFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class LocalFile(
         @SerialName("path")
         val path: String?,
@@ -546,6 +729,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("remoteFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoteFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoteFile(
         @SerialName("id")
         val id: String?,
@@ -571,6 +759,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("file")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class File(
         @SerialName("id")
         val id: Int,
@@ -590,6 +783,11 @@ class TdApi {
      * Points to a file
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputFile"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputFile : Object(), TdObject
 
     /**
@@ -599,6 +797,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputFileId")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputFileId"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputFileId(
         @SerialName("id")
         val id: Int
@@ -611,6 +814,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputFileRemote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputFileRemote"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputFileRemote(
         @SerialName("id")
         val id: String
@@ -623,6 +831,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputFileLocal")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputFileLocal"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputFileLocal(
         @SerialName("path")
         val path: String
@@ -641,6 +854,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputFileGenerated")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputFileGenerated"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputFileGenerated(
         @SerialName("original_path")
         val originalPath: String,
@@ -660,6 +878,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("photoSize")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPhotoSize"),
+        level = DeprecationLevel.WARNING
+    )
     data class PhotoSize(
         @SerialName("type")
         val type: String,
@@ -680,6 +903,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("minithumbnail")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMinithumbnail"),
+        level = DeprecationLevel.WARNING
+    )
     data class Minithumbnail(
         @SerialName("width")
         val width: Int,
@@ -693,6 +921,11 @@ class TdApi {
      * Part of the face, relative to which a mask should be placed
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMaskPoint"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class MaskPoint : Object(), TdObject
 
     /**
@@ -700,6 +933,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("maskPointForehead")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMaskPointForehead"),
+        level = DeprecationLevel.WARNING
+    )
     object MaskPointForehead : MaskPoint()
 
     /**
@@ -707,6 +945,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("maskPointEyes")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMaskPointEyes"),
+        level = DeprecationLevel.WARNING
+    )
     object MaskPointEyes : MaskPoint()
 
     /**
@@ -714,6 +957,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("maskPointMouth")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMaskPointMouth"),
+        level = DeprecationLevel.WARNING
+    )
     object MaskPointMouth : MaskPoint()
 
     /**
@@ -721,6 +969,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("maskPointChin")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMaskPointChin"),
+        level = DeprecationLevel.WARNING
+    )
     object MaskPointChin : MaskPoint()
 
     /**
@@ -736,6 +989,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("maskPosition")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMaskPosition"),
+        level = DeprecationLevel.WARNING
+    )
     data class MaskPosition(
         @SerialName("point")
         val point: MaskPoint,
@@ -758,6 +1016,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pollOption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPollOption"),
+        level = DeprecationLevel.WARNING
+    )
     data class PollOption(
         @SerialName("text")
         val text: String,
@@ -788,6 +1051,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("animation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class Animation(
         @SerialName("duration")
         val duration: Int,
@@ -829,6 +1097,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("audio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class Audio(
         @SerialName("duration")
         val duration: Int,
@@ -862,6 +1135,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("document")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class Document(
         @SerialName("file_name")
         val fileName: String,
@@ -884,6 +1162,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("photo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class Photo(
         @SerialName("has_stickers")
         val hasStickers: Boolean,
@@ -911,6 +1194,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class Sticker(
         @SerialName("set_id")
         val setId: Long,
@@ -954,6 +1242,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("video")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class Video(
         @SerialName("duration")
         val duration: Int,
@@ -992,6 +1285,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("videoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class VideoNote(
         @SerialName("duration")
         val duration: Int,
@@ -1019,6 +1317,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("voiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class VoiceNote(
         @SerialName("duration")
         val duration: Int,
@@ -1042,6 +1345,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("contact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdContact"),
+        level = DeprecationLevel.WARNING
+    )
     data class Contact(
         @SerialName("phone_number")
         val phoneNumber: String,
@@ -1065,6 +1373,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("location")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class Location(
         @SerialName("latitude")
         val latitude: Double,
@@ -1091,6 +1404,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("venue")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdVenue"),
+        level = DeprecationLevel.WARNING
+    )
     data class Venue(
         @SerialName("location")
         val location: Location,
@@ -1120,6 +1438,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("game")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class Game(
         @SerialName("id")
         val id: Long,
@@ -1148,6 +1471,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("poll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPoll"),
+        level = DeprecationLevel.WARNING
+    )
     data class Poll(
         @SerialName("id")
         val id: Long,
@@ -1174,6 +1502,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("profilePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProfilePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class ProfilePhoto(
         @SerialName("id")
         val id: Long,
@@ -1193,6 +1526,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatPhoto(
         @SerialName("small")
         val small: File,
@@ -1206,6 +1544,11 @@ class TdApi {
      * For outgoing_link, user B is the current user
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLinkState"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class LinkState : Object(), TdObject
 
     /**
@@ -1213,6 +1556,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("linkStateNone")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLinkStateNone"),
+        level = DeprecationLevel.WARNING
+    )
     object LinkStateNone : LinkState()
 
     /**
@@ -1220,6 +1568,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("linkStateKnowsPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLinkStateKnowsPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     object LinkStateKnowsPhoneNumber : LinkState()
 
     /**
@@ -1227,6 +1580,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("linkStateIsContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLinkStateIsContact"),
+        level = DeprecationLevel.WARNING
+    )
     object LinkStateIsContact : LinkState()
 
     /**
@@ -1234,6 +1592,11 @@ class TdApi {
      * The following types are possible: regular users, deleted users and bots
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class UserType : Object(), TdObject
 
     /**
@@ -1241,6 +1604,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userTypeRegular")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserTypeRegular"),
+        level = DeprecationLevel.WARNING
+    )
     object UserTypeRegular : UserType()
 
     /**
@@ -1250,6 +1618,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userTypeDeleted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserTypeDeleted"),
+        level = DeprecationLevel.WARNING
+    )
     object UserTypeDeleted : UserType()
 
     /**
@@ -1264,6 +1637,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userTypeBot")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserTypeBot"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserTypeBot(
         @SerialName("can_join_groups")
         val canJoinGroups: Boolean,
@@ -1284,6 +1662,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userTypeUnknown")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserTypeUnknown"),
+        level = DeprecationLevel.WARNING
+    )
     object UserTypeUnknown : UserType()
 
     /**
@@ -1294,6 +1677,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("botCommand")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBotCommand"),
+        level = DeprecationLevel.WARNING
+    )
     data class BotCommand(
         @SerialName("command")
         val command: String,
@@ -1309,6 +1697,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("botInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBotInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class BotInfo(
         @SerialName("description")
         val description: String,
@@ -1344,6 +1737,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("user")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class User(
         @SerialName("id")
         val id: Int,
@@ -1397,6 +1795,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserFullInfo(
         @SerialName("is_blocked")
         val isBlocked: Boolean,
@@ -1425,6 +1828,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userProfilePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserProfilePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserProfilePhoto(
         @SerialName("id")
         val id: Long,
@@ -1443,6 +1851,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userProfilePhotos")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserProfilePhotos"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserProfilePhotos(
         @SerialName("total_count")
         val totalCount: Int,
@@ -1461,6 +1874,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("users")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUsers"),
+        level = DeprecationLevel.WARNING
+    )
     data class Users(
         @SerialName("total_count")
         val totalCount: Int,
@@ -1488,6 +1906,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatPermissions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatPermissions"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatPermissions(
         @SerialName("can_send_messages")
         val canSendMessages: Boolean,
@@ -1511,6 +1934,11 @@ class TdApi {
      * Provides information about the status of a member in a chat
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatus"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ChatMemberStatus : Object(), TdObject
 
     /**
@@ -1520,6 +1948,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMemberStatusCreator")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatusCreator"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatMemberStatusCreator(
         @SerialName("is_member")
         val isMember: Boolean
@@ -1545,6 +1978,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMemberStatusAdministrator")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatusAdministrator"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatMemberStatusAdministrator(
         @SerialName("can_be_edited")
         val canBeEdited: Boolean,
@@ -1571,6 +2009,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMemberStatusMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatusMember"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMemberStatusMember : ChatMemberStatus()
 
     /**
@@ -1585,6 +2028,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMemberStatusRestricted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatusRestricted"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatMemberStatusRestricted(
         @SerialName("is_member")
         val isMember: Boolean,
@@ -1599,6 +2047,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMemberStatusLeft")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatusLeft"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMemberStatusLeft : ChatMemberStatus()
 
     /**
@@ -1611,6 +2064,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMemberStatusBanned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMemberStatusBanned"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatMemberStatusBanned(
         @SerialName("banned_until_date")
         val bannedUntilDate: Int
@@ -1630,6 +2088,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMember"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatMember(
         @SerialName("user_id")
         val userId: Int,
@@ -1654,6 +2117,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembers"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatMembers(
         @SerialName("total_count")
         val totalCount: Int,
@@ -1667,6 +2135,11 @@ class TdApi {
      * Specifies the kind of chat members to return in searchChatMembers
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilter"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ChatMembersFilter : Object(), TdObject
 
     /**
@@ -1674,6 +2147,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembersFilterContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilterContacts"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMembersFilterContacts : ChatMembersFilter()
 
     /**
@@ -1681,6 +2159,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembersFilterAdministrators")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilterAdministrators"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMembersFilterAdministrators : ChatMembersFilter()
 
     /**
@@ -1688,6 +2171,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembersFilterMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilterMembers"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMembersFilterMembers : ChatMembersFilter()
 
     /**
@@ -1696,6 +2184,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembersFilterRestricted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilterRestricted"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMembersFilterRestricted : ChatMembersFilter()
 
     /**
@@ -1704,6 +2197,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembersFilterBanned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilterBanned"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMembersFilterBanned : ChatMembersFilter()
 
     /**
@@ -1711,12 +2209,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatMembersFilterBots")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatMembersFilterBots"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatMembersFilterBots : ChatMembersFilter()
 
     /**
      * Specifies the kind of chat members to return in getSupergroupMembers
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilter"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class SupergroupMembersFilter : Object(), TdObject
 
     /**
@@ -1724,6 +2232,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterRecent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterRecent"),
+        level = DeprecationLevel.WARNING
+    )
     object SupergroupMembersFilterRecent : SupergroupMembersFilter()
 
     /**
@@ -1733,6 +2246,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class SupergroupMembersFilterContacts(
         @SerialName("query")
         val query: String
@@ -1743,6 +2261,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterAdministrators")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterAdministrators"),
+        level = DeprecationLevel.WARNING
+    )
     object SupergroupMembersFilterAdministrators : SupergroupMembersFilter()
 
     /**
@@ -1752,6 +2275,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterSearch")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterSearch"),
+        level = DeprecationLevel.WARNING
+    )
     data class SupergroupMembersFilterSearch(
         @SerialName("query")
         val query: String
@@ -1765,6 +2293,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterRestricted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterRestricted"),
+        level = DeprecationLevel.WARNING
+    )
     data class SupergroupMembersFilterRestricted(
         @SerialName("query")
         val query: String
@@ -1778,6 +2311,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterBanned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterBanned"),
+        level = DeprecationLevel.WARNING
+    )
     data class SupergroupMembersFilterBanned(
         @SerialName("query")
         val query: String
@@ -1788,6 +2326,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupMembersFilterBots")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupMembersFilterBots"),
+        level = DeprecationLevel.WARNING
+    )
     object SupergroupMembersFilterBots : SupergroupMembersFilter()
 
     /**
@@ -1803,6 +2346,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("basicGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBasicGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class BasicGroup(
         @SerialName("id")
         val id: Int,
@@ -1831,6 +2379,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("basicGroupFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBasicGroupFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class BasicGroupFullInfo(
         @SerialName("description")
         val description: String,
@@ -1871,6 +2424,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class Supergroup(
         @SerialName("id")
         val id: Int,
@@ -1926,6 +2484,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("supergroupFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSupergroupFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class SupergroupFullInfo(
         @SerialName("description")
         val description: String,
@@ -1963,6 +2526,11 @@ class TdApi {
      * Describes the current secret chat state
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSecretChatState"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class SecretChatState : Object(), TdObject
 
     /**
@@ -1971,6 +2539,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("secretChatStatePending")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSecretChatStatePending"),
+        level = DeprecationLevel.WARNING
+    )
     object SecretChatStatePending : SecretChatState()
 
     /**
@@ -1978,6 +2551,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("secretChatStateReady")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSecretChatStateReady"),
+        level = DeprecationLevel.WARNING
+    )
     object SecretChatStateReady : SecretChatState()
 
     /**
@@ -1985,6 +2563,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("secretChatStateClosed")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSecretChatStateClosed"),
+        level = DeprecationLevel.WARNING
+    )
     object SecretChatStateClosed : SecretChatState()
 
     /**
@@ -2007,6 +2590,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("secretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class SecretChat(
         @SerialName("id")
         val id: Int,
@@ -2030,6 +2618,11 @@ class TdApi {
      * Contains information about the origin of a forwarded message
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageForwardOrigin"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class MessageForwardOrigin : Object(), TdObject
 
     /**
@@ -2039,6 +2632,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageForwardOriginUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageForwardOriginUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageForwardOriginUser(
         @SerialName("sender_user_id")
         val senderUserId: Int
@@ -2051,6 +2649,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageForwardOriginHiddenUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageForwardOriginHiddenUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageForwardOriginHiddenUser(
         @SerialName("sender_name")
         val senderName: String
@@ -2066,6 +2669,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageForwardOriginChannel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageForwardOriginChannel"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageForwardOriginChannel(
         @SerialName("chat_id")
         val chatId: Long,
@@ -2087,6 +2695,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageForwardInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageForwardInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageForwardInfo(
         @SerialName("origin")
         val origin: MessageForwardOrigin,
@@ -2102,6 +2715,11 @@ class TdApi {
      * Contains information about the sending state of the message
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageSendingState"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class MessageSendingState : Object(), TdObject
 
     /**
@@ -2109,6 +2727,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageSendingStatePending")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageSendingStatePending"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageSendingStatePending : MessageSendingState()
 
     /**
@@ -2123,6 +2746,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageSendingStateFailed")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageSendingStateFailed"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageSendingStateFailed(
         @SerialName("error_code")
         val errorCode: Int,
@@ -2172,6 +2800,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("message")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class Message(
         @SerialName("id")
         val id: Long,
@@ -2233,6 +2866,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class Messages(
         @SerialName("total_count")
         val totalCount: Int,
@@ -2251,6 +2889,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("foundMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFoundMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class FoundMessages(
         @SerialName("messages")
         val messages: Array<Message>,
@@ -2264,6 +2907,11 @@ class TdApi {
      * Describes the types of chats to which notification settings are applied
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationSettingsScope"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class NotificationSettingsScope : Object(), TdObject
 
     /**
@@ -2271,6 +2919,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationSettingsScopePrivateChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationSettingsScopePrivateChats"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationSettingsScopePrivateChats : NotificationSettingsScope()
 
     /**
@@ -2278,6 +2931,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationSettingsScopeGroupChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationSettingsScopeGroupChats"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationSettingsScopeGroupChats : NotificationSettingsScope()
 
     /**
@@ -2285,6 +2943,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationSettingsScopeChannelChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationSettingsScopeChannelChats"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationSettingsScopeChannelChats : NotificationSettingsScope()
 
     /**
@@ -2304,6 +2967,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatNotificationSettings(
         @SerialName("use_default_mute_for")
         val useDefaultMuteFor: Boolean,
@@ -2340,6 +3008,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("scopeNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdScopeNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class ScopeNotificationSettings(
         @SerialName("mute_for")
         val muteFor: Int,
@@ -2365,6 +3038,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("draftMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDraftMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class DraftMessage(
         @SerialName("reply_to_message_id")
         val replyToMessageId: Long,
@@ -2376,6 +3054,11 @@ class TdApi {
      * Describes the type of a chat
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ChatType : Object(), TdObject
 
     /**
@@ -2385,6 +3068,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatTypePrivate")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatTypePrivate"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatTypePrivate(
         @SerialName("user_id")
         val userId: Int
@@ -2397,6 +3085,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatTypeBasicGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatTypeBasicGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatTypeBasicGroup(
         @SerialName("basic_group_id")
         val basicGroupId: Int
@@ -2411,6 +3104,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatTypeSupergroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatTypeSupergroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatTypeSupergroup(
         @SerialName("supergroup_id")
         val supergroupId: Int,
@@ -2426,6 +3124,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatTypeSecret")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatTypeSecret"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatTypeSecret(
         @SerialName("secret_chat_id")
         val secretChatId: Int,
@@ -2469,6 +3172,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class Chat(
         @SerialName("id")
         val id: Long,
@@ -2528,6 +3236,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class Chats(
         @SerialName("chat_ids")
         val chatIds: LongArray,
@@ -2543,6 +3256,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatInviteLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatInviteLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatInviteLink(
         @SerialName("invite_link")
         val inviteLink: String,
@@ -2565,6 +3283,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatInviteLinkInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatInviteLinkInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatInviteLinkInfo(
         @SerialName("chat_id")
         val chatId: Long,
@@ -2588,6 +3311,11 @@ class TdApi {
      * Describes a keyboard button type
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdKeyboardButtonType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class KeyboardButtonType : Object(), TdObject
 
     /**
@@ -2595,6 +3323,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("keyboardButtonTypeText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdKeyboardButtonTypeText"),
+        level = DeprecationLevel.WARNING
+    )
     object KeyboardButtonTypeText : KeyboardButtonType()
 
     /**
@@ -2603,6 +3336,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("keyboardButtonTypeRequestPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdKeyboardButtonTypeRequestPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     object KeyboardButtonTypeRequestPhoneNumber : KeyboardButtonType()
 
     /**
@@ -2611,6 +3349,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("keyboardButtonTypeRequestLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdKeyboardButtonTypeRequestLocation"),
+        level = DeprecationLevel.WARNING
+    )
     object KeyboardButtonTypeRequestLocation : KeyboardButtonType()
 
     /**
@@ -2621,6 +3364,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("keyboardButton")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdKeyboardButton"),
+        level = DeprecationLevel.WARNING
+    )
     data class KeyboardButton(
         @SerialName("text")
         val text: String,
@@ -2632,6 +3380,11 @@ class TdApi {
      * Describes the type of an inline keyboard button
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InlineKeyboardButtonType : Object(), TdObject
 
     /**
@@ -2641,6 +3394,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButtonTypeUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonTypeUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineKeyboardButtonTypeUrl(
         @SerialName("url")
         val url: String
@@ -2655,6 +3413,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButtonTypeLoginUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonTypeLoginUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineKeyboardButtonTypeLoginUrl(
         @SerialName("url")
         val url: String,
@@ -2671,6 +3434,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButtonTypeCallback")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonTypeCallback"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineKeyboardButtonTypeCallback(
         @SerialName("data")
         val data: ByteArray
@@ -2682,6 +3450,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButtonTypeCallbackGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonTypeCallbackGame"),
+        level = DeprecationLevel.WARNING
+    )
     object InlineKeyboardButtonTypeCallbackGame : InlineKeyboardButtonType()
 
     /**
@@ -2692,6 +3465,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButtonTypeSwitchInline")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonTypeSwitchInline"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineKeyboardButtonTypeSwitchInline(
         @SerialName("query")
         val query: String,
@@ -2705,6 +3483,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButtonTypeBuy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButtonTypeBuy"),
+        level = DeprecationLevel.WARNING
+    )
     object InlineKeyboardButtonTypeBuy : InlineKeyboardButtonType()
 
     /**
@@ -2715,6 +3498,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineKeyboardButton")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineKeyboardButton"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineKeyboardButton(
         @SerialName("text")
         val text: String,
@@ -2726,6 +3514,11 @@ class TdApi {
      * Contains a description of a custom keyboard and actions that can be done with it to quickly reply to bots
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReplyMarkup"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ReplyMarkup : Object(), TdObject
 
     /**
@@ -2737,6 +3530,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("replyMarkupRemoveKeyboard")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReplyMarkupRemoveKeyboard"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReplyMarkupRemoveKeyboard(
         @SerialName("is_personal")
         val isPersonal: Boolean
@@ -2750,6 +3548,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("replyMarkupForceReply")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReplyMarkupForceReply"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReplyMarkupForceReply(
         @SerialName("is_personal")
         val isPersonal: Boolean
@@ -2766,6 +3569,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("replyMarkupShowKeyboard")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReplyMarkupShowKeyboard"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReplyMarkupShowKeyboard(
         @SerialName("rows")
         val rows: Array<Array<KeyboardButton>>,
@@ -2784,6 +3592,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("replyMarkupInlineKeyboard")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReplyMarkupInlineKeyboard"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReplyMarkupInlineKeyboard(
         @SerialName("rows")
         val rows: Array<Array<InlineKeyboardButton>>
@@ -2793,6 +3606,11 @@ class TdApi {
      * Describes a text object inside an instant-view web page
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichText"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class RichText : Object(), TdObject
 
     /**
@@ -2802,6 +3620,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextPlain")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextPlain"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextPlain(
         @SerialName("text")
         val text: String
@@ -2814,6 +3637,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextBold")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextBold"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextBold(
         @SerialName("text")
         val text: RichText
@@ -2826,6 +3654,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextItalic")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextItalic"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextItalic(
         @SerialName("text")
         val text: RichText
@@ -2838,6 +3671,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextUnderline")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextUnderline"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextUnderline(
         @SerialName("text")
         val text: RichText
@@ -2850,6 +3688,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextStrikethrough")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextStrikethrough"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextStrikethrough(
         @SerialName("text")
         val text: RichText
@@ -2862,6 +3705,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextFixed")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextFixed"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextFixed(
         @SerialName("text")
         val text: RichText
@@ -2875,6 +3723,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextUrl(
         @SerialName("text")
         val text: RichText,
@@ -2890,6 +3743,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextEmailAddress(
         @SerialName("text")
         val text: RichText,
@@ -2904,6 +3762,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextSubscript")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextSubscript"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextSubscript(
         @SerialName("text")
         val text: RichText
@@ -2916,6 +3779,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextSuperscript")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextSuperscript"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextSuperscript(
         @SerialName("text")
         val text: RichText
@@ -2928,6 +3796,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextMarked")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextMarked"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextMarked(
         @SerialName("text")
         val text: RichText
@@ -2941,6 +3814,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextPhoneNumber(
         @SerialName("text")
         val text: RichText,
@@ -2960,6 +3838,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextIcon")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextIcon"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextIcon(
         @SerialName("document")
         val document: Document,
@@ -2977,6 +3860,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTextAnchor")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTextAnchor"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTextAnchor(
         @SerialName("text")
         val text: RichText,
@@ -2991,6 +3879,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("richTexts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRichTexts"),
+        level = DeprecationLevel.WARNING
+    )
     data class RichTexts(
         @SerialName("texts")
         val texts: Array<RichText>
@@ -3004,6 +3897,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockCaption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockCaption"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockCaption(
         @SerialName("text")
         val text: RichText,
@@ -3019,6 +3917,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockListItem")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockListItem"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockListItem(
         @SerialName("label")
         val label: String,
@@ -3030,6 +3933,11 @@ class TdApi {
      * Describes a horizontal alignment of a table cell content
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockHorizontalAlignment"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PageBlockHorizontalAlignment : Object(), TdObject
 
     /**
@@ -3037,6 +3945,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockHorizontalAlignmentLeft")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockHorizontalAlignmentLeft"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockHorizontalAlignmentLeft : PageBlockHorizontalAlignment()
 
     /**
@@ -3044,6 +3957,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockHorizontalAlignmentCenter")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockHorizontalAlignmentCenter"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockHorizontalAlignmentCenter : PageBlockHorizontalAlignment()
 
     /**
@@ -3051,12 +3969,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockHorizontalAlignmentRight")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockHorizontalAlignmentRight"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockHorizontalAlignmentRight : PageBlockHorizontalAlignment()
 
     /**
      * Describes a Vertical alignment of a table cell content
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockVerticalAlignment"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PageBlockVerticalAlignment : Object(), TdObject
 
     /**
@@ -3064,6 +3992,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockVerticalAlignmentTop")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockVerticalAlignmentTop"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockVerticalAlignmentTop : PageBlockVerticalAlignment()
 
     /**
@@ -3071,6 +4004,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockVerticalAlignmentMiddle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockVerticalAlignmentMiddle"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockVerticalAlignmentMiddle : PageBlockVerticalAlignment()
 
     /**
@@ -3078,6 +4016,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockVerticalAlignmentBottom")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockVerticalAlignmentBottom"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockVerticalAlignmentBottom : PageBlockVerticalAlignment()
 
     /**
@@ -3092,6 +4035,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockTableCell")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockTableCell"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockTableCell(
         @SerialName("text")
         val text: RichText,
@@ -3120,6 +4068,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockRelatedArticle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockRelatedArticle"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockRelatedArticle(
         @SerialName("url")
         val url: String,
@@ -3139,6 +4092,11 @@ class TdApi {
      * Describes a block of an instant view web page
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlock"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PageBlock : Object(), TdObject
 
     /**
@@ -3148,6 +4106,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockTitle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockTitle"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockTitle(
         @SerialName("title")
         val title: RichText
@@ -3160,6 +4123,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockSubtitle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockSubtitle"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockSubtitle(
         @SerialName("subtitle")
         val subtitle: RichText
@@ -3174,6 +4142,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockAuthorDate")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockAuthorDate"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockAuthorDate(
         @SerialName("author")
         val author: RichText,
@@ -3188,6 +4161,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockHeader")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockHeader"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockHeader(
         @SerialName("header")
         val header: RichText
@@ -3200,6 +4178,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockSubheader")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockSubheader"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockSubheader(
         @SerialName("subheader")
         val subheader: RichText
@@ -3212,6 +4195,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockKicker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockKicker"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockKicker(
         @SerialName("kicker")
         val kicker: RichText
@@ -3224,6 +4212,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockParagraph")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockParagraph"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockParagraph(
         @SerialName("text")
         val text: RichText
@@ -3237,6 +4230,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockPreformatted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockPreformatted"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockPreformatted(
         @SerialName("text")
         val text: RichText,
@@ -3251,6 +4249,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockFooter")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockFooter"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockFooter(
         @SerialName("footer")
         val footer: RichText
@@ -3261,6 +4264,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockDivider")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockDivider"),
+        level = DeprecationLevel.WARNING
+    )
     object PageBlockDivider : PageBlock()
 
     /**
@@ -3270,6 +4278,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockAnchor")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockAnchor"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockAnchor(
         @SerialName("name")
         val name: String
@@ -3282,6 +4295,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockList")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockList"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockList(
         @SerialName("items")
         val items: Array<PageBlockListItem>
@@ -3295,6 +4313,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockBlockQuote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockBlockQuote"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockBlockQuote(
         @SerialName("text")
         val text: RichText,
@@ -3310,6 +4333,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockPullQuote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockPullQuote"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockPullQuote(
         @SerialName("text")
         val text: RichText,
@@ -3326,6 +4354,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockAnimation(
         @SerialName("animation")
         val animation: Animation?,
@@ -3343,6 +4376,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockAudio(
         @SerialName("audio")
         val audio: Audio?,
@@ -3359,6 +4397,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockPhoto(
         @SerialName("photo")
         val photo: Photo?,
@@ -3378,6 +4421,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockVideo(
         @SerialName("video")
         val video: Video?,
@@ -3396,6 +4444,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockCover")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockCover"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockCover(
         @SerialName("cover")
         val cover: PageBlock
@@ -3417,6 +4470,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockEmbedded")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockEmbedded"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockEmbedded(
         @SerialName("url")
         val url: String,
@@ -3449,6 +4507,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockEmbeddedPost")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockEmbeddedPost"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockEmbeddedPost(
         @SerialName("url")
         val url: String,
@@ -3472,6 +4535,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockCollage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockCollage"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockCollage(
         @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
@@ -3487,6 +4555,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockSlideshow")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockSlideshow"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockSlideshow(
         @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
@@ -3503,6 +4576,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockChatLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockChatLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockChatLink(
         @SerialName("title")
         val title: String,
@@ -3522,6 +4600,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockTable")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockTable"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockTable(
         @SerialName("caption")
         val caption: RichText,
@@ -3542,6 +4625,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockDetails")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockDetails"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockDetails(
         @SerialName("header")
         val header: RichText,
@@ -3559,6 +4647,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockRelatedArticles")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockRelatedArticles"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockRelatedArticles(
         @SerialName("header")
         val header: RichText,
@@ -3577,6 +4670,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pageBlockMap")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPageBlockMap"),
+        level = DeprecationLevel.WARNING
+    )
     data class PageBlockMap(
         @SerialName("location")
         val location: Location,
@@ -3604,6 +4702,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("webPageInstantView")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdWebPageInstantView"),
+        level = DeprecationLevel.WARNING
+    )
     data class WebPageInstantView(
         @SerialName("page_blocks")
         val pageBlocks: Array<PageBlock>,
@@ -3648,6 +4751,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("webPage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdWebPage"),
+        level = DeprecationLevel.WARNING
+    )
     data class WebPage(
         @SerialName("url")
         val url: String,
@@ -3707,6 +4815,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("address")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class Address(
         @SerialName("country_code")
         val countryCode: String,
@@ -3730,6 +4843,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("labeledPricePart")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLabeledPricePart"),
+        level = DeprecationLevel.WARNING
+    )
     data class LabeledPricePart(
         @SerialName("label")
         val label: String,
@@ -3753,6 +4871,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("invoice")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInvoice"),
+        level = DeprecationLevel.WARNING
+    )
     data class Invoice(
         @SerialName("currency")
         val currency: String,
@@ -3787,6 +4910,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("orderInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOrderInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class OrderInfo(
         @SerialName("name")
         val name: String,
@@ -3809,6 +4937,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("shippingOption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdShippingOption"),
+        level = DeprecationLevel.WARNING
+    )
     data class ShippingOption(
         @SerialName("id")
         val id: String,
@@ -3826,6 +4959,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("savedCredentials")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSavedCredentials"),
+        level = DeprecationLevel.WARNING
+    )
     data class SavedCredentials(
         @SerialName("id")
         val id: String,
@@ -3837,6 +4975,11 @@ class TdApi {
      * Contains information about the payment method chosen by the user
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputCredentials"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputCredentials : Object(), TdObject
 
     /**
@@ -3847,6 +4990,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputCredentialsSaved")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputCredentialsSaved"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputCredentialsSaved(
         @SerialName("saved_credentials_id")
         val savedCredentialsId: String
@@ -3860,6 +5008,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputCredentialsNew")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputCredentialsNew"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputCredentialsNew(
         @SerialName("data")
         val data: String,
@@ -3874,6 +5027,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputCredentialsAndroidPay")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputCredentialsAndroidPay"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputCredentialsAndroidPay(
         @SerialName("data")
         val data: String
@@ -3886,6 +5044,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputCredentialsApplePay")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputCredentialsApplePay"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputCredentialsApplePay(
         @SerialName("data")
         val data: String
@@ -3901,6 +5064,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("paymentsProviderStripe")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPaymentsProviderStripe"),
+        level = DeprecationLevel.WARNING
+    )
     data class PaymentsProviderStripe(
         @SerialName("publishable_key")
         val publishableKey: String,
@@ -3926,6 +5094,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("paymentForm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPaymentForm"),
+        level = DeprecationLevel.WARNING
+    )
     data class PaymentForm(
         @SerialName("invoice")
         val invoice: Invoice,
@@ -3955,6 +5128,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("validatedOrderInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdValidatedOrderInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class ValidatedOrderInfo(
         @SerialName("order_info_id")
         val orderInfoId: String,
@@ -3974,6 +5152,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("paymentResult")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPaymentResult"),
+        level = DeprecationLevel.WARNING
+    )
     data class PaymentResult(
         @SerialName("success")
         val success: Boolean,
@@ -3996,6 +5179,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("paymentReceipt")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPaymentReceipt"),
+        level = DeprecationLevel.WARNING
+    )
     data class PaymentReceipt(
         @SerialName("date")
         val date: Int,
@@ -4021,6 +5209,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("datedFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDatedFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class DatedFile(
         @SerialName("file")
         val file: File,
@@ -4032,6 +5225,11 @@ class TdApi {
      * Contains the type of a Telegram Passport element
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PassportElementType : Object(), TdObject
 
     /**
@@ -4039,6 +5237,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypePersonalDetails")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypePersonalDetails"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypePersonalDetails : PassportElementType()
 
     /**
@@ -4046,6 +5249,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypePassport")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypePassport"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypePassport : PassportElementType()
 
     /**
@@ -4053,6 +5261,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeDriverLicense")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeDriverLicense"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeDriverLicense : PassportElementType()
 
     /**
@@ -4060,6 +5273,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeIdentityCard")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeIdentityCard"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeIdentityCard : PassportElementType()
 
     /**
@@ -4067,6 +5285,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeInternalPassport")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeInternalPassport"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeInternalPassport : PassportElementType()
 
     /**
@@ -4074,6 +5297,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeAddress"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeAddress : PassportElementType()
 
     /**
@@ -4081,6 +5309,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeUtilityBill")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeUtilityBill"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeUtilityBill : PassportElementType()
 
     /**
@@ -4088,6 +5321,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeBankStatement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeBankStatement"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeBankStatement : PassportElementType()
 
     /**
@@ -4095,6 +5333,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeRentalAgreement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeRentalAgreement"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeRentalAgreement : PassportElementType()
 
     /**
@@ -4102,6 +5345,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypePassportRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypePassportRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypePassportRegistration : PassportElementType()
 
     /**
@@ -4109,6 +5357,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeTemporaryRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeTemporaryRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeTemporaryRegistration : PassportElementType()
 
     /**
@@ -4116,6 +5369,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypePhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypePhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypePhoneNumber : PassportElementType()
 
     /**
@@ -4123,6 +5381,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTypeEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTypeEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementTypeEmailAddress : PassportElementType()
 
     /**
@@ -4134,6 +5397,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("date")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDate"),
+        level = DeprecationLevel.WARNING
+    )
     data class Date(
         @SerialName("day")
         val day: Int,
@@ -4159,6 +5427,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("personalDetails")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPersonalDetails"),
+        level = DeprecationLevel.WARNING
+    )
     data class PersonalDetails(
         @SerialName("first_name")
         val firstName: String,
@@ -4195,6 +5468,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("identityDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdIdentityDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class IdentityDocument(
         @SerialName("number")
         val number: String,
@@ -4223,6 +5501,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputIdentityDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputIdentityDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputIdentityDocument(
         @SerialName("number")
         val number: String,
@@ -4246,6 +5529,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("personalDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPersonalDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class PersonalDocument(
         @SerialName("files")
         val files: Array<DatedFile>,
@@ -4261,6 +5549,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPersonalDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPersonalDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPersonalDocument(
         @SerialName("files")
         val files: Array<InputFile>,
@@ -4272,6 +5565,11 @@ class TdApi {
      * Contains information about a Telegram Passport element
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElement"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PassportElement : Object(), TdResponse
 
     /**
@@ -4282,6 +5580,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementPersonalDetails")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementPersonalDetails"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementPersonalDetails(
         @SerialName("personal_details")
         val personalDetails: PersonalDetails,
@@ -4297,6 +5600,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementPassport")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementPassport"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementPassport(
         @SerialName("passport")
         val passport: IdentityDocument,
@@ -4312,6 +5620,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementDriverLicense")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementDriverLicense"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementDriverLicense(
         @SerialName("driver_license")
         val driverLicense: IdentityDocument,
@@ -4327,6 +5640,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementIdentityCard")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementIdentityCard"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementIdentityCard(
         @SerialName("identity_card")
         val identityCard: IdentityDocument,
@@ -4342,6 +5660,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementInternalPassport")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementInternalPassport"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementInternalPassport(
         @SerialName("internal_passport")
         val internalPassport: IdentityDocument,
@@ -4357,6 +5680,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementAddress(
         @SerialName("address")
         val address: Address,
@@ -4372,6 +5700,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementUtilityBill")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementUtilityBill"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementUtilityBill(
         @SerialName("utility_bill")
         val utilityBill: PersonalDocument,
@@ -4387,6 +5720,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementBankStatement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementBankStatement"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementBankStatement(
         @SerialName("bank_statement")
         val bankStatement: PersonalDocument,
@@ -4402,6 +5740,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementRentalAgreement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementRentalAgreement"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementRentalAgreement(
         @SerialName("rental_agreement")
         val rentalAgreement: PersonalDocument,
@@ -4417,6 +5760,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementPassportRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementPassportRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementPassportRegistration(
         @SerialName("passport_registration")
         val passportRegistration: PersonalDocument,
@@ -4432,6 +5780,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementTemporaryRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementTemporaryRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementTemporaryRegistration(
         @SerialName("temporary_registration")
         val temporaryRegistration: PersonalDocument,
@@ -4447,6 +5800,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementPhoneNumber(
         @SerialName("phone_number")
         val phoneNumber: String,
@@ -4462,6 +5820,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementEmailAddress(
         @SerialName("email_address")
         val emailAddress: String,
@@ -4473,6 +5836,11 @@ class TdApi {
      * Contains information about a Telegram Passport element to be saved
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElement"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputPassportElement : Object(), TdObject
 
     /**
@@ -4482,6 +5850,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementPersonalDetails")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementPersonalDetails"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementPersonalDetails(
         @SerialName("personal_details")
         val personalDetails: PersonalDetails
@@ -4494,6 +5867,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementPassport")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementPassport"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementPassport(
         @SerialName("passport")
         val passport: InputIdentityDocument
@@ -4506,6 +5884,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementDriverLicense")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementDriverLicense"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementDriverLicense(
         @SerialName("driver_license")
         val driverLicense: InputIdentityDocument
@@ -4518,6 +5901,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementIdentityCard")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementIdentityCard"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementIdentityCard(
         @SerialName("identity_card")
         val identityCard: InputIdentityDocument
@@ -4530,6 +5918,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementInternalPassport")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementInternalPassport"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementInternalPassport(
         @SerialName("internal_passport")
         val internalPassport: InputIdentityDocument
@@ -4542,6 +5935,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementAddress(
         @SerialName("address")
         val address: Address
@@ -4554,6 +5952,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementUtilityBill")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementUtilityBill"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementUtilityBill(
         @SerialName("utility_bill")
         val utilityBill: InputPersonalDocument
@@ -4566,6 +5969,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementBankStatement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementBankStatement"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementBankStatement(
         @SerialName("bank_statement")
         val bankStatement: InputPersonalDocument
@@ -4578,6 +5986,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementRentalAgreement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementRentalAgreement"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementRentalAgreement(
         @SerialName("rental_agreement")
         val rentalAgreement: InputPersonalDocument
@@ -4590,6 +6003,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementPassportRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementPassportRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementPassportRegistration(
         @SerialName("passport_registration")
         val passportRegistration: InputPersonalDocument
@@ -4602,6 +6020,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementTemporaryRegistration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementTemporaryRegistration"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementTemporaryRegistration(
         @SerialName("temporary_registration")
         val temporaryRegistration: InputPersonalDocument
@@ -4614,6 +6037,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementPhoneNumber(
         @SerialName("phone_number")
         val phoneNumber: String
@@ -4626,6 +6054,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementEmailAddress(
         @SerialName("email_address")
         val emailAddress: String
@@ -4639,6 +6072,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElements")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElements"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElements(
         @SerialName("elements")
         val elements: Array<PassportElement>,
@@ -4650,6 +6088,11 @@ class TdApi {
      * Contains the description of an error in a Telegram Passport element
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSource"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PassportElementErrorSource : Object(), TdObject
 
     /**
@@ -4658,6 +6101,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceUnspecified")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceUnspecified"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementErrorSourceUnspecified : PassportElementErrorSource()
 
     /**
@@ -4668,6 +6116,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceDataField")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceDataField"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementErrorSourceDataField(
         @SerialName("field_name")
         val fieldName: String
@@ -4679,6 +6132,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceFrontSide")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceFrontSide"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementErrorSourceFrontSide : PassportElementErrorSource()
 
     /**
@@ -4687,6 +6145,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceReverseSide")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceReverseSide"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementErrorSourceReverseSide : PassportElementErrorSource()
 
     /**
@@ -4695,6 +6158,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceSelfie")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceSelfie"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementErrorSourceSelfie : PassportElementErrorSource()
 
     /**
@@ -4705,6 +6173,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceTranslationFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceTranslationFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementErrorSourceTranslationFile(
         @SerialName("file_index")
         val fileIndex: Int
@@ -4716,6 +6189,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceTranslationFiles")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceTranslationFiles"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementErrorSourceTranslationFiles : PassportElementErrorSource()
 
     /**
@@ -4726,6 +6204,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementErrorSourceFile(
         @SerialName("file_index")
         val fileIndex: Int
@@ -4737,6 +6220,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementErrorSourceFiles")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementErrorSourceFiles"),
+        level = DeprecationLevel.WARNING
+    )
     object PassportElementErrorSourceFiles : PassportElementErrorSource()
 
     /**
@@ -4748,6 +6236,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementError")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementError"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementError(
         @SerialName("type")
         val type: PassportElementType,
@@ -4767,6 +6260,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportSuitableElement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportSuitableElement"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportSuitableElement(
         @SerialName("type")
         val type: PassportElementType,
@@ -4785,6 +6283,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportRequiredElement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportRequiredElement"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportRequiredElement(
         @SerialName("suitable_elements")
         val suitableElements: Array<PassportSuitableElement>
@@ -4800,6 +6303,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportAuthorizationForm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportAuthorizationForm"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportAuthorizationForm(
         @SerialName("id")
         val id: Int,
@@ -4820,6 +6328,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("passportElementsWithErrors")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPassportElementsWithErrors"),
+        level = DeprecationLevel.WARNING
+    )
     data class PassportElementsWithErrors(
         @SerialName("elements")
         val elements: Array<PassportElement>,
@@ -4838,6 +6351,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("encryptedCredentials")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEncryptedCredentials"),
+        level = DeprecationLevel.WARNING
+    )
     data class EncryptedCredentials(
         @SerialName("data")
         val data: ByteArray,
@@ -4862,6 +6380,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("encryptedPassportElement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEncryptedPassportElement"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EncryptedPassportElement(
         @SerialName("type")
@@ -4888,6 +6411,11 @@ class TdApi {
      * Contains the description of an error in a Telegram Passport element
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSource"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputPassportElementErrorSource : Object(), TdObject
 
     /**
@@ -4898,6 +6426,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceUnspecified")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceUnspecified"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceUnspecified(
         @SerialName("element_hash")
         val elementHash: ByteArray
@@ -4912,6 +6445,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceDataField")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceDataField"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceDataField(
         @SerialName("field_name")
         val fieldName: String,
@@ -4927,6 +6465,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceFrontSide")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceFrontSide"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceFrontSide(
         @SerialName("file_hash")
         val fileHash: ByteArray
@@ -4940,6 +6483,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceReverseSide")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceReverseSide"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceReverseSide(
         @SerialName("file_hash")
         val fileHash: ByteArray
@@ -4953,6 +6501,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceSelfie")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceSelfie"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceSelfie(
         @SerialName("file_hash")
         val fileHash: ByteArray
@@ -4966,6 +6519,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceTranslationFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceTranslationFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceTranslationFile(
         @SerialName("file_hash")
         val fileHash: ByteArray
@@ -4979,6 +6537,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceTranslationFiles")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceTranslationFiles"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceTranslationFiles(
         @SerialName("file_hashes")
         val fileHashes: Array<ByteArray>
@@ -4992,6 +6555,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceFile(
         @SerialName("file_hash")
         val fileHash: ByteArray
@@ -5005,6 +6573,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementErrorSourceFiles")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementErrorSourceFiles"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputPassportElementErrorSourceFiles(
         @SerialName("file_hashes")
         val fileHashes: Array<ByteArray>
@@ -5019,6 +6592,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputPassportElementError")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputPassportElementError"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class InputPassportElementError(
         @SerialName("type")
@@ -5033,6 +6611,11 @@ class TdApi {
      * Contains the content of a message
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageContent"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class MessageContent : Object(), TdObject
 
     /**
@@ -5043,6 +6626,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageText"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageText(
         @SerialName("text")
         val text: FormattedText,
@@ -5059,6 +6647,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageAnimation(
         @SerialName("animation")
         val animation: Animation,
@@ -5076,6 +6669,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageAudio(
         @SerialName("audio")
         val audio: Audio,
@@ -5091,6 +6689,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageDocument(
         @SerialName("document")
         val document: Document,
@@ -5107,6 +6710,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessagePhoto(
         @SerialName("photo")
         val photo: Photo,
@@ -5121,6 +6729,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageExpiredPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageExpiredPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageExpiredPhoto : MessageContent()
 
     /**
@@ -5130,6 +6743,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageSticker(
         @SerialName("sticker")
         val sticker: Sticker
@@ -5144,6 +6762,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageVideo(
         @SerialName("video")
         val video: Video,
@@ -5158,6 +6781,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageExpiredVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageExpiredVideo"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageExpiredVideo : MessageContent()
 
     /**
@@ -5169,6 +6797,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageVideoNote(
         @SerialName("video_note")
         val videoNote: VideoNote,
@@ -5187,6 +6820,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageVoiceNote(
         @SerialName("voice_note")
         val voiceNote: VoiceNote,
@@ -5206,6 +6844,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageLocation(
         @SerialName("location")
         val location: Location,
@@ -5222,6 +6865,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageVenue")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageVenue"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageVenue(
         @SerialName("venue")
         val venue: Venue
@@ -5234,6 +6882,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageContact"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageContact(
         @SerialName("contact")
         val contact: Contact
@@ -5246,6 +6899,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageGame(
         @SerialName("game")
         val game: Game
@@ -5258,6 +6916,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePoll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePoll"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessagePoll(
         @SerialName("poll")
         val poll: Poll
@@ -5279,6 +6942,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageInvoice")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageInvoice"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageInvoice(
         @SerialName("title")
         val title: String,
@@ -5308,6 +6976,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageCall(
         @SerialName("discard_reason")
         val discardReason: CallDiscardReason,
@@ -5323,6 +6996,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageBasicGroupChatCreate")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageBasicGroupChatCreate"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageBasicGroupChatCreate(
         @SerialName("title")
         val title: String,
@@ -5337,6 +7015,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageSupergroupChatCreate")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageSupergroupChatCreate"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageSupergroupChatCreate(
         @SerialName("title")
         val title: String
@@ -5349,6 +7032,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatChangeTitle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatChangeTitle"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatChangeTitle(
         @SerialName("title")
         val title: String
@@ -5361,6 +7049,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatChangePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatChangePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatChangePhoto(
         @SerialName("photo")
         val photo: Photo
@@ -5371,6 +7064,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatDeletePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatDeletePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageChatDeletePhoto : MessageContent()
 
     /**
@@ -5380,6 +7078,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatAddMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatAddMembers"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatAddMembers(
         @SerialName("member_user_ids")
         val memberUserIds: IntArray
@@ -5390,6 +7093,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatJoinByLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatJoinByLink"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageChatJoinByLink : MessageContent()
 
     /**
@@ -5399,6 +7107,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatDeleteMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatDeleteMember"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatDeleteMember(
         @SerialName("user_id")
         val userId: Int
@@ -5411,6 +7124,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatUpgradeTo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatUpgradeTo"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatUpgradeTo(
         @SerialName("supergroup_id")
         val supergroupId: Int
@@ -5424,6 +7142,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatUpgradeFrom")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatUpgradeFrom"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatUpgradeFrom(
         @SerialName("title")
         val title: String,
@@ -5438,6 +7161,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePinMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePinMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessagePinMessage(
         @SerialName("message_id")
         val messageId: Long
@@ -5448,6 +7176,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageScreenshotTaken")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageScreenshotTaken"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageScreenshotTaken : MessageContent()
 
     /**
@@ -5457,6 +7190,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageChatSetTtl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageChatSetTtl"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageChatSetTtl(
         @SerialName("ttl")
         val ttl: Int
@@ -5469,6 +7207,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageCustomServiceAction")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageCustomServiceAction"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageCustomServiceAction(
         @SerialName("text")
         val text: String
@@ -5484,6 +7227,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageGameScore")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageGameScore"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageGameScore(
         @SerialName("game_message_id")
         val gameMessageId: Long,
@@ -5503,6 +7251,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePaymentSuccessful")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePaymentSuccessful"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessagePaymentSuccessful(
         @SerialName("invoice_message_id")
         val invoiceMessageId: Long,
@@ -5528,6 +7281,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePaymentSuccessfulBot")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePaymentSuccessfulBot"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class MessagePaymentSuccessfulBot(
         @SerialName("invoice_message_id")
@@ -5553,6 +7311,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageContactRegistered")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageContactRegistered"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageContactRegistered : MessageContent()
 
     /**
@@ -5562,6 +7325,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageWebsiteConnected")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageWebsiteConnected"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageWebsiteConnected(
         @SerialName("domain_name")
         val domainName: String
@@ -5574,6 +7342,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePassportDataSent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePassportDataSent"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessagePassportDataSent(
         @SerialName("types")
         val types: Array<PassportElementType>
@@ -5587,6 +7360,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messagePassportDataReceived")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessagePassportDataReceived"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class MessagePassportDataReceived(
         @SerialName("elements")
@@ -5600,12 +7378,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageUnsupported")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageUnsupported"),
+        level = DeprecationLevel.WARNING
+    )
     object MessageUnsupported : MessageContent()
 
     /**
      * Represents a part of the text which must be formatted differently
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class TextEntityType : Object(), TdObject
 
     /**
@@ -5613,6 +7401,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeMention")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeMention"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeMention : TextEntityType()
 
     /**
@@ -5620,6 +7413,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeHashtag")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeHashtag"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeHashtag : TextEntityType()
 
     /**
@@ -5628,6 +7426,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeCashtag")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeCashtag"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeCashtag : TextEntityType()
 
     /**
@@ -5636,6 +7439,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeBotCommand")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeBotCommand"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeBotCommand : TextEntityType()
 
     /**
@@ -5643,6 +7451,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeUrl"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeUrl : TextEntityType()
 
     /**
@@ -5650,6 +7463,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeEmailAddress : TextEntityType()
 
     /**
@@ -5657,6 +7475,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeBold")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeBold"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeBold : TextEntityType()
 
     /**
@@ -5664,6 +7487,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeItalic")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeItalic"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeItalic : TextEntityType()
 
     /**
@@ -5671,6 +7499,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeCode"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypeCode : TextEntityType()
 
     /**
@@ -5678,6 +7511,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypePre")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypePre"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypePre : TextEntityType()
 
     /**
@@ -5688,6 +7526,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypePreCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypePreCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class TextEntityTypePreCode(
         @SerialName("language")
         val language: String
@@ -5700,6 +7543,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeTextUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeTextUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class TextEntityTypeTextUrl(
         @SerialName("url")
         val url: String
@@ -5712,6 +7560,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypeMentionName")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypeMentionName"),
+        level = DeprecationLevel.WARNING
+    )
     data class TextEntityTypeMentionName(
         @SerialName("user_id")
         val userId: Int
@@ -5722,6 +7575,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textEntityTypePhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextEntityTypePhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     object TextEntityTypePhoneNumber : TextEntityType()
 
     /**
@@ -5737,6 +7595,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputThumbnail")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputThumbnail"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputThumbnail(
         @SerialName("thumbnail")
         val thumbnail: InputFile,
@@ -5750,6 +7613,11 @@ class TdApi {
      * The content of a message to send
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageContent"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputMessageContent : Object(), TdObject
 
     /**
@@ -5763,6 +7631,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageText"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageText(
         @SerialName("text")
         val text: FormattedText,
@@ -5787,6 +7660,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageAnimation(
         @SerialName("animation")
         val animation: InputFile,
@@ -5817,6 +7695,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageAudio(
         @SerialName("audio")
         val audio: InputFile,
@@ -5842,6 +7725,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageDocument(
         @SerialName("document")
         val document: InputFile,
@@ -5866,6 +7754,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessagePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessagePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessagePhoto(
         @SerialName("photo")
         val photo: InputFile,
@@ -5893,6 +7786,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageSticker(
         @SerialName("sticker")
         val sticker: InputFile,
@@ -5921,6 +7819,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageVideo(
         @SerialName("video")
         val video: InputFile,
@@ -5953,6 +7856,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageVideoNote(
         @SerialName("video_note")
         val videoNote: InputFile,
@@ -5975,6 +7883,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageVoiceNote(
         @SerialName("voice_note")
         val voiceNote: InputFile,
@@ -5995,6 +7908,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageLocation(
         @SerialName("location")
         val location: Location,
@@ -6009,6 +7927,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageVenue")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageVenue"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageVenue(
         @SerialName("venue")
         val venue: Venue
@@ -6021,6 +7944,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageContact"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageContact(
         @SerialName("contact")
         val contact: Contact
@@ -6035,6 +7963,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageGame(
         @SerialName("bot_user_id")
         val botUserId: Int,
@@ -6059,6 +7992,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageInvoice")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageInvoice"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class InputMessageInvoice(
         @SerialName("invoice")
@@ -6094,6 +8032,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessagePoll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessagePoll"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessagePoll(
         @SerialName("question")
         val question: String,
@@ -6115,6 +8058,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputMessageForwarded")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputMessageForwarded"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputMessageForwarded(
         @SerialName("from_chat_id")
         val fromChatId: Long,
@@ -6132,6 +8080,11 @@ class TdApi {
      * Represents a filter for message search results
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilter"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class SearchMessagesFilter : Object(), TdObject
 
     /**
@@ -6139,6 +8092,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterEmpty")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterEmpty"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterEmpty : SearchMessagesFilter()
 
     /**
@@ -6146,6 +8104,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterAnimation : SearchMessagesFilter()
 
     /**
@@ -6153,6 +8116,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterAudio"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterAudio : SearchMessagesFilter()
 
     /**
@@ -6160,6 +8128,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterDocument"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterDocument : SearchMessagesFilter()
 
     /**
@@ -6167,6 +8140,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterPhoto : SearchMessagesFilter()
 
     /**
@@ -6174,6 +8152,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterVideo"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterVideo : SearchMessagesFilter()
 
     /**
@@ -6181,6 +8164,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterVoiceNote : SearchMessagesFilter()
 
     /**
@@ -6188,6 +8176,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterPhotoAndVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterPhotoAndVideo"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterPhotoAndVideo : SearchMessagesFilter()
 
     /**
@@ -6195,6 +8188,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterUrl"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterUrl : SearchMessagesFilter()
 
     /**
@@ -6202,6 +8200,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterChatPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterChatPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterChatPhoto : SearchMessagesFilter()
 
     /**
@@ -6209,6 +8212,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterCall"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterCall : SearchMessagesFilter()
 
     /**
@@ -6216,6 +8224,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterMissedCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterMissedCall"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterMissedCall : SearchMessagesFilter()
 
     /**
@@ -6223,6 +8236,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterVideoNote : SearchMessagesFilter()
 
     /**
@@ -6230,6 +8248,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterVoiceAndVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterVoiceAndVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterVoiceAndVideoNote : SearchMessagesFilter()
 
     /**
@@ -6237,6 +8260,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterMention")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterMention"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterMention : SearchMessagesFilter()
 
     /**
@@ -6245,12 +8273,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessagesFilterUnreadMention")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessagesFilterUnreadMention"),
+        level = DeprecationLevel.WARNING
+    )
     object SearchMessagesFilterUnreadMention : SearchMessagesFilter()
 
     /**
      * Describes the different types of activity in a chat
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatAction"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ChatAction : Object(), TdObject
 
     /**
@@ -6258,6 +8296,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionTyping")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionTyping"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionTyping : ChatAction()
 
     /**
@@ -6265,6 +8308,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionRecordingVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionRecordingVideo"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionRecordingVideo : ChatAction()
 
     /**
@@ -6274,6 +8322,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionUploadingVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionUploadingVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatActionUploadingVideo(
         @SerialName("progress")
         val progress: Int
@@ -6284,6 +8337,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionRecordingVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionRecordingVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionRecordingVoiceNote : ChatAction()
 
     /**
@@ -6293,6 +8351,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionUploadingVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionUploadingVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatActionUploadingVoiceNote(
         @SerialName("progress")
         val progress: Int
@@ -6305,6 +8368,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionUploadingPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionUploadingPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatActionUploadingPhoto(
         @SerialName("progress")
         val progress: Int
@@ -6317,6 +8385,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionUploadingDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionUploadingDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatActionUploadingDocument(
         @SerialName("progress")
         val progress: Int
@@ -6327,6 +8400,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionChoosingLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionChoosingLocation"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionChoosingLocation : ChatAction()
 
     /**
@@ -6334,6 +8412,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionChoosingContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionChoosingContact"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionChoosingContact : ChatAction()
 
     /**
@@ -6341,6 +8424,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionStartPlayingGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionStartPlayingGame"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionStartPlayingGame : ChatAction()
 
     /**
@@ -6348,6 +8436,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionRecordingVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionRecordingVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionRecordingVideoNote : ChatAction()
 
     /**
@@ -6357,6 +8450,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionUploadingVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionUploadingVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatActionUploadingVideoNote(
         @SerialName("progress")
         val progress: Int
@@ -6367,12 +8465,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatActionCancel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatActionCancel"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatActionCancel : ChatAction()
 
     /**
      * Describes the last time the user was online
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatus"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class UserStatus : Object(), TdObject
 
     /**
@@ -6380,6 +8488,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userStatusEmpty")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatusEmpty"),
+        level = DeprecationLevel.WARNING
+    )
     object UserStatusEmpty : UserStatus()
 
     /**
@@ -6389,6 +8502,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userStatusOnline")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatusOnline"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserStatusOnline(
         @SerialName("expires")
         val expires: Int
@@ -6401,6 +8519,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userStatusOffline")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatusOffline"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserStatusOffline(
         @SerialName("was_online")
         val wasOnline: Int
@@ -6411,6 +8534,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userStatusRecently")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatusRecently"),
+        level = DeprecationLevel.WARNING
+    )
     object UserStatusRecently : UserStatus()
 
     /**
@@ -6418,6 +8546,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userStatusLastWeek")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatusLastWeek"),
+        level = DeprecationLevel.WARNING
+    )
     object UserStatusLastWeek : UserStatus()
 
     /**
@@ -6425,6 +8558,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userStatusLastMonth")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserStatusLastMonth"),
+        level = DeprecationLevel.WARNING
+    )
     object UserStatusLastMonth : UserStatus()
 
     /**
@@ -6435,6 +8573,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("stickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class Stickers(
         @SerialName("stickers")
         val stickers: Array<Sticker>,
@@ -6450,6 +8593,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("emojis")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEmojis"),
+        level = DeprecationLevel.WARNING
+    )
     data class Emojis(
         @SerialName("emojis")
         val emojis: Array<String>,
@@ -6479,6 +8627,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("stickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     data class StickerSet(
         @SerialName("id")
         val id: Long,
@@ -6528,6 +8681,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("stickerSetInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStickerSetInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class StickerSetInfo(
         @SerialName("id")
         val id: Long,
@@ -6564,6 +8722,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("stickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class StickerSets(
         @SerialName("total_count")
         val totalCount: Int,
@@ -6577,6 +8740,11 @@ class TdApi {
      * Describes the reason why a call was discarded
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallDiscardReason"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class CallDiscardReason : Object(), TdObject
 
     /**
@@ -6584,6 +8752,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callDiscardReasonEmpty")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallDiscardReasonEmpty"),
+        level = DeprecationLevel.WARNING
+    )
     object CallDiscardReasonEmpty : CallDiscardReason()
 
     /**
@@ -6592,6 +8765,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callDiscardReasonMissed")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallDiscardReasonMissed"),
+        level = DeprecationLevel.WARNING
+    )
     object CallDiscardReasonMissed : CallDiscardReason()
 
     /**
@@ -6600,6 +8778,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callDiscardReasonDeclined")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallDiscardReasonDeclined"),
+        level = DeprecationLevel.WARNING
+    )
     object CallDiscardReasonDeclined : CallDiscardReason()
 
     /**
@@ -6607,6 +8790,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callDiscardReasonDisconnected")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallDiscardReasonDisconnected"),
+        level = DeprecationLevel.WARNING
+    )
     object CallDiscardReasonDisconnected : CallDiscardReason()
 
     /**
@@ -6614,6 +8802,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callDiscardReasonHungUp")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallDiscardReasonHungUp"),
+        level = DeprecationLevel.WARNING
+    )
     object CallDiscardReasonHungUp : CallDiscardReason()
 
     /**
@@ -6626,6 +8819,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProtocol")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProtocol"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallProtocol(
         @SerialName("udp_p2p")
         val udpP2p: Boolean,
@@ -6648,6 +8846,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callConnection")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallConnection"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallConnection(
         @SerialName("id")
         val id: Long,
@@ -6669,6 +8872,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callId")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallId"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallId(
         @SerialName("id")
         val id: Int,
@@ -6680,6 +8888,11 @@ class TdApi {
      * Describes the current call state
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallState"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class CallState : Object(), TdObject
 
     /**
@@ -6690,6 +8903,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callStatePending")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallStatePending"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallStatePending(
         @SerialName("is_created")
         val isCreated: Boolean,
@@ -6702,6 +8920,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callStateExchangingKeys")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallStateExchangingKeys"),
+        level = DeprecationLevel.WARNING
+    )
     object CallStateExchangingKeys : CallState()
 
     /**
@@ -6716,6 +8939,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callStateReady")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallStateReady"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallStateReady(
         @SerialName("protocol")
         val protocol: CallProtocol,
@@ -6736,6 +8964,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callStateHangingUp")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallStateHangingUp"),
+        level = DeprecationLevel.WARNING
+    )
     object CallStateHangingUp : CallState()
 
     /**
@@ -6747,6 +8980,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callStateDiscarded")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallStateDiscarded"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallStateDiscarded(
         @SerialName("reason")
         val reason: CallDiscardReason,
@@ -6764,6 +9002,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callStateError")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallStateError"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallStateError(
         @SerialName("error")
         val error: Error
@@ -6773,6 +9016,11 @@ class TdApi {
      * Describes the exact type of a problem with a call
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblem"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class CallProblem : Object(), TdObject
 
     /**
@@ -6780,6 +9028,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemEcho")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemEcho"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemEcho : CallProblem()
 
     /**
@@ -6787,6 +9040,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemNoise")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemNoise"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemNoise : CallProblem()
 
     /**
@@ -6794,6 +9052,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemInterruptions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemInterruptions"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemInterruptions : CallProblem()
 
     /**
@@ -6801,6 +9064,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemDistortedSpeech")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemDistortedSpeech"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemDistortedSpeech : CallProblem()
 
     /**
@@ -6808,6 +9076,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemSilentLocal")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemSilentLocal"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemSilentLocal : CallProblem()
 
     /**
@@ -6815,6 +9088,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemSilentRemote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemSilentRemote"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemSilentRemote : CallProblem()
 
     /**
@@ -6822,6 +9100,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callProblemDropped")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallProblemDropped"),
+        level = DeprecationLevel.WARNING
+    )
     object CallProblemDropped : CallProblem()
 
     /**
@@ -6834,6 +9117,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("call")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class Call(
         @SerialName("id")
         val id: Int,
@@ -6856,6 +9144,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("phoneNumberAuthenticationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPhoneNumberAuthenticationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class PhoneNumberAuthenticationSettings(
         @SerialName("allow_flash_call")
         val allowFlashCall: Boolean,
@@ -6873,6 +9166,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("animations")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnimations"),
+        level = DeprecationLevel.WARNING
+    )
     data class Animations(
         @SerialName("animations")
         val animations: Array<Animation>,
@@ -6891,6 +9189,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("importedContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdImportedContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class ImportedContacts(
         @SerialName("user_ids")
         val userIds: IntArray,
@@ -6908,6 +9211,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("httpUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdHttpUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class HttpUrl(
         @SerialName("url")
         val url: String,
@@ -6919,6 +9227,11 @@ class TdApi {
      * Represents a single result of an inline query
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResult"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputInlineQueryResult : Object(), TdObject
 
     /**
@@ -6938,6 +9251,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultAnimatedGif")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultAnimatedGif"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultAnimatedGif(
         @SerialName("id")
         val id: String,
@@ -6977,6 +9295,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultAnimatedMpeg4")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultAnimatedMpeg4"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultAnimatedMpeg4(
         @SerialName("id")
         val id: String,
@@ -7016,6 +9339,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultArticle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultArticle"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultArticle(
         @SerialName("id")
         val id: String,
@@ -7054,6 +9382,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultAudio(
         @SerialName("id")
         val id: String,
@@ -7086,6 +9419,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultContact"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultContact(
         @SerialName("id")
         val id: String,
@@ -7122,6 +9460,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultDocument(
         @SerialName("id")
         val id: String,
@@ -7155,6 +9498,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultGame(
         @SerialName("id")
         val id: String,
@@ -7181,6 +9529,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultLocation(
         @SerialName("id")
         val id: String,
@@ -7219,6 +9572,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultPhoto(
         @SerialName("id")
         val id: String,
@@ -7255,6 +9613,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultSticker(
         @SerialName("id")
         val id: String,
@@ -7287,6 +9650,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultVenue")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultVenue"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultVenue(
         @SerialName("id")
         val id: String,
@@ -7323,6 +9691,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultVideo(
         @SerialName("id")
         val id: String,
@@ -7362,6 +9735,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputInlineQueryResultVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputInlineQueryResultVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputInlineQueryResultVoiceNote(
         @SerialName("id")
         val id: String,
@@ -7381,6 +9759,11 @@ class TdApi {
      * Represents a single result of an inline query
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResult"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InlineQueryResult : Object(), TdObject
 
     /**
@@ -7395,6 +9778,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultArticle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultArticle"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultArticle(
         @SerialName("id")
         val id: String,
@@ -7419,6 +9807,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultContact"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultContact(
         @SerialName("id")
         val id: String,
@@ -7438,6 +9831,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultLocation(
         @SerialName("id")
         val id: String,
@@ -7458,6 +9856,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultVenue")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultVenue"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultVenue(
         @SerialName("id")
         val id: String,
@@ -7475,6 +9878,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultGame(
         @SerialName("id")
         val id: String,
@@ -7491,6 +9899,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultAnimation(
         @SerialName("id")
         val id: String,
@@ -7508,6 +9921,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultAudio(
         @SerialName("id")
         val id: String,
@@ -7525,6 +9943,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultDocument(
         @SerialName("id")
         val id: String,
@@ -7546,6 +9969,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultPhoto(
         @SerialName("id")
         val id: String,
@@ -7565,6 +9993,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultSticker(
         @SerialName("id")
         val id: String,
@@ -7582,6 +10015,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultVideo(
         @SerialName("id")
         val id: String,
@@ -7602,6 +10040,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResultVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResultVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResultVoiceNote(
         @SerialName("id")
         val id: String,
@@ -7625,6 +10068,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inlineQueryResults")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInlineQueryResults"),
+        level = DeprecationLevel.WARNING
+    )
     data class InlineQueryResults(
         @SerialName("inline_query_id")
         val inlineQueryId: Long,
@@ -7644,6 +10092,11 @@ class TdApi {
      * Represents a payload of a callback query
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallbackQueryPayload"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class CallbackQueryPayload : Object(), TdObject
 
     /**
@@ -7653,6 +10106,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callbackQueryPayloadData")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallbackQueryPayloadData"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallbackQueryPayloadData(
         @SerialName("data")
         val data: ByteArray
@@ -7665,6 +10123,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callbackQueryPayloadGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallbackQueryPayloadGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallbackQueryPayloadGame(
         @SerialName("game_short_name")
         val gameShortName: String
@@ -7680,6 +10143,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("callbackQueryAnswer")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCallbackQueryAnswer"),
+        level = DeprecationLevel.WARNING
+    )
     data class CallbackQueryAnswer(
         @SerialName("text")
         val text: String,
@@ -7699,6 +10167,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("customRequestResult")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCustomRequestResult"),
+        level = DeprecationLevel.WARNING
+    )
     data class CustomRequestResult(
         @SerialName("result")
         val result: String,
@@ -7715,6 +10188,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("gameHighScore")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGameHighScore"),
+        level = DeprecationLevel.WARNING
+    )
     data class GameHighScore(
         @SerialName("position")
         val position: Int,
@@ -7732,6 +10210,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("gameHighScores")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGameHighScores"),
+        level = DeprecationLevel.WARNING
+    )
     data class GameHighScores(
         @SerialName("scores")
         val scores: Array<GameHighScore>,
@@ -7743,6 +10226,11 @@ class TdApi {
      * Represents a chat event
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventAction"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ChatEventAction : Object(), TdObject
 
     /**
@@ -7753,6 +10241,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMessageEdited")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMessageEdited"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventMessageEdited(
         @SerialName("old_message")
         val oldMessage: Message,
@@ -7767,6 +10260,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMessageDeleted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMessageDeleted"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventMessageDeleted(
         @SerialName("message")
         val message: Message
@@ -7779,6 +10277,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventPollStopped")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventPollStopped"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventPollStopped(
         @SerialName("message")
         val message: Message
@@ -7791,6 +10294,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMessagePinned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMessagePinned"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventMessagePinned(
         @SerialName("message")
         val message: Message
@@ -7801,6 +10309,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMessageUnpinned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMessageUnpinned"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatEventMessageUnpinned : ChatEventAction()
 
     /**
@@ -7808,6 +10321,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMemberJoined")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMemberJoined"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatEventMemberJoined : ChatEventAction()
 
     /**
@@ -7815,6 +10333,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMemberLeft")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMemberLeft"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatEventMemberLeft : ChatEventAction()
 
     /**
@@ -7825,6 +10348,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMemberInvited")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMemberInvited"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventMemberInvited(
         @SerialName("user_id")
         val userId: Int,
@@ -7841,6 +10369,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMemberPromoted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMemberPromoted"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventMemberPromoted(
         @SerialName("user_id")
         val userId: Int,
@@ -7859,6 +10392,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventMemberRestricted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventMemberRestricted"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventMemberRestricted(
         @SerialName("user_id")
         val userId: Int,
@@ -7876,6 +10414,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventTitleChanged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventTitleChanged"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventTitleChanged(
         @SerialName("old_title")
         val oldTitle: String,
@@ -7891,6 +10434,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventPermissionsChanged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventPermissionsChanged"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventPermissionsChanged(
         @SerialName("old_permissions")
         val oldPermissions: ChatPermissions,
@@ -7906,6 +10454,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventDescriptionChanged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventDescriptionChanged"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventDescriptionChanged(
         @SerialName("old_description")
         val oldDescription: String,
@@ -7921,6 +10474,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventUsernameChanged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventUsernameChanged"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventUsernameChanged(
         @SerialName("old_username")
         val oldUsername: String,
@@ -7936,6 +10494,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventPhotoChanged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventPhotoChanged"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventPhotoChanged(
         @SerialName("old_photo")
         val oldPhoto: Photo?,
@@ -7950,6 +10513,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventInvitesToggled")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventInvitesToggled"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventInvitesToggled(
         @SerialName("can_invite_users")
         val canInviteUsers: Boolean
@@ -7962,6 +10530,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventSignMessagesToggled")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventSignMessagesToggled"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventSignMessagesToggled(
         @SerialName("sign_messages")
         val signMessages: Boolean
@@ -7977,6 +10550,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventStickerSetChanged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventStickerSetChanged"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventStickerSetChanged(
         @SerialName("old_sticker_set_id")
         val oldStickerSetId: Long,
@@ -7991,6 +10569,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventIsAllHistoryAvailableToggled")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventIsAllHistoryAvailableToggled"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventIsAllHistoryAvailableToggled(
         @SerialName("is_all_history_available")
         val isAllHistoryAvailable: Boolean
@@ -8006,6 +10589,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEvent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEvent"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEvent(
         @SerialName("id")
         val id: Long,
@@ -8025,6 +10613,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEvents")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEvents"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEvents(
         @SerialName("events")
         val events: Array<ChatEvent>,
@@ -8048,6 +10641,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatEventLogFilters")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatEventLogFilters"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatEventLogFilters(
         @SerialName("message_edits")
         val messageEdits: Boolean,
@@ -8075,6 +10673,11 @@ class TdApi {
      * Represents the value of a string in a language pack
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackStringValue"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class LanguagePackStringValue : Object(), TdResponse
 
     /**
@@ -8085,6 +10688,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("languagePackStringValueOrdinary")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackStringValueOrdinary"),
+        level = DeprecationLevel.WARNING
+    )
     data class LanguagePackStringValueOrdinary(
         @SerialName("value")
         val value: String,
@@ -8106,6 +10714,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("languagePackStringValuePluralized")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackStringValuePluralized"),
+        level = DeprecationLevel.WARNING
+    )
     data class LanguagePackStringValuePluralized(
         @SerialName("zero_value")
         val zeroValue: String,
@@ -8130,6 +10743,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("languagePackStringValueDeleted")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackStringValueDeleted"),
+        level = DeprecationLevel.WARNING
+    )
     data class LanguagePackStringValueDeleted(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -8143,6 +10761,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("languagePackString")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackString"),
+        level = DeprecationLevel.WARNING
+    )
     data class LanguagePackString(
         @SerialName("key")
         val key: String,
@@ -8158,6 +10781,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("languagePackStrings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackStrings"),
+        level = DeprecationLevel.WARNING
+    )
     data class LanguagePackStrings(
         @SerialName("strings")
         val strings: Array<LanguagePackString>,
@@ -8189,6 +10817,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("languagePackInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLanguagePackInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class LanguagePackInfo(
         @SerialName("id")
         val id: String,
@@ -8228,6 +10861,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("localizationTargetInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLocalizationTargetInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class LocalizationTargetInfo(
         @SerialName("language_packs")
         val languagePacks: Array<LanguagePackInfo>,
@@ -8240,6 +10878,11 @@ class TdApi {
      * To use specific push notification service, you must specify the correct application platform and upload valid server authentication data at https://my.telegram.org
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceToken"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class DeviceToken : Object(), TdObject
 
     /**
@@ -8251,6 +10894,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenFirebaseCloudMessaging")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenFirebaseCloudMessaging"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenFirebaseCloudMessaging(
         @SerialName("token")
         val token: String?,
@@ -8267,6 +10915,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenApplePush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenApplePush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenApplePush(
         @SerialName("device_token")
         val deviceToken: String?,
@@ -8284,6 +10937,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenApplePushVoIP")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenApplePushVoIP"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenApplePushVoIP(
         @SerialName("device_token")
         val deviceToken: String?,
@@ -8301,6 +10959,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenWindowsPush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenWindowsPush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenWindowsPush(
         @SerialName("access_token")
         val accessToken: String?
@@ -8314,6 +10977,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenMicrosoftPush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenMicrosoftPush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenMicrosoftPush(
         @SerialName("channel_uri")
         val channelUri: String?
@@ -8327,6 +10995,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenMicrosoftPushVoIP")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenMicrosoftPushVoIP"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenMicrosoftPushVoIP(
         @SerialName("channel_uri")
         val channelUri: String?
@@ -8342,6 +11015,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenWebPush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenWebPush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenWebPush(
         @SerialName("endpoint")
         val endpoint: String?,
@@ -8359,6 +11037,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenSimplePush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenSimplePush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenSimplePush(
         @SerialName("endpoint")
         val endpoint: String?
@@ -8372,6 +11055,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenUbuntuPush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenUbuntuPush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenUbuntuPush(
         @SerialName("token")
         val token: String?
@@ -8385,6 +11073,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenBlackBerryPush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenBlackBerryPush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenBlackBerryPush(
         @SerialName("token")
         val token: String?
@@ -8398,6 +11091,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deviceTokenTizenPush")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeviceTokenTizenPush"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeviceTokenTizenPush(
         @SerialName("reg_id")
         val regId: String?
@@ -8411,6 +11109,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushReceiverId")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushReceiverId"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushReceiverId(
         @SerialName("id")
         val id: Long,
@@ -8422,6 +11125,11 @@ class TdApi {
      * Describes a type of a background
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBackgroundType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class BackgroundType : Object(), TdObject
 
     /**
@@ -8432,6 +11140,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("backgroundTypeWallpaper")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBackgroundTypeWallpaper"),
+        level = DeprecationLevel.WARNING
+    )
     data class BackgroundTypeWallpaper(
         @SerialName("is_blurred")
         val isBlurred: Boolean,
@@ -8448,6 +11161,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("backgroundTypePattern")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBackgroundTypePattern"),
+        level = DeprecationLevel.WARNING
+    )
     data class BackgroundTypePattern(
         @SerialName("is_moving")
         val isMoving: Boolean,
@@ -8464,6 +11182,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("backgroundTypeSolid")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBackgroundTypeSolid"),
+        level = DeprecationLevel.WARNING
+    )
     data class BackgroundTypeSolid(
         @SerialName("color")
         val color: Int
@@ -8483,6 +11206,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("background")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBackground"),
+        level = DeprecationLevel.WARNING
+    )
     data class Background(
         @SerialName("id")
         val id: Long,
@@ -8508,6 +11236,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("backgrounds")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBackgrounds"),
+        level = DeprecationLevel.WARNING
+    )
     data class Backgrounds(
         @SerialName("backgrounds")
         val backgrounds: Array<Background>,
@@ -8519,6 +11252,11 @@ class TdApi {
      * Contains information about background to set
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputBackground"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class InputBackground : Object(), TdObject
 
     /**
@@ -8530,6 +11268,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputBackgroundLocal")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputBackgroundLocal"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputBackgroundLocal(
         @SerialName("background")
         val background: InputFile
@@ -8542,6 +11285,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputBackgroundRemote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputBackgroundRemote"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputBackgroundRemote(
         @SerialName("background_id")
         val backgroundId: Long
@@ -8555,6 +11303,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("hashtags")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdHashtags"),
+        level = DeprecationLevel.WARNING
+    )
     data class Hashtags(
         @SerialName("hashtags")
         val hashtags: Array<String>,
@@ -8566,6 +11319,11 @@ class TdApi {
      * Represents result of checking whether a username can be set for a chat
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsernameResult"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class CheckChatUsernameResult : Object(), TdResponse
 
     /**
@@ -8575,6 +11333,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatUsernameResultOk")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsernameResultOk"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatUsernameResultOk(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -8587,6 +11350,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatUsernameResultUsernameInvalid")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsernameResultUsernameInvalid"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatUsernameResultUsernameInvalid(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -8599,6 +11367,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatUsernameResultUsernameOccupied")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsernameResultUsernameOccupied"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatUsernameResultUsernameOccupied(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -8611,6 +11384,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatUsernameResultPublicChatsTooMuch")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsernameResultPublicChatsTooMuch"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatUsernameResultPublicChatsTooMuch(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -8623,6 +11401,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatUsernameResultPublicGroupsUnavailable")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsernameResultPublicGroupsUnavailable"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatUsernameResultPublicGroupsUnavailable(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -8632,6 +11415,11 @@ class TdApi {
      * Contains content of a push message notification
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContent"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class PushMessageContent : Object(), TdObject
 
     /**
@@ -8641,6 +11429,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentHidden")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentHidden"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentHidden(
         @SerialName("is_pinned")
         val isPinned: Boolean
@@ -8655,6 +11448,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentAnimation(
         @SerialName("animation")
         val animation: Animation?,
@@ -8672,6 +11470,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentAudio"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentAudio(
         @SerialName("audio")
         val audio: Audio?,
@@ -8687,6 +11490,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentContact")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentContact"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentContact(
         @SerialName("name")
         val name: String,
@@ -8699,6 +11507,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentContactRegistered")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentContactRegistered"),
+        level = DeprecationLevel.WARNING
+    )
     object PushMessageContentContactRegistered : PushMessageContent()
 
     /**
@@ -8709,6 +11522,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentDocument"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentDocument(
         @SerialName("document")
         val document: Document?,
@@ -8724,6 +11542,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentGame")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentGame"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentGame(
         @SerialName("title")
         val title: String,
@@ -8740,6 +11563,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentGameScore")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentGameScore"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentGameScore(
         @SerialName("title")
         val title: String,
@@ -8757,6 +11585,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentInvoice")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentInvoice"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentInvoice(
         @SerialName("price")
         val price: String,
@@ -8772,6 +11605,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentLocation(
         @SerialName("is_live")
         val isLive: Boolean,
@@ -8789,6 +11627,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentPhoto(
         @SerialName("photo")
         val photo: Photo?,
@@ -8808,6 +11651,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentPoll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentPoll"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentPoll(
         @SerialName("question")
         val question: String,
@@ -8820,6 +11668,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentScreenshotTaken")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentScreenshotTaken"),
+        level = DeprecationLevel.WARNING
+    )
     object PushMessageContentScreenshotTaken : PushMessageContent()
 
     /**
@@ -8831,6 +11684,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentSticker(
         @SerialName("sticker")
         val sticker: Sticker?,
@@ -8848,6 +11706,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentText"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentText(
         @SerialName("text")
         val text: String,
@@ -8865,6 +11728,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentVideo"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentVideo(
         @SerialName("video")
         val video: Video?,
@@ -8884,6 +11752,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentVideoNote(
         @SerialName("video_note")
         val videoNote: VideoNote?,
@@ -8899,6 +11772,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentVoiceNote(
         @SerialName("voice_note")
         val voiceNote: VoiceNote?,
@@ -8911,6 +11789,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentBasicGroupChatCreate")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentBasicGroupChatCreate"),
+        level = DeprecationLevel.WARNING
+    )
     object PushMessageContentBasicGroupChatCreate : PushMessageContent()
 
     /**
@@ -8922,6 +11805,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentChatAddMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentChatAddMembers"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentChatAddMembers(
         @SerialName("member_name")
         val memberName: String,
@@ -8936,6 +11824,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentChatChangePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentChatChangePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object PushMessageContentChatChangePhoto : PushMessageContent()
 
     /**
@@ -8945,6 +11838,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentChatChangeTitle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentChatChangeTitle"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentChatChangeTitle(
         @SerialName("title")
         val title: String
@@ -8959,6 +11857,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentChatDeleteMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentChatDeleteMember"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentChatDeleteMember(
         @SerialName("member_name")
         val memberName: String,
@@ -8973,6 +11876,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentChatJoinByLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentChatJoinByLink"),
+        level = DeprecationLevel.WARNING
+    )
     object PushMessageContentChatJoinByLink : PushMessageContent()
 
     /**
@@ -8982,6 +11890,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentMessageForwards")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentMessageForwards"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentMessageForwards(
         @SerialName("total_count")
         val totalCount: Int
@@ -8996,6 +11909,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pushMessageContentMediaAlbum")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPushMessageContentMediaAlbum"),
+        level = DeprecationLevel.WARNING
+    )
     data class PushMessageContentMediaAlbum(
         @SerialName("total_count")
         val totalCount: Int,
@@ -9009,6 +11927,11 @@ class TdApi {
      * Contains detailed information about a notification
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class NotificationType : Object(), TdObject
 
     /**
@@ -9018,6 +11941,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationTypeNewMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationTypeNewMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class NotificationTypeNewMessage(
         @SerialName("message")
         val message: Message
@@ -9028,6 +11956,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationTypeNewSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationTypeNewSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationTypeNewSecretChat : NotificationType()
 
     /**
@@ -9037,6 +11970,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationTypeNewCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationTypeNewCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class NotificationTypeNewCall(
         @SerialName("call_id")
         val callId: Int
@@ -9053,6 +11991,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationTypeNewPushMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationTypeNewPushMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class NotificationTypeNewPushMessage(
         @SerialName("message_id")
         val messageId: Long,
@@ -9066,6 +12009,11 @@ class TdApi {
      * Describes type of notifications in the group
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationGroupType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class NotificationGroupType : Object(), TdObject
 
     /**
@@ -9073,6 +12021,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationGroupTypeMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationGroupTypeMessages"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationGroupTypeMessages : NotificationGroupType()
 
     /**
@@ -9080,6 +12033,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationGroupTypeMentions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationGroupTypeMentions"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationGroupTypeMentions : NotificationGroupType()
 
     /**
@@ -9087,6 +12045,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationGroupTypeSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationGroupTypeSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationGroupTypeSecretChat : NotificationGroupType()
 
     /**
@@ -9094,6 +12057,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationGroupTypeCalls")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationGroupTypeCalls"),
+        level = DeprecationLevel.WARNING
+    )
     object NotificationGroupTypeCalls : NotificationGroupType()
 
     /**
@@ -9105,6 +12073,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class Notification(
         @SerialName("id")
         val id: Int,
@@ -9125,6 +12098,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("notificationGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNotificationGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class NotificationGroup(
         @SerialName("id")
         val id: Int,
@@ -9142,6 +12120,11 @@ class TdApi {
      * Represents the value of an option
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOptionValue"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class OptionValue : Object(), TdResponse
 
     /**
@@ -9152,6 +12135,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("optionValueBoolean")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOptionValueBoolean"),
+        level = DeprecationLevel.WARNING
+    )
     data class OptionValueBoolean(
         @SerialName("value")
         val value: Boolean,
@@ -9166,6 +12154,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("optionValueEmpty")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOptionValueEmpty"),
+        level = DeprecationLevel.WARNING
+    )
     data class OptionValueEmpty(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -9179,6 +12172,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("optionValueInteger")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOptionValueInteger"),
+        level = DeprecationLevel.WARNING
+    )
     data class OptionValueInteger(
         @SerialName("value")
         val value: Int,
@@ -9194,6 +12192,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("optionValueString")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOptionValueString"),
+        level = DeprecationLevel.WARNING
+    )
     data class OptionValueString(
         @SerialName("value")
         val value: String,
@@ -9209,6 +12212,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonObjectMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonObjectMember"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonObjectMember(
         @SerialName("key")
         val key: String,
@@ -9220,6 +12228,11 @@ class TdApi {
      * Represents a JSON value
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValue"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class JsonValue : Object(), TdResponse
 
     /**
@@ -9229,6 +12242,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonValueNull")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValueNull"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonValueNull(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -9242,6 +12260,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonValueBoolean")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValueBoolean"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonValueBoolean(
         @SerialName("value")
         val value: Boolean,
@@ -9257,6 +12280,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonValueNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValueNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonValueNumber(
         @SerialName("value")
         val value: Double,
@@ -9272,6 +12300,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonValueString")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValueString"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonValueString(
         @SerialName("value")
         val value: String,
@@ -9287,6 +12320,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonValueArray")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValueArray"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonValueArray(
         @SerialName("values")
         val values: Array<JsonValue>,
@@ -9302,6 +12340,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("jsonValueObject")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJsonValueObject"),
+        level = DeprecationLevel.WARNING
+    )
     data class JsonValueObject(
         @SerialName("members")
         val members: Array<JsonObjectMember>,
@@ -9313,6 +12356,11 @@ class TdApi {
      * Represents a single rule for managing privacy settings
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRule"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class UserPrivacySettingRule : Object(), TdObject
 
     /**
@@ -9320,6 +12368,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRuleAllowAll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRuleAllowAll"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingRuleAllowAll : UserPrivacySettingRule()
 
     /**
@@ -9327,6 +12380,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRuleAllowContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRuleAllowContacts"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingRuleAllowContacts : UserPrivacySettingRule()
 
     /**
@@ -9336,6 +12394,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRuleAllowUsers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRuleAllowUsers"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserPrivacySettingRuleAllowUsers(
         @SerialName("user_ids")
         val userIds: IntArray
@@ -9346,6 +12409,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRuleRestrictAll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRuleRestrictAll"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingRuleRestrictAll : UserPrivacySettingRule()
 
     /**
@@ -9353,6 +12421,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRuleRestrictContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRuleRestrictContacts"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingRuleRestrictContacts : UserPrivacySettingRule()
 
     /**
@@ -9362,6 +12435,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRuleRestrictUsers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRuleRestrictUsers"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserPrivacySettingRuleRestrictUsers(
         @SerialName("user_ids")
         val userIds: IntArray
@@ -9378,6 +12456,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingRules")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingRules"),
+        level = DeprecationLevel.WARNING
+    )
     data class UserPrivacySettingRules(
         @SerialName("rules")
         val rules: Array<UserPrivacySettingRule>,
@@ -9389,6 +12472,11 @@ class TdApi {
      * Describes available user privacy settings
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySetting"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class UserPrivacySetting : Object(), TdObject
 
     /**
@@ -9396,6 +12484,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingShowStatus")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingShowStatus"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingShowStatus : UserPrivacySetting()
 
     /**
@@ -9403,6 +12496,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingShowProfilePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingShowProfilePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingShowProfilePhoto : UserPrivacySetting()
 
     /**
@@ -9410,6 +12508,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingShowLinkInForwardedMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingShowLinkInForwardedMessages"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingShowLinkInForwardedMessages : UserPrivacySetting()
 
     /**
@@ -9417,6 +12520,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingAllowChatInvites")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingAllowChatInvites"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingAllowChatInvites : UserPrivacySetting()
 
     /**
@@ -9424,6 +12532,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingAllowCalls")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingAllowCalls"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingAllowCalls : UserPrivacySetting()
 
     /**
@@ -9431,6 +12544,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("userPrivacySettingAllowPeerToPeerCalls")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUserPrivacySettingAllowPeerToPeerCalls"),
+        level = DeprecationLevel.WARNING
+    )
     object UserPrivacySettingAllowPeerToPeerCalls : UserPrivacySetting()
 
     /**
@@ -9442,6 +12560,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("accountTtl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAccountTtl"),
+        level = DeprecationLevel.WARNING
+    )
     data class AccountTtl(
         @SerialName("days")
         val days: Int,
@@ -9471,6 +12594,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("session")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSession"),
+        level = DeprecationLevel.WARNING
+    )
     data class Session(
         @SerialName("id")
         val id: Long,
@@ -9512,6 +12640,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sessions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSessions"),
+        level = DeprecationLevel.WARNING
+    )
     data class Sessions(
         @SerialName("sessions")
         val sessions: Array<Session>,
@@ -9534,6 +12667,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectedWebsite")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectedWebsite"),
+        level = DeprecationLevel.WARNING
+    )
     data class ConnectedWebsite(
         @SerialName("id")
         val id: Long,
@@ -9563,6 +12701,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectedWebsites")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectedWebsites"),
+        level = DeprecationLevel.WARNING
+    )
     data class ConnectedWebsites(
         @SerialName("websites")
         val websites: Array<ConnectedWebsite>,
@@ -9578,6 +12721,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportSpamState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportSpamState"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatReportSpamState(
         @SerialName("can_report_spam")
         val canReportSpam: Boolean,
@@ -9589,6 +12737,11 @@ class TdApi {
      * Describes the reason why a chat is reported
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReason"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ChatReportReason : Object(), TdObject
 
     /**
@@ -9596,6 +12749,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportReasonSpam")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReasonSpam"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatReportReasonSpam : ChatReportReason()
 
     /**
@@ -9603,6 +12761,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportReasonViolence")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReasonViolence"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatReportReasonViolence : ChatReportReason()
 
     /**
@@ -9610,6 +12773,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportReasonPornography")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReasonPornography"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatReportReasonPornography : ChatReportReason()
 
     /**
@@ -9617,6 +12785,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportReasonChildAbuse")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReasonChildAbuse"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatReportReasonChildAbuse : ChatReportReason()
 
     /**
@@ -9624,6 +12797,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportReasonCopyright")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReasonCopyright"),
+        level = DeprecationLevel.WARNING
+    )
     object ChatReportReasonCopyright : ChatReportReason()
 
     /**
@@ -9633,6 +12811,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("chatReportReasonCustom")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChatReportReasonCustom"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChatReportReasonCustom(
         @SerialName("text")
         val text: String
@@ -9647,6 +12830,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("publicMessageLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPublicMessageLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class PublicMessageLink(
         @SerialName("link")
         val link: String,
@@ -9667,6 +12855,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("messageLinkInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdMessageLinkInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class MessageLinkInfo(
         @SerialName("is_public")
         val isPublic: Boolean,
@@ -9688,6 +12881,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("filePart")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFilePart"),
+        level = DeprecationLevel.WARNING
+    )
     data class FilePart(
         @SerialName("data")
         val data: ByteArray,
@@ -9699,6 +12897,11 @@ class TdApi {
      * Represents the type of a file
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class FileType : Object(), TdObject
 
     /**
@@ -9706,6 +12909,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeNone")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeNone"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeNone : FileType()
 
     /**
@@ -9713,6 +12921,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeAnimation : FileType()
 
     /**
@@ -9720,6 +12933,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeAudio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeAudio"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeAudio : FileType()
 
     /**
@@ -9727,6 +12945,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeDocument")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeDocument"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeDocument : FileType()
 
     /**
@@ -9734,6 +12957,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypePhoto : FileType()
 
     /**
@@ -9741,6 +12969,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeProfilePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeProfilePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeProfilePhoto : FileType()
 
     /**
@@ -9748,6 +12981,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeSecret")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeSecret"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeSecret : FileType()
 
     /**
@@ -9755,6 +12993,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeSecretThumbnail")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeSecretThumbnail"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeSecretThumbnail : FileType()
 
     /**
@@ -9762,6 +13005,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeSecure")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeSecure"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeSecure : FileType()
 
     /**
@@ -9769,6 +13017,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeSticker"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeSticker : FileType()
 
     /**
@@ -9776,6 +13029,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeThumbnail")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeThumbnail"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeThumbnail : FileType()
 
     /**
@@ -9783,6 +13041,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeUnknown")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeUnknown"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeUnknown : FileType()
 
     /**
@@ -9790,6 +13053,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeVideo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeVideo"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeVideo : FileType()
 
     /**
@@ -9797,6 +13065,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeVideoNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeVideoNote"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeVideoNote : FileType()
 
     /**
@@ -9804,6 +13077,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeVoiceNote")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeVoiceNote"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeVoiceNote : FileType()
 
     /**
@@ -9811,6 +13089,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("fileTypeWallpaper")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFileTypeWallpaper"),
+        level = DeprecationLevel.WARNING
+    )
     object FileTypeWallpaper : FileType()
 
     /**
@@ -9822,6 +13105,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("storageStatisticsByFileType")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStorageStatisticsByFileType"),
+        level = DeprecationLevel.WARNING
+    )
     data class StorageStatisticsByFileType(
         @SerialName("file_type")
         val fileType: FileType,
@@ -9842,6 +13130,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("storageStatisticsByChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStorageStatisticsByChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class StorageStatisticsByChat(
         @SerialName("chat_id")
         val chatId: Long,
@@ -9863,6 +13156,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("storageStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStorageStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class StorageStatistics(
         @SerialName("size")
         val size: Long,
@@ -9886,6 +13184,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("storageStatisticsFast")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStorageStatisticsFast"),
+        level = DeprecationLevel.WARNING
+    )
     data class StorageStatisticsFast(
         @SerialName("files_size")
         val filesSize: Long,
@@ -9909,6 +13212,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("databaseStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDatabaseStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class DatabaseStatistics(
         @SerialName("statistics")
         val statistics: String,
@@ -9920,6 +13228,11 @@ class TdApi {
      * Represents the type of a network
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class NetworkType : Object(), TdObject
 
     /**
@@ -9927,6 +13240,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkTypeNone")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkTypeNone"),
+        level = DeprecationLevel.WARNING
+    )
     object NetworkTypeNone : NetworkType()
 
     /**
@@ -9934,6 +13252,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkTypeMobile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkTypeMobile"),
+        level = DeprecationLevel.WARNING
+    )
     object NetworkTypeMobile : NetworkType()
 
     /**
@@ -9941,6 +13264,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkTypeMobileRoaming")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkTypeMobileRoaming"),
+        level = DeprecationLevel.WARNING
+    )
     object NetworkTypeMobileRoaming : NetworkType()
 
     /**
@@ -9948,6 +13276,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkTypeWiFi")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkTypeWiFi"),
+        level = DeprecationLevel.WARNING
+    )
     object NetworkTypeWiFi : NetworkType()
 
     /**
@@ -9955,12 +13288,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkTypeOther")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkTypeOther"),
+        level = DeprecationLevel.WARNING
+    )
     object NetworkTypeOther : NetworkType()
 
     /**
      * Contains statistics about network usage
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkStatisticsEntry"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class NetworkStatisticsEntry : Object(), TdObject
 
     /**
@@ -9974,6 +13317,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkStatisticsEntryFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkStatisticsEntryFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class NetworkStatisticsEntryFile(
         @SerialName("file_type")
         val fileType: FileType,
@@ -9996,6 +13344,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkStatisticsEntryCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkStatisticsEntryCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class NetworkStatisticsEntryCall(
         @SerialName("network_type")
         val networkType: NetworkType,
@@ -10016,6 +13369,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("networkStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdNetworkStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class NetworkStatistics(
         @SerialName("since_date")
         val sinceDate: Int,
@@ -10038,6 +13396,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("autoDownloadSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAutoDownloadSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class AutoDownloadSettings(
         @SerialName("is_auto_download_enabled")
         val isAutoDownloadEnabled: Boolean,
@@ -10068,6 +13431,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("autoDownloadSettingsPresets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAutoDownloadSettingsPresets"),
+        level = DeprecationLevel.WARNING
+    )
     data class AutoDownloadSettingsPresets(
         @SerialName("low")
         val low: AutoDownloadSettings,
@@ -10083,6 +13451,11 @@ class TdApi {
      * Describes the current state of the connection to Telegram servers
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectionState"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ConnectionState : Object(), TdObject
 
     /**
@@ -10091,6 +13464,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectionStateWaitingForNetwork")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectionStateWaitingForNetwork"),
+        level = DeprecationLevel.WARNING
+    )
     object ConnectionStateWaitingForNetwork : ConnectionState()
 
     /**
@@ -10098,6 +13476,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectionStateConnectingToProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectionStateConnectingToProxy"),
+        level = DeprecationLevel.WARNING
+    )
     object ConnectionStateConnectingToProxy : ConnectionState()
 
     /**
@@ -10105,6 +13488,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectionStateConnecting")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectionStateConnecting"),
+        level = DeprecationLevel.WARNING
+    )
     object ConnectionStateConnecting : ConnectionState()
 
     /**
@@ -10112,6 +13500,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectionStateUpdating")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectionStateUpdating"),
+        level = DeprecationLevel.WARNING
+    )
     object ConnectionStateUpdating : ConnectionState()
 
     /**
@@ -10119,12 +13512,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("connectionStateReady")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdConnectionStateReady"),
+        level = DeprecationLevel.WARNING
+    )
     object ConnectionStateReady : ConnectionState()
 
     /**
      * Represents the categories of chats for which a list of frequently used chats can be retrieved
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategory"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class TopChatCategory : Object(), TdObject
 
     /**
@@ -10132,6 +13535,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("topChatCategoryUsers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategoryUsers"),
+        level = DeprecationLevel.WARNING
+    )
     object TopChatCategoryUsers : TopChatCategory()
 
     /**
@@ -10139,6 +13547,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("topChatCategoryBots")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategoryBots"),
+        level = DeprecationLevel.WARNING
+    )
     object TopChatCategoryBots : TopChatCategory()
 
     /**
@@ -10146,6 +13559,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("topChatCategoryGroups")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategoryGroups"),
+        level = DeprecationLevel.WARNING
+    )
     object TopChatCategoryGroups : TopChatCategory()
 
     /**
@@ -10153,6 +13571,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("topChatCategoryChannels")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategoryChannels"),
+        level = DeprecationLevel.WARNING
+    )
     object TopChatCategoryChannels : TopChatCategory()
 
     /**
@@ -10160,6 +13583,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("topChatCategoryInlineBots")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategoryInlineBots"),
+        level = DeprecationLevel.WARNING
+    )
     object TopChatCategoryInlineBots : TopChatCategory()
 
     /**
@@ -10167,12 +13595,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("topChatCategoryCalls")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTopChatCategoryCalls"),
+        level = DeprecationLevel.WARNING
+    )
     object TopChatCategoryCalls : TopChatCategory()
 
     /**
      * Describes the type of a URL linking to an internal Telegram entity
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrlType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class TMeUrlType : Object(), TdObject
 
     /**
@@ -10182,6 +13620,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tMeUrlTypeUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrlTypeUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class TMeUrlTypeUser(
         @SerialName("user_id")
         val userId: Int
@@ -10194,6 +13637,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tMeUrlTypeSupergroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrlTypeSupergroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class TMeUrlTypeSupergroup(
         @SerialName("supergroup_id")
         val supergroupId: Long
@@ -10206,6 +13654,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tMeUrlTypeChatInvite")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrlTypeChatInvite"),
+        level = DeprecationLevel.WARNING
+    )
     data class TMeUrlTypeChatInvite(
         @SerialName("info")
         val info: ChatInviteLinkInfo
@@ -10218,6 +13671,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tMeUrlTypeStickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrlTypeStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     data class TMeUrlTypeStickerSet(
         @SerialName("sticker_set_id")
         val stickerSetId: Long
@@ -10231,6 +13689,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tMeUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class TMeUrl(
         @SerialName("url")
         val url: String,
@@ -10246,6 +13709,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("tMeUrls")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTMeUrls"),
+        level = DeprecationLevel.WARNING
+    )
     data class TMeUrls(
         @SerialName("urls")
         val urls: Array<TMeUrl>,
@@ -10261,6 +13729,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("count")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class Count(
         @SerialName("count")
         val count: Int,
@@ -10276,6 +13749,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("text")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdText"),
+        level = DeprecationLevel.WARNING
+    )
     data class Text(
         @SerialName("text")
         val text: String,
@@ -10291,6 +13769,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("seconds")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSeconds"),
+        level = DeprecationLevel.WARNING
+    )
     data class Seconds(
         @SerialName("seconds")
         val seconds: Double,
@@ -10307,6 +13790,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deepLinkInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeepLinkInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeepLinkInfo(
         @SerialName("text")
         val text: FormattedText,
@@ -10320,6 +13808,11 @@ class TdApi {
      * Describes the way the text should be parsed for TextEntities
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextParseMode"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class TextParseMode : Object(), TdObject
 
     /**
@@ -10327,6 +13820,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("textParseModeMarkdown")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextParseModeMarkdown"),
+        level = DeprecationLevel.WARNING
+    )
     object TextParseModeMarkdown : TextParseMode()
 
     /**
@@ -10334,12 +13832,22 @@ class TdApi {
      */
     @Serializable
     @SerialName("textParseModeHTML")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTextParseModeHTML"),
+        level = DeprecationLevel.WARNING
+    )
     object TextParseModeHTML : TextParseMode()
 
     /**
      * Describes the type of the proxy server
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProxyType"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class ProxyType : Object(), TdObject
 
     /**
@@ -10350,6 +13858,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("proxyTypeSocks5")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProxyTypeSocks5"),
+        level = DeprecationLevel.WARNING
+    )
     data class ProxyTypeSocks5(
         @SerialName("username")
         val username: String?,
@@ -10366,6 +13879,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("proxyTypeHttp")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProxyTypeHttp"),
+        level = DeprecationLevel.WARNING
+    )
     data class ProxyTypeHttp(
         @SerialName("username")
         val username: String?,
@@ -10382,6 +13900,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("proxyTypeMtproto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProxyTypeMtproto"),
+        level = DeprecationLevel.WARNING
+    )
     data class ProxyTypeMtproto(
         @SerialName("secret")
         val secret: String
@@ -10401,6 +13924,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("proxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class Proxy(
         @SerialName("id")
         val id: Int,
@@ -10426,6 +13954,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("proxies")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProxies"),
+        level = DeprecationLevel.WARNING
+    )
     data class Proxies(
         @SerialName("proxies")
         val proxies: Array<Proxy>,
@@ -10443,6 +13976,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("inputSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdInputSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class InputSticker(
         @SerialName("png_sticker")
         val pngSticker: InputFile,
@@ -10456,7 +13994,12 @@ class TdApi {
      * Contains notifications about data changes
      */
     @Serializable
-    abstract class Update : Object(), TdResponse
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdate"),
+        level = DeprecationLevel.WARNING
+    )
+    abstract class Update : Object(), TdUpdate, TdResponse
 
     /**
      * The user authorization state has changed
@@ -10466,6 +14009,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateAuthorizationState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateAuthorizationState"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateAuthorizationState(
         @SerialName("authorization_state")
         val authorizationState: AuthorizationState,
@@ -10482,6 +14030,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateNewMessage(
         @SerialName("message")
         val message: Message,
@@ -10501,6 +14054,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageSendAcknowledged")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageSendAcknowledged"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageSendAcknowledged(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10520,6 +14078,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageSendSucceeded")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageSendSucceeded"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageSendSucceeded(
         @SerialName("message")
         val message: Message,
@@ -10541,6 +14104,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageSendFailed")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageSendFailed"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageSendFailed(
         @SerialName("message")
         val message: Message,
@@ -10564,6 +14132,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageContent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageContent"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageContent(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10587,6 +14160,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageEdited")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageEdited"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageEdited(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10610,6 +14188,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageViews")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageViews"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageViews(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10631,6 +14214,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageContentOpened")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageContentOpened"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageContentOpened(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10650,6 +14238,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateMessageMentionRead")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateMessageMentionRead"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateMessageMentionRead(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10671,6 +14264,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateNewChat(
         @SerialName("chat")
         val chat: Chat,
@@ -10687,6 +14285,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatTitle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatTitle"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatTitle(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10705,6 +14308,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatPhoto(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10723,6 +14331,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatPermissions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatPermissions"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatPermissions(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10744,6 +14357,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatLastMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatLastMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatLastMessage(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10765,6 +14383,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatOrder")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatOrder"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatOrder(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10784,6 +14407,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatIsPinned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatIsPinned"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatIsPinned(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10804,6 +14432,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatIsMarkedAsUnread")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatIsMarkedAsUnread"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatIsMarkedAsUnread(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10823,6 +14456,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatIsSponsored")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatIsSponsored"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatIsSponsored(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10843,6 +14481,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatDefaultDisableNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatDefaultDisableNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatDefaultDisableNotification(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10862,6 +14505,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatReadInbox")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatReadInbox"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatReadInbox(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10882,6 +14530,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatReadOutbox")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatReadOutbox"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatReadOutbox(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10900,6 +14553,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatUnreadMentionCount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatUnreadMentionCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatUnreadMentionCount(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10918,6 +14576,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatNotificationSettings(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10936,6 +14599,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateScopeNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateScopeNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateScopeNotificationSettings(
         @SerialName("scope")
         val scope: NotificationSettingsScope,
@@ -10955,6 +14623,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatPinnedMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatPinnedMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatPinnedMessage(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10975,6 +14648,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatReplyMarkup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatReplyMarkup"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatReplyMarkup(
         @SerialName("chat_id")
         val chatId: Long,
@@ -10996,6 +14674,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatDraftMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatDraftMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatDraftMessage(
         @SerialName("chat_id")
         val chatId: Long,
@@ -11018,6 +14701,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateChatOnlineMemberCount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateChatOnlineMemberCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateChatOnlineMemberCount(
         @SerialName("chat_id")
         val chatId: Long,
@@ -11036,6 +14724,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateNotification(
         @SerialName("notification_group_id")
         val notificationGroupId: Int,
@@ -11060,6 +14753,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNotificationGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNotificationGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateNotificationGroup(
         @SerialName("notification_group_id")
         val notificationGroupId: Int,
@@ -11091,6 +14789,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateActiveNotifications")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateActiveNotifications"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateActiveNotifications(
         @SerialName("groups")
         val groups: Array<NotificationGroup>,
@@ -11108,6 +14811,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateHavePendingNotifications")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateHavePendingNotifications"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateHavePendingNotifications(
         @SerialName("have_delayed_notifications")
         val haveDelayedNotifications: Boolean,
@@ -11128,6 +14836,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateDeleteMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateDeleteMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateDeleteMessages(
         @SerialName("chat_id")
         val chatId: Long,
@@ -11151,6 +14864,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUserChatAction")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUserChatAction"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUserChatAction(
         @SerialName("chat_id")
         val chatId: Long,
@@ -11171,6 +14889,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUserStatus")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUserStatus"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUserStatus(
         @SerialName("user_id")
         val userId: Int,
@@ -11189,6 +14912,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUser(
         @SerialName("user")
         val user: User,
@@ -11205,6 +14933,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateBasicGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateBasicGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateBasicGroup(
         @SerialName("basic_group")
         val basicGroup: BasicGroup,
@@ -11221,6 +14954,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateSupergroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateSupergroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateSupergroup(
         @SerialName("supergroup")
         val supergroup: Supergroup,
@@ -11237,6 +14975,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateSecretChat(
         @SerialName("secret_chat")
         val secretChat: SecretChat,
@@ -11253,6 +14996,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUserFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUserFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUserFullInfo(
         @SerialName("user_id")
         val userId: Int,
@@ -11271,6 +15019,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateBasicGroupFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateBasicGroupFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateBasicGroupFullInfo(
         @SerialName("basic_group_id")
         val basicGroupId: Int,
@@ -11289,6 +15042,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateSupergroupFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateSupergroupFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateSupergroupFullInfo(
         @SerialName("supergroup_id")
         val supergroupId: Int,
@@ -11310,6 +15068,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateServiceNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateServiceNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateServiceNotification(
         @SerialName("type")
         val type: String,
@@ -11327,6 +15090,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateFile(
         @SerialName("file")
         val file: File,
@@ -11346,6 +15114,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateFileGenerationStart")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateFileGenerationStart"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateFileGenerationStart(
         @SerialName("generation_id")
         val generationId: Long,
@@ -11367,6 +15140,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateFileGenerationStop")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateFileGenerationStop"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateFileGenerationStop(
         @SerialName("generation_id")
         val generationId: Long,
@@ -11382,6 +15160,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateCall(
         @SerialName("call")
         val call: Call,
@@ -11398,6 +15181,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUserPrivacySettingRules")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUserPrivacySettingRules"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUserPrivacySettingRules(
         @SerialName("setting")
         val setting: UserPrivacySetting,
@@ -11417,6 +15205,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUnreadMessageCount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUnreadMessageCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUnreadMessageCount(
         @SerialName("unread_count")
         val unreadCount: Int,
@@ -11439,6 +15232,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateUnreadChatCount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateUnreadChatCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateUnreadChatCount(
         @SerialName("unread_count")
         val unreadCount: Int,
@@ -11461,6 +15259,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateOption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateOption"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateOption(
         @SerialName("name")
         val name: String,
@@ -11479,6 +15282,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateInstalledStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateInstalledStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateInstalledStickerSets(
         @SerialName("is_masks")
         val isMasks: Boolean,
@@ -11496,6 +15304,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateTrendingStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateTrendingStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateTrendingStickerSets(
         @SerialName("sticker_sets")
         val stickerSets: StickerSets,
@@ -11512,6 +15325,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateRecentStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateRecentStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateRecentStickers(
         @SerialName("is_attached")
         val isAttached: Boolean,
@@ -11529,6 +15347,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateFavoriteStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateFavoriteStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateFavoriteStickers(
         @SerialName("sticker_ids")
         val stickerIds: IntArray,
@@ -11544,6 +15367,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateSavedAnimations")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateSavedAnimations"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateSavedAnimations(
         @SerialName("animation_ids")
         val animationIds: IntArray,
@@ -11560,6 +15388,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateSelectedBackground")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateSelectedBackground"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateSelectedBackground(
         @SerialName("for_dark_theme")
         val forDarkTheme: Boolean,
@@ -11579,6 +15412,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateLanguagePackStrings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateLanguagePackStrings"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateLanguagePackStrings(
         @SerialName("localization_target")
         val localizationTarget: String,
@@ -11598,6 +15436,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateConnectionState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateConnectionState"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateConnectionState(
         @SerialName("state")
         val state: ConnectionState,
@@ -11615,6 +15458,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateTermsOfService")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateTermsOfService"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpdateTermsOfService(
         @SerialName("terms_of_service_id")
         val termsOfServiceId: String,
@@ -11636,6 +15484,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewInlineQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewInlineQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewInlineQuery(
         @SerialName("id")
@@ -11664,6 +15517,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewChosenInlineResult")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewChosenInlineResult"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewChosenInlineResult(
         @SerialName("sender_user_id")
@@ -11693,6 +15551,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewCallbackQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewCallbackQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewCallbackQuery(
         @SerialName("id")
@@ -11723,6 +15586,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewInlineCallbackQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewInlineCallbackQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewInlineCallbackQuery(
         @SerialName("id")
@@ -11751,6 +15619,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewShippingQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewShippingQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewShippingQuery(
         @SerialName("id")
@@ -11781,6 +15654,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewPreCheckoutQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewPreCheckoutQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewPreCheckoutQuery(
         @SerialName("id")
@@ -11809,6 +15687,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewCustomEvent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewCustomEvent"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewCustomEvent(
         @SerialName("event")
@@ -11827,6 +15710,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updateNewCustomQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdateNewCustomQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdateNewCustomQuery(
         @SerialName("id")
@@ -11847,6 +15735,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updatePoll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdatePoll"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UpdatePoll(
         @SerialName("poll")
@@ -11863,6 +15756,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("updates")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpdates"),
+        level = DeprecationLevel.WARNING
+    )
     data class Updates(
         @SerialName("updates")
         val updates: Array<Update>,
@@ -11874,6 +15772,11 @@ class TdApi {
      * Describes a stream to which TDLib internal log is written
      */
     @Serializable
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogStream"),
+        level = DeprecationLevel.WARNING
+    )
     abstract class LogStream : Object(), TdResponse
 
     /**
@@ -11883,6 +15786,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("logStreamDefault")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogStreamDefault"),
+        level = DeprecationLevel.WARNING
+    )
     data class LogStreamDefault(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -11897,6 +15805,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("logStreamFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogStreamFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class LogStreamFile(
         @SerialName("path")
         val path: String,
@@ -11913,6 +15826,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("logStreamEmpty")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogStreamEmpty"),
+        level = DeprecationLevel.WARNING
+    )
     data class LogStreamEmpty(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -11926,6 +15844,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("logVerbosityLevel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogVerbosityLevel"),
+        level = DeprecationLevel.WARNING
+    )
     data class LogVerbosityLevel(
         @SerialName("verbosity_level")
         val verbosityLevel: Int,
@@ -11941,6 +15864,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("logTags")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogTags"),
+        level = DeprecationLevel.WARNING
+    )
     data class LogTags(
         @SerialName("tags")
         val tags: Array<String>,
@@ -11956,7 +15884,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testInt")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestInt"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestInt(
         @SerialName("value")
         val value: Int,
@@ -11972,7 +15905,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testString")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestString"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestString(
         @SerialName("value")
         val value: String,
@@ -11988,7 +15926,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testBytes")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestBytes"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestBytes(
         @SerialName("value")
         val value: ByteArray,
@@ -12004,7 +15947,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testVectorInt")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestVectorInt"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestVectorInt(
         @SerialName("value")
         val value: IntArray,
@@ -12020,7 +15968,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testVectorIntObject")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestVectorIntObject"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestVectorIntObject(
         @SerialName("value")
         val value: Array<TestInt>,
@@ -12036,7 +15989,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testVectorString")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestVectorString"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestVectorString(
         @SerialName("value")
         val value: Array<String>,
@@ -12052,7 +16010,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testVectorStringObject")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestVectorStringObject"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestVectorStringObject(
         @SerialName("value")
         val value: Array<TestString>,
@@ -12070,6 +16033,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getAuthorizationState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetAuthorizationState"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetAuthorizationState(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12088,6 +16056,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setTdlibParameters")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetTdlibParameters"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetTdlibParameters(
         @SerialName("parameters")
         val parameters: TdlibParameters? = null,
@@ -12108,6 +16081,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkDatabaseEncryptionKey")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckDatabaseEncryptionKey"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckDatabaseEncryptionKey(
         @SerialName("encryption_key")
         val encryptionKey: ByteArray = byteArrayOf(),
@@ -12129,6 +16107,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setAuthenticationPhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetAuthenticationPhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetAuthenticationPhoneNumber(
         @SerialName("phone_number")
         val phoneNumber: String? = null,
@@ -12150,6 +16133,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendAuthenticationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendAuthenticationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendAuthenticationCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12168,6 +16156,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkAuthenticationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckAuthenticationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckAuthenticationCode(
         @SerialName("code")
         val code: String? = null,
@@ -12189,6 +16182,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("registerUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRegisterUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class RegisterUser(
         @SerialName("first_name")
         val firstName: String? = null,
@@ -12211,6 +16209,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkAuthenticationPassword")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckAuthenticationPassword"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckAuthenticationPassword(
         @SerialName("password")
         val password: String? = null,
@@ -12230,6 +16233,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("requestAuthenticationPasswordRecovery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRequestAuthenticationPasswordRecovery"),
+        level = DeprecationLevel.WARNING
+    )
     data class RequestAuthenticationPasswordRecovery(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12248,6 +16256,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("recoverAuthenticationPassword")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRecoverAuthenticationPassword"),
+        level = DeprecationLevel.WARNING
+    )
     data class RecoverAuthenticationPassword(
         @SerialName("recovery_code")
         val recoveryCode: String? = null,
@@ -12269,6 +16282,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkAuthenticationBotToken")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckAuthenticationBotToken"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class CheckAuthenticationBotToken(
         @SerialName("token")
@@ -12291,6 +16309,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("logOut")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLogOut"),
+        level = DeprecationLevel.WARNING
+    )
     data class LogOut(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12309,6 +16332,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("close")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdClose"),
+        level = DeprecationLevel.WARNING
+    )
     data class Close(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12328,6 +16356,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("destroy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDestroy"),
+        level = DeprecationLevel.WARNING
+    )
     data class Destroy(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12348,6 +16381,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getCurrentState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetCurrentState"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetCurrentState(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12366,6 +16404,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setDatabaseEncryptionKey")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetDatabaseEncryptionKey"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetDatabaseEncryptionKey(
         @SerialName("new_encryption_key")
         val newEncryptionKey: ByteArray = byteArrayOf(),
@@ -12384,6 +16427,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPasswordState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPasswordState"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPasswordState(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12407,6 +16455,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setPassword")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetPassword"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetPassword(
         @SerialName("old_password")
         val oldPassword: String? = null,
@@ -12435,6 +16488,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getRecoveryEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetRecoveryEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetRecoveryEmailAddress(
         @SerialName("password")
         val password: String? = null,
@@ -12457,6 +16515,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setRecoveryEmailAddress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetRecoveryEmailAddress"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetRecoveryEmailAddress(
         @SerialName("password")
         val password: String? = null,
@@ -12478,6 +16541,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkRecoveryEmailAddressCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckRecoveryEmailAddressCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckRecoveryEmailAddressCode(
         @SerialName("code")
         val code: String? = null,
@@ -12496,6 +16564,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendRecoveryEmailAddressCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendRecoveryEmailAddressCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendRecoveryEmailAddressCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12512,6 +16585,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("requestPasswordRecovery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRequestPasswordRecovery"),
+        level = DeprecationLevel.WARNING
+    )
     data class RequestPasswordRecovery(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12529,6 +16607,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("recoverPassword")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRecoverPassword"),
+        level = DeprecationLevel.WARNING
+    )
     data class RecoverPassword(
         @SerialName("recovery_code")
         val recoveryCode: String? = null,
@@ -12550,6 +16633,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createTemporaryPassword")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateTemporaryPassword"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateTemporaryPassword(
         @SerialName("password")
         val password: String? = null,
@@ -12570,6 +16658,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getTemporaryPasswordState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetTemporaryPasswordState"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetTemporaryPasswordState(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12586,6 +16679,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMe")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMe"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMe(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -12604,6 +16702,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetUser(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -12623,6 +16726,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getUserFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetUserFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetUserFullInfo(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -12643,6 +16751,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getBasicGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetBasicGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetBasicGroup(
         @SerialName("basic_group_id")
         val basicGroupId: Int = 0,
@@ -12662,6 +16775,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getBasicGroupFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetBasicGroupFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetBasicGroupFullInfo(
         @SerialName("basic_group_id")
         val basicGroupId: Int = 0,
@@ -12682,6 +16800,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSupergroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSupergroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSupergroup(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -12701,6 +16824,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSupergroupFullInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSupergroupFullInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSupergroupFullInfo(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -12721,6 +16849,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSecretChat(
         @SerialName("secret_chat_id")
         val secretChatId: Int = 0,
@@ -12740,6 +16873,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -12760,6 +16898,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -12783,6 +16926,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMessageLocally")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMessageLocally"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMessageLocally(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -12805,6 +16953,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getRepliedMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetRepliedMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetRepliedMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -12826,6 +16979,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatPinnedMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatPinnedMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatPinnedMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -12847,6 +17005,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -12869,6 +17032,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetFile(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -12891,6 +17059,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getRemoteFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetRemoteFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetRemoteFile(
         @SerialName("remote_file_id")
         val remoteFileId: String? = null,
@@ -12918,6 +17091,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChats(
         @SerialName("offset_order")
         val offsetOrder: Long = 0L,
@@ -12944,6 +17122,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchPublicChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchPublicChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchPublicChat(
         @SerialName("username")
         val username: String? = null,
@@ -12967,6 +17150,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchPublicChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchPublicChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchPublicChats(
         @SerialName("query")
         val query: String? = null,
@@ -12989,6 +17177,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchChats(
         @SerialName("query")
         val query: String? = null,
@@ -13012,6 +17205,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchChatsOnServer")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchChatsOnServer"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchChatsOnServer(
         @SerialName("query")
         val query: String? = null,
@@ -13036,6 +17234,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getTopChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetTopChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetTopChats(
         @SerialName("category")
         val category: TopChatCategory? = null,
@@ -13059,6 +17262,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeTopChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveTopChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveTopChat(
         @SerialName("category")
         val category: TopChatCategory? = null,
@@ -13082,6 +17290,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addRecentlyFoundChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddRecentlyFoundChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddRecentlyFoundChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13101,6 +17314,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeRecentlyFoundChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveRecentlyFoundChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveRecentlyFoundChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13119,6 +17337,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("clearRecentlyFoundChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdClearRecentlyFoundChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class ClearRecentlyFoundChats(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -13138,6 +17361,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatUsername")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatUsername"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatUsername(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13158,6 +17386,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getCreatedPublicChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetCreatedPublicChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetCreatedPublicChats(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -13179,6 +17412,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getGroupsInCommon")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetGroupsInCommon"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetGroupsInCommon(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -13213,6 +17451,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatHistory")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatHistory"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatHistory(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13243,6 +17486,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteChatHistory")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteChatHistory"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteChatHistory(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13281,6 +17529,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchChatMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchChatMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchChatMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13320,6 +17573,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchMessages(
         @SerialName("query")
         val query: String? = null,
@@ -13356,6 +17614,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchSecretMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchSecretMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchSecretMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13390,6 +17653,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchCallMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchCallMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchCallMessages(
         @SerialName("from_message_id")
         val fromMessageId: Long = 0L,
@@ -13415,6 +17683,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchChatRecentLocationMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchChatRecentLocationMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchChatRecentLocationMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13436,6 +17709,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getActiveLiveLocationMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetActiveLiveLocationMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetActiveLiveLocationMessages(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -13454,6 +17732,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatMessageByDate")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatMessageByDate"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatMessageByDate(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13478,6 +17761,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatMessageCount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatMessageCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatMessageCount(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13503,6 +17791,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveNotification(
         @SerialName("notification_group_id")
         val notificationGroupId: Int = 0,
@@ -13526,6 +17819,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeNotificationGroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveNotificationGroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveNotificationGroup(
         @SerialName("notification_group_id")
         val notificationGroupId: Int = 0,
@@ -13550,6 +17848,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPublicMessageLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPublicMessageLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPublicMessageLink(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13576,6 +17879,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMessageLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMessageLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMessageLink(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13597,6 +17905,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMessageLinkInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMessageLinkInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMessageLinkInfo(
         @SerialName("url")
         val url: String? = null,
@@ -13623,6 +17936,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13660,6 +17978,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendMessageAlbum")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendMessageAlbum"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendMessageAlbum(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13692,6 +18015,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendBotStartMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendBotStartMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendBotStartMessage(
         @SerialName("bot_user_id")
         val botUserId: Int = 0,
@@ -13725,6 +18053,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendInlineQueryResultMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendInlineQueryResultMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendInlineQueryResultMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13768,6 +18101,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("forwardMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdForwardMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class ForwardMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13807,6 +18145,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13829,6 +18172,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendChatSetTtlMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendChatSetTtlMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendChatSetTtlMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13851,6 +18199,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendChatScreenshotTakenNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendChatScreenshotTakenNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendChatScreenshotTakenNotification(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13877,6 +18230,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addLocalMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddLocalMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddLocalMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13907,6 +18265,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13933,6 +18296,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteChatMessagesFromUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteChatMessagesFromUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteChatMessagesFromUser(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13959,6 +18327,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editMessageText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditMessageText"),
+        level = DeprecationLevel.WARNING
+    )
     data class EditMessageText(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -13991,6 +18364,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editMessageLiveLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditMessageLiveLocation"),
+        level = DeprecationLevel.WARNING
+    )
     data class EditMessageLiveLocation(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14025,6 +18403,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editMessageMedia")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditMessageMedia"),
+        level = DeprecationLevel.WARNING
+    )
     data class EditMessageMedia(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14056,6 +18439,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editMessageCaption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditMessageCaption"),
+        level = DeprecationLevel.WARNING
+    )
     data class EditMessageCaption(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14085,6 +18473,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editMessageReplyMarkup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditMessageReplyMarkup"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EditMessageReplyMarkup(
         @SerialName("chat_id")
@@ -14112,6 +18505,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editInlineMessageText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditInlineMessageText"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EditInlineMessageText(
         @SerialName("inline_message_id")
@@ -14139,6 +18537,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editInlineMessageLiveLocation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditInlineMessageLiveLocation"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EditInlineMessageLiveLocation(
         @SerialName("inline_message_id")
@@ -14166,6 +18569,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editInlineMessageMedia")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditInlineMessageMedia"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EditInlineMessageMedia(
         @SerialName("inline_message_id")
@@ -14194,6 +18602,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editInlineMessageCaption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditInlineMessageCaption"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EditInlineMessageCaption(
         @SerialName("inline_message_id")
@@ -14219,6 +18632,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editInlineMessageReplyMarkup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditInlineMessageReplyMarkup"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class EditInlineMessageReplyMarkup(
         @SerialName("inline_message_id")
@@ -14243,6 +18661,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getTextEntities")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetTextEntities"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetTextEntities(
         @SerialName("text")
         val text: String? = null,
@@ -14265,6 +18688,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("parseTextEntities")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdParseTextEntities"),
+        level = DeprecationLevel.WARNING
+    )
     data class ParseTextEntities(
         @SerialName("text")
         val text: String? = null,
@@ -14289,6 +18717,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getFileMimeType")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetFileMimeType"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetFileMimeType(
         @SerialName("file_name")
         val fileName: String? = null,
@@ -14311,6 +18744,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getFileExtension")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetFileExtension"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetFileExtension(
         @SerialName("mime_type")
         val mimeType: String? = null,
@@ -14334,6 +18772,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("cleanFileName")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCleanFileName"),
+        level = DeprecationLevel.WARNING
+    )
     data class CleanFileName(
         @SerialName("file_name")
         val fileName: String? = null,
@@ -14359,6 +18802,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLanguagePackString")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLanguagePackString"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLanguagePackString(
         @SerialName("language_pack_database_path")
         val languagePackDatabasePath: String? = null,
@@ -14386,6 +18834,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getJsonValue")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetJsonValue"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetJsonValue(
         @SerialName("json")
         val json: String? = null,
@@ -14407,6 +18860,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getJsonString")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetJsonString"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetJsonString(
         @SerialName("json_value")
         val jsonValue: JsonValue? = null,
@@ -14429,6 +18887,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setPollAnswer")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetPollAnswer"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetPollAnswer(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14455,6 +18918,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("stopPoll")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdStopPoll"),
+        level = DeprecationLevel.WARNING
+    )
     data class StopPoll(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14484,6 +18952,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getInlineQueryResults")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetInlineQueryResults"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetInlineQueryResults(
         @SerialName("bot_user_id")
         val botUserId: Int = 0,
@@ -14518,6 +18991,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("answerInlineQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnswerInlineQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class AnswerInlineQuery(
         @SerialName("inline_query_id")
@@ -14553,6 +19031,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getCallbackQueryAnswer")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetCallbackQueryAnswer"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetCallbackQueryAnswer(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14580,6 +19063,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("answerCallbackQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnswerCallbackQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class AnswerCallbackQuery(
         @SerialName("callback_query_id")
@@ -14610,6 +19098,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("answerShippingQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnswerShippingQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class AnswerShippingQuery(
         @SerialName("shipping_query_id")
@@ -14635,6 +19128,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("answerPreCheckoutQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnswerPreCheckoutQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class AnswerPreCheckoutQuery(
         @SerialName("pre_checkout_query_id")
@@ -14663,6 +19161,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setGameScore")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetGameScore"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class SetGameScore(
         @SerialName("chat_id")
@@ -14698,6 +19201,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setInlineGameScore")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetInlineGameScore"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class SetInlineGameScore(
         @SerialName("inline_message_id")
@@ -14728,6 +19236,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getGameHighScores")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetGameHighScores"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class GetGameHighScores(
         @SerialName("chat_id")
@@ -14753,6 +19266,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getInlineGameHighScores")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetInlineGameHighScores"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class GetInlineGameHighScores(
         @SerialName("inline_message_id")
@@ -14778,6 +19296,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteChatReplyMarkup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteChatReplyMarkup"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteChatReplyMarkup(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14800,6 +19323,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendChatAction")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendChatAction"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendChatAction(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14822,6 +19350,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("openChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOpenChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class OpenChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14842,6 +19375,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("closeChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCloseChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CloseChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14864,6 +19402,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("viewMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdViewMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class ViewMessages(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14889,6 +19432,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("openMessageContent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOpenMessageContent"),
+        level = DeprecationLevel.WARNING
+    )
     data class OpenMessageContent(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14910,6 +19458,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("readAllChatMentions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReadAllChatMentions"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReadAllChatMentions(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -14931,6 +19484,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createPrivateChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreatePrivateChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreatePrivateChat(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -14954,6 +19512,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createBasicGroupChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateBasicGroupChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateBasicGroupChat(
         @SerialName("basic_group_id")
         val basicGroupId: Int = 0,
@@ -14977,6 +19540,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createSupergroupChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateSupergroupChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateSupergroupChat(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -14998,6 +19566,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateSecretChat(
         @SerialName("secret_chat_id")
         val secretChatId: Int = 0,
@@ -15019,6 +19592,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createNewBasicGroupChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateNewBasicGroupChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateNewBasicGroupChat(
         @SerialName("user_ids")
         val userIds: IntArray = intArrayOf(),
@@ -15043,6 +19621,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createNewSupergroupChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateNewSupergroupChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateNewSupergroupChat(
         @SerialName("title")
         val title: String? = null,
@@ -15067,6 +19650,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createNewSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateNewSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateNewSecretChat(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -15088,6 +19676,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("upgradeBasicGroupChatToSupergroupChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUpgradeBasicGroupChatToSupergroupChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class UpgradeBasicGroupChatToSupergroupChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15111,6 +19704,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatTitle")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatTitle"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatTitle(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15138,6 +19736,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatPhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatPhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatPhoto(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15162,6 +19765,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatPermissions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatPermissions"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatPermissions(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15184,6 +19792,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatDraftMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatDraftMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatDraftMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15206,6 +19819,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatNotificationSettings(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15229,6 +19847,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("toggleChatIsPinned")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdToggleChatIsPinned"),
+        level = DeprecationLevel.WARNING
+    )
     data class ToggleChatIsPinned(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15251,6 +19874,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("toggleChatIsMarkedAsUnread")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdToggleChatIsMarkedAsUnread"),
+        level = DeprecationLevel.WARNING
+    )
     data class ToggleChatIsMarkedAsUnread(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15273,6 +19901,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("toggleChatDefaultDisableNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdToggleChatDefaultDisableNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class ToggleChatDefaultDisableNotification(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15295,6 +19928,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatClientData")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatClientData"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatClientData(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15319,6 +19957,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatDescription")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatDescription"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatDescription(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15343,6 +19986,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pinChatMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPinChatMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class PinChatMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15367,6 +20015,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("unpinChatMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUnpinChatMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class UnpinChatMessage(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15387,6 +20040,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("joinChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJoinChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class JoinChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15407,6 +20065,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("leaveChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdLeaveChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class LeaveChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15431,6 +20094,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addChatMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddChatMember"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddChatMember(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15459,6 +20127,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addChatMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddChatMembers"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddChatMembers(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15485,6 +20158,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setChatMemberStatus")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetChatMemberStatus"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetChatMemberStatus(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15509,6 +20187,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatMember")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatMember"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatMember(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15535,6 +20218,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchChatMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchChatMembers"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchChatMembers(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15560,6 +20248,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatAdministrators")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatAdministrators"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatAdministrators(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15579,6 +20272,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("clearAllDraftMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdClearAllDraftMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class ClearAllDraftMessages(
         @SerialName("exclude_secret_chats")
         val excludeSecretChats: Boolean = false,
@@ -15599,6 +20297,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatNotificationSettingsExceptions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatNotificationSettingsExceptions"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatNotificationSettingsExceptions(
         @SerialName("scope")
         val scope: NotificationSettingsScope? = null,
@@ -15620,6 +20323,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getScopeNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetScopeNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetScopeNotificationSettings(
         @SerialName("scope")
         val scope: NotificationSettingsScope? = null,
@@ -15640,6 +20348,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setScopeNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetScopeNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetScopeNotificationSettings(
         @SerialName("scope")
         val scope: NotificationSettingsScope? = null,
@@ -15661,6 +20374,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resetAllNotificationSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResetAllNotificationSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResetAllNotificationSettings(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -15678,6 +20396,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setPinnedChats")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetPinnedChats"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetPinnedChats(
         @SerialName("chat_ids")
         val chatIds: LongArray = longArrayOf(),
@@ -15706,6 +20429,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("downloadFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDownloadFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class DownloadFile(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -15734,6 +20462,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getFileDownloadedPrefixSize")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetFileDownloadedPrefixSize"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetFileDownloadedPrefixSize(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -15758,6 +20491,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("cancelDownloadFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCancelDownloadFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class CancelDownloadFile(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -15785,6 +20523,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("uploadFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUploadFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class UploadFile(
         @SerialName("file")
         val file: InputFile? = null,
@@ -15810,6 +20553,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("cancelUploadFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCancelUploadFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class CancelUploadFile(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -15832,6 +20580,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("writeGeneratedFilePart")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdWriteGeneratedFilePart"),
+        level = DeprecationLevel.WARNING
+    )
     data class WriteGeneratedFilePart(
         @SerialName("generation_id")
         val generationId: Long = 0L,
@@ -15858,6 +20611,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setFileGenerationProgress")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetFileGenerationProgress"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetFileGenerationProgress(
         @SerialName("generation_id")
         val generationId: Long = 0L,
@@ -15882,6 +20640,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("finishFileGeneration")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdFinishFileGeneration"),
+        level = DeprecationLevel.WARNING
+    )
     data class FinishFileGeneration(
         @SerialName("generation_id")
         val generationId: Long = 0L,
@@ -15909,6 +20672,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("readFilePart")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReadFilePart"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReadFilePart(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -15932,6 +20700,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteFile(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -15954,6 +20727,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("generateChatInviteLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGenerateChatInviteLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class GenerateChatInviteLink(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -15973,6 +20751,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChatInviteLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChatInviteLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChatInviteLink(
         @SerialName("invite_link")
         val inviteLink: String? = null,
@@ -15993,6 +20776,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("joinChatByInviteLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdJoinChatByInviteLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class JoinChatByInviteLink(
         @SerialName("invite_link")
         val inviteLink: String? = null,
@@ -16013,6 +20801,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class CreateCall(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -16035,6 +20828,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("acceptCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAcceptCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class AcceptCall(
         @SerialName("call_id")
         val callId: Int = 0,
@@ -16059,6 +20857,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("discardCall")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDiscardCall"),
+        level = DeprecationLevel.WARNING
+    )
     data class DiscardCall(
         @SerialName("call_id")
         val callId: Int = 0,
@@ -16087,6 +20890,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendCallRating")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendCallRating"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendCallRating(
         @SerialName("call_id")
         val callId: Int = 0,
@@ -16113,6 +20921,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendCallDebugInformation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendCallDebugInformation"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendCallDebugInformation(
         @SerialName("call_id")
         val callId: Int = 0,
@@ -16134,6 +20947,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("blockUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdBlockUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class BlockUser(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -16153,6 +20971,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("unblockUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUnblockUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class UnblockUser(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -16173,6 +20996,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getBlockedUsers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetBlockedUsers"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetBlockedUsers(
         @SerialName("offset")
         val offset: Int = 0,
@@ -16195,6 +21023,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("importContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdImportContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class ImportContacts(
         @SerialName("contacts")
         val contacts: Array<Contact> = emptyArray(),
@@ -16213,6 +21046,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetContacts(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16232,6 +21070,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchContacts(
         @SerialName("query")
         val query: String? = null,
@@ -16253,6 +21096,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveContacts(
         @SerialName("user_ids")
         val userIds: IntArray = intArrayOf(),
@@ -16271,6 +21119,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getImportedContactCount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetImportedContactCount"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetImportedContactCount(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16290,6 +21143,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("changeImportedContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChangeImportedContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChangeImportedContacts(
         @SerialName("contacts")
         val contacts: Array<Contact> = emptyArray(),
@@ -16308,6 +21166,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("clearImportedContacts")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdClearImportedContacts"),
+        level = DeprecationLevel.WARNING
+    )
     data class ClearImportedContacts(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16328,6 +21191,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getUserProfilePhotos")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetUserProfilePhotos"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetUserProfilePhotos(
         @SerialName("user_id")
         val userId: Int = 0,
@@ -16354,6 +21222,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetStickers(
         @SerialName("emoji")
         val emoji: String? = null,
@@ -16376,6 +21249,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchStickers(
         @SerialName("emoji")
         val emoji: String? = null,
@@ -16398,6 +21276,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getInstalledStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetInstalledStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetInstalledStickerSets(
         @SerialName("is_masks")
         val isMasks: Boolean = false,
@@ -16420,6 +21303,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getArchivedStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetArchivedStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetArchivedStickerSets(
         @SerialName("is_masks")
         val isMasks: Boolean = false,
@@ -16442,6 +21330,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getTrendingStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetTrendingStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetTrendingStickerSets(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16460,6 +21353,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getAttachedStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetAttachedStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetAttachedStickerSets(
         @SerialName("file_id")
         val fileId: Int = 0,
@@ -16479,6 +21377,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getStickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetStickerSet(
         @SerialName("set_id")
         val setId: Long = 0L,
@@ -16498,6 +21401,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchStickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchStickerSet(
         @SerialName("name")
         val name: String? = null,
@@ -16520,6 +21428,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchInstalledStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchInstalledStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchInstalledStickerSets(
         @SerialName("is_masks")
         val isMasks: Boolean = false,
@@ -16544,6 +21457,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchStickerSets(
         @SerialName("query")
         val query: String? = null,
@@ -16566,6 +21484,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("changeStickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChangeStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChangeStickerSet(
         @SerialName("set_id")
         val setId: Long = 0L,
@@ -16589,6 +21512,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("viewTrendingStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdViewTrendingStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class ViewTrendingStickerSets(
         @SerialName("sticker_set_ids")
         val stickerSetIds: LongArray = longArrayOf(),
@@ -16610,6 +21538,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("reorderInstalledStickerSets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReorderInstalledStickerSets"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReorderInstalledStickerSets(
         @SerialName("is_masks")
         val isMasks: Boolean = false,
@@ -16632,6 +21565,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getRecentStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetRecentStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetRecentStickers(
         @SerialName("is_attached")
         val isAttached: Boolean = false,
@@ -16656,6 +21594,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addRecentSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddRecentSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddRecentSticker(
         @SerialName("is_attached")
         val isAttached: Boolean = false,
@@ -16679,6 +21622,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeRecentSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveRecentSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveRecentSticker(
         @SerialName("is_attached")
         val isAttached: Boolean = false,
@@ -16701,6 +21649,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("clearRecentStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdClearRecentStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class ClearRecentStickers(
         @SerialName("is_attached")
         val isAttached: Boolean = false,
@@ -16719,6 +21672,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getFavoriteStickers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetFavoriteStickers"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetFavoriteStickers(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16739,6 +21697,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addFavoriteSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddFavoriteSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddFavoriteSticker(
         @SerialName("sticker")
         val sticker: InputFile? = null,
@@ -16758,6 +21721,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeFavoriteSticker")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveFavoriteSticker"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveFavoriteSticker(
         @SerialName("sticker")
         val sticker: InputFile? = null,
@@ -16778,6 +21746,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getStickerEmojis")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetStickerEmojis"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetStickerEmojis(
         @SerialName("sticker")
         val sticker: InputFile? = null,
@@ -16799,6 +21772,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchEmojis")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchEmojis"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchEmojis(
         @SerialName("text")
         val text: String? = null,
@@ -16821,6 +21799,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getEmojiSuggestionsUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetEmojiSuggestionsUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetEmojiSuggestionsUrl(
         @SerialName("language_code")
         val languageCode: String? = null,
@@ -16839,6 +21822,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSavedAnimations")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSavedAnimations"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSavedAnimations(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16861,6 +21849,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addSavedAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddSavedAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddSavedAnimation(
         @SerialName("animation")
         val animation: InputFile? = null,
@@ -16880,6 +21873,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeSavedAnimation")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveSavedAnimation"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveSavedAnimation(
         @SerialName("animation")
         val animation: InputFile? = null,
@@ -16898,6 +21896,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getRecentInlineBots")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetRecentInlineBots"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetRecentInlineBots(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -16916,6 +21919,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchHashtags")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchHashtags"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchHashtags(
         @SerialName("prefix")
         val prefix: String? = null,
@@ -16937,6 +21945,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeRecentHashtag")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveRecentHashtag"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveRecentHashtag(
         @SerialName("hashtag")
         val hashtag: String? = null,
@@ -16958,6 +21971,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getWebPagePreview")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetWebPagePreview"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetWebPagePreview(
         @SerialName("text")
         val text: FormattedText? = null,
@@ -16979,6 +21997,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getWebPageInstantView")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetWebPageInstantView"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetWebPageInstantView(
         @SerialName("url")
         val url: String? = null,
@@ -17002,6 +22025,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setProfilePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetProfilePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetProfilePhoto(
         @SerialName("photo")
         val photo: InputFile? = null,
@@ -17022,6 +22050,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteProfilePhoto")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteProfilePhoto"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteProfilePhoto(
         @SerialName("profile_photo_id")
         val profilePhotoId: Long = 0L,
@@ -17043,6 +22076,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setName")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetName"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetName(
         @SerialName("first_name")
         val firstName: String? = null,
@@ -17064,6 +22102,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setBio")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetBio"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetBio(
         @SerialName("bio")
         val bio: String? = null,
@@ -17085,6 +22128,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setUsername")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetUsername"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetUsername(
         @SerialName("username")
         val username: String? = null,
@@ -17106,6 +22154,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("changePhoneNumber")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChangePhoneNumber"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChangePhoneNumber(
         @SerialName("phone_number")
         val phoneNumber: String? = null,
@@ -17127,6 +22180,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendChangePhoneNumberCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendChangePhoneNumberCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendChangePhoneNumberCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17144,6 +22202,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkChangePhoneNumberCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckChangePhoneNumberCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckChangePhoneNumberCode(
         @SerialName("code")
         val code: String? = null,
@@ -17162,6 +22225,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getActiveSessions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetActiveSessions"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetActiveSessions(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17179,6 +22247,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("terminateSession")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTerminateSession"),
+        level = DeprecationLevel.WARNING
+    )
     data class TerminateSession(
         @SerialName("session_id")
         val sessionId: Long = 0L,
@@ -17197,6 +22270,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("terminateAllOtherSessions")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTerminateAllOtherSessions"),
+        level = DeprecationLevel.WARNING
+    )
     data class TerminateAllOtherSessions(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17213,6 +22291,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getConnectedWebsites")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetConnectedWebsites"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetConnectedWebsites(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17230,6 +22313,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("disconnectWebsite")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDisconnectWebsite"),
+        level = DeprecationLevel.WARNING
+    )
     data class DisconnectWebsite(
         @SerialName("website_id")
         val websiteId: Long = 0L,
@@ -17248,6 +22336,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("disconnectAllWebsites")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDisconnectAllWebsites"),
+        level = DeprecationLevel.WARNING
+    )
     data class DisconnectAllWebsites(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17267,6 +22360,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setSupergroupUsername")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetSupergroupUsername"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetSupergroupUsername(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17291,6 +22389,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setSupergroupStickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetSupergroupStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetSupergroupStickerSet(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17314,6 +22417,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("toggleSupergroupSignMessages")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdToggleSupergroupSignMessages"),
+        level = DeprecationLevel.WARNING
+    )
     data class ToggleSupergroupSignMessages(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17337,6 +22445,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("toggleSupergroupIsAllHistoryAvailable")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdToggleSupergroupIsAllHistoryAvailable"),
+        level = DeprecationLevel.WARNING
+    )
     data class ToggleSupergroupIsAllHistoryAvailable(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17362,6 +22475,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("reportSupergroupSpam")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReportSupergroupSpam"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReportSupergroupSpam(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17392,6 +22510,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSupergroupMembers")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSupergroupMembers"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSupergroupMembers(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17420,6 +22543,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteSupergroup")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteSupergroup"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteSupergroup(
         @SerialName("supergroup_id")
         val supergroupId: Int = 0,
@@ -17439,6 +22567,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("closeSecretChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCloseSecretChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class CloseSecretChat(
         @SerialName("secret_chat_id")
         val secretChatId: Int = 0,
@@ -17470,6 +22603,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatEventLog")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatEventLog"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatEventLog(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -17501,6 +22639,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPaymentForm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPaymentForm"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPaymentForm(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -17525,6 +22668,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("validateOrderInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdValidateOrderInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class ValidateOrderInfo(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -17554,6 +22702,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendPaymentForm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendPaymentForm"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendPaymentForm(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -17582,6 +22735,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPaymentReceipt")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPaymentReceipt"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPaymentReceipt(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -17602,6 +22760,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSavedOrderInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSavedOrderInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSavedOrderInfo(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17618,6 +22781,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteSavedOrderInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteSavedOrderInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteSavedOrderInfo(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17634,6 +22802,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteSavedCredentials")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteSavedCredentials"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteSavedCredentials(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17650,6 +22823,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getSupportUser")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetSupportUser"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetSupportUser(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17667,6 +22845,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getBackgrounds")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetBackgrounds"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetBackgrounds(
         @SerialName("for_dark_theme")
         val forDarkTheme: Boolean = false,
@@ -17687,6 +22870,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getBackgroundUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetBackgroundUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetBackgroundUrl(
         @SerialName("name")
         val name: String? = null,
@@ -17708,6 +22896,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("searchBackground")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSearchBackground"),
+        level = DeprecationLevel.WARNING
+    )
     data class SearchBackground(
         @SerialName("name")
         val name: String? = null,
@@ -17732,6 +22925,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setBackground")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetBackground"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetBackground(
         @SerialName("background")
         val background: InputBackground? = null,
@@ -17755,6 +22953,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeBackground")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveBackground"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveBackground(
         @SerialName("background_id")
         val backgroundId: Long = 0L,
@@ -17773,6 +22976,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resetBackgrounds")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResetBackgrounds"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResetBackgrounds(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -17792,6 +23000,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLocalizationTargetInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLocalizationTargetInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLocalizationTargetInfo(
         @SerialName("only_local")
         val onlyLocal: Boolean = false,
@@ -17813,6 +23026,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLanguagePackInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLanguagePackInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLanguagePackInfo(
         @SerialName("language_pack_id")
         val languagePackId: String? = null,
@@ -17835,6 +23053,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLanguagePackStrings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLanguagePackStrings"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLanguagePackStrings(
         @SerialName("language_pack_id")
         val languagePackId: String? = null,
@@ -17858,6 +23081,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("synchronizeLanguagePack")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSynchronizeLanguagePack"),
+        level = DeprecationLevel.WARNING
+    )
     data class SynchronizeLanguagePack(
         @SerialName("language_pack_id")
         val languagePackId: String? = null,
@@ -17879,6 +23107,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addCustomServerLanguagePack")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddCustomServerLanguagePack"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddCustomServerLanguagePack(
         @SerialName("language_pack_id")
         val languagePackId: String? = null,
@@ -17901,6 +23134,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setCustomLanguagePack")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetCustomLanguagePack"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetCustomLanguagePack(
         @SerialName("info")
         val info: LanguagePackInfo? = null,
@@ -17923,6 +23161,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editCustomLanguagePackInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditCustomLanguagePackInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class EditCustomLanguagePackInfo(
         @SerialName("info")
         val info: LanguagePackInfo? = null,
@@ -17944,6 +23187,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setCustomLanguagePackString")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetCustomLanguagePackString"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetCustomLanguagePackString(
         @SerialName("language_pack_id")
         val languagePackId: String? = null,
@@ -17967,6 +23215,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteLanguagePack")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteLanguagePack"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteLanguagePack(
         @SerialName("language_pack_id")
         val languagePackId: String? = null,
@@ -17988,6 +23241,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("registerDevice")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRegisterDevice"),
+        level = DeprecationLevel.WARNING
+    )
     data class RegisterDevice(
         @SerialName("device_token")
         val deviceToken: DeviceToken? = null,
@@ -18011,6 +23269,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("processPushNotification")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdProcessPushNotification"),
+        level = DeprecationLevel.WARNING
+    )
     data class ProcessPushNotification(
         @SerialName("payload")
         val payload: String? = null,
@@ -18032,6 +23295,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPushReceiverId")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPushReceiverId"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPushReceiverId(
         @SerialName("payload")
         val payload: String? = null,
@@ -18051,6 +23319,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getRecentlyVisitedTMeUrls")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetRecentlyVisitedTMeUrls"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetRecentlyVisitedTMeUrls(
         @SerialName("referrer")
         val referrer: String? = null,
@@ -18071,6 +23344,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setUserPrivacySettingRules")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetUserPrivacySettingRules"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetUserPrivacySettingRules(
         @SerialName("setting")
         val setting: UserPrivacySetting? = null,
@@ -18092,6 +23370,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getUserPrivacySettingRules")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetUserPrivacySettingRules"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetUserPrivacySettingRules(
         @SerialName("setting")
         val setting: UserPrivacySetting? = null,
@@ -18112,6 +23395,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getOption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetOption"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetOption(
         @SerialName("name")
         val name: String? = null,
@@ -18134,6 +23422,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setOption")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetOption"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetOption(
         @SerialName("name")
         val name: String? = null,
@@ -18155,6 +23448,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setAccountTtl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetAccountTtl"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetAccountTtl(
         @SerialName("ttl")
         val ttl: AccountTtl? = null,
@@ -18173,6 +23471,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getAccountTtl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetAccountTtl"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetAccountTtl(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18192,6 +23495,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deleteAccount")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeleteAccount"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeleteAccount(
         @SerialName("reason")
         val reason: String? = null,
@@ -18211,6 +23519,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatReportSpamState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatReportSpamState"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatReportSpamState(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -18234,6 +23547,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("changeChatReportSpamState")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdChangeChatReportSpamState"),
+        level = DeprecationLevel.WARNING
+    )
     data class ChangeChatReportSpamState(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -18258,6 +23576,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("reportChat")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdReportChat"),
+        level = DeprecationLevel.WARNING
+    )
     data class ReportChat(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -18284,6 +23607,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getChatStatisticsUrl")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetChatStatisticsUrl"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetChatStatisticsUrl(
         @SerialName("chat_id")
         val chatId: Long = 0L,
@@ -18310,6 +23638,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getStorageStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetStorageStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetStorageStatistics(
         @SerialName("chat_limit")
         val chatLimit: Int = 0,
@@ -18329,6 +23662,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getStorageStatisticsFast")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetStorageStatisticsFast"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetStorageStatisticsFast(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18345,6 +23683,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getDatabaseStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetDatabaseStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetDatabaseStatistics(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18379,6 +23722,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("optimizeStorage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdOptimizeStorage"),
+        level = DeprecationLevel.WARNING
+    )
     data class OptimizeStorage(
         @SerialName("size")
         val size: Long = 0L,
@@ -18416,6 +23764,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setNetworkType")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetNetworkType"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetNetworkType(
         @SerialName("type")
         val type: NetworkType? = null,
@@ -18436,6 +23789,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getNetworkStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetNetworkStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetNetworkStatistics(
         @SerialName("only_current")
         val onlyCurrent: Boolean = false,
@@ -18456,6 +23814,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addNetworkStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddNetworkStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddNetworkStatistics(
         @SerialName("entry")
         val entry: NetworkStatisticsEntry? = null,
@@ -18475,6 +23838,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resetNetworkStatistics")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResetNetworkStatistics"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResetNetworkStatistics(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18491,6 +23859,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getAutoDownloadSettingsPresets")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetAutoDownloadSettingsPresets"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetAutoDownloadSettingsPresets(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18509,6 +23882,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setAutoDownloadSettings")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetAutoDownloadSettings"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetAutoDownloadSettings(
         @SerialName("settings")
         val settings: AutoDownloadSettings? = null,
@@ -18531,6 +23909,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPassportElement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPassportElement"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPassportElement(
         @SerialName("type")
         val type: PassportElementType? = null,
@@ -18552,6 +23935,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getAllPassportElements")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetAllPassportElements"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetAllPassportElements(
         @SerialName("password")
         val password: String? = null,
@@ -18573,6 +23961,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setPassportElement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetPassportElement"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetPassportElement(
         @SerialName("element")
         val element: InputPassportElement? = null,
@@ -18594,6 +23987,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("deletePassportElement")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDeletePassportElement"),
+        level = DeprecationLevel.WARNING
+    )
     data class DeletePassportElement(
         @SerialName("type")
         val type: PassportElementType? = null,
@@ -18615,6 +24013,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setPassportElementErrors")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetPassportElementErrors"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class SetPassportElementErrors(
         @SerialName("user_id")
@@ -18638,6 +24041,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPreferredCountryLanguage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPreferredCountryLanguage"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPreferredCountryLanguage(
         @SerialName("country_code")
         val countryCode: String? = null,
@@ -18658,6 +24066,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendPhoneNumberVerificationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendPhoneNumberVerificationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendPhoneNumberVerificationCode(
         @SerialName("phone_number")
         val phoneNumber: String? = null,
@@ -18678,6 +24091,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendPhoneNumberVerificationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendPhoneNumberVerificationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendPhoneNumberVerificationCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18695,6 +24113,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkPhoneNumberVerificationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckPhoneNumberVerificationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckPhoneNumberVerificationCode(
         @SerialName("code")
         val code: String? = null,
@@ -18714,6 +24137,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendEmailAddressVerificationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendEmailAddressVerificationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendEmailAddressVerificationCode(
         @SerialName("email_address")
         val emailAddress: String? = null,
@@ -18732,6 +24160,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendEmailAddressVerificationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendEmailAddressVerificationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendEmailAddressVerificationCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18749,6 +24182,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkEmailAddressVerificationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckEmailAddressVerificationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckEmailAddressVerificationCode(
         @SerialName("code")
         val code: String? = null,
@@ -18771,6 +24209,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPassportAuthorizationForm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPassportAuthorizationForm"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPassportAuthorizationForm(
         @SerialName("bot_user_id")
         val botUserId: Int = 0,
@@ -18798,6 +24241,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getPassportAuthorizationFormAvailableElements")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetPassportAuthorizationFormAvailableElements"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetPassportAuthorizationFormAvailableElements(
         @SerialName("autorization_form_id")
         val autorizationFormId: Int = 0,
@@ -18821,6 +24269,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendPassportAuthorizationForm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendPassportAuthorizationForm"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendPassportAuthorizationForm(
         @SerialName("autorization_form_id")
         val autorizationFormId: Int = 0,
@@ -18845,6 +24298,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendPhoneNumberConfirmationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendPhoneNumberConfirmationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class SendPhoneNumberConfirmationCode(
         @SerialName("hash")
         val hash: String? = null,
@@ -18867,6 +24325,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("resendPhoneNumberConfirmationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdResendPhoneNumberConfirmationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class ResendPhoneNumberConfirmationCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -18884,6 +24347,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("checkPhoneNumberConfirmationCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCheckPhoneNumberConfirmationCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class CheckPhoneNumberConfirmationCode(
         @SerialName("code")
         val code: String? = null,
@@ -18904,6 +24372,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setBotUpdatesStatus")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetBotUpdatesStatus"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class SetBotUpdatesStatus(
         @SerialName("pending_update_count")
@@ -18929,6 +24402,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("uploadStickerFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdUploadStickerFile"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class UploadStickerFile(
         @SerialName("user_id")
@@ -18958,6 +24436,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("createNewStickerSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdCreateNewStickerSet"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class CreateNewStickerSet(
         @SerialName("user_id")
@@ -18989,6 +24472,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addStickerToSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddStickerToSet"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class AddStickerToSet(
         @SerialName("user_id")
@@ -19015,6 +24503,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setStickerPositionInSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetStickerPositionInSet"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class SetStickerPositionInSet(
         @SerialName("sticker")
@@ -19038,6 +24531,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeStickerFromSet")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveStickerFromSet"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class RemoveStickerFromSet(
         @SerialName("sticker")
@@ -19065,6 +24563,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getMapThumbnailFile")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetMapThumbnailFile"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetMapThumbnailFile(
         @SerialName("location")
         val location: Location? = null,
@@ -19094,6 +24597,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("acceptTermsOfService")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAcceptTermsOfService"),
+        level = DeprecationLevel.WARNING
+    )
     data class AcceptTermsOfService(
         @SerialName("terms_of_service_id")
         val termsOfServiceId: String? = null,
@@ -19114,6 +24622,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("sendCustomRequest")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSendCustomRequest"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class SendCustomRequest(
         @SerialName("method")
@@ -19137,6 +24650,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("answerCustomQuery")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAnswerCustomQuery"),
+        level = DeprecationLevel.WARNING
+    )
     @TdBotsOnly
     data class AnswerCustomQuery(
         @SerialName("custom_query_id")
@@ -19161,6 +24679,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setAlarm")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetAlarm"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetAlarm(
         @SerialName("seconds")
         val seconds: Double = 0.0,
@@ -19181,6 +24704,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getCountryCode")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetCountryCode"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetCountryCode(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19197,6 +24725,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getInviteText")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetInviteText"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetInviteText(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19217,6 +24750,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getDeepLinkInfo")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetDeepLinkInfo"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetDeepLinkInfo(
         @SerialName("link")
         val link: String? = null,
@@ -19236,6 +24774,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getApplicationConfig")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetApplicationConfig"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetApplicationConfig(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19256,6 +24799,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("saveApplicationLogEvent")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSaveApplicationLogEvent"),
+        level = DeprecationLevel.WARNING
+    )
     data class SaveApplicationLogEvent(
         @SerialName("type")
         val type: String? = null,
@@ -19283,6 +24831,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddProxy(
         @SerialName("server")
         val server: String? = null,
@@ -19313,6 +24866,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("editProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEditProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class EditProxy(
         @SerialName("proxy_id")
         val proxyId: Int = 0,
@@ -19342,6 +24900,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("enableProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdEnableProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class EnableProxy(
         @SerialName("proxy_id")
         val proxyId: Int = 0,
@@ -19361,6 +24924,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("disableProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdDisableProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class DisableProxy(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19379,6 +24947,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("removeProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdRemoveProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class RemoveProxy(
         @SerialName("proxy_id")
         val proxyId: Int = 0,
@@ -19398,6 +24971,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getProxies")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetProxies"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetProxies(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19417,6 +24995,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getProxyLink")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetProxyLink"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetProxyLink(
         @SerialName("proxy_id")
         val proxyId: Int = 0,
@@ -19438,6 +25021,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("pingProxy")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdPingProxy"),
+        level = DeprecationLevel.WARNING
+    )
     data class PingProxy(
         @SerialName("proxy_id")
         val proxyId: Int = 0,
@@ -19459,6 +25047,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setLogStream")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetLogStream"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetLogStream(
         @SerialName("log_stream")
         val logStream: LogStream? = null,
@@ -19479,6 +25072,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLogStream")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLogStream"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLogStream(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19499,6 +25097,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setLogVerbosityLevel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetLogVerbosityLevel"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetLogVerbosityLevel(
         @SerialName("new_verbosity_level")
         val newVerbosityLevel: Int = 0,
@@ -19519,6 +25122,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLogVerbosityLevel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLogVerbosityLevel"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLogVerbosityLevel(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19537,6 +25145,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLogTags")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLogTags"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLogTags(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19557,6 +25170,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("setLogTagVerbosityLevel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdSetLogTagVerbosityLevel"),
+        level = DeprecationLevel.WARNING
+    )
     data class SetLogTagVerbosityLevel(
         @SerialName("tag")
         val tag: String? = null,
@@ -19580,6 +25198,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("getLogTagVerbosityLevel")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdGetLogTagVerbosityLevel"),
+        level = DeprecationLevel.WARNING
+    )
     data class GetLogTagVerbosityLevel(
         @SerialName("tag")
         val tag: String? = null,
@@ -19602,6 +25225,11 @@ class TdApi {
      */
     @Serializable
     @SerialName("addLogMessage")
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdAddLogMessage"),
+        level = DeprecationLevel.WARNING
+    )
     data class AddLogMessage(
         @SerialName("verbosity_level")
         val verbosityLevel: Int = 0,
@@ -19624,7 +25252,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallEmpty")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallEmpty"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallEmpty(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19644,7 +25277,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallString")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallString"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallString(
         @SerialName("x")
         val x: String? = null,
@@ -19666,7 +25304,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallBytes")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallBytes"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallBytes(
         @SerialName("x")
         val x: ByteArray = byteArrayOf(),
@@ -19688,7 +25331,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallVectorInt")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallVectorInt"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallVectorInt(
         @SerialName("x")
         val x: IntArray = intArrayOf(),
@@ -19710,7 +25358,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallVectorIntObject")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallVectorIntObject"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallVectorIntObject(
         @SerialName("x")
         val x: Array<TestInt> = emptyArray(),
@@ -19732,7 +25385,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallVectorString")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallVectorString"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallVectorString(
         @SerialName("x")
         val x: Array<String> = emptyArray(),
@@ -19754,7 +25412,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testCallVectorStringObject")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestCallVectorStringObject"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestCallVectorStringObject(
         @SerialName("x")
         val x: Array<TestString> = emptyArray(),
@@ -19776,7 +25439,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testSquareInt")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestSquareInt"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestSquareInt(
         @SerialName("x")
         val x: Int = 0,
@@ -19796,7 +25464,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testNetwork")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestNetwork"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestNetwork(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19817,7 +25490,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testProxy")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestProxy"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestProxy(
         @SerialName("server")
         val server: String? = null,
@@ -19840,7 +25518,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testGetDifference")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestGetDifference"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestGetDifference(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19859,7 +25542,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testUseUpdate")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestUseUpdate"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestUseUpdate(
         @SerialName("@extra")
         override val extra: TdExtra = TdExtra.EMPTY
@@ -19879,7 +25567,12 @@ class TdApi {
      */
     @Serializable
     @SerialName("testReturnError")
-    @TdTestingOnly
+    @Deprecated(
+        message = abstractTdDeprecatedMessage,
+        replaceWith = ReplaceWith("TdTestReturnError"),
+        level = DeprecationLevel.WARNING
+    )
+    @TdTestOnly
     data class TestReturnError(
         @SerialName("error")
         val error: Error? = null,

@@ -15,7 +15,7 @@ import java.util.*
 
 @UseExperimental(ExperimentalCli::class)
 class DispatchCommand : Subcommand("dispatch") {
-    private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
+    private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val type by option(ArgType.Choice(listOf("api", "tdlib")), "type", "t", "Type of event").required()
 
     @UseExperimental(KtorExperimentalAPI::class)
@@ -35,9 +35,7 @@ class DispatchCommand : Subcommand("dispatch") {
                             tdVersions.forEach { +it }
                         }
                         "refs" to json {
-                            tdVersionRefs.forEach { (v, ref) ->
-                                v to ref
-                            }
+                            tdVersionRefs.forEach { (v, ref) -> v to ref }
                         }
                     }
                 }.toString(), ContentType.Application.Json)

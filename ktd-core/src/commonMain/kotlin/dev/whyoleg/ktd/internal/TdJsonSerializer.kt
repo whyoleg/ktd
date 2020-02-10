@@ -5,8 +5,19 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.*
 
-internal class TdJsonSerializer(module: SerialModule) {
-    private val json = Json(jsonConfiguration, module)
+internal class TdJsonSerializer(moduleBuilder: SerializersModuleBuilder.() -> Unit) {
+    private val json = Json(jsonConfiguration, SerializersModule {
+        polymorphic<TdApiRequest> {
+            addSubclass(TdClose.serializer())
+            addSubclass(TdDestroy.serializer())
+            addSubclass(TdLogOut.serializer())
+        }
+        polymorphic<TdApiResponse> {
+            addSubclass(TdOk.serializer())
+            addSubclass(TdError.serializer())
+        }
+        apply(moduleBuilder)
+    })
 
     fun parse(string: String): TdApiResponse = json.parse(responseSerializer, string)
     fun stringify(request: TdApiRequest): String = json.stringify(requestSerializer, request)

@@ -5,9 +5,9 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 
 class ReaktiveTdClient(
-    api: StaticTdApi,
+    api: AnyTdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {}
-) : AbstractTdClient(api, runner, updatesCallback) {
+) : CallbackUpdatesTdClient(api, runner, updatesCallback) {
     fun <R : TdResponse> send(request: TdRequest<R>): Single<R> = single { sendCallback(request, it::onSuccess, it::onError) }
 }

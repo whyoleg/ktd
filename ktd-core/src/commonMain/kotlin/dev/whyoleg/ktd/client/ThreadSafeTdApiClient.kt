@@ -5,7 +5,7 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.locks.*
 import kotlin.contracts.*
 
-class ThreadSafeTdApiClient(api: StaticTdApi) {
+class ThreadSafeTdApiClient(api: AnyTdApi) {
     @PublishedApi
     internal val client by lazy { IncrementalTdApiClient(api) }
 
@@ -21,7 +21,7 @@ class ThreadSafeTdApiClient(api: StaticTdApi) {
     internal inline fun send2(request: TdApiRequest, preconfigure: (requestId: Long) -> Unit = {}): Long =
         client.send2(request, preconfigure)
 
-    fun receive(timeout: Double = StaticTdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = receiveLock.withLock { client.receive(timeout) }
+    fun receive(timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = receiveLock.withLock { client.receive(timeout) }
 }
 
 /**

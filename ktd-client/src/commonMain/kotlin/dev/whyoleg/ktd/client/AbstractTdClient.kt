@@ -4,11 +4,10 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 
 abstract class AbstractTdClient(
-    api: StaticTdApi,
-    runner: SynchronizedRunner = DefaultSynchronizedRunner(),
-    updatesCallback: TdUpdatesCallback = {}
+    api: AnyTdApi,
+    runner: SynchronizedRunner = DefaultSynchronizedRunner()
 ) : TdClient {
-    private val tdClient: DefaultTdClient by lazy { DefaultTdClient(api, runner, updatesCallback, this::onClose) }
+    private val tdClient: DefaultTdClient by lazy { DefaultTdClient(api, runner, this::onUpdate, this::onClose) }
 
     final override val id: Long get() = tdClient.id
     final override val isClosed: Boolean get() = tdClient.isClosed
@@ -21,4 +20,5 @@ abstract class AbstractTdClient(
         tdClient.sendCallback(request, callback)
 
     open fun onClose(): Unit = Unit
+    open fun onUpdate(update: TdUpdate): Unit = Unit
 }

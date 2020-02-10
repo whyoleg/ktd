@@ -10,15 +10,15 @@ import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
 class DiffCommand : Subcommand("diff") {
-    private val previousVersion by option(ArgType.String, "previousVersion", "pv", "A previous version of tdlib").required()
-    private val newVersion by option(ArgType.String, "newVersion", "nv", "A new version of tdlib").required()
+    private val previousVersion by option(ArgType.String, "previousVersion", "pv", "A previous version of TdLib").required()
+    private val newVersion by option(ArgType.String, "newVersion", "nv", "A new version of TdLib").required()
 
     override fun execute() {
         val gitHub = gitHub()
         val previousScheme = gitHub.scheme(previousVersion)
         val currentScheme = gitHub.scheme(newVersion)
 
-        val file = File("api/CHANGELOG.md")
+        val file = File("ktd-api/CHANGELOG.md")
         val fileLines = file.readText().lines()
 
         val newText = previousScheme stringDiff currentScheme

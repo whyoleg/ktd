@@ -1,7 +1,7 @@
 package dev.whyoleg.ktd.json
 
 actual object TdJson {
-    actual fun init(): Unit = loadTdlib()
+    actual fun init(): Unit = loadTdLib()
     actual external fun create(): Long
     actual external fun destroy(clientId: Long)
     actual external fun send(clientId: Long, request: String)

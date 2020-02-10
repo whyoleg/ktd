@@ -1,8 +1,6 @@
 package dev.whyoleg.ktd.cli
 
-import eu.jrie.jetbrains.kotlinshell.shell.*
 import org.kohsuke.github.*
-import java.io.*
 
 val tdVersionRefs = mapOf(
     "1.5.0" to "e2734d4fb6815da5f357da4731d3013f64410e6b",
@@ -17,16 +15,10 @@ val tdVersions = tdVersionRefs.keys.sorted()
 fun gitHub(): GitHub = GitHub.connectAnonymously()
 
 fun GitHub.downloadScheme(version: String): ByteArray {
-    val commitSha = tdVersionRefs[version] ?: error("There is no '$version' version of tdlib")
-    println("Downloading scheme for tdlib version '$version' with sha '$commitSha'")
+    val commitSha = tdVersionRefs[version] ?: error("There is no '$version' version of TdLib")
+    println("Downloading scheme for TdLib version '$version' with sha '$commitSha'")
     val content = getRepository("tdlib/td").getFileContent("td/generate/scheme/td_api.tl", commitSha)
     val scheme = content.read().readBytes()
     println("Scheme '$version' downloaded")
     return scheme
-}
-
-//TODO remove it, use workflow
-suspend fun checkoutVersion(version: String) {
-    val commitSha = tdVersionRefs[version] ?: error("There is no '$version' version of tdlib")
-    shell(dir = File("td")) { "git reset --hard $commitSha"() }
 }

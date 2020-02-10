@@ -20,9 +20,9 @@ sealed class TlAddition {
         override fun toString(): String = "BotsOnly"
     }
 
-    object TestingOnly : TlAddition(), Annotation {
-        override val annotation: String = "TdTestingOnly"
-        override fun toString(): String = "TestingOnly"
+    object TestOnly : TlAddition(), Annotation {
+        override val annotation: String = "TdTestOnly"
+        override fun toString(): String = "TestOnly"
     }
 
     data class Documentation(override val message: String) : TlAddition(), WithMessage {
@@ -46,7 +46,7 @@ sealed class TlAddition {
     }
 
     companion object {
-        fun annotations() = listOf<Annotation>(BotsOnly, TestingOnly)
+        fun annotations() = listOf<Annotation>(BotsOnly, TestOnly)
     }
 }
 
@@ -61,7 +61,7 @@ fun TlAddition(addition: String): TlAddition = when (addition.toLowerCase()) {
     "may be empty if not applicable",
     "pass null to stop sharing the live location" ->
         Nullable(addition)
-    "for testing only"                            -> TestingOnly
+    "for testing only"                            -> TestOnly
     "for bots only",
     "can be used only by bots and only in private chats",
     "only available to bots",

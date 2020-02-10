@@ -6,7 +6,7 @@ import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
 class ApiCommand : Subcommand("api") {
-    private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
+    private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
 
     private fun getAndroidManifest(type: String) = """
         <?xml version="1.0" encoding="utf-8"?>
@@ -16,7 +16,7 @@ class ApiCommand : Subcommand("api") {
     private val types = listOf("coroutines", "lib", "raw")
 
     override fun execute() {
-        println("Generate api for tdlib $version")
+        println("Generate api for TdLib $version")
         val scheme = gitHub().downloadScheme(version)
         println("Scheme downloaded")
         val apiEntities = generateApi(scheme, version).toList()

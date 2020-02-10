@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
 
-class FlowCachedUpdatesHandler(job: Job) {
+class FlowUpdatesCache(job: Job) {
 
     private sealed class Action {
         class Add(val update: TdUpdate) : Action()
@@ -24,10 +24,6 @@ class FlowCachedUpdatesHandler(job: Job) {
     val updates: Flow<TdUpdate> = channelFlow {
         cacheChannel.offer(Action.Subscribe(this))
         awaitClose { cacheChannel.offer(Action.Unsubscribe(this)) }
-    }
-
-    val updatesCallback: TdUpdatesCallback = {
-        cacheChannel.offer(Action.Add(it))
     }
 
     init {
@@ -64,4 +60,9 @@ class FlowCachedUpdatesHandler(job: Job) {
         }
         return unlimitedChannel
     }
+
+    fun save(update: TdUpdate) {
+        cacheChannel.offer(Action.Add(update))
+    }
+
 }

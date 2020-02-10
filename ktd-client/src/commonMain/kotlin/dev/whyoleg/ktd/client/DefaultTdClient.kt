@@ -5,7 +5,7 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.*
 
 class DefaultTdClient(
-    api: StaticTdApi,
+    api: AnyTdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {},
     onClose: () -> Unit = {}

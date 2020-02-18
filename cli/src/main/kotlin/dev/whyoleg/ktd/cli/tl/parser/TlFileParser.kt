@@ -1,7 +1,6 @@
 package dev.whyoleg.ktd.cli.tl.parser
 
 import dev.whyoleg.ktd.cli.tl.*
-import java.util.zip.*
 
 fun List<String>.parseTlData(): List<TlData> = parseRawTlData().map(RawTlData::toTlData)
 
@@ -24,36 +23,36 @@ private fun List<String>.parseRawTlData(): List<RawTlData> {
     return data
 }
 
-private fun String.crc(): Int = CRC32().apply { update(replace("<", " ").replace(">", "").toByteArray()) }.value.toInt()
-
 private fun RawTlData.toTlData(): TlData = when (type) {
     RawTlDataType.Object   -> when (expression.contains(spaceToken)) {
-        true  -> toObject()
-        false -> toAbstract()
+        true  -> toClass()
+        false -> toSealed()
     }
     RawTlDataType.Function -> toFunction()
 }
 
-private fun RawTlData.toAbstract(): TlAbstract {
+private fun RawTlData.toSealed(): TlSealed {
     val map = groupLines()
     val (descriptions, additions) = map.splitByKey(descriptionToken)
     val metadata = TlMetadata(descriptions, additions, emptyList())
-    return TlAbstract(expression, metadata)
+    return TlSealed(expression, metadata)
 }
 
-private fun RawTlData.toObject(): TlObject {
+private fun RawTlData.toClass(): TlClass {
     val type = expression.substringBefore(spaceToken).trim().capitalize()
     val expressionParentType = expression.substringAfter(equalToken).trim()
-    val parentType = if (expressionParentType == type) null else expressionParentType
     val metadata = extractMetadata()
-    return TlObject(type, parentType, metadata, expression.crc())
+    return when (expressionParentType) {
+        type -> TlObject(type, metadata)
+        else -> TlSealedChild(type, expressionParentType, metadata)
+    }
 }
 
 private fun RawTlData.toFunction(): TlFunction {
     val type = expression.substringBefore(spaceToken).trim().capitalize()
     val returnType = expression.substringAfter(equalToken).trim()
     val metadata = extractMetadata()
-    return TlFunction(type, returnType, metadata, expression.crc())
+    return TlFunction(type, returnType, metadata)
 }
 
 private fun RawTlData.extractMetadata(): TlMetadata {

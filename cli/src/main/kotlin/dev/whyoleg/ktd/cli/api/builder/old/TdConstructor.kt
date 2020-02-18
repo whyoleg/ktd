@@ -15,20 +15,16 @@ val extraParameter =
         .defaultValue("TdExtra.EMPTY")
         .build()
 
-fun TlProperty.parameter(nullable: Boolean, default: Boolean): ParameterSpec =
-    ParameterSpec.builder(name.snakeToCamel(), type.className(nullable))
+fun TlProperty.parameter(nullable: Boolean, default: Boolean, old: Boolean = false): ParameterSpec =
+    ParameterSpec.builder(name.snakeToCamel(), type.className(nullable, old))
         .apply { if (default) defaultValue(type.default) }
         .build()
 
-fun TlProperty.property(nullable: Boolean): PropertySpec =
-    PropertySpec.builder(name.snakeToCamel(), type.className(nullable))
+fun TlProperty.property(nullable: Boolean, old: Boolean = false): PropertySpec =
+    PropertySpec.builder(name.snakeToCamel(), type.className(nullable, old))
         .initializer(name.snakeToCamel())
         .addAnnotation(serialName(name))
-        .apply {
-            additions.filterIsInstance<TlAddition.Annotation>()
-                .map { ClassName(pcg, it.annotation) }
-                .forEach(::addAnnotation)
-        }
+        .apply { if (TlAddition.BotsOnly in additions) addAnnotation(ClassName(pcg, "TdBotsOnly")) }
         .build()
 
 fun tdConstructor(extraNeeded: Boolean, block: FunSpec.Builder.() -> Unit): FunSpec = FunSpec.constructorBuilder()
@@ -36,16 +32,15 @@ fun tdConstructor(extraNeeded: Boolean, block: FunSpec.Builder.() -> Unit): FunS
     .apply { if (extraNeeded) addParameter(extraParameter) }
     .build()
 
-fun TypeSpec.Builder.constructor(data: TlData, extraNeeded: Boolean): TypeSpec.Builder = apply {
+fun TypeSpec.Builder.constructor(data: TlData, extraNeeded: Boolean, old: Boolean = false): TypeSpec.Builder = apply {
+    val sortedProperties = data.metadata.properties.sortedBy { TlAddition.BotsOnly in it.additions }
     primaryConstructor(tdConstructor(extraNeeded) {
-        parameters += data.metadata.properties.map {
-            it.parameter(
-                it.additions.any { it is TlAddition.Nullable } || data is TlFunction,
-                data is TlFunction
-            )
+        parameters += sortedProperties.map {
+            it.parameter(it.additions.any { it is TlAddition.Nullable } || data is TlFunction, data is TlFunction, old)
         }
     })
-    propertySpecs += data.metadata.properties.map {
-        it.property(it.additions.any { it is TlAddition.Nullable } || data is TlFunction)
+    propertySpecs += sortedProperties.map {
+        it.property(it.additions.any { it is TlAddition.Nullable } || data is TlFunction, old)
     }
+    if (extraNeeded) addProperty(extraProperty)
 }

@@ -20,15 +20,23 @@ buildscript {
     }
 }
 
-inline fun ModuleContext.m(name: String, path: String? = null, block: ModuleContext.() -> Unit = {}) {
+inline fun ModuleContext.m(name: String, path: String? = null, ignore: Boolean = false, block: ModuleContext.() -> Unit = {}) {
     val p = path?.let { "$it/" } ?: ""
-    name("${p}ktd-$name", block = block)
+    name("${p}ktd-$name", ignore, block)
+}
+
+fun ModuleContext.mf(folder: String): (modules: List<String>) -> Unit = { modules ->
+    folder {
+        modules.forEach {
+            m(it, folder)
+        }
+    }
 }
 
 modules {
     "cli"()
     "benchmarks"()
-    //    "integration"()
+    //    "api-integration"()
     //    "samples"()
 
     m("tdlib")
@@ -37,23 +45,37 @@ modules {
     m("client")
 
     // latest: 1.6.0
-    m("api")
-    m("core-api")
-    m("bots-api")
-    m("test-api")
-    m("deprecated-api") //TODO remove in 0.6.1
+    mf("api")(
+        listOf(
+            "api-core",
+            "api-user",
+            "api-bots",
+            "api-test"
+        )
+    )
+    mf("api-suspend")(
+        listOf(
+            "api-core-suspend",
+            "api-user-suspend",
+            "api-bots-suspend",
+            "api-test-suspend"
+        )
+    )
+    mf("clients")(
+        listOf(
+            "client-suspend",
+            "client-coroutines"
+        )
+    )
+    mf("updates")(
+        listOf(
+            "updates-flow" //experimental
+        )
+    )
 
-    "clients" {
-        m("client-deferred", "clients")
-        m("client-coroutines", "clients")
-        //        m("client-rx2", "clients") //experimental
-        //        m("client-rx3", "clients") //experimental
-        //        m("client-reactor", "clients") //experimental
-        //        m("client-reaktive", "clients") //experimental
-    }
-
-    "updates" {
-        m("updates-flow", "updates") //experimental
-    }
-
+    //    "migration" {
+    //        "v060" { //TODO error in 0.6.1, remove in 0.7.0
+    //            "ktd-api-coroutines"()
+    //        }
+    //    }
 }

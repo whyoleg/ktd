@@ -4,17 +4,9 @@ import com.squareup.kotlinpoet.*
 import java.io.*
 
 
-fun file(name: String, block: FileSpec.Builder.() -> Unit) {
-    FileSpec.builder(pcg, name).apply(block).writeDefault()
+fun file(name: String, packageName: String = pcg, module: String, block: FileSpec.Builder.() -> Unit) {
+    FileSpec.builder(packageName, name).apply(block).writeDefault(module)
 }
 
-fun FileSpec.Builder.writeDefault() {
-    indent("    ")
-    addAnnotation(
-        AnnotationSpec.builder(ClassName("kotlin", "UseExperimental"))
-            .addMember("TdBotsOnly::class")
-            .addMember("TdTestOnly::class")
-            .build()
-    )
-    build().writeTo(File("ktd-api/src/commonMain/kotlin"))
-}
+fun FileSpec.Builder.writeDefault(module: String): Unit =
+    indent("    ").build().writeTo(File("api/$module/src/commonMain/kotlin"))

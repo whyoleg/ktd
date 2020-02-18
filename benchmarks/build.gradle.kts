@@ -12,8 +12,8 @@ kotlin {
     }
     metadata {
         dependenciesMain {
-            implementation(ProjectModules.api)
-            implementation(ProjectModules.Clients.client_deferred)
+            implementation(ProjectModules.Api.api_core)
+            implementation(ProjectModules.Clients.client_suspend)
         }
     }
 }

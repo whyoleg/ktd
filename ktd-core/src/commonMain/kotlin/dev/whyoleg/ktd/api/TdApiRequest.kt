@@ -1,14 +1,14 @@
 package dev.whyoleg.ktd.api
 
 /**
- * Requests to [StaticTdApi] are untyped.
+ * Requests to TdApi are untyped.
  * Typing need to be handled on clients level.
  */
 typealias TdApiRequest = TdRequest<*>
 
 /**
  * Represents request with associated [TdResponse] of type [R].
- * Response from [StaticTdApi] will be of type [TdResponseOrError]
+ * Response from TdApi will be of type [TdResponseOrError]
  *
  * @param[R] type of associated [TdResponse]
  */

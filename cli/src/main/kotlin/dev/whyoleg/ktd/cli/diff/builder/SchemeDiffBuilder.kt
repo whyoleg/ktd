@@ -8,7 +8,7 @@ infix fun TlScheme.stringDiff(new: TlScheme): String? = (this diff new)?.schemeD
 
 fun TlSchemeDiff.schemeDiff(): String = buildString {
     append("```diff")
-    abstractList?.let(this::abstractListDiff)
+    sealedList?.let(this::sealedListDiff)
     objectList?.let(this::objectListDiff)
     functionList?.let(this::functionListDiff)
     append("\n```\n")

@@ -6,7 +6,7 @@ sealed class TlData(
     open val metadata: TlMetadata
 )
 
-data class TlAbstract(
+data class TlSealed(
     override val type: String,
     override val metadata: TlMetadata
 ) : TlData(type, null, metadata)
@@ -14,20 +14,22 @@ data class TlAbstract(
 sealed class TlClass(
     type: String,
     parentType: String?,
-    metadata: TlMetadata,
-    open val crc: Int
+    metadata: TlMetadata
 ) : TlData(type, parentType, metadata)
+
+data class TlSealedChild(
+    override val type: String,
+    override val parentType: String,
+    override val metadata: TlMetadata
+) : TlClass(type, parentType, metadata)
 
 data class TlObject(
     override val type: String,
-    override val parentType: String?,
-    override val metadata: TlMetadata,
-    override val crc: Int
-) : TlClass(type, parentType, metadata, crc)
+    override val metadata: TlMetadata
+) : TlClass(type, null, metadata)
 
 data class TlFunction(
     override val type: String,
     val returnType: String,
-    override val metadata: TlMetadata,
-    override val crc: Int
-) : TlClass(type, null, metadata, crc)
+    override val metadata: TlMetadata
+) : TlClass(type, null, metadata)

@@ -11,7 +11,7 @@ kotlin {
     }
     metadata {
         dependenciesMain {
-            api(ProjectModules.Clients.client_deferred)
+            api(ProjectModules.Clients.client_suspend)
             api(ProjectModules.Updates.updates_flow)
         }
     }

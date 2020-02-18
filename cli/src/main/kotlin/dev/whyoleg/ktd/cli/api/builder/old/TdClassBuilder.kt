@@ -4,9 +4,6 @@ import com.squareup.kotlinpoet.*
 import dev.whyoleg.ktd.cli.builder.*
 import dev.whyoleg.ktd.cli.tl.*
 
-val pcg = "dev.whyoleg.ktd.api"
-val existed = listOf("Ok", "Error", "Close", "Destroy", "LogOut")
-
 fun TypeSpec.Builder.dataKdoc(data: TlData, extraNeeded: Boolean): TypeSpec.Builder = apply {
     val classDescription = data.metadata.descriptions + data.metadata.additions.strings()
     val propertiesDescription = data.metadata.properties.flatMap {
@@ -30,11 +27,25 @@ fun TypeSpec.Builder.dataKdoc(data: TlData, extraNeeded: Boolean): TypeSpec.Buil
     }
 }
 
-fun tdDataType(data: TlData, type: TdType, block: TypeSpec.Builder.() -> Unit): TypeSpec {
-    val extraNeeded =
-        type == TdType.Response || type == TdType.Request || type == TdType.SyncRequest || type == TdType.Update // TODO remove
+fun tdDataType(
+    data: TlData,
+    type: TdDataType,
+    packageName: String = pcg,
+    old: Boolean = false,
+    overrideName: String? = null,
+    block: TypeSpec.Builder.() -> Unit
+): TypeSpec {
+    val extraNeeded = type == TdDataType.Response || type == TdDataType.Request || type == TdDataType.SyncRequest
     val isObject = data.metadata.properties.isEmpty() && !extraNeeded
-    val className = tdApiClass.nestedClass(data.type)
+    val className = if (old) tdApiClass.nestedClass(data.type) else {
+        ClassName(
+            packageName, overrideName ?: when (data) {
+                is TlSealedChild -> data.type.substringAfter(data.parentType)
+                else             -> "Td${data.type}"
+            }
+        )
+    }
+    println(className)
     val spec = when {
         isObject -> TypeSpec.objectBuilder(className)
         else     -> TypeSpec.classBuilder(className).addModifiers(KModifier.DATA)
@@ -44,15 +55,13 @@ fun tdDataType(data: TlData, type: TdType, block: TypeSpec.Builder.() -> Unit): 
         .dataKdoc(data, extraNeeded)
         .apply(block)
         .apply {
-            data.metadata.additions.filterIsInstance<TlAddition.Annotation>()
-                .map { ClassName(pcg, it.annotation) }
-                .forEach(::addAnnotation)
-            if (type == TdType.Request || type == TdType.SyncRequest) {
+            if (type == TdDataType.Request || type == TdDataType.SyncRequest) {
                 addFunction(
                     FunSpec.builder("withRequestId")
                         .addModifiers(KModifier.OVERRIDE)
+                        .addAnnotation(suppress("OverridingDeprecatedMember"))
                         .addParameter("id", ClassName("kotlin", "Long"))
-                        .returns(ClassName("", data.type))
+                        .returns(className)
                         .addCode(CodeBlock.of("return·copy(extra·=·extra.copy(id·=·id))\n"))
                         .build()
                 )
@@ -60,43 +69,41 @@ fun tdDataType(data: TlData, type: TdType, block: TypeSpec.Builder.() -> Unit): 
         }
     return when {
         isObject -> spec
-        else     -> spec.constructor(data, extraNeeded).apply { if (extraNeeded) addProperty(extraProperty) }
+        else     -> spec.constructor(data, extraNeeded, old)
     }.build()
 }
 
 fun TypeSpec.Builder.setParents(
     data: TlData,
-    responseTypes: Set<String>,
-    requestsTypes: Map<String, String>
+    typedScheme: TlTypedScheme,
+    old: Boolean = false,
+    parentType: String? = null
 ): TypeSpec.Builder = apply {
-    val parent = data.parentType
-    when (data.type(responseTypes, requestsTypes)) {
-        TdType.Object      -> {
-            if (parent != null) superclass(ClassName.bestGuess(parent))
+    val parent = parentType ?: data.parentType
+    when (data.type(typedScheme)) {
+        TdDataType.Object      -> {
+            if (parent != null) superclass(ClassName.bestGuess(if (old) parent else "Td$parent"))
             else {
-                superclass(ClassName.bestGuess("Object"))
+                if (old) superclass(ClassName.bestGuess("Object"))
                 addSuperinterface(tdObjectClass)
             }
         }
-        TdType.Response    -> {
-            if (parent != null) superclass(ClassName.bestGuess(parent))
+        TdDataType.Response    -> {
+            if (parent != null) superclass(ClassName.bestGuess(if (old) parent else "Td$parent"))
             else {
-                superclass(ClassName.bestGuess("Object"))
+                if (old) superclass(ClassName.bestGuess("Object"))
                 addSuperinterface(tdResponseClass)
             }
         }
-        TdType.Request     -> {
-            superclass(ClassName.bestGuess("Function"))
-            addSuperinterface(tdRequestParameterized(requestsTypes.getValue(data.type)))
+        TdDataType.Request     -> {
+            if (old) superclass(ClassName.bestGuess("Function"))
+            val type = typedScheme.requestTypes.getValue(data.type)
+            addSuperinterface(tdRequestParameterized(if (old) type else "Td$type"))
         }
-        TdType.SyncRequest -> {
-            superclass(ClassName.bestGuess("Function"))
-            addSuperinterface(tdSyncRequestParameterized(requestsTypes.getValue(data.type)))
-        }
-        TdType.Update      -> {
-            superclass(ClassName.bestGuess("Object"))
-            addSuperinterface(tdUpdateClass)
-            addSuperinterface(tdResponseClass)
+        TdDataType.SyncRequest -> {
+            if (old) superclass(ClassName.bestGuess("Function"))
+            val type = typedScheme.requestTypes.getValue(data.type)
+            addSuperinterface(tdSyncRequestParameterized(if (old) type else "Td$type"))
         }
     }
 }

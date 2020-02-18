@@ -5,13 +5,11 @@ import dev.whyoleg.ktd.internal.*
 import dev.whyoleg.ktd.json.*
 import kotlinx.serialization.modules.*
 
-abstract class AnyTdApi
-@Deprecated(message = "Constructor used internally to setup serialization for api.", level = DeprecationLevel.ERROR)
-constructor(val version: String, moduleBuilder: SerializersModuleBuilder.() -> Unit) {
+open class AnyTdApi
+@Deprecated(message = "Constructor used internally in api modules to setup serialization for api.", level = DeprecationLevel.ERROR)
+constructor(val version: String, private val lazySerialModule: Lazy<SerialModule>) {
 
-    private val tdJson by lazy { TdJson.apply { init() } }
-
-    private val serializer by lazy { TdJsonSerializer(moduleBuilder) }
+    private val serializer by lazy { TdJsonSerializer(lazySerialModule.value) }
 
     fun createClient(): Long =
         tdJson.create()
@@ -29,6 +27,7 @@ constructor(val version: String, moduleBuilder: SerializersModuleBuilder.() -> U
         TdResult(tdJson.execute(serializer.stringify(request)).let(serializer::parse) as TdResponseOrError)
 
     companion object {
+        private val tdJson by lazy { TdJson.apply { init() } }
         const val DEFAULT_RECEIVE_TIMEOUT: Double = 300.0
     }
 }

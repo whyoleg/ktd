@@ -4,12 +4,12 @@ import dev.whyoleg.ktd.*
 import java.util.concurrent.*
 
 class SingleThreadRunner(
-    override val timeout: Double = StaticTdApi.DEFAULT_RECEIVE_TIMEOUT
+    override val timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : ExecutorThreadRunner(Executors.newSingleThreadExecutor())
 
 class CachedThreadRunner(
     threadFactory: ThreadFactory = Executors.defaultThreadFactory(),
-    override val timeout: Double = StaticTdApi.DEFAULT_RECEIVE_TIMEOUT
+    override val timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : ExecutorThreadRunner(Executors.newCachedThreadPool(threadFactory)) {
     companion object : ExecutorThreadRunner(Executors.newCachedThreadPool())
 }
@@ -25,7 +25,7 @@ abstract class ExecutorThreadRunner(private val executor: ExecutorService) : Syn
         }
     }
 
-    fun shutdown() {
+    override fun cleanup() {
         executor.shutdown()
     }
 }

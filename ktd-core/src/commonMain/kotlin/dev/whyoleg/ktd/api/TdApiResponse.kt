@@ -1,12 +1,12 @@
 package dev.whyoleg.ktd.api
 
 /**
- * Represents any response from [StaticTdApi]: [TdUpdate], [TdResponse], [TdError].
+ * Represents any response from TdApi: [TdUpdate], [TdResponse], [TdError].
  */
 interface TdApiResponse : TdObject
 
 /**
- * Represents update from [StaticTdApi].
+ * Represents update from TdApi.
  */
 interface TdUpdate : TdApiResponse
 

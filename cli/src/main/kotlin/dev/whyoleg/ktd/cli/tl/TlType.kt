@@ -23,8 +23,8 @@ data class TlArrayType(val type: TlType) : TlType(type.arrayDefault) {
     override fun toString(): String = kotlinType
 }
 
-val TlType.arrayKotlinType: String get() = if (this is TlPrimitiveType) "${kotlinType}Array" else "Array<${kotlinType}>"
-val TlType.arrayDefault: String get() = if (this is TlPrimitiveType) "${kotlinType.decapitalize()}ArrayOf()" else "emptyArray()"
+val TlType.arrayKotlinType: String get() = if (this is TlPrimitiveType) "${kotlinType}Array" else "List<${kotlinType}>"
+val TlType.arrayDefault: String get() = if (this is TlPrimitiveType) "${kotlinType.decapitalize()}ArrayOf()" else "emptyList()"
 
 fun String.toTlType(): TlType = when (val type = capitalize()) {
     "Int32"          -> TlIntType

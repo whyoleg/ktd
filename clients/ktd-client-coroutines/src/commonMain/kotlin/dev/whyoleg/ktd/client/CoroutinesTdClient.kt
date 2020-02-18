@@ -6,39 +6,18 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 class CoroutinesTdClient internal constructor(
-    private val job: Job,
     api: AnyTdApi,
-    runner: SynchronizedRunner
-) : AbstractTdClient(api, runner), Job by job {
-    private val requestsJob = SupervisorJob(job)
+    runner: SynchronizedRunner,
+    job: Job
+) : SuspendTdClient(api, runner, job) {
     private val cache = FlowUpdatesCache(job)
+
     val updates: Flow<TdUpdate> = cache.updates
 
-    override fun cancel(cause: CancellationException?) {
-        close()
-        job.cancel(cause)
-    }
-
-    override fun onClose() {
-        job.cancel()
-    }
-
-    override fun onUpdate(update: TdUpdate) {
-        cache.save(update)
-    }
-
-    fun send(request: TdApiRequest) {
-        sendCallback(request)
-    }
-
-    suspend fun <R : TdResponse> exec(request: TdRequest<R>): R = Dispatchers.Default {
-        CompletableDeferred<R>(requestsJob).also { sendCallback(request, it::complete, it::completeExceptionally) }.await()
-    }
+    override fun onUpdate(update: TdUpdate): Unit = cache.save(update)
 }
 
-@Suppress("FunctionName")
-fun CoroutinesTdClient(
-    api: AnyTdApi,
+fun AnyTdApi.coroutinesClient(
     parentJob: Job? = null,
     runner: SynchronizedRunner = DefaultSynchronizedRunner()
-): CoroutinesTdClient = CoroutinesTdClient(Job(parentJob), api, runner)
+): CoroutinesTdClient = CoroutinesTdClient(this, runner, Job(parentJob))

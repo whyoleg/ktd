@@ -7,21 +7,15 @@ sealed class TlAddition {
         val message: String?
     }
 
-    interface Annotation {
-        val annotation: String
-    }
-
     data class Nullable(override val message: String? = null) : TlAddition(), WithMessage {
         override fun toString(): String = "Nullable" + (message?.let { " - $it" } ?: "")
     }
 
-    object BotsOnly : TlAddition(), Annotation {
-        override val annotation: String = "TdBotsOnly"
+    object BotsOnly : TlAddition() {
         override fun toString(): String = "BotsOnly"
     }
 
-    object TestOnly : TlAddition(), Annotation {
-        override val annotation: String = "TdTestOnly"
+    object TestOnly : TlAddition() {
         override fun toString(): String = "TestOnly"
     }
 
@@ -45,9 +39,6 @@ sealed class TlAddition {
         override fun toString(): String = "Sync - can be called synchronously"
     }
 
-    companion object {
-        fun annotations() = listOf<Annotation>(BotsOnly, TestOnly)
-    }
 }
 
 @Suppress("FunctionName")

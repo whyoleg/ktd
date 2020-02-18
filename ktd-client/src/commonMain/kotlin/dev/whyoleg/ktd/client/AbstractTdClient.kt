@@ -20,5 +20,5 @@ abstract class AbstractTdClient(
         tdClient.sendCallback(request, callback)
 
     open fun onClose(): Unit = Unit
-    open fun onUpdate(update: TdUpdate): Unit = Unit
+    abstract fun onUpdate(update: TdUpdate)
 }

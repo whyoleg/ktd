@@ -9,5 +9,6 @@ val tdUpdateClass = ClassName(pcg, "TdUpdate")
 val tdObjectClass = ClassName(pcg, "TdObject")
 val tdRequestClass = ClassName(pcg, "TdRequest")
 val tdSyncRequestClass = ClassName(pcg, "TdSyncRequest")
-fun tdRequestParameterized(t: String) = tdRequestClass.parameterizedBy(ClassName("", t))
-fun tdSyncRequestParameterized(t: String) = tdSyncRequestClass.parameterizedBy(ClassName("", t))
+
+fun tdRequestParameterized(t: String) = tdRequestClass.parameterizedBy(ClassName(pcg, t))
+fun tdSyncRequestParameterized(t: String) = tdSyncRequestClass.parameterizedBy(ClassName(pcg, t))

@@ -20,3 +20,12 @@ fun deprecated(
         )
         addMember("level = DeprecationLevel." + if (error) "ERROR" else "WARNING")
     }.build()
+
+fun suppress(vararg strings: String) =
+    AnnotationSpec.builder(ClassName("kotlin", "Suppress")).apply {
+        strings.forEach { addMember("\"$it\"") }
+    }.build()
+
+val suppressApi: AnnotationSpec = suppress("unused", "DEPRECATION")
+
+val suppressDeprecationError = suppress("DEPRECATION_ERROR")

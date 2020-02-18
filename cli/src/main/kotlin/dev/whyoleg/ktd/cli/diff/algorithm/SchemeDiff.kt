@@ -7,7 +7,7 @@ inline fun <reified T : Any, D : Any> TlScheme.diff(new: TlScheme, diff: (old: L
     diff(this.data.filterIsInstance<T>(), new.data.filterIsInstance<T>())
 
 infix fun TlScheme.diff(new: TlScheme): TlSchemeDiff? = constructorDiff(
-    diff(new, List<TlAbstract>::diff),
+    diff(new, List<TlSealed>::diff),
     diff(new, List<TlObject>::diff),
     diff(new, List<TlFunction>::diff),
     ::TlSchemeDiff

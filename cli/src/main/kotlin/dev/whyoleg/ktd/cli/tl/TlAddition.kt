@@ -66,7 +66,7 @@ fun TlAddition(addition: String): TlAddition = when (addition.toLowerCase()) {
     "must be non-negative"                                                                                                 ->
         SizeRequired(0, Int.MAX_VALUE)
     else                                          -> {
-        val splitted = addition.substringBefore(spaceToken).split(dashToken).mapNotNull(String::toIntOrNull)
+        val splitted = addition.substringBefore(" ").split("-").mapNotNull(String::toIntOrNull)
         if (splitted.size > 1) {
             val (min, max) = splitted
             SizeRequired(min, max)

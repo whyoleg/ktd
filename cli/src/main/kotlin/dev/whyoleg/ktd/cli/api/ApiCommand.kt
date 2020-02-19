@@ -1,6 +1,5 @@
 package dev.whyoleg.ktd.cli.api
 
-import dev.whyoleg.ktd.cli.*
 import kotlinx.cli.*
 import java.io.*
 
@@ -16,19 +15,21 @@ class ApiCommand : Subcommand("api") {
     private val types = listOf("coroutines", "lib", "raw")
 
     override fun execute() {
-        println("Generate api for TdLib $version")
-        val scheme = gitHub().downloadScheme(version)
-        println("Scheme downloaded")
-        val apiEntities = generateApi(scheme, version).toList()
-
-        val buildEntities = types.map(this::buildEntity)
-        val androidEntities = types.map(this::androidEntity)
-
-        val entities = apiEntities + buildEntities + androidEntities
-        println("Entities generated")
-        writeEntities(entities)
-        println("New api saved")
+        //        println("Generate api for TdLib $version")
+        //        val scheme = gitHub().downloadScheme(version)
+        //        println("Scheme downloaded")
+        //        val apiEntities = generateApi(scheme, version).toList()
+        //
+        //        val buildEntities = types.map(this::buildEntity)
+        //        val androidEntities = types.map(this::androidEntity)
+        //
+        //        val entities = apiEntities + buildEntities + androidEntities
+        //        println("Entities generated")
+        //        writeEntities(entities)
+        //        println("New api saved")
     }
+
+    private fun apiPath(module: String, version: String, path: String): String = "api/$module/v$version/$path"
 
     private fun buildEntity(type: String) =
         apiPath(type, version, "build.gradle.kts") to "configure${type.capitalize()}Api()\n"

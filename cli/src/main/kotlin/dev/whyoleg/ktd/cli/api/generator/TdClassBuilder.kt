@@ -1,12 +1,15 @@
-package dev.whyoleg.ktd.cli.api.builder.old
+package dev.whyoleg.ktd.cli.api.generator
 
 import com.squareup.kotlinpoet.*
-import dev.whyoleg.ktd.cli.builder.*
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.tl.*
 
-fun TypeSpec.Builder.dataKdoc(data: TlData, extraNeeded: Boolean): TypeSpec.Builder = apply {
-    val classDescription = data.metadata.descriptions + data.metadata.additions.strings()
-    val propertiesDescription = data.metadata.properties.flatMap {
+private fun List<TlAddition>.strings(): List<String> =
+    filterIsInstance<TlAddition.WithMessage>().mapNotNull(TlAddition.WithMessage::message)
+
+fun TlData.kdoc(extraNeeded: Boolean): List<String> {
+    val classDescription = metadata.descriptions + metadata.additions.strings()
+    val propertiesDescription = metadata.properties.flatMap {
         val link = "@property ${it.name.snakeToCamel()} "
         val spaces = " ".repeat(link.length)
         val firstLine = link + it.descriptions.first()
@@ -21,10 +24,10 @@ fun TypeSpec.Builder.dataKdoc(data: TlData, extraNeeded: Boolean): TypeSpec.Buil
         propertiesDescription.isEmpty() -> emptyList()
         else                            -> listOf("") + propertiesDescription
     }
-    lines.forEachIndexed { index, line ->
-        addKdoc(line.replace(" ", "·"))
-        if (lines.size != index) addKdoc("\n")
-    }
+    return lines.mapIndexed { index, line ->
+        val l = line.replace(" ", "·")
+        if (lines.size != index) listOf(l, "\n") else listOf(l)
+    }.flatten()
 }
 
 fun tdDataType(
@@ -35,7 +38,8 @@ fun tdDataType(
     overrideName: String? = null,
     block: TypeSpec.Builder.() -> Unit
 ): TypeSpec {
-    val extraNeeded = type == TdDataType.Response || type == TdDataType.Request || type == TdDataType.SyncRequest
+    val extraNeeded = type == TdDataType.Response || type == TdDataType.Request || type == TdDataType
+        .SyncRequest
     val isObject = data.metadata.properties.isEmpty() && !extraNeeded
     val className = if (old) tdApiClass.nestedClass(data.type) else {
         ClassName(
@@ -52,10 +56,11 @@ fun tdDataType(
     }
     spec.addAnnotation(serializableAnnotation)
         .addAnnotation(serialName(data.type.decapitalize()))
-        .dataKdoc(data, extraNeeded)
+        .apply { data.kdoc(extraNeeded).forEach(::addKdoc) }
         .apply(block)
         .apply {
-            if (type == TdDataType.Request || type == TdDataType.SyncRequest) {
+            if (type == TdDataType.Request || type == TdDataType.SyncRequest
+            ) {
                 addFunction(
                     FunSpec.builder("withRequestId")
                         .addModifiers(KModifier.OVERRIDE)

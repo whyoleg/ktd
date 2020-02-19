@@ -1,6 +1,5 @@
 package dev.whyoleg.ktd.cli.diff.builder
 
-import dev.whyoleg.ktd.cli.builder.*
 import dev.whyoleg.ktd.cli.diff.data.*
 import dev.whyoleg.ktd.cli.diff.data.StringDiffChange.*
 

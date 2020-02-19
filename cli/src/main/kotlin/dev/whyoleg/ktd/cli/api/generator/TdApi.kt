@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.builder.old
+package dev.whyoleg.ktd.cli.api.generator
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -15,20 +15,31 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
     val moduleName = "ktd-api-$kindName"
 
     typedScheme.run { objects + functions }.forEach { data ->
-        file("Td${data.type}", pcg, moduleName) {
-            addType(tdDataType(data, data.type(typedScheme), pcg) { setParents(data, typedScheme, false) })
+        file("Td${data.type}", pcg, "api", moduleName) {
+            addType(
+                tdDataType(data, data.type(typedScheme), pcg) {
+                    setParents(
+                        data,
+                        typedScheme,
+                        false
+                    )
+                })
         }
     }
     typedScheme.sealed.forEach { (sealed, children) ->
-        file("Td${sealed.type}", pcg, moduleName) {
+        file("Td${sealed.type}", pcg, "api", moduleName) {
             addType(
                 TypeSpec.classBuilder(ClassName(pcg, "Td${sealed.type}"))
                     .addModifiers(KModifier.SEALED)
                     .addAnnotation(serializableAnnotation)
-                    .dataKdoc(sealed, false)
+                    .apply { sealed.kdoc(false).forEach(::addKdoc) }
                     .setParents(sealed, typedScheme, false)
                     .addTypes(children.map { child ->
-                        tdDataType(child, child.type(typedScheme), pcg) { setParents(child, typedScheme, false) }
+                        tdDataType(
+                            child,
+                            child.type(typedScheme),
+                            pcg
+                        ) { setParents(child, typedScheme, false) }
                     })
                     .build()
             )
@@ -37,16 +48,28 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
     typedScheme.updates.forEach { (group, children) ->
         if (group == null) {
             children.map { child ->
-                file("Td${child.type}", "$pcg.updates", moduleName) {
-                    addType(tdDataType(child, child.type(typedScheme), "$pcg.updates", false, "Td${child.type}") {
-                        addSuperinterface(tdUpdateClass)
-                    })
+                file("Td${child.type}", "$pcg.updates", "api", moduleName) {
+                    addType(
+                        tdDataType(
+                            child,
+                            child.type(typedScheme),
+                            "$pcg.updates",
+                            false,
+                            "Td${child.type}"
+                        ) {
+                            addSuperinterface(tdUpdateClass)
+                        })
                 }
             }
         } else {
-            file("TdUpdate${group}", "$pcg.updates", moduleName) {
+            file("TdUpdate${group}", "$pcg.updates", "api", moduleName) {
                 addType(
-                    TypeSpec.classBuilder(ClassName("$pcg.updates", "TdUpdate${group}"))
+                    TypeSpec.classBuilder(
+                            ClassName(
+                                "$pcg.updates",
+                                "TdUpdate${group}"
+                            )
+                        )
                         .addModifiers(KModifier.SEALED)
                         .addAnnotation(serializableAnnotation)
                         .addSuperinterface(tdUpdateClass)
@@ -56,8 +79,19 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
                                 newType.startsWith("New") || newType.substringAfter(group).isBlank() -> "Data"
                                 else                                                                 -> newType.substringAfter(group)
                             }
-                            tdDataType(child, child.type(typedScheme), "$pcg.updates", false, overrideName) {
-                                superclass(ClassName("$pcg.updates", "TdUpdate${group}"))
+                            tdDataType(
+                                child,
+                                child.type(typedScheme),
+                                "$pcg.updates",
+                                false,
+                                overrideName
+                            ) {
+                                superclass(
+                                    ClassName(
+                                        "$pcg.updates",
+                                        "TdUpdate${group}"
+                                    )
+                                )
                             }
                         })
                         .build()
@@ -112,7 +146,7 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
     val isFinalKind = kind != TlKind.Core
 
     val controlFlow = when (isFinalKind) {
-        true  -> "coreApiBuilder.value + %T {"
+        true -> "coreApiBuilder.value + %T {"
         false -> "%T {"
     }
 
@@ -125,12 +159,26 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
     }
 
     val allResponseBlock =
-        typedScheme.sealed.mapNotNull { if (it.key.type(typedScheme) == TdDataType.Response) it else null }.takeIfIsNotEmpty()?.let {
-            CodeBlock.builder().apply { it.forEach { (sealed, children) -> add(sealedBlock(sealed.type, children)) } }.build()
+        typedScheme.sealed.mapNotNull {
+            if (it.key.type(typedScheme) == TdDataType
+                    .Response
+            ) it else null
+        }.takeIfIsNotEmpty()?.let {
+            CodeBlock.builder().apply {
+                it.forEach { (sealed, children) ->
+                    add(
+                        sealedBlock(sealed.type, children)
+                    )
+                }
+            }.build()
         }
 
     val responseBlock =
-        typedScheme.objects.mapNotNull { if (it.type(typedScheme) == TdDataType.Response) it.type else null }.takeIfIsNotEmpty()?.let {
+        typedScheme.objects.mapNotNull {
+            if (it.type(typedScheme) == TdDataType
+                    .Response
+            ) it.type else null
+        }.takeIfIsNotEmpty()?.let {
             CodeBlock.builder()
                 .beginControlFlow("polymorphic<%T>", ClassName(pcg, "TdApiResponse"))
                 .apply { it.forEach(::subclass) }
@@ -147,17 +195,22 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
         }
     }
 
-    file(builderName.capitalize(), pcg, moduleName) {
+    file(builderName.capitalize(), pcg, "api", moduleName) {
         if (isFinalKind) addImport("kotlinx.serialization.modules", "plus")
         addProperty(
-            PropertySpec.builder(builderName, ClassName("kotlin", "Lazy").parameterizedBy(SerialModuleClass))
+            PropertySpec.builder(
+                    builderName,
+                    ClassName("kotlin", "Lazy").parameterizedBy(SerialModuleClass)
+                )
                 .apply {
                     when {
-                        isFinalKind         -> {
+                        isFinalKind -> {
                             addModifiers(KModifier.INTERNAL)
                             addAnnotation(suppressDeprecationError)
                         }
-                        else                -> addAnnotation(deprecated("\"Used internally\"", error = true))
+                        else        -> addAnnotation(
+                            deprecated("\"Used internally\"", error = true)
+                        )
                     }
                 }
                 .initializer(
@@ -185,7 +238,7 @@ fun tdApiFile(version: String, kind: TlKind) {
     val apiName = "${kindName.capitalize()}TdApi"
     val builderName = "${kindName}ApiBuilder"
 
-    file(apiName, pcg, moduleName) {
+    file(apiName, pcg, "api", moduleName) {
         addType(TypeSpec.objectBuilder(ClassName(pcg, name)).apply {
             addAnnotation(suppressDeprecationError)
             superclass(ClassName("dev.whyoleg.ktd", "AnyTdApi"))

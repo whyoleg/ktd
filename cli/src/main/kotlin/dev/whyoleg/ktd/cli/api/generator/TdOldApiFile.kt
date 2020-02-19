@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.builder.old
+package dev.whyoleg.ktd.cli.api.generator
 
 //fun oldApiFile(meta: TlSchemeMetadata) {
 //    val (list, responses, requests) = meta

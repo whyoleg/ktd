@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.builder.old
+package dev.whyoleg.ktd.cli.api.generator
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy

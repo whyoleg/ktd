@@ -1,7 +1,7 @@
-package dev.whyoleg.ktd.cli.api.builder.old
+package dev.whyoleg.ktd.cli.api.generator
 
 import com.squareup.kotlinpoet.*
-import dev.whyoleg.ktd.cli.builder.*
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.tl.*
 
 val extraProperty =
@@ -27,18 +27,14 @@ fun TlProperty.property(nullable: Boolean, old: Boolean = false): PropertySpec =
         .apply { if (TlAddition.BotsOnly in additions) addAnnotation(ClassName(pcg, "TdBotsOnly")) }
         .build()
 
-fun tdConstructor(extraNeeded: Boolean, block: FunSpec.Builder.() -> Unit): FunSpec = FunSpec.constructorBuilder()
-    .apply(block)
-    .apply { if (extraNeeded) addParameter(extraParameter) }
-    .build()
-
 fun TypeSpec.Builder.constructor(data: TlData, extraNeeded: Boolean, old: Boolean = false): TypeSpec.Builder = apply {
     val sortedProperties = data.metadata.properties.sortedBy { TlAddition.BotsOnly in it.additions }
-    primaryConstructor(tdConstructor(extraNeeded) {
+    primaryConstructor(FunSpec.constructorBuilder().apply {
         parameters += sortedProperties.map {
             it.parameter(it.additions.any { it is TlAddition.Nullable } || data is TlFunction, data is TlFunction, old)
         }
-    })
+        if (extraNeeded) addParameter(extraParameter)
+    }.build())
     propertySpecs += sortedProperties.map {
         it.property(it.additions.any { it is TlAddition.Nullable } || data is TlFunction, old)
     }

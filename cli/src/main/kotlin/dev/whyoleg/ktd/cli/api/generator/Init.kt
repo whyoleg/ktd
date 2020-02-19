@@ -1,4 +1,4 @@
-package dev.whyoleg.ktd.cli.api.builder.old
+package dev.whyoleg.ktd.cli.api.generator
 
 import dev.whyoleg.ktd.cli.tl.*
 import java.io.*
@@ -12,10 +12,12 @@ fun main() {
     val data = parseData(tdBytes, tlBytes)
     data.forEach { (kind, scheme) ->
         if (kind == TlKind.Ignore) return@forEach
-        File("ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
+        File("api/ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
+        File("api-suspend/ktd-api-${kind.name.toLowerCase()}-suspend/src/commonMain/kotlin").deleteRecursively()
 
         tdApiFile(version, kind)
         tdApiClasses(scheme, kind)
         builderFile(scheme, kind)
+        suspendTdApiFunctions(scheme, kind)
     }
 }

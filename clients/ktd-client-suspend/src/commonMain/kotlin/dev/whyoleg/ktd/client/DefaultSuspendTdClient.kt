@@ -4,7 +4,7 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
 
-class DefaultSuspendTdClient internal constructor(
+internal class DefaultSuspendTdClient(
     api: AnyTdApi,
     runner: SynchronizedRunner,
     job: Job,

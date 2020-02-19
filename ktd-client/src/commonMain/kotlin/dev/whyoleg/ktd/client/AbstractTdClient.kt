@@ -7,7 +7,7 @@ abstract class AbstractTdClient(
     api: AnyTdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner()
 ) : TdClient {
-    private val tdClient: DefaultTdClient by lazy { DefaultTdClient(api, runner, this::onUpdate, this::onClose) }
+    private val tdClient: DefaultTdClient by lazy { DefaultTdClient(api, runner, this::onClose, this::onUpdate) }
 
     final override val id: Long get() = tdClient.id
     final override val isClosed: Boolean get() = tdClient.isClosed

@@ -109,7 +109,7 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
     val moduleName = "ktd-api-$kindName"
     val builderName = "${kindName}ApiBuilder"
 
-    val isFinalKind = kind == TlKind.User || kind == TlKind.Bots
+    val isFinalKind = kind != TlKind.Core
 
     val controlFlow = when (isFinalKind) {
         true  -> "coreApiBuilder.value + %T {"
@@ -157,7 +157,6 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
                             addModifiers(KModifier.INTERNAL)
                             addAnnotation(suppressDeprecationError)
                         }
-                        kind == TlKind.Test -> addModifiers(KModifier.INTERNAL)
                         else                -> addAnnotation(deprecated("\"Used internally\"", error = true))
                     }
                 }

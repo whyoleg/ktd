@@ -4,11 +4,11 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.*
 
-class DefaultTdClient(
+internal class DefaultTdClient(
     api: AnyTdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
-    updatesCallback: TdUpdatesCallback = {},
-    onClose: () -> Unit = {}
+    onClose: () -> Unit = {},
+    updatesCallback: TdUpdatesCallback = {}
 ) : TdClient {
     private val clientClosing = atomic(false)
     private val clientClosed = atomic(false)
@@ -58,3 +58,9 @@ class DefaultTdClient(
 
     override fun toString(): String = "TdClient($id)"
 }
+
+fun AnyTdApi.defaultTdClient(
+    runner: SynchronizedRunner = DefaultSynchronizedRunner(),
+    onClose: () -> Unit = {},
+    updatesCallback: TdUpdatesCallback = {}
+): TdClient = DefaultTdClient(this, runner, onClose, updatesCallback)

@@ -11,8 +11,7 @@ kotlin {
     }
     metadata {
         dependenciesMain {
-            api(ProjectModules.core)
-            api(ProjectModules.tdlib)
+            api(ProjectModules.Api.api_core)
         }
     }
 }

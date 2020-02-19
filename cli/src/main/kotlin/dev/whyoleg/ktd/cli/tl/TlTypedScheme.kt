@@ -25,7 +25,9 @@ fun List<TlData>.typed(responseTypes: Set<String>, requestTypes: Map<String, Str
     )
 }
 
-private val existed = listOf("Ok", "Error", "Close", "Destroy", "LogOut", "Update")
+private val existed = setOf("Ok", "Error", "Close", "Destroy", "LogOut", "Update")
+private val ignored = setOf("TestUseUpdate", "TestReturnError")
+private val testCore = setOf("TestNetwork", "TestProxy")
 
 fun parseData(tdBytes: ByteArray, tlBytes: ByteArray): Map<TlKind, TlTypedScheme> {
     val map = tdBytes.parseTdCpp()
@@ -39,11 +41,11 @@ fun parseData(tdBytes: ByteArray, tlBytes: ByteArray): Map<TlKind, TlTypedScheme
 
     return scheme.groupBy {
         when {
-            it.type in existed                                                  -> TlKind.BuiltIn
-            TlAddition.TestOnly in it.metadata.additions                        -> TlKind.Test
-            it.type in botsKeys || TlAddition.BotsOnly in it.metadata.additions -> TlKind.Bots
-            it.type in userKeys                                                 -> TlKind.User
-            else                                                                -> TlKind.Core
+            it.type in existed || it.type in ignored                             -> TlKind.Ignore
+            TlAddition.TestOnly in it.metadata.additions && it.type !in testCore -> TlKind.Test
+            it.type in botsKeys || TlAddition.BotsOnly in it.metadata.additions  -> TlKind.Bots
+            it.type in userKeys                                                  -> TlKind.User
+            else                                                                 -> TlKind.Core
         }
     }.mapValues { (_, list) -> list.typed(responseTypes, requestTypes) }
 }

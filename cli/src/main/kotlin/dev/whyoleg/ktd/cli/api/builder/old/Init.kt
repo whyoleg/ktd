@@ -11,8 +11,7 @@ fun main() {
 
     val data = parseData(tdBytes, tlBytes)
     data.forEach { (kind, scheme) ->
-        if (kind != TlKind.Test) return@forEach
-        //        if (kind == TlKind.BuiltIn || kind == TlKind.Test) return@forEach
+        if (kind == TlKind.Ignore) return@forEach
         File("ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
 
         tdApiFile(version, kind)

@@ -8,7 +8,6 @@ configureMultiplatform(
 )
 
 val tdIntegrationVersion = properties["tdIntegrationVersion"]?.toString()
-val tdOnlyVersion = properties["tdOnlyVersion"]?.toString() ?: "1.5.0"
 
 kotlin {
     dependenciesMain {
@@ -19,9 +18,9 @@ kotlin {
     metadata {
         dependenciesMain {
             if (tdIntegrationVersion == null) {
-                implementation(ProjectModule(":api-coroutines-v$tdOnlyVersion"))
+                implementation(ProjectModules.Api.api_test)
             } else {
-                implementation(Dependencies.ktdApiCoroutines(tdIntegrationVersion))
+                implementation(Dependencies.ktdApiTestSuspend(tdIntegrationVersion))
             }
         }
     }

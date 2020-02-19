@@ -1,8 +1,6 @@
 package dev.whyoleg.ktd.api.integration
 
-import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
-import dev.whyoleg.ktd.api.TdApi.*
 import kotlin.test.*
 
 abstract class TdlibCompatibilityTestBase {
@@ -10,43 +8,36 @@ abstract class TdlibCompatibilityTestBase {
     @Test
     fun executeFunction() {
         val logLevel = 11
-        TelegramRawClient.execute(SetLogVerbosityLevel(logLevel))
-        val newLevel = (TelegramRawClient.execute(GetLogVerbosityLevel()) as LogVerbosityLevel).verbosityLevel
+        TestTdApi.executeSynchronously(TdSetLogVerbosityLevel(logLevel))
+        val newLevel = TestTdApi.executeSynchronously(TdGetLogVerbosityLevel()).response!!.verbosityLevel
         assertEquals(logLevel, newLevel)
-        TelegramRawClient.execute(SetLogVerbosityLevel(0))
+        TestTdApi.executeSynchronously(TdSetLogVerbosityLevel(0))
     }
 
     @Test
     fun createClient() {
-        val clientId = TelegramRawClient.create()
-        val clientId2 = TelegramRawClient.create()
+        val clientId = TestTdApi.createClient()
+        val clientId2 = TestTdApi.createClient()
         assertNotEquals(clientId, clientId2)
-        TelegramRawClient.destroy(clientId)
-        TelegramRawClient.destroy(clientId2)
+        TestTdApi.destroyClient(clientId)
+        TestTdApi.destroyClient(clientId2)
     }
 
     @Test
     fun receiveUpdates() {
-        val clientId = TelegramRawClient.create()
-        val ids = LongArray(10)
-        val events = arrayOfNulls<TelegramObject>(10)
-        TelegramRawClient.receive(clientId, ids, events, 1000.0)
-        val receivedEvents = events.filterNotNull()
-        assertTrue(receivedEvents.isNotEmpty())
+        val clientId = TestTdApi.createClient()
+        val received = TestTdApi.receiveFrom(clientId)
+        assertNotNull(received)
     }
 
     @Test
     fun sendObject() {
-        val clientId = TelegramRawClient.create()
-        TelegramRawClient.send(clientId, 1, GetCurrentState())
-        val ids = LongArray(10)
-        val events = arrayOfNulls<TelegramObject>(10)
-        var updates: Updates? = null
-        while (updates == null) {
-            TelegramRawClient.receive(clientId, ids, events, 10.0)
-            updates = events.find { it is Updates } as Updates?
-        }
-        assertTrue(updates.updates.isNotEmpty())
+        val clientId = TestTdApi.createClient()
+        TestTdApi.sendTo(clientId, TdTestCallEmpty(TdExtra(1)))
+        var ok: TdOk?
+        do {
+            ok = TestTdApi.receiveFrom(clientId) as? TdOk
+        } while (ok == null)
     }
 
 }

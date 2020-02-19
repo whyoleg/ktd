@@ -31,8 +31,6 @@ fun main2() {
     val tdlibAndroid = "tdlib -p jvm -t android-armv7"
     val tdlibLinux = "tdlib -p jvm -t linux"
     val tdlibWindows = "tdlib -p jvm -t win-x64"
-    val cmd = api
-    val args = cmd.split(' ').toTypedArray()
     forEachVersion("dispatch -t tdlib")
     forEachVersion("api")
 }

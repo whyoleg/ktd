@@ -8,7 +8,7 @@ object Versions {
     const val kotlinPoet = "1.5.0"
     const val benchmarks = "0.2.0-dev-7"
 
-    const val ktdVersion = "0.5.0"
+    const val ktdVersion = "0.6.0"
 
     object Reactive {
         val rx2 = "2.2.17"

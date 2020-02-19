@@ -25,8 +25,8 @@ JNIEXPORT jstring JNICALL Java_dev_whyoleg_ktd_json_TdJson_receive(JNIEnv *env, 
   return td::jni::to_jstring(env, result);
 }
 
-JNIEXPORT jstring JNICALL Java_dev_whyoleg_ktd_json_TdJson_execute(JNIEnv *env, jclass clazz, jlong client, jstring request) {
-  auto result = td_json_client_execute(reinterpret_cast<void *>(client), td::jni::from_jstring(env, request).c_str());
+JNIEXPORT jstring JNICALL Java_dev_whyoleg_ktd_json_TdJson_execute(JNIEnv *env, jclass clazz, jstring request) {
+  auto result = td_json_client_execute(nullptr, td::jni::from_jstring(env, request).c_str());
   if (result == nullptr) {
     return nullptr;
   }

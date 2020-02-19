@@ -36,7 +36,6 @@ fun ModuleContext.mf(folder: String): (modules: List<String>) -> Unit = { module
 modules {
     "cli"()
     "benchmarks"()
-    //    "api-integration"()
     //    "samples"()
 
     m("tdlib")
@@ -44,6 +43,7 @@ modules {
     m("core")
     m("client")
 
+    "api-integration"()
     // latest: 1.6.0
     mf("api")(
         listOf(

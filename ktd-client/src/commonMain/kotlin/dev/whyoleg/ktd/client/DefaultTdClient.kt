@@ -19,22 +19,27 @@ internal class DefaultTdClient(
 
     private val client by lazy {
         val client = IncrementalTdApiClient(api)
-        runner.run(client.id, {
-            runCatching(client::unsafeDestroy)
-            runCatching(onClose)
-        }) {
-            when (val response = client.receive(runner.timeout)) {
-                null                 -> Unit
-                is TdUpdate          -> {
-                    response.runCatching(updatesCallback)
-                    if (response is TdStateUpdated) when (response.state) {
-                        is TdClosing -> clientClosing.value = true
-                        is TdClosed  -> clientClosed.value = true
+        runner.run(client.id) {
+            try {
+                when (val response = client.receive(runner.timeout)) {
+                    null                 -> Unit
+                    is TdUpdate          -> {
+                        response.runCatching(updatesCallback)
+                        if (response is TdUpdateState) when (response.state) {
+                            is TdClosing -> clientClosing.value = true
+                            is TdClosed  -> clientClosed.value = true
+                        }
                     }
+                    is TdResponseOrError -> callbacks.remove(response.extra.id)?.runCatching { this(TdResult(response)) }
                 }
-                is TdResponseOrError -> callbacks.remove(response.extra.id)?.runCatching { this(TdResult(response)) }
+            } catch (ignore: Throwable) {
             }
-            !clientClosed.value || !callbacks.isEmpty()
+            val finish = clientClosed.value && callbacks.isEmpty()
+            if (finish) {
+                runCatching(client::unsafeDestroy)
+                runCatching(onClose)
+            }
+            !finish
         }
         client
     }

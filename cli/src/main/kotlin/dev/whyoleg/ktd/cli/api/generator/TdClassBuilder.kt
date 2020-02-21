@@ -38,9 +38,8 @@ fun tdDataType(
     overrideName: String? = null,
     block: TypeSpec.Builder.() -> Unit
 ): TypeSpec {
-    val extraNeeded = type == TdDataType.Response || type == TdDataType.Request || type == TdDataType
-        .SyncRequest
-    val isObject = data.metadata.properties.isEmpty() && !extraNeeded
+    val extraNeeded = !old && (type == TdDataType.Response || type == TdDataType.Request || type == TdDataType.SyncRequest)
+    val isObject = data.metadata.properties.isEmpty() && !extraNeeded && !old
     val className = if (old) tdApiClass.nestedClass(data.type) else {
         ClassName(
             packageName, overrideName ?: when (data) {
@@ -52,26 +51,28 @@ fun tdDataType(
     println(className)
     val spec = when {
         isObject -> TypeSpec.objectBuilder(className)
-        else     -> TypeSpec.classBuilder(className).addModifiers(KModifier.DATA)
+        else     -> TypeSpec.classBuilder(className)
     }
-    spec.addAnnotation(serializableAnnotation)
-        .addAnnotation(serialName(data.type.decapitalize()))
-        .apply { data.kdoc(extraNeeded).forEach(::addKdoc) }
-        .apply(block)
-        .apply {
-            if (type == TdDataType.Request || type == TdDataType.SyncRequest
-            ) {
-                addFunction(
-                    FunSpec.builder("withRequestId")
-                        .addModifiers(KModifier.OVERRIDE)
-                        .addAnnotation(suppress("OverridingDeprecatedMember"))
-                        .addParameter("id", ClassName("kotlin", "Long"))
-                        .returns(className)
-                        .addCode(CodeBlock.of("return·copy(extra·=·extra.copy(id·=·id))\n"))
-                        .build()
-                )
-            }
+    if (!old) spec.apply {
+        if (!isObject) addModifiers(KModifier.DATA)
+        addAnnotation(serializableAnnotation)
+        addAnnotation(serialName(data.type.decapitalize()))
+        data.kdoc(extraNeeded).forEach(::addKdoc)
+    }
+    spec.apply(block)
+    if (!old) spec.apply {
+        if (type == TdDataType.Request || type == TdDataType.SyncRequest) {
+            addFunction(
+                FunSpec.builder("withRequestId")
+                    .addModifiers(KModifier.OVERRIDE)
+                    .addAnnotation(suppress("OverridingDeprecatedMember"))
+                    .addParameter("id", ClassName("kotlin", "Long"))
+                    .returns(className)
+                    .addCode(CodeBlock.of("return·copy(extra·=·extra.copy(id·=·id))\n"))
+                    .build()
+            )
         }
+    }
     return when {
         isObject -> spec
         else     -> spec.constructor(data, extraNeeded, old)
@@ -90,25 +91,29 @@ fun TypeSpec.Builder.setParents(
             if (parent != null) superclass(ClassName.bestGuess(if (old) parent else "Td$parent"))
             else {
                 if (old) superclass(ClassName.bestGuess("Object"))
-                addSuperinterface(tdObjectClass)
+                else addSuperinterface(tdObjectClass)
             }
         }
         TdDataType.Response    -> {
             if (parent != null) superclass(ClassName.bestGuess(if (old) parent else "Td$parent"))
             else {
                 if (old) superclass(ClassName.bestGuess("Object"))
-                addSuperinterface(tdResponseClass)
+                else addSuperinterface(tdResponseClass)
             }
         }
         TdDataType.Request     -> {
             if (old) superclass(ClassName.bestGuess("Function"))
-            val type = typedScheme.requestTypes.getValue(data.type)
-            addSuperinterface(tdRequestParameterized(if (old) type else "Td$type"))
+            else {
+                val type = typedScheme.requestTypes.getValue(data.type)
+                addSuperinterface(tdRequestParameterized(if (old) type else "Td$type"))
+            }
         }
         TdDataType.SyncRequest -> {
             if (old) superclass(ClassName.bestGuess("Function"))
-            val type = typedScheme.requestTypes.getValue(data.type)
-            addSuperinterface(tdSyncRequestParameterized(if (old) type else "Td$type"))
+            else {
+                val type = typedScheme.requestTypes.getValue(data.type)
+                addSuperinterface(tdSyncRequestParameterized(if (old) type else "Td$type"))
+            }
         }
     }
 }

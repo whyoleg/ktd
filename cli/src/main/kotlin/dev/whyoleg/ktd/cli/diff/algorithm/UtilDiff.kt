@@ -1,5 +1,6 @@
 package dev.whyoleg.ktd.cli.diff.algorithm
 
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.diff.data.*
 
 infix fun <T : Any> List<T>.listDiff(other: List<T>): List<T>? = (this - other).takeIfIsNotEmpty()

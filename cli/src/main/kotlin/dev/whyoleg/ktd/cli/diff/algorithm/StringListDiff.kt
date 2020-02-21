@@ -1,5 +1,6 @@
 package dev.whyoleg.ktd.cli.diff.algorithm
 
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.diff.data.*
 
 infix fun List<String>.diff(new: List<String>): List<StringDiff>? {

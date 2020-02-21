@@ -1,9 +1,8 @@
 package dev.whyoleg.ktd.cli.diff.algorithm
 
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.diff.data.*
 import dev.whyoleg.ktd.cli.tl.*
-
-fun <T : Any> List<T>.takeIfIsNotEmpty(): List<T>? = takeIf(List<T>::isNotEmpty)
 
 inline fun <T : Any, ED : Any, D : Any> List<T>.diff(
     new: List<T>,

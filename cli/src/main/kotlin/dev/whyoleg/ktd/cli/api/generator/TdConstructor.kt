@@ -17,13 +17,21 @@ val extraParameter =
 
 fun TlProperty.parameter(nullable: Boolean, default: Boolean, old: Boolean = false): ParameterSpec =
     ParameterSpec.builder(name.snakeToCamel(), type.className(nullable, old))
-        .apply { if (default) defaultValue(type.default) }
+        .apply {
+            if (default) {
+                if (!old) defaultValue(type.default)
+                else {
+                    if (type is TlArrayType) defaultValue(type.type.oldArrayDefault)
+                    else defaultValue(type.default)
+                }
+            }
+        }
         .build()
 
 fun TlProperty.property(nullable: Boolean, old: Boolean = false): PropertySpec =
     PropertySpec.builder(name.snakeToCamel(), type.className(nullable, old))
         .initializer(name.snakeToCamel())
-        .addAnnotation(serialName(name))
+        .apply { if (!old) addAnnotation(serialName(name)) }
         .apply { if (TlAddition.BotsOnly in additions) addAnnotation(ClassName(pcg, "TdBotsOnly")) }
         .build()
 

@@ -74,7 +74,9 @@ modules {
     )
 
     //    "migration" {
-    //        "v060" { //TODO error in 0.6.1, remove in 0.7.0
+    //        "v060" { //TODO remove in 0.6.1
+    //            "ktd-client-raw"()
+    //            "ktd-api-raw"()
     //            "ktd-api-coroutines"()
     //        }
     //    }

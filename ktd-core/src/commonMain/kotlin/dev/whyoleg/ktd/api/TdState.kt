@@ -4,6 +4,6 @@ interface TdState
 interface TdClosed : TdState
 interface TdClosing : TdState
 
-interface TdStateUpdated {
+interface TdUpdateState {
     val state: TdState
 }

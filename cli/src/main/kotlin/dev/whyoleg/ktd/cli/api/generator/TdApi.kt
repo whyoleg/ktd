@@ -2,7 +2,7 @@ package dev.whyoleg.ktd.cli.api.generator
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import dev.whyoleg.ktd.cli.diff.algorithm.*
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.tl.*
 
 const val pcg = "dev.whyoleg.ktd.api"
@@ -28,21 +28,20 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
     }
     typedScheme.sealed.forEach { (sealed, children) ->
         file("Td${sealed.type}", pcg, "api", moduleName) {
-            addType(
-                TypeSpec.classBuilder(ClassName(pcg, "Td${sealed.type}"))
-                    .addModifiers(KModifier.SEALED)
-                    .addAnnotation(serializableAnnotation)
-                    .apply { sealed.kdoc(false).forEach(::addKdoc) }
-                    .setParents(sealed, typedScheme, false)
-                    .addTypes(children.map { child ->
-                        tdDataType(
-                            child,
-                            child.type(typedScheme),
-                            pcg
-                        ) { setParents(child, typedScheme, false) }
-                    })
-                    .build()
-            )
+            addType(TypeSpec.classBuilder(ClassName(pcg, "Td${sealed.type}")).apply {
+                addModifiers(KModifier.SEALED)
+                addAnnotation(serializableAnnotation)
+                sealed.kdoc(false).forEach(::addKdoc)
+                setParents(sealed, typedScheme, false)
+                if (sealed.type == "AuthorizationState") addSuperinterface(ClassName(pcg, "TdState"))
+                addTypes(children.map { child ->
+                    tdDataType(child, child.type(typedScheme), pcg) {
+                        setParents(child, typedScheme, false)
+                        if (child.type == "AuthorizationStateClosed") addSuperinterface(ClassName(pcg, "TdClosed"))
+                        else if (child.type == "AuthorizationStateClosing") addSuperinterface(ClassName(pcg, "TdClosing"))
+                    }
+                })
+            }.build())
         }
     }
     typedScheme.updates.forEach { (group, children) ->
@@ -58,18 +57,21 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
                             "Td${child.type}"
                         ) {
                             addSuperinterface(tdUpdateClass)
+                            if (child.type == "UpdateAuthorizationState") {
+                                addSuperinterface(ClassName(pcg, "TdUpdateState"))
+                                addProperty(
+                                    PropertySpec.builder("state", ClassName(pcg, "TdState"), KModifier.OVERRIDE)
+                                        .getter(FunSpec.getterBuilder().addStatement("return authorizationState").build())
+                                        .build()
+                                )
+                            }
                         })
                 }
             }
         } else {
             file("TdUpdate${group}", "$pcg.updates", "api", moduleName) {
                 addType(
-                    TypeSpec.classBuilder(
-                            ClassName(
-                                "$pcg.updates",
-                                "TdUpdate${group}"
-                            )
-                        )
+                    TypeSpec.classBuilder(ClassName("$pcg.updates", "TdUpdate${group}"))
                         .addModifiers(KModifier.SEALED)
                         .addAnnotation(serializableAnnotation)
                         .addSuperinterface(tdUpdateClass)

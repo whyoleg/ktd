@@ -10,14 +10,15 @@ fun main() {
 
 
     val data = parseData(tdBytes, tlBytes)
-    data.forEach { (kind, scheme) ->
-        if (kind == TlKind.Ignore) return@forEach
-        File("api/ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
-        File("api-suspend/ktd-api-${kind.name.toLowerCase()}-suspend/src/commonMain/kotlin").deleteRecursively()
-
-        tdApiFile(version, kind)
-        tdApiClasses(scheme, kind)
-        builderFile(scheme, kind)
-        suspendTdApiFunctions(scheme, kind)
-    }
+    //        data.forEach { (kind, scheme) ->
+    //            if (kind == TlKind.Ignore) return@forEach
+    //            File("api/ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
+    //            File("api-suspend/ktd-api-${kind.name.toLowerCase()}-suspend/src/commonMain/kotlin").deleteRecursively()
+    //
+    //            tdApiFile(version, kind)
+    //            tdApiClasses(scheme, kind)
+    //            builderFile(scheme, kind)
+    //            suspendTdApiFunctions(scheme, kind)
+    //        }
+    oldApiFile(data.getValue(TlKind.Core).copy(data = data.flatMap { it.value.data }))
 }

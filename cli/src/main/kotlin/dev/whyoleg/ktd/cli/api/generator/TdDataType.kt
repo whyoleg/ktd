@@ -23,7 +23,10 @@ fun TlData.type(typedScheme: TlTypedScheme): TdDataType = when {
 fun TlType.className(nullable: Boolean, old: Boolean = false): TypeName = when (this) {
     is TlRefType       -> when (kotlinType) {
         "String" -> ClassName("kotlin", "String").copy(nullable = nullable)
-        else     -> ClassName(pcg, if (old) kotlinType else "Td${kotlinType}").copy(nullable = nullable)
+        else     -> when (old) {
+            true  -> tdApiClass.nestedClass(kotlinType).copy(nullable = nullable)
+            false -> ClassName(pcg, "Td${kotlinType}").copy(nullable = nullable)
+        }
     }
     is TlPrimitiveType -> ClassName("kotlin", kotlinType)
     is TlArrayType     -> when (type) {

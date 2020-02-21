@@ -7,36 +7,17 @@ import kotlin.concurrent.*
 class SingleThreadRunner(
     override val timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : SynchronizedRunner {
-    override fun run(id: Long, onClose: () -> Unit, block: () -> Boolean) {
-        thread {
-            try {
-                while (block()) Unit
-                do Unit while (block())
-            } finally {
-                onClose()
-            }
-        }
+    override fun run(id: Long, block: () -> Boolean) {
+        thread { while (block()) Unit }
     }
 }
 
-@Suppress("FunctionName")
-fun CachedThreadRunner(
-    threadFactory: ThreadFactory = Executors.defaultThreadFactory(),
-    timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
-): SynchronizedRunner = ExecutorThreadRunner(Executors.newCachedThreadPool(threadFactory), timeout)
-
 class ExecutorThreadRunner(
-    private val executor: ExecutorService,
+    private val executor: ExecutorService = Executors.newCachedThreadPool(),
     override val timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : SynchronizedRunner {
-    override fun run(id: Long, onClose: () -> Unit, block: () -> Boolean) {
-        executor.execute {
-            try {
-                while (block()) Unit
-            } finally {
-                onClose()
-            }
-        }
+    override fun run(id: Long, block: () -> Boolean) {
+        executor.execute { while (block()) Unit }
     }
 
     override fun cleanup() {

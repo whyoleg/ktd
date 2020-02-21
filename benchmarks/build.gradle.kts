@@ -12,7 +12,7 @@ kotlin {
     }
     metadata {
         dependenciesMain {
-            implementation(ProjectModules.client)
+            implementation(ProjectModules.Clients.client_suspend)
             implementation(ProjectModules.Api.api_test)
         }
     }
@@ -25,12 +25,5 @@ allOpen {
 benchmark {
     targets {
         register("jvm")
-    }
-    configurations {
-        getByName("main") {
-            warmups = 5 // number of warmup iterations
-            //            iterations = 5 // number of iterations
-            //            iterationTime = 5 // time in seconds per iteration
-        }
     }
 }

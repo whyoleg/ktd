@@ -1,5 +1,7 @@
 package dev.whyoleg.ktd.cli.diff.algorithm
 
+import dev.whyoleg.ktd.cli.*
+
 data class KeysDiff(val added: Set<String>, val removed: Set<String>, val intersection: Set<String>)
 
 infix fun Map<String, *>.diff(new: Map<String, *>): KeysDiff {

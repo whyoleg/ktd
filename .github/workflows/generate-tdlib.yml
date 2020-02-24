@@ -14,11 +14,11 @@ env:
 
 jobs:
   check:
-    name: tdlib ${{ env.LIB_VERSION }}-${{ env.TD_VERSION }}
     if: github.event.action == 'generate_tdlib'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Init with ${{ toJson(github.event.client_payload) }}"
+      - name: tdlib ${{ env.LIB_VERSION }}-${{ env.TD_VERSION }}
+        run: echo "Init with ${{ toJson(github.event.client_payload) }}"
 
   download-android-openssl:
     needs: [check]

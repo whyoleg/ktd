@@ -20,7 +20,7 @@ kotlin {
             if (tdIntegrationVersion == null) {
                 implementation(ProjectModules.Api.api_test)
             } else {
-                implementation(Dependencies.ktdApiTestSuspend(tdIntegrationVersion))
+                implementation(Dependencies.ktdApiTest(tdIntegrationVersion))
             }
         }
     }

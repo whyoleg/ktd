@@ -3,15 +3,15 @@
 Here is list of major work needed for 1.0 version of library.
 Ordering of implementation is not static.
 
-- [x] JVM linux, macos, win32, win64 support
-- [x] Automated tdlib build for all platforms
-- [x] Artifacts per tdlib version. One version of library - different artifacts per tdlib version.
-- [x] Android support
-- [ ] iOS support
-- [ ] JS support
-- [ ] Native support
-- [ ] Documentation
-- [ ] Tests
-- [ ] Benchmarks (memory and speed)
+- [x] JVM linux, macos, win32, win64 support **(done in 0.4.0)**
+- [x] Artifacts per tdlib version **(done in 0.4.0)**
+- [x] Automated tdlib build for all platforms **(done in 0.5.0)**
+- [x] Android support **(done in 0.5.0)**
+- [ ] Documentation **(TODO in 0.6.0)**
+- [ ] Tests **(TODO in 0.6.0)**
+- [ ] Benchmarks **(done in 0.6.0)**
+- [ ] Native support **(TODO in 0.7.x)**
+- [ ] iOS support **(TODO in 0.7.x)**
+- [ ] JS support **(TODO in 0.8.x)**
 - [ ] Publish to maven central, jcenter, github, bintray
 - [ ] Version compatibility checker

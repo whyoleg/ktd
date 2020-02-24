@@ -24,9 +24,9 @@ object Dependencies {
         group("com.squareup", RepositoryProviders.mavenCentral)
             .artifact("kotlinpoet").version(Versions.kotlinPoet).jvm
 
-    fun ktdApiTestSuspend(tdVersion: String) =
+    fun ktdApiTest(tdVersion: String) =
         group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
-            .artifact("ktd-api-test-suspend").version("${Versions.ktdVersion}-$tdVersion").common
+            .artifact("ktd-api-api-test").version("${Versions.ktdVersion}").common
 
     object Reactive {
         val rx2 =

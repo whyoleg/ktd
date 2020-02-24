@@ -18,7 +18,7 @@ class DiffCommand : Subcommand("diff") {
         val previousScheme = gitHub.scheme(previousVersion)
         val currentScheme = gitHub.scheme(newVersion)
 
-        val file = File("ktd-api/CHANGELOG.md")
+        val file = File("docs/td-api-changelog.md")
         val fileLines = file.readText().lines()
 
         val newText = previousScheme stringDiff currentScheme

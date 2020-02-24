@@ -12,7 +12,7 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11
   ANDROID_JAVA_VERSION: 1.8
-  LIB_VERSION: 1
+  LIB_VERSION: 2
 
 jobs:
   test-jvm-client:
@@ -47,9 +47,9 @@ jobs:
     needs: [download-tdlib, download-cli]
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      max-parallel: 3
       matrix:
-        tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
+        tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4, 1.6.0, 1.6.1]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
@@ -78,9 +78,9 @@ jobs:
     needs: [download-tdlib, download-cli]
     runs-on: macos-latest
     strategy:
-      fail-fast: false
+      max-parallel: 3
       matrix:
-        tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4]
+        tdVersion: [1.5.0, 1.5.1, 1.5.2, 1.5.3, 1.5.4, 1.6.0, 1.6.1]
         arch: [x86_64, x86]
         api-level: [21, 29]
     steps:

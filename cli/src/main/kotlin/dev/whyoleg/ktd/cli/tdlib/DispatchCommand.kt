@@ -29,6 +29,7 @@ class DispatchCommand : Subcommand("dispatch") {
                 body = TextContent(json {
                     "event_type" to "generate_$type"
                     "client_payload" to json {
+                        "lib_version" to "2"
                         "version" to version
                         "ref" to tdVersionRefs.getValue(version)
                         "versions" to jsonArray {

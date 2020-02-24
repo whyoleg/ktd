@@ -8,12 +8,13 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11
-  LIB_VERSION: 1
+  LIB_VERSION: ${{ github.event.client_payload.lib_version }}
   TD_VERSION: ${{ github.event.client_payload.version }}
   TD_VERSION_REF: ${{ github.event.client_payload.ref }}
 
 jobs:
   check:
+    name: tdlib ${{ env.LIB_VERSION }}-${{ env.TD_VERSION }}
     if: github.event.action == 'generate_tdlib'
     runs-on: ubuntu-latest
     steps:
@@ -81,7 +82,6 @@ jobs:
     needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
-      fail-fast: false
       matrix:
         arch: [x86, x64]
     steps:
@@ -154,7 +154,6 @@ jobs:
     needs: [download-cli, download-android-openssl]
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         arch: [armv7, armv8, x86, x64]
     steps:
@@ -195,7 +194,6 @@ jobs:
           name: android-${{ matrix.arch }}
           path: tdlib/jni/bin
 
-  #TODO create action to iterate over platforms/targets
   upload-tdlib:
     runs-on: ubuntu-latest
     needs: [generate-linux, generate-win, generate-mac, generate-android]

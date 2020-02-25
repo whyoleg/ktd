@@ -71,7 +71,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t mac -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t mac
 
       - uses: actions/upload-artifact@v1
         with:
@@ -112,7 +112,7 @@ jobs:
           xcopy /S dependencies ..\
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t win-${{ matrix.arch }} -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t win-${{ matrix.arch }}
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
@@ -142,7 +142,7 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t linux -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t linux
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
@@ -186,7 +186,7 @@ jobs:
           cp -r openssl ..
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t android-${{ matrix.arch }}
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1

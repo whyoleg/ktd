@@ -73,10 +73,11 @@ jobs:
       - name: Generate tdlib
         run: java -jar cli/cli.jar tdlib -p jvm -t mac
 
-      - uses: actions/upload-artifact@v1
+      - name: Save tdlib
+        uses: actions/upload-artifact@v1
         with:
           name: mac
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   generate-win:
     needs: [download-cli, download-windows-dependencies]
@@ -118,7 +119,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: win-${{ matrix.arch }}
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   generate-linux:
     needs: [download-cli]
@@ -148,7 +149,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: linux
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   generate-android:
     needs: [download-cli, download-android-openssl]
@@ -192,7 +193,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: android-${{ matrix.arch }}
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   upload-tdlib:
     runs-on: ubuntu-latest

@@ -4,6 +4,31 @@ import org.gradle.jvm.tasks.*
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
+fun Project.configureSerialization() {
+    Plugins.serializationModule.forEach { (name) -> plugins.apply(name) }
+    extensions.configure<KotlinMultiplatformExtension> {
+        dependenciesMain {
+            api(Dependencies.kotlinx.serialization.runtime)
+        }
+    }
+}
+
+fun Project.configureApi(vararg modules: ProjectModule) {
+    Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
+    configureMultiplatform(useAndroidLibrary = true)
+
+    extensions.configure<KotlinMultiplatformExtension> {
+        dependenciesMain {
+            api(Dependencies.kotlin.stdlib)
+        }
+        metadata {
+            dependenciesMain {
+                modules.forEach(::api)
+            }
+        }
+    }
+}
+
 fun Project.configureRawApi() {
     Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
     configureMultiplatform(true)
@@ -29,8 +54,9 @@ fun Project.configureCoroutinesApi() {
         }
         metadata {
             dependenciesMain {
-                api(ProjectModules.Client.coroutines)
-                api(ProjectModule(":api-raw-v${project.apiVersion}"))
+                //TODO change later
+                api(ProjectModule(":client-suspend"))
+                api(ProjectModule(":api-typed-v${project.apiVersion}"))
             }
         }
     }

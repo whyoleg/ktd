@@ -1,9 +1,8 @@
 package dev.whyoleg.ktd.cli.diff.algorithm
 
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.diff.data.*
 import dev.whyoleg.ktd.cli.tl.*
-
-fun <T : Any> List<T>.takeIfIsNotEmpty(): List<T>? = takeIf(List<T>::isNotEmpty)
 
 inline fun <T : Any, ED : Any, D : Any> List<T>.diff(
     new: List<T>,
@@ -20,8 +19,8 @@ inline fun <T : Any, ED : Any, D : Any> List<T>.diff(
     return if (added == null && removed == null && diff == null) null else resultDiff(added, removed, diff)
 }
 
-infix fun List<TlAbstract>.diff(new: List<TlAbstract>): TlAbstractListDiff? =
-    diff(new, TlAbstract::type, TlAbstract::diff, ::TlAbstractListDiff)
+infix fun List<TlSealed>.diff(new: List<TlSealed>): TlSealedListDiff? =
+    diff(new, TlSealed::type, TlSealed::diff, ::TlSealedListDiff)
 
 infix fun List<TlObject>.diff(new: List<TlObject>): TlObjectListDiff? =
     diff(new, TlObject::type, TlObject::diff, ::TlObjectListDiff)

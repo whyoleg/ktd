@@ -23,9 +23,9 @@ infix fun TlFunction.diff(new: TlFunction): TlFunctionDiff? = constructorDiff(
     type
 )
 
-infix fun TlAbstract.diff(new: TlAbstract): TlAbstractDiff? = constructorDiff(
+infix fun TlSealed.diff(new: TlSealed): TlSealedDiff? = constructorDiff(
     this.metadata diff new.metadata,
-    ::TlAbstractDiff,
+    ::TlSealedDiff,
     type
 )
 

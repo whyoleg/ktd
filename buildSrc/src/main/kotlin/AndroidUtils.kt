@@ -20,5 +20,6 @@ fun LibraryExtension.default() {
     }
     packagingOptions {
         exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+        exclude("META-INF/kotlinx-serialization-runtime.kotlin_module")
     }
 }

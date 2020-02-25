@@ -10,6 +10,8 @@ syntax: glob
 .gradle
 classes
 build/
+td/build/
+td/crossCompile/
 *.log
-tdlib/jni/*/
+cli/tdlib/jni/*/
 /local.properties

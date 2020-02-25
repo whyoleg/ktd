@@ -1,3 +1,4 @@
+import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.modules.*
 
 object Plugins {
@@ -12,4 +13,7 @@ object Plugins {
         GradleBuiltInPlugins.application,
         GradleBuiltInPlugins.mavenPublish
     )
+
+    val serializationModule = listOf(KotlinPlugins.Stable.serialization)
+    val benchmarks = listOf(KampPlugin("kotlinx.benchmark"), KampPlugin("org.jetbrains.kotlin.plugin.allopen"))
 }

@@ -1,6 +1,6 @@
 package dev.whyoleg.ktd.cli.diff.builder
 
-import dev.whyoleg.ktd.cli.diff.algorithm.*
+import dev.whyoleg.ktd.cli.*
 import dev.whyoleg.ktd.cli.diff.data.*
 import dev.whyoleg.ktd.cli.tl.*
 

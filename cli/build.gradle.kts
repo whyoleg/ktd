@@ -12,9 +12,10 @@ kotlin {
             implementation(Dependencies.kotlinx.cli.jvm)
             implementation(Dependencies.kotlinx.serialization.runtime)
             implementation(Dependencies.kotlinx.serialization.configParser)
+            implementation(Dependencies.ktor.client.cio)
             implementation(Dependencies.githubApi)
             implementation(Dependencies.kotlinShell)
-            implementation(Dependencies.ktor.client.cio)
+            implementation(Dependencies.kotlinPoet)
         }
     }
 }

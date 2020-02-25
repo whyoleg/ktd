@@ -13,9 +13,7 @@ private val dropStart: ParseStep = {
 private val splitClasses: ParseStep = {
     flatMap { line ->
         if (line.startsWith(doubleSlashToken + classAddressToken)) {
-            val name = line.substringAfter(doubleSlashToken + classAddressToken).substringBefore(
-                descriptionAddressToken
-            ).trim()
+            val name = line.substringAfter(doubleSlashToken + classAddressToken).substringBefore(descriptionAddressToken).trim()
             val description = line.substringAfter(name).trim()
             listOf(doubleSlashToken + description, name)
         } else listOf(line)

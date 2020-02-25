@@ -34,7 +34,6 @@ suspend fun JniConfig.buildJni(execution: CmakeExecution): CmakeExecutionResult 
         crossCompile = null,
         build = CmakeConfig(
             configureParams = listOf(
-                "-DTD_ENABLE_JNI=ON",
                 "-DCMAKE_INSTALL_PREFIX:PATH=${installDir.absolutePath}"
             )
         ),
@@ -128,16 +127,7 @@ fun AndroidJniConfig.execution(buildType: TdBuildType, target: BuildTarget.Andro
     val jdkIncludePath = jdkPath.resolve("include")
 
     return CmakeExecution(
-        crossCompile = (linuxConfig?.execution(buildType)?.build ?: CmakeConfig()) + CmakeConfig(
-            configureParams = listOf(
-                "-DTD_ENABLE_JNI=ON",
-                prop("-DJAVA_AWT_LIBRARY", jdkLibPath),
-                prop("-DJAVA_JVM_LIBRARY", jdkLibPath),
-                prop("-DJAVA_INCLUDE_PATH2", jdkIncludePath.resolve("linux")),
-                prop("-DJAVA_INCLUDE_PATH", jdkIncludePath),
-                prop("-DJAVA_AWT_INCLUDE_PATH", jdkIncludePath)
-            )
-        ),
+        crossCompile = linuxConfig?.execution(buildType)?.build ?: CmakeConfig(),
         build = commonConfig + CmakeConfig(
             configureParams = listOf(
                 prop("-DOPENSSL_ROOT_DIR", opensslTargetPath),

@@ -1,6 +1,5 @@
 package dev.whyoleg.ktd.cli.diff.builder
 
-import dev.whyoleg.ktd.cli.builder.*
 import dev.whyoleg.ktd.cli.diff.data.*
 import dev.whyoleg.ktd.cli.diff.data.StringDiffChange.*
 
@@ -32,8 +31,8 @@ fun <T> List<T>.joinWithIndent(buffer: StringBuilder, transform: ((T) -> String)
 
 fun StringBuilder.typeDiff(text: String, type: TlTypeDiff) {
     append("\n").append(text)
-    withIndentMinus { append(type.old) }
-    withIndentPlus { append(type.new) }
+    type.old?.let { withIndentMinus { append(it) } }
+    type.old?.let { withIndentPlus { append(it) } }
 }
 
 fun StringBuilder.additionListDiff(additionList: TlAdditionListDiff) {

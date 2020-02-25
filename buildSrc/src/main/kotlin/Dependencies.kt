@@ -1,6 +1,7 @@
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 import dev.whyoleg.kamp.modules.*
+import dev.whyoleg.kamp.platform.KampPlatform.*
 
 object Dependencies {
     val kotlin = KotlinModule(KotlinVersion(Versions.kotlin)).dependencies
@@ -14,8 +15,31 @@ object Dependencies {
         group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
             .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
 
+    val benchmarks =
+        group("org.jetbrains.kotlinx", KotlinxModule.Provider)
+            .artifact("kotlinx.benchmark.runtime").version(Versions.benchmarks)
+            .platforms(jvm("jvm"), common("metadata"))
 
-    fun ktdApiCoroutines(tdVersion: String) =
+    val kotlinPoet =
+        group("com.squareup", RepositoryProviders.mavenCentral)
+            .artifact("kotlinpoet").version(Versions.kotlinPoet).jvm
+
+    fun ktdApiTest(tdVersion: String) =
         group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
-            .artifact("ktd-api-coroutines").version("${Versions.ktdVersion}-$tdVersion").common
+            .artifact("ktd-api-api-test").version("${Versions.ktdVersion}").common
+
+    object Reactive {
+        val rx2 =
+            group("io.reactivex.rxjava2", RepositoryProviders.mavenCentral)
+                .artifact("rxjava").version(Versions.Reactive.rx2).jvm
+        val rx3 =
+            group("io.reactivex.rxjava3", RepositoryProviders.mavenCentral)
+                .artifact("rxjava").version(Versions.Reactive.rx3).jvm
+        val reactor =
+            group("io.projectreactor", RepositoryProviders.mavenCentral)
+                .artifact("reactor-core").version(Versions.Reactive.reactor).jvm
+        val reaktive =
+            group("com.badoo.reaktive", RepositoryProviders.bintray("badoo", "maven"))
+                .artifact("reaktive").version(Versions.Reactive.reaktive).common
+    }
 }

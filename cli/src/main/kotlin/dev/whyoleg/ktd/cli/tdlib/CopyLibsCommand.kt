@@ -5,7 +5,7 @@ import java.io.*
 
 @UseExperimental(ExperimentalCli::class)
 class CopyLibsCommand : Subcommand("copyLibs") {
-    private val version by option(ArgType.String, "version", "v", "Version of tdlib").required()
+    private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val libsFolder by option(ArgType.String, "libsFolder", "lf", "Folder with generated libs").default("libs")
 
     override fun execute() {

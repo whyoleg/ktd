@@ -7,22 +7,16 @@ sealed class TlAddition {
         val message: String?
     }
 
-    interface Annotation {
-        val annotation: String
-    }
-
     data class Nullable(override val message: String? = null) : TlAddition(), WithMessage {
         override fun toString(): String = "Nullable" + (message?.let { " - $it" } ?: "")
     }
 
-    object BotsOnly : TlAddition(), Annotation {
-        override val annotation: String = "BotsOnly"
+    object BotsOnly : TlAddition() {
         override fun toString(): String = "BotsOnly"
     }
 
-    object TestingOnly : TlAddition(), Annotation {
-        override val annotation: String = "TestingOnly"
-        override fun toString(): String = "TestingOnly"
+    object TestOnly : TlAddition() {
+        override fun toString(): String = "TestOnly"
     }
 
     data class Documentation(override val message: String) : TlAddition(), WithMessage {
@@ -45,9 +39,6 @@ sealed class TlAddition {
         override fun toString(): String = "Sync - can be called synchronously"
     }
 
-    companion object {
-        fun annotations() = listOf<Annotation>(BotsOnly, TestingOnly)
-    }
 }
 
 @Suppress("FunctionName")
@@ -61,7 +52,7 @@ fun TlAddition(addition: String): TlAddition = when (addition.toLowerCase()) {
     "may be empty if not applicable",
     "pass null to stop sharing the live location" ->
         Nullable(addition)
-    "for testing only"                            -> TestingOnly
+    "for testing only"                            -> TestOnly
     "for bots only",
     "can be used only by bots and only in private chats",
     "only available to bots",
@@ -75,7 +66,7 @@ fun TlAddition(addition: String): TlAddition = when (addition.toLowerCase()) {
     "must be non-negative"                                                                                                 ->
         SizeRequired(0, Int.MAX_VALUE)
     else                                          -> {
-        val splitted = addition.substringBefore(spaceToken).split(dashToken).mapNotNull(String::toIntOrNull)
+        val splitted = addition.substringBefore(" ").split("-").mapNotNull(String::toIntOrNull)
         if (splitted.size > 1) {
             val (min, max) = splitted
             SizeRequired(min, max)

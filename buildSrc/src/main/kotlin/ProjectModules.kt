@@ -32,9 +32,22 @@ object ProjectModules {
         val client_suspend = ProjectModule(":clients-client-suspend")
         val client_coroutines = ProjectModule(":clients-client-coroutines")
     }
+
     val updates = ProjectModule(":updates")
 
     object Updates {
         val updates_flow = ProjectModule(":updates-updates-flow")
+    }
+
+    val migration = ProjectModule(":migration")
+
+    object Migration {
+        val v060 = ProjectModule(":migration:v060")
+
+        object V060 {
+            val ktd_client_raw = ProjectModule(":migration:v060:ktd-client-raw")
+            val ktd_api_raw = ProjectModule(":migration:v060:ktd-api-raw")
+            val ktd_api_coroutines = ProjectModule(":migration:v060:ktd-api-coroutines")
+        }
     }
 }

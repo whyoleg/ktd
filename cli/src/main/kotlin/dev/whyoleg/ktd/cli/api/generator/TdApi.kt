@@ -16,14 +16,9 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
 
     typedScheme.run { objects + functions }.forEach { data ->
         file("Td${data.type}", pcg, "api", moduleName) {
-            addType(
-                tdDataType(data, data.type(typedScheme), pcg) {
-                    setParents(
-                        data,
-                        typedScheme,
-                        false
-                    )
-                })
+            addType(tdDataType(data, data.type(typedScheme), pcg) {
+                setParents(data, typedScheme, false)
+            })
         }
     }
     typedScheme.sealed.forEach { (sealed, children) ->
@@ -48,24 +43,17 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
         if (group == null) {
             children.map { child ->
                 file("Td${child.type}", "$pcg.updates", "api", moduleName) {
-                    addType(
-                        tdDataType(
-                            child,
-                            child.type(typedScheme),
-                            "$pcg.updates",
-                            false,
-                            "Td${child.type}"
-                        ) {
-                            addSuperinterface(tdUpdateClass)
-                            if (child.type == "UpdateAuthorizationState") {
-                                addSuperinterface(ClassName(pcg, "TdUpdateState"))
-                                addProperty(
-                                    PropertySpec.builder("state", ClassName(pcg, "TdState"), KModifier.OVERRIDE)
-                                        .getter(FunSpec.getterBuilder().addStatement("return authorizationState").build())
-                                        .build()
-                                )
-                            }
-                        })
+                    addType(tdDataType(child, child.type(typedScheme), "$pcg.updates", false, "Td${child.type}") {
+                        addSuperinterface(tdUpdateClass)
+                        if (child.type == "UpdateAuthorizationState") {
+                            addSuperinterface(ClassName(pcg, "TdUpdateState"))
+                            addProperty(
+                                PropertySpec.builder("state", ClassName(pcg, "TdState"), KModifier.OVERRIDE)
+                                    .getter(FunSpec.getterBuilder().addStatement("return authorizationState").build())
+                                    .build()
+                            )
+                        }
+                    })
                 }
             }
         } else {
@@ -76,30 +64,22 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
                         .addAnnotation(serializableAnnotation)
                         .addSuperinterface(tdUpdateClass)
                         .addTypes(children.map { child ->
-                            val newType = child.type.substringAfter("Update")
-                            val overrideName = when {
-                                newType.startsWith("New") || newType.substringAfter(group).isBlank() -> "Data"
-                                else                                                                 -> newType.substringAfter(group)
-                            }
-                            tdDataType(
-                                child,
-                                child.type(typedScheme),
-                                "$pcg.updates",
-                                false,
-                                overrideName
-                            ) {
-                                superclass(
-                                    ClassName(
-                                        "$pcg.updates",
-                                        "TdUpdate${group}"
-                                    )
-                                )
+                            tdDataType(child, child.type(typedScheme), "$pcg.updates", false, child.realName(group)) {
+                                superclass(ClassName("$pcg.updates", "TdUpdate${group}"))
                             }
                         })
                         .build()
                 )
             }
         }
+    }
+}
+
+fun TlSealedChild.realName(group: String): String {
+    val newType = type.substringAfter("Update")
+    return when {
+        newType.startsWith("New") || newType.substringAfter(group).isBlank() -> "Data"
+        else                                                                 -> newType.substringAfter(group)
     }
 }
 
@@ -162,24 +142,16 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
 
     val allResponseBlock =
         typedScheme.sealed.mapNotNull {
-            if (it.key.type(typedScheme) == TdDataType
-                    .Response
-            ) it else null
+            if (it.key.type(typedScheme) == TdDataType.Response) it else null
         }.takeIfIsNotEmpty()?.let {
             CodeBlock.builder().apply {
-                it.forEach { (sealed, children) ->
-                    add(
-                        sealedBlock(sealed.type, children)
-                    )
-                }
+                it.forEach { (sealed, children) -> add(sealedBlock(sealed.type, children)) }
             }.build()
         }
 
     val responseBlock =
         typedScheme.objects.mapNotNull {
-            if (it.type(typedScheme) == TdDataType
-                    .Response
-            ) it.type else null
+            if (it.type(typedScheme) == TdDataType.Response) it.type else null
         }.takeIfIsNotEmpty()?.let {
             CodeBlock.builder()
                 .beginControlFlow("polymorphic<%T>", ClassName(pcg, "TdApiResponse"))
@@ -200,19 +172,14 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
     file(builderName.capitalize(), pcg, "api", moduleName) {
         if (isFinalKind) addImport("kotlinx.serialization.modules", "plus")
         addProperty(
-            PropertySpec.builder(
-                    builderName,
-                    ClassName("kotlin", "Lazy").parameterizedBy(SerialModuleClass)
-                )
+            PropertySpec.builder(builderName, ClassName("kotlin", "Lazy").parameterizedBy(SerialModuleClass))
                 .apply {
                     when {
                         isFinalKind -> {
                             addModifiers(KModifier.INTERNAL)
                             addAnnotation(suppressDeprecationError)
                         }
-                        else        -> addAnnotation(
-                            deprecated("\"Used internally\"", error = true)
-                        )
+                        else        -> addAnnotation(deprecated("\"Used internally\"", error = true))
                     }
                 }
                 .initializer(

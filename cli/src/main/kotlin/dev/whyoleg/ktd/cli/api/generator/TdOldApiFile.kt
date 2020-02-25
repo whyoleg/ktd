@@ -6,16 +6,9 @@ import dev.whyoleg.ktd.cli.tl.*
 fun oldApiFile(typedScheme: TlTypedScheme) {
     file("TdApi", pcg, "migration/v060", "ktd-api-raw") {
         addAnnotation(AnnotationSpec.builder(ClassName("kotlin", "Suppress")).addMember("\"DEPRECATION_ERROR\"").build())
-        //        addAnnotation(
-        //            AnnotationSpec.builder(ClassName("kotlin", "Suppress"))
-        //                .addMember("\"unused\"")
-        //                .addMember("\"DEPRECATION\"")
-        //                .build()
-        //        )
         addProperty(
-            PropertySpec.builder("abstractTdDeprecatedMessage", ClassName("kotlin", "String"))
-                .addModifiers(KModifier.CONST)
-                .initializer("%S", "Classes under TdApi will be removed in 0.6.1, use Td-prefixed typealises")
+            PropertySpec.builder("abstractTdDeprecatedMessage", ClassName("kotlin", "String"), KModifier.CONST, KModifier.PRIVATE)
+                .initializer("%S", "Classes under TdApi will be removed in 0.6.1, use Td-prefixed classes under ReplaceWith")
                 .build()
         )
         listOf("Object", "Function", "Update", "Error").forEach {
@@ -26,11 +19,10 @@ fun oldApiFile(typedScheme: TlTypedScheme) {
                 }.build()
             )
         }
-        addType(TypeSpec.objectBuilder(tdApiClass).apply {
+        addType(TypeSpec.classBuilder(tdApiClass).apply {
             addAnnotation(
                 deprecated(
                     "\"Deprecated, use one of [User,Bots,Core]TdApi instead. For user api - UserTdApi\"",
-                    "UserTdApi",
                     error = true
                 )
             )
@@ -53,20 +45,53 @@ fun oldApiFile(typedScheme: TlTypedScheme) {
                         .build()
                 )
             )
-            typedScheme.data.forEach { data ->
-                val type = data.type(typedScheme)
-                val spec = if (data is TlSealed) {
-                    val sealedClassName = tdApiClass.nestedClass(data.type)
-                    TypeSpec.classBuilder(sealedClassName)
-                        .addModifiers(KModifier.ABSTRACT)
-                        .setParents(data, typedScheme, old = true)
-                        .addAnnotation(deprecated("abstractTdDeprecatedMessage", replaceWith = "Td${data.type}", error = true))
-                        .build()
-                } else tdDataType(data, type, old = true) {
+            typedScheme.run { objects + functions }.forEach { data ->
+                tdDataType(data, data.type(typedScheme), old = true) {
                     setParents(data, typedScheme, old = true)
                     addAnnotation(deprecated("abstractTdDeprecatedMessage", replaceWith = "Td${data.type}", error = true))
+                }.also(::addType)
+            }
+            typedScheme.sealed.forEach { (sealed, children) ->
+                val sealedClassName = tdApiClass.nestedClass(sealed.type)
+                TypeSpec.classBuilder(sealedClassName)
+                    .addModifiers(KModifier.ABSTRACT)
+                    .setParents(sealed, typedScheme, old = true)
+                    .addAnnotation(deprecated("abstractTdDeprecatedMessage", replaceWith = "Td${sealed.type}", error = true))
+                    .build()
+                    .also(::addType)
+                if (sealed.type == "Update") return@forEach
+                children.forEach { child ->
+                    tdDataType(child, child.type(typedScheme), old = true) {
+                        setParents(child, typedScheme, old = true)
+                        val newName = "Td${sealed.type}.${child.type.substringAfter(child.parentType)}"
+                        addAnnotation(deprecated("abstractTdDeprecatedMessage", replaceWith = newName, error = true))
+                    }.also(::addType)
                 }
-                addType(spec)
+            }
+            typedScheme.updates.forEach { (group, children) ->
+                children.forEach { child ->
+                    tdDataType(child, child.type(typedScheme), old = true) {
+                        setParents(child, typedScheme, old = true)
+                        val (updateName, newName) = if (group == null) {
+                            "Td${child.type}" to "Td${child.type}"
+                        } else {
+                            val newType = child.type.substringAfter("Update")
+                            val overrideName = when {
+                                newType.startsWith("New") || newType.substringAfter(group).isBlank() -> "Data"
+                                else                                                                 -> newType.substringAfter(group)
+                            }
+                            "TdUpdate$group" to "TdUpdate$group.${overrideName}"
+                        }
+                        addAnnotation(
+                            deprecated(
+                                "abstractTdDeprecatedMessage",
+                                replaceWith = newName,
+                                imports = listOf("$pcg.updates.${updateName}"),
+                                error = true
+                            )
+                        )
+                    }.also(::addType)
+                }
             }
         }.build())
     }

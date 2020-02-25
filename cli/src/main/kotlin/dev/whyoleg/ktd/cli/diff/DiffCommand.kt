@@ -19,22 +19,22 @@ class DiffCommand : Subcommand("diff") {
         val currentScheme = gitHub.scheme(newVersion)
 
         val file = File("docs/td-api-changelog.md")
-        val fileLines = file.readText().lines()
+        //        val fileLines = file.readText().lines()
 
         val newText = previousScheme stringDiff currentScheme
-
-        val versionSectionHeader = "\n## $newVersion\n\n"
-        val versionsSectionLine = "- [$newVersion](#${newVersion.filter(Char::isDigit)})"
-
-        val section = fileLines.takeWhile { it.isNotBlank() }
-        val start = section.take(2)
-        val end = section.drop(2)
-
-        val header = (start + versionsSectionLine + end + versionSectionHeader).joinToString("\n")
-        val other = fileLines.drop(section.size).joinToString("\n")
-        val newFileText = header + newText!! + other
-
-        file.writeText(newFileText)
+        file.writeText(newText!!)
+        //        val versionSectionHeader = "\n## $newVersion\n\n"
+        //        val versionsSectionLine = "- [$newVersion](#${newVersion.filter(Char::isDigit)})"
+        //
+        //        val section = fileLines.takeWhile { it.isNotBlank() }
+        //        val start = section.take(2)
+        //        val end = section.drop(2)
+        //
+        //        val header = (start + versionsSectionLine + end + versionSectionHeader).joinToString("\n")
+        //        val other = fileLines.drop(section.size).joinToString("\n")
+        //        val newFileText = header + newText!! + other
+        //
+        //        file.writeText(newFileText)
     }
 
     private fun GitHub.scheme(version: String): TlScheme = downloadScheme(version).parseScheme()

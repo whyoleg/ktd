@@ -14,6 +14,7 @@ kotlin {
             api(ProjectModules.Api.api_user)
             api(ProjectModules.Api.api_bots)
             api(ProjectModules.Api.api_test)
+            api(ProjectModules.Migration.V060.ktd_client_raw)
         }
     }
 }

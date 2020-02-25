@@ -5,5 +5,6 @@ enum class TlKind {
     User,
     Bots,
     Test,
-    Ignore
+    Ignore,
+    All
 }

@@ -2,9 +2,8 @@ package dev.whyoleg.ktd.cli.api.generator
 
 import com.squareup.kotlinpoet.*
 import dev.whyoleg.ktd.cli.tl.*
-import dev.whyoleg.ktd.cli.tl.TlKind as TlKind1
 
-fun suspendTdApiFunctions(typedScheme: TlTypedScheme, kind: TlKind1) {
+fun suspendTdApiFunctions(typedScheme: TlTypedScheme, kind: TlKind) {
     val kindName = kind.name.toLowerCase()
     val moduleName = "ktd-api-$kindName-suspend"
 

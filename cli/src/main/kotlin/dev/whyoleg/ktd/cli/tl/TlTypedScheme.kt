@@ -47,5 +47,6 @@ fun parseData(tdBytes: ByteArray, tlBytes: ByteArray): Map<TlKind, TlTypedScheme
             it.type in userKeys                                                  -> TlKind.User
             else                                                                 -> TlKind.Core
         }
-    }.mapValues { (_, list) -> list.typed(responseTypes, requestTypes) }
+    }.mapValues { (_, list) -> list.typed(responseTypes, requestTypes) } +
+            (TlKind.All to scheme.filter { it.type !in ignored }.typed(responseTypes, requestTypes))
 }

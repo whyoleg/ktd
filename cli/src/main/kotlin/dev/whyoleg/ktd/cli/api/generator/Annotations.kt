@@ -9,7 +9,7 @@ fun serialName(string: String): AnnotationSpec = AnnotationSpec.builder(serialNa
 fun deprecated(
     message: String,
     replaceWith: String? = null,
-    vararg imports: String,
+    imports: List<String> = emptyList(),
     error: Boolean = false
 ): AnnotationSpec = AnnotationSpec.builder(ClassName("kotlin", "Deprecated"))
     .addMember("message = $message")

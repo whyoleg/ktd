@@ -15,6 +15,16 @@ class CoroutinesTdClient internal constructor(
     val updates: Flow<TdUpdate> = cache.updates
 
     override fun onUpdate(update: TdUpdate): Unit = cache.save(update)
+
+    //TODO remove after migration
+    companion object {
+        @Deprecated(
+            message = "Use AnyTdApi.executeSynchronously instead",
+            replaceWith = ReplaceWith("UserTdApi.executeSynchronously(request)", "dev.whyoleg.ktd.api.UserTdApi"),
+            level = DeprecationLevel.ERROR
+        )
+        fun <T : TdResponse> exec(request: TdRequest<T>): T = error("No TdApi exists")
+    }
 }
 
 fun AnyTdApi.coroutinesClient(

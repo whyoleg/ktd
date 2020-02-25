@@ -8,7 +8,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
   AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
   JAVA_VERSION: 11
-  LIB_VERSION: 1
+  LIB_VERSION: ${{ github.event.client_payload.lib_version }}
   TD_VERSION: ${{ github.event.client_payload.version }}
   TD_VERSION_REF: ${{ github.event.client_payload.ref }}
 
@@ -17,7 +17,8 @@ jobs:
     if: github.event.action == 'generate_tdlib'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Init with ${{ toJson(github.event.client_payload) }}"
+      - name: tdlib ${{ env.LIB_VERSION }}-${{ env.TD_VERSION }}
+        run: echo "Init with ${{ toJson(github.event.client_payload) }}"
 
   download-android-openssl:
     needs: [check]
@@ -70,18 +71,18 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t mac -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t mac
 
-      - uses: actions/upload-artifact@v1
+      - name: Save tdlib
+        uses: actions/upload-artifact@v1
         with:
           name: mac
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   generate-win:
     needs: [download-cli, download-windows-dependencies]
     runs-on: windows-latest
     strategy:
-      fail-fast: false
       matrix:
         arch: [x86, x64]
     steps:
@@ -112,13 +113,13 @@ jobs:
           xcopy /S dependencies ..\
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t win-${{ matrix.arch }} -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t win-${{ matrix.arch }}
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
           name: win-${{ matrix.arch }}
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   generate-linux:
     needs: [download-cli]
@@ -142,19 +143,18 @@ jobs:
           name: cli
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t linux -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t linux
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
           name: linux
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
   generate-android:
     needs: [download-cli, download-android-openssl]
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         arch: [armv7, armv8, x86, x64]
     steps:
@@ -187,15 +187,14 @@ jobs:
           cp -r openssl ..
 
       - name: Generate tdlib
-        run: java -jar cli/cli.jar tdlib -p jvm -t android-${{ matrix.arch }} -c cli/config/tdlib.default.conf
+        run: java -jar cli/cli.jar tdlib -p jvm -t android-${{ matrix.arch }}
 
       - name: Save tdlib
         uses: actions/upload-artifact@v1
         with:
           name: android-${{ matrix.arch }}
-          path: tdlib/jni/bin
+          path: cli/tdlib/jni/bin
 
-  #TODO create action to iterate over platforms/targets
   upload-tdlib:
     runs-on: ubuntu-latest
     needs: [generate-linux, generate-win, generate-mac, generate-android]

@@ -6,9 +6,9 @@ import kotlinx.atomicfu.*
 
 internal class DefaultTdClient(
     api: TdApi,
-    runner: SynchronizedRunner = DefaultSynchronizedRunner(),
-    onClose: () -> Unit = {},
-    updatesCallback: TdUpdatesCallback = {}
+    runner: SynchronizedRunner,
+    onClose: () -> Unit,
+    updatesCallback: TdUpdatesCallback
 ) : TdClient {
     private val clientClosing = atomic(false)
     private val clientClosed = atomic(false)
@@ -21,7 +21,7 @@ internal class DefaultTdClient(
         val client = IncrementalTdApiClient(api)
         runner.run(client.id) {
             try {
-                when (val response = client.receive(runner.timeout)) {
+                when (val response = client.unsafeReceive(runner.timeout)) {
                     null                 -> Unit
                     is TdUpdate          -> {
                         response.runCatching(updatesCallback)
@@ -55,9 +55,11 @@ internal class DefaultTdClient(
     }
 
     override fun <R : TdResponse> sendCallback(request: TdRequest<R>, callback: TypedTdCallback<R>?) {
-        if (clientClosing.value) callback?.invoke(TdResult(TdError(500, "Client is closing now.")))
-        else client.send(request) { requestId ->
-            callback?.let { callbacks[requestId] = @Suppress("UNCHECKED_CAST") (it as TdCallback) }
+        when (clientClosing.value) {
+            true  -> callback?.invoke(TdResult(TdError(500, "Client is closing now.")))
+            false -> client.send(request) { requestId ->
+                callback?.let { callbacks[requestId] = @Suppress("UNCHECKED_CAST") (it as TdCallback) }
+            }
         }
     }
 

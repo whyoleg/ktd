@@ -21,7 +21,6 @@ class IncrementalTdApiClientTest {
         }
 
         override fun sendTo(clientId: Long, request: TdApiRequest) {
-            TODO("Not yet implemented")
         }
 
         override fun receiveFrom(clientId: Long, timeout: Double): TdApiResponse? {

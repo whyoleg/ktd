@@ -26,7 +26,6 @@ class ThreadSafeTdApiClientTest {
         }
 
         override fun sendTo(clientId: Long, request: TdApiRequest) {
-            TODO("Not yet implemented")
         }
 
         override fun receiveFrom(clientId: Long, timeout: Double): TdApiResponse? {
@@ -40,7 +39,6 @@ class ThreadSafeTdApiClientTest {
             TODO("Not yet implemented")
         }
     }
-
 
     @Test
     fun createIsNotCalledBeforeAnyRequest() {
@@ -57,7 +55,7 @@ class ThreadSafeTdApiClientTest {
         val client = ThreadSafeTdApiClient(api)
         assertFalse(api.clientCreated)
         assertFalse(api.clientDestroyed)
-        client.unsafeDestroy()
+        client.destroy()
         assertTrue(api.clientCreated)
         assertTrue(api.clientDestroyed)
     }
@@ -111,5 +109,26 @@ class ThreadSafeTdApiClientTest {
         api.locked.value = false
         Thread.sleep(100)
         assertEquals(3, api.counter.value)
+    }
+
+    @Test
+    fun destroyLock() {
+        val api = TestTdApi()
+        val client = ThreadSafeTdApiClient(api)
+        assertEquals(0, api.counter.value)
+        thread { client.receive() }
+        Thread.sleep(100)
+        assertEquals(1, api.counter.value)
+        api.locked.value = false
+        Thread.sleep(100)
+        assertEquals(1, api.counter.value)
+        thread { client.receive() }
+        Thread.sleep(100)
+        thread { client.destroy() }
+        Thread.sleep(100)
+        assertFalse(api.clientDestroyed)
+        api.locked.value = false
+        Thread.sleep(100)
+        assertTrue(api.clientDestroyed)
     }
 }

@@ -7,7 +7,7 @@ import kotlin.contracts.*
 
 class IncrementalTdApiClient(api: TdApi) {
     @PublishedApi
-    internal val client by lazy { TdApiClient(api) }
+    internal val client = TdApiClient(api)
 
     private val requestId = atomic(0L)
 
@@ -30,7 +30,7 @@ class IncrementalTdApiClient(api: TdApi) {
         return requestId
     }
 
-    fun receive(timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = client.receive(timeout)
+    fun unsafeReceive(timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = client.receive(timeout)
 }
 
 /**

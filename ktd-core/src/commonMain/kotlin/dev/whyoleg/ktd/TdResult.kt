@@ -9,7 +9,9 @@ inline class TdResult<T : TdResponse>(private val responseOrError: TdResponseOrE
     val error: TdError?
         get() = responseOrError as? TdError
 
-    inline fun handle(onResponse: T.() -> Unit, onError: TdError.() -> Unit) {
-        response?.let(onResponse) ?: error?.let(onError)
+    inline fun <R> handle(onResponse: T.() -> R, onError: TdError.() -> R): R {
+        response?.let { return onResponse(it) }
+        error?.let { return onError(it) }
+        error("Cast failed!")
     }
 }

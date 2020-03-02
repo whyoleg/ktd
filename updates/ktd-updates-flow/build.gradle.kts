@@ -10,6 +10,11 @@ kotlin {
         api(Dependencies.kotlinx.coroutines.core)
         api(Dependencies.kotlinx.immutableCollections.metadata)
     }
+    dependenciesTest {
+        implementation(Dependencies.kotlin.test)
+        implementation(Dependencies.kotlin.annotations)
+    }
+
     metadata {
         dependenciesMain {
             api(ProjectModules.client)

@@ -5,7 +5,7 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
 
 abstract class SuspendTdClient(
-    api: AnyTdApi,
+    api: TdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     protected val job: Job = Job()
 ) : AbstractTdClient(api, runner), Job by job {

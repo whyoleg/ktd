@@ -32,13 +32,11 @@ object ProjectModules {
         val client_suspend = ProjectModule(":clients-client-suspend")
         val client_coroutines = ProjectModule(":clients-client-coroutines")
     }
-
     val updates = ProjectModule(":updates")
 
     object Updates {
         val updates_flow = ProjectModule(":updates-updates-flow")
     }
-
     val migration = ProjectModule(":migration")
 
     object Migration {

@@ -5,7 +5,7 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.coroutines.*
 
 internal class DefaultSuspendTdClient(
-    api: AnyTdApi,
+    api: TdApi,
     runner: SynchronizedRunner,
     job: Job,
     private val updatesCallback: TdUpdatesCallback
@@ -13,7 +13,7 @@ internal class DefaultSuspendTdClient(
     override fun onUpdate(update: TdUpdate): Unit = updatesCallback(update)
 }
 
-fun AnyTdApi.defaultSuspendClient(
+fun TdApi.defaultSuspendClient(
     parentJob: Job? = null,
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),
     updatesCallback: TdUpdatesCallback = {}

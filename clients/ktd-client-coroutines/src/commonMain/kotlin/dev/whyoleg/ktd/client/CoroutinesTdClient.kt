@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 class CoroutinesTdClient internal constructor(
-    api: AnyTdApi,
+    api: TdApi,
     runner: SynchronizedRunner,
     job: Job
 ) : SuspendTdClient(api, runner, job) {
@@ -19,7 +19,7 @@ class CoroutinesTdClient internal constructor(
     //TODO remove after migration
     companion object {
         @Deprecated(
-            message = "Use AnyTdApi.executeSynchronously instead",
+            message = "Use TdApi.executeSynchronously instead",
             replaceWith = ReplaceWith("UserTdApi.executeSynchronously(request)", "dev.whyoleg.ktd.api.UserTdApi"),
             level = DeprecationLevel.ERROR
         )
@@ -27,7 +27,7 @@ class CoroutinesTdClient internal constructor(
     }
 }
 
-fun AnyTdApi.coroutinesClient(
+fun TdApi.coroutinesClient(
     parentJob: Job? = null,
     runner: SynchronizedRunner = DefaultSynchronizedRunner()
 ): CoroutinesTdClient = CoroutinesTdClient(this, runner, Job(parentJob))

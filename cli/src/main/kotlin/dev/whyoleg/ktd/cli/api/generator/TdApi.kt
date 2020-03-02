@@ -210,9 +210,11 @@ fun tdApiFile(version: String, kind: TlKind) {
     file(apiName, pcg, "api", moduleName) {
         addType(TypeSpec.objectBuilder(ClassName(pcg, name)).apply {
             addAnnotation(suppressDeprecationError)
-            superclass(ClassName("dev.whyoleg.ktd", "AnyTdApi"))
-            addSuperclassConstructorParameter("\"$version\"")
-            addSuperclassConstructorParameter(builderName)
+            addImport("dev.whyoleg.ktd.internal", "JsonTdApi")
+            addSuperinterface(
+                ClassName("dev.whyoleg.ktd", "TdApi"),
+                CodeBlock.builder().addStatement("JsonTdApi(\"$version\", $builderName)").build()
+            )
         }.build())
     }
 }

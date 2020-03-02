@@ -1,5 +1,6 @@
 package dev.whyoleg.ktd.json
 
+@ExperimentalTdInterface
 expect object TdJson {
     fun init()
     fun create(): Long

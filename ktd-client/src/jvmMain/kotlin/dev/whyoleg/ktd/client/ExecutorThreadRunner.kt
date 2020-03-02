@@ -5,7 +5,7 @@ import java.util.concurrent.*
 import kotlin.concurrent.*
 
 class SingleThreadRunner(
-    override val timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
+    override val timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : SynchronizedRunner {
     override fun run(id: Long, block: () -> Boolean) {
         thread { while (block()) Unit }
@@ -14,7 +14,7 @@ class SingleThreadRunner(
 
 class ExecutorThreadRunner(
     private val executor: ExecutorService = Executors.newCachedThreadPool(),
-    override val timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT
+    override val timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : SynchronizedRunner {
     override fun run(id: Long, block: () -> Boolean) {
         executor.execute { while (block()) Unit }

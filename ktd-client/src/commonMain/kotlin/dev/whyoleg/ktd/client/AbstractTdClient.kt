@@ -4,7 +4,7 @@ import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 
 abstract class AbstractTdClient(
-    api: AnyTdApi,
+    api: TdApi,
     runner: SynchronizedRunner = DefaultSynchronizedRunner()
 ) : TdClient {
     private val tdClient: DefaultTdClient by lazy { DefaultTdClient(api, runner, this::onClose, this::onUpdate) }

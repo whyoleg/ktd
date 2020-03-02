@@ -5,7 +5,7 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.*
 import kotlin.contracts.*
 
-class IncrementalTdApiClient(api: AnyTdApi) {
+class IncrementalTdApiClient(api: TdApi) {
     @PublishedApi
     internal val client by lazy { TdApiClient(api) }
 
@@ -30,7 +30,7 @@ class IncrementalTdApiClient(api: AnyTdApi) {
         return requestId
     }
 
-    fun receive(timeout: Double = AnyTdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = client.receive(timeout)
+    fun receive(timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = client.receive(timeout)
 }
 
 /**

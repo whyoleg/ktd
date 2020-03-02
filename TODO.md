@@ -15,3 +15,4 @@ Ordering of implementation is not static.
 - [ ] JS support **(TODO in 0.8.x)**
 - [ ] Publish to maven central, jcenter, github, bintray
 - [ ] Version compatibility checker
+- [ ] Check if it's needed to use JNI for jvm and json/native implementations for other targets

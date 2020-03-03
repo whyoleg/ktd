@@ -8,7 +8,7 @@ import kotlinx.cli.*
 import org.kohsuke.github.*
 import java.io.*
 
-@UseExperimental(ExperimentalCli::class)
+@OptIn(ExperimentalCli::class)
 class DiffCommand : Subcommand("diff") {
     private val previousVersion by option(ArgType.String, "previousVersion", "pv", "A previous version of TdLib").required()
     private val newVersion by option(ArgType.String, "newVersion", "nv", "A new version of TdLib").required()

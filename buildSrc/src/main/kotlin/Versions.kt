@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.3.61"
+    const val kotlin = "1.3.70"
     const val cli = "0.2.0-dev-6"
     const val immutableCollections = "0.3"
     const val githubApi = "1.99"

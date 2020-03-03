@@ -7,7 +7,7 @@ import kotlinx.coroutines.*
 import org.jetbrains.kotlinx.serialization.config.*
 import java.io.*
 
-@UseExperimental(ExperimentalCli::class)
+@OptIn(ExperimentalCli::class)
 class TdlibCommand : Subcommand("tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()

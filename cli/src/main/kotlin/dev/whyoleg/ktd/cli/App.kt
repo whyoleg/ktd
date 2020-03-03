@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
     parser().parse(args)
 }
 
-@UseExperimental(ExperimentalCli::class)
+@OptIn(ExperimentalCli::class)
 private fun parser() = ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_STYLE.JVM).apply {
     subcommands(
         TdlibCommand(),

@@ -3,7 +3,7 @@ package dev.whyoleg.ktd.cli.tdlib
 import kotlinx.cli.*
 import java.io.*
 
-@UseExperimental(ExperimentalCli::class)
+@OptIn(ExperimentalCli::class)
 class CopyLibsCommand : Subcommand("copyLibs") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val libsFolder by option(ArgType.String, "libsFolder", "lf", "Folder with generated libs").default("libs")

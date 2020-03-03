@@ -13,12 +13,12 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
 import java.util.*
 
-@UseExperimental(ExperimentalCli::class)
+@OptIn(ExperimentalCli::class)
 class DispatchCommand : Subcommand("dispatch") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val type by option(ArgType.Choice(listOf("api", "tdlib")), "type", "t", "Type of event").required()
 
-    @UseExperimental(KtorExperimentalAPI::class)
+    @OptIn(KtorExperimentalAPI::class)
     override fun execute() {
         val client = HttpClient(CIO)
         runBlocking {

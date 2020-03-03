@@ -9,11 +9,12 @@ buildscript {
         jcenter()
     }
     dependencies {
+        val kotlinVersion = "1.3.70"
         classpath("dev.whyoleg.kamp:kamp:0.2.1-pre-4")
         classpath("com.android.tools.build:gradle:3.5.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61")
-        classpath("org.jetbrains.kotlin:kotlin-allopen:1.3.61")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:1.3.61")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.1")
         classpath("com.github.jengelman.gradle.plugins:shadow:5.2.0")
         classpath("org.jetbrains.kotlinx:kotlinx.benchmark.gradle:0.2.0-dev-7")

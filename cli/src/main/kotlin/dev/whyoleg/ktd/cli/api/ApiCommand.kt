@@ -6,7 +6,7 @@ import dev.whyoleg.ktd.cli.tl.*
 import kotlinx.cli.*
 import java.io.*
 
-@UseExperimental(ExperimentalCli::class)
+@OptIn(ExperimentalCli::class)
 class ApiCommand : Subcommand("api") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
 

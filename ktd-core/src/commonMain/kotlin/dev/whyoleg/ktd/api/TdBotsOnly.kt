@@ -1,4 +1,4 @@
 package dev.whyoleg.ktd.api
 
-@Experimental(level = Experimental.Level.WARNING)
+@RequiresOptIn("Fields annotated with such annotation can be used only by bots", RequiresOptIn.Level.WARNING)
 annotation class TdBotsOnly

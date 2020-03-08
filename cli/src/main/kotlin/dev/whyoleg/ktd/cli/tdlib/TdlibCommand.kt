@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.serialization.config.*
 import java.io.*
 
 @OptIn(ExperimentalCli::class)
-class TdlibCommand : Subcommand("tdlib") {
+class TdlibCommand : Subcommand("tdlib", "Generate tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
     private val configPath by option(ArgType.String, "config", "c", "Path to .conf file").default("cli/tdlib.conf")
@@ -17,7 +17,7 @@ class TdlibCommand : Subcommand("tdlib") {
         println("Start build TdLib for $platform/$target ")
         if (target !in platform.targets) error("Can't build TdLib for $platform/$target")
         when (platform) {
-            BuildPlatform.Jvm    -> {
+            BuildPlatform.Jvm -> {
                 val config = config<JniConfig>("jni").also(::println)
                 val execution = when (val t = target) {
                     BuildTarget.Linux      -> config.linux?.execution(config.td.buildType)
@@ -40,15 +40,13 @@ class TdlibCommand : Subcommand("tdlib") {
 
 object BuildPlatformArgType : ArgType<BuildPlatform>(true) {
     override val description: kotlin.String = "{ PlatformTarget }"
-    override val conversion: (value: kotlin.String, name: kotlin.String) -> BuildPlatform = { value, _ ->
+    override fun convert(value: kotlin.String, name: kotlin.String): BuildPlatform =
         BuildPlatform.values().find { it.name.contains(value, ignoreCase = true) } ?: error("Platform '$value' isn't supported")
-    }
 }
 
 object BuildTargetArgType : ArgType<BuildTarget>(true) {
     private val allTargets = BuildPlatform.values().flatMap(BuildPlatform::targets).distinct()
     override val description: kotlin.String = "{ BuildTarget }"
-    override val conversion: (value: kotlin.String, name: kotlin.String) -> BuildTarget = { value, _ ->
+    override fun convert(value: kotlin.String, name: kotlin.String): BuildTarget =
         allTargets.find { it.targetName.contains(value, ignoreCase = true) } ?: error("Target '$value' isn't supported")
-    }
 }

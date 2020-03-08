@@ -6,24 +6,24 @@ import kotlinx.serialization.modules.*
 internal val testApiBuilder: Lazy<SerialModule> = lazy {
     coreApiBuilder.value + SerializersModule {
         polymorphic<TdApiRequest> {
-            addSubclass(TdTestCallEmpty.serializer())
-            addSubclass(TdTestCallString.serializer())
-            addSubclass(TdTestCallBytes.serializer())
-            addSubclass(TdTestCallVectorInt.serializer())
-            addSubclass(TdTestCallVectorIntObject.serializer())
-            addSubclass(TdTestCallVectorString.serializer())
-            addSubclass(TdTestCallVectorStringObject.serializer())
-            addSubclass(TdTestSquareInt.serializer())
-            addSubclass(TdTestGetDifference.serializer())
+            subclass(TdTestCallEmpty.serializer())
+            subclass(TdTestCallString.serializer())
+            subclass(TdTestCallBytes.serializer())
+            subclass(TdTestCallVectorInt.serializer())
+            subclass(TdTestCallVectorIntObject.serializer())
+            subclass(TdTestCallVectorString.serializer())
+            subclass(TdTestCallVectorStringObject.serializer())
+            subclass(TdTestSquareInt.serializer())
+            subclass(TdTestGetDifference.serializer())
         }
         polymorphic<TdApiResponse> {
-            addSubclass(TdTestInt.serializer())
-            addSubclass(TdTestString.serializer())
-            addSubclass(TdTestBytes.serializer())
-            addSubclass(TdTestVectorInt.serializer())
-            addSubclass(TdTestVectorIntObject.serializer())
-            addSubclass(TdTestVectorString.serializer())
-            addSubclass(TdTestVectorStringObject.serializer())
+            subclass(TdTestInt.serializer())
+            subclass(TdTestString.serializer())
+            subclass(TdTestBytes.serializer())
+            subclass(TdTestVectorInt.serializer())
+            subclass(TdTestVectorIntObject.serializer())
+            subclass(TdTestVectorString.serializer())
+            subclass(TdTestVectorStringObject.serializer())
         }
     }
 }

@@ -14,7 +14,7 @@ import kotlinx.serialization.json.*
 import java.util.*
 
 @OptIn(ExperimentalCli::class)
-class DispatchCommand : Subcommand("dispatch") {
+class DispatchCommand : Subcommand("dispatch", "Dispatch GH action") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val type by option(ArgType.Choice(listOf("api", "tdlib")), "type", "t", "Type of event").required()
 

@@ -15,7 +15,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.1")
+        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.2")
         classpath("com.github.jengelman.gradle.plugins:shadow:5.2.0")
         classpath("org.jetbrains.kotlinx:kotlinx.benchmark.gradle:0.2.0-dev-7")
     }

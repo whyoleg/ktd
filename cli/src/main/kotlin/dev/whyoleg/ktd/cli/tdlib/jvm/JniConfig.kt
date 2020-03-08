@@ -4,7 +4,6 @@ package dev.whyoleg.ktd.cli.tdlib.jvm
 
 import kotlinx.serialization.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.internal.*
 import java.io.*
 
 @Serializable
@@ -61,9 +60,7 @@ data class AndroidJniConfig(
 
 @Serializer(File::class)
 object FileFromStringSerializer : KSerializer<File> {
-    override val descriptor: SerialDescriptor = SerialClassDescImpl("java.io.file")
+    override val descriptor: SerialDescriptor = SerialDescriptor("java.io.file")
     override fun deserialize(decoder: Decoder): File = File(decoder.decodeString())
-    override fun serialize(encoder: Encoder, obj: File) {
-        error("not needed")
-    }
+    override fun serialize(encoder: Encoder, value: File) = error("not needed")
 }

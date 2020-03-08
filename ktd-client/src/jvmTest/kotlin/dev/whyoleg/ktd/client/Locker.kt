@@ -2,12 +2,12 @@ package dev.whyoleg.ktd.client
 
 import kotlinx.atomicfu.*
 
-class Locker {
-    private val atomic = atomic(3)
+class Locker(init: Int = 3) {
+    private val _counter = atomic(init)
     private val lock = atomic(false)
 
     val isLocked get() = lock.value
-    val atomicValue get() = atomic.value
+    val counter get() = _counter.value
     fun lock() {
         lock.value = true
     }
@@ -16,5 +16,5 @@ class Locker {
         lock.value = false
     }
 
-    fun checkAtomic() = atomic.decrementAndGet() != 0
+    fun decrementAndCheck() = _counter.decrementAndGet() != 0
 }

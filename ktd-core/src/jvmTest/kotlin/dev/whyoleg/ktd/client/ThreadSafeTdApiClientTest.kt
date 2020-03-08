@@ -1,68 +1,51 @@
 package dev.whyoleg.ktd.client
 
-import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
+import dev.whyoleg.ktd.test.*
 import kotlinx.atomicfu.*
 import kotlin.concurrent.*
 import kotlin.test.*
 
 class ThreadSafeTdApiClientTest {
-    private class TestTdApi : TdApi {
-        override val version: String = "1"
+    private class ReceiveLockTestTdInstance : TestTdInstance {
+        private val _counter = atomic(0)
+        private val lock = atomic(false)
 
-        var clientCreated = false
-        var clientDestroyed = false
-
-        val counter = atomic(0)
-        val locked = atomic(false)
-
-        override fun createClient(): Long {
-            clientCreated = true
-            return 1
+        val counter: Int get() = _counter.value
+        fun unlock() {
+            lock.value = false
         }
 
-        override fun destroyClient(clientId: Long) {
-            clientDestroyed = true
-        }
-
-        override fun sendTo(clientId: Long, request: TdApiRequest) {
-        }
-
-        override fun receiveFrom(clientId: Long, timeout: Double): TdApiResponse? {
-            locked.value = true
-            counter.incrementAndGet()
-            while (locked.value) Unit
+        override fun receive(timeout: Double): TdApiResponse? {
+            lock.value = true
+            _counter.incrementAndGet()
+            while (lock.value) Unit
             return TdOk()
-        }
-
-        override fun <R : TdResponse> executeSynchronously(request: TdSyncRequest<R>): TdResult<R> {
-            TODO("Not yet implemented")
         }
     }
 
     @Test
     fun createIsNotCalledBeforeAnyRequest() {
-        val api = TestTdApi()
+        val api = TestTdApi(::ReceiveLockTestTdInstance)
         val client = ThreadSafeTdApiClient(api)
-        assertFalse(api.clientCreated)
-        assertEquals(1, client.id)
-        assertTrue(api.clientCreated)
+        assertEquals(0, api.activeClients)
+        assertNotNull(api.instanceOrNull(client.id))
+        assertEquals(1, api.activeClients)
     }
 
     @Test
     fun destroyed() {
-        val api = TestTdApi()
+        val api = TestTdApi(::ReceiveLockTestTdInstance)
         val client = ThreadSafeTdApiClient(api)
-        assertFalse(api.clientCreated)
-        assertFalse(api.clientDestroyed)
+        assertNotNull(api.instanceOrNull(client.id))
         client.destroy()
-        assertTrue(api.clientCreated)
-        assertTrue(api.clientDestroyed)
+        assertNull(api.instanceOrNull(client.id))
+        assertEquals(0, api.activeClients)
     }
 
     @Test
     fun incrementalSend() {
-        val api = TestTdApi()
+        val api = TestTdApi(::ReceiveLockTestTdInstance)
         val client = ThreadSafeTdApiClient(api)
         assertEquals(1, client.send(TdClose()) { assertEquals(it, 1) })
         assertEquals(2, client.send(TdClose()) { assertEquals(it, 2) })
@@ -70,65 +53,68 @@ class ThreadSafeTdApiClientTest {
 
     @Test
     fun singleReceive() {
-        val api = TestTdApi()
+        val api = TestTdApi(::ReceiveLockTestTdInstance)
         val client = ThreadSafeTdApiClient(api)
-        assertEquals(0, api.counter.value)
+        val instance = api.instance(client.id)
+        assertEquals(0, instance.counter)
         thread { client.receive() }
-        while (api.counter.value == 0) Unit
-        assertEquals(1, api.counter.value)
-        api.locked.value = false
+        while (instance.counter == 0) Unit
+        assertEquals(1, instance.counter)
+        instance.unlock()
     }
 
     @Test
     fun multiReceive() {
-        val api = TestTdApi()
+        val api = TestTdApi(::ReceiveLockTestTdInstance)
         val client = ThreadSafeTdApiClient(api)
-        assertEquals(0, api.counter.value)
+        val instance = api.instance(client.id)
+        assertEquals(0, instance.counter)
 
         thread { client.receive() }
         thread { client.receive() }
         thread { client.receive() }
 
         Thread.sleep(100)
-        assertEquals(1, api.counter.value)
+        assertEquals(1, instance.counter)
         Thread.sleep(100)
-        assertEquals(1, api.counter.value)
+        assertEquals(1, instance.counter)
 
-        api.locked.value = false
+        instance.unlock()
         Thread.sleep(100)
-        assertEquals(2, api.counter.value)
+        assertEquals(2, instance.counter)
         Thread.sleep(100)
-        assertEquals(2, api.counter.value)
+        assertEquals(2, instance.counter)
 
-        api.locked.value = false
+        instance.unlock()
         Thread.sleep(100)
-        assertEquals(3, api.counter.value)
+        assertEquals(3, instance.counter)
         Thread.sleep(100)
-        assertEquals(3, api.counter.value)
+        assertEquals(3, instance.counter)
 
-        api.locked.value = false
+        instance.unlock()
         Thread.sleep(100)
-        assertEquals(3, api.counter.value)
+        assertEquals(3, instance.counter)
     }
 
     @Test
     fun destroyLock() {
-        val api = TestTdApi()
+        val api = TestTdApi(::ReceiveLockTestTdInstance)
         val client = ThreadSafeTdApiClient(api)
-        assertEquals(0, api.counter.value)
+        val instance = api.instance(client.id)
+        assertEquals(0, instance.counter)
         thread { client.receive() }
         Thread.sleep(100)
-        assertEquals(1, api.counter.value)
-        api.locked.value = false
+        assertEquals(1, instance.counter)
+        instance.unlock()
         Thread.sleep(100)
-        assertEquals(1, api.counter.value)
+        assertEquals(1, instance.counter)
         thread { client.receive() }
         Thread.sleep(100)
         thread { client.destroy() }
         Thread.sleep(100)
-        assertFalse(api.clientDestroyed)
-        api.locked.value = false
+        assertNotNull(api.instanceOrNull(client.id))
+        instance.unlock()
         Thread.sleep(100)
-        assertTrue(api.clientDestroyed)
+        assertNull(api.instanceOrNull(client.id))
     }
 }

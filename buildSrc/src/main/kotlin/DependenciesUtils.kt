@@ -16,3 +16,7 @@ inline fun KotlinMultiplatformExtension.dependenciesTest(crossinline configure: 
     dependencies("test", configure)
     sourceSets.getByName("commonTest") { dependencies(KampPlatform.common, configure) }
 }
+
+inline fun KotlinMultiplatformExtension.metadataDependenciesTest(crossinline configure: KampDependencyHandler.() -> Unit) {
+    sourceSets.getByName("commonTest") { dependencies(KampPlatform.common, configure) }
+}

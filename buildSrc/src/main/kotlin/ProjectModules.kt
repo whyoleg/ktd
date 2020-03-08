@@ -9,6 +9,7 @@ object ProjectModules {
     val json = ProjectModule(":json")
     val core = ProjectModule(":core")
     val client = ProjectModule(":client")
+    val test = ProjectModule(":test")
     val api_integration = ProjectModule(":api-integration")
     val api = ProjectModule(":api")
 

@@ -34,21 +34,21 @@ class ExecutorThreadRunnerTest {
         val locker = Locker()
         runner.run(1) {
             locker.lock()
-            val v = locker.checkAtomic()
+            val v = locker.decrementAndCheck()
             while (locker.isLocked) Unit
             v
         }
         repeat(3) {
             Thread.sleep(100)
-            assertEquals(2 - it, locker.atomicValue)
+            assertEquals(2 - it, locker.counter)
             Thread.sleep(100)
-            assertEquals(2 - it, locker.atomicValue)
+            assertEquals(2 - it, locker.counter)
             locker.unlock()
         }
         Thread.sleep(100)
-        assertEquals(0, locker.atomicValue)
+        assertEquals(0, locker.counter)
         Thread.sleep(100)
-        assertEquals(0, locker.atomicValue)
+        assertEquals(0, locker.counter)
         assertFalse(locker.isLocked)
     }
 
@@ -59,16 +59,16 @@ class ExecutorThreadRunnerTest {
         lockers.forEach { locker ->
             runner.run(1) {
                 locker.lock()
-                val v = locker.checkAtomic()
+                val v = locker.decrementAndCheck()
                 while (locker.isLocked) Unit
                 v
             }
         }
         fun check(f: Int, s: Int, t: Int) {
             Thread.sleep(100)
-            assertEquals(f, lockers[0].atomicValue)
-            assertEquals(s, lockers[1].atomicValue)
-            assertEquals(t, lockers[2].atomicValue)
+            assertEquals(f, lockers[0].counter)
+            assertEquals(s, lockers[1].counter)
+            assertEquals(t, lockers[2].counter)
         }
         check(2, 2, 2)
         lockers[0].unlock()

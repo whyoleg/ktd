@@ -19,4 +19,7 @@ kotlin {
             api(ProjectModules.client)
         }
     }
+    metadataDependenciesTest {
+        api(ProjectModules.test)
+    }
 }

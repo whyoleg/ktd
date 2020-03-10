@@ -21,4 +21,7 @@ kotlin {
             api(ProjectModules.json)
         }
     }
+    metadataDependenciesTest {
+        api(ProjectModules.test)
+    }
 }

@@ -5,10 +5,13 @@ import dev.whyoleg.ktd.api.*
 import dev.whyoleg.ktd.json.*
 import kotlinx.serialization.modules.*
 
-@OptIn(ExperimentalTdInterface::class)
-class JsonTdApi
+/**
+ * Json implementation of interaction with tdlib.
+ * Can be used only internally!
+ */
 @Deprecated(message = "Constructor used internally in api modules to setup serialization for api.", level = DeprecationLevel.ERROR)
-constructor(override val version: String, private val lazySerialModule: Lazy<SerialModule>) : TdApi {
+@OptIn(ExperimentalTdInterface::class)
+class JsonTdApi(override val version: String, private val lazySerialModule: Lazy<SerialModule>) : TdApi {
     private val tdJson by lazy { TdJson.also { TdJson.init() } }
     private val serializer by lazy { TdJsonSerializer(lazySerialModule.value) }
 

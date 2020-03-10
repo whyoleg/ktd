@@ -44,7 +44,7 @@ interface TdApi {
     fun receiveFrom(clientId: Long, timeout: Double = DEFAULT_RECEIVE_TIMEOUT): TdApiResponse?
 
     /**
-     * Execute [TdSyncRequest] synchronously, blocking until request received
+     * Execute [TdSyncRequest] synchronously, blocking until response received
      *
      * @param R type of [TdResponse]
      * @param request synchronous request to tdlib

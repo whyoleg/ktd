@@ -42,6 +42,7 @@ modules {
     m("json")
     m("core")
     m("client")
+    m("test")
 
     "api-integration"()
     // latest: 1.6.0

@@ -7,12 +7,12 @@ import kotlin.contracts.*
 
 class ThreadSafeTdApiClient(api: TdApi) {
     @PublishedApi
-    internal val client by lazy { IncrementalTdApiClient(api) }
+    internal val client = IncrementalTdApiClient(api)
 
     private val receiveLock = reentrantLock()
 
     val id: Long get() = client.id
-    fun unsafeDestroy(): Unit = client.unsafeDestroy()
+    fun destroy(): Unit = receiveLock.withLock { client.unsafeDestroy() }
 
     /**
      * TODO Only the top-level functions can have a contract for now.
@@ -21,7 +21,7 @@ class ThreadSafeTdApiClient(api: TdApi) {
     internal inline fun send2(request: TdApiRequest, preconfigure: (requestId: Long) -> Unit = {}): Long =
         client.send2(request, preconfigure)
 
-    fun receive(timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = receiveLock.withLock { client.receive(timeout) }
+    fun receive(timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT): TdApiResponse? = receiveLock.withLock { client.unsafeReceive(timeout) }
 }
 
 /**

@@ -12,11 +12,15 @@ kotlin {
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
         implementation(Dependencies.kotlin.annotations)
+        runtimeOnly(Dependencies.kotlinx.atomicfu.runtime)
     }
 
     metadata {
         dependenciesMain {
             api(ProjectModules.core)
         }
+    }
+    metadataDependenciesTest {
+        api(ProjectModules.test)
     }
 }

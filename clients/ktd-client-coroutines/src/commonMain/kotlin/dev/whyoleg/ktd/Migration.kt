@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package dev.whyoleg.ktd
 
 import dev.whyoleg.ktd.client.*

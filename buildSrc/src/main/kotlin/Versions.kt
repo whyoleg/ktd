@@ -11,10 +11,12 @@ object Versions {
         immutableCollections = "0.3"
         //todo add benchmarks here
     )
+
+    val ktor = KtorVersion("1.3.1")
     const val benchmarks = "0.2.0-dev-7"
 
-    const val githubApi = "1.99"
-    const val kotlinShell = "0.2"
+    const val githubApi = "1.108"
+    const val kotlinShell = "0.2.1"
     const val kotlinPoet = "1.5.0"
 
     const val ktdVersion = "0.6.0"

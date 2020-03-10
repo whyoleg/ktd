@@ -4,7 +4,7 @@ import dev.whyoleg.ktd.cli.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
-import io.ktor.client.response.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.util.*
@@ -41,7 +41,6 @@ class DispatchCommand : Subcommand("dispatch", "Dispatch GH action") {
                     }
                 }.toString(), ContentType.Application.Json)
             }
-            println(response)
             println(response.status)
         }
     }

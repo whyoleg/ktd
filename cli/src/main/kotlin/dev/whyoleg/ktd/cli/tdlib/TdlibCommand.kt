@@ -4,7 +4,7 @@ import com.typesafe.config.*
 import dev.whyoleg.ktd.cli.tdlib.jvm.*
 import kotlinx.cli.*
 import kotlinx.coroutines.*
-import org.jetbrains.kotlinx.serialization.config.*
+import kotlinx.serialization.config.*
 import java.io.*
 
 @OptIn(ExperimentalCli::class)

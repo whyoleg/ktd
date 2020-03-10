@@ -22,7 +22,8 @@ private fun parser() = ArgParser("ktd").apply {
 
 fun ArgParser.parse(string: String) = parse(string.cmd())
 
-fun main2() {
+@Suppress("UNUSED_VARIABLE")
+fun examples() {
     //example commands
     val api = "api -v 1.5.4"
     val copyLibs = "copyLibs -v 1.5.4"

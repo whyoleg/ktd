@@ -1,3 +1,7 @@
+plugins {
+    id("com.github.ben-manes.versions")
+}
+
 allprojects {
     repositories {
         google()

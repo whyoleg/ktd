@@ -6,7 +6,7 @@ import dev.whyoleg.kamp.platform.KampPlatform.*
 object Dependencies {
     val kotlin = KotlinModule(Versions.kotlin).dependencies
     val kotlinx = KotlinxModule(Versions.kotlinx).dependencies
-    val ktor = KtorDependencies.Stable
+    val ktor = KtorDependencies(Versions.ktor)
 
     val githubApi =
         group("org.kohsuke", RepositoryProviders.mavenCentral)

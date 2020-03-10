@@ -18,6 +18,7 @@ class CoroutinesTdClient internal constructor(
 
     //TODO remove after migration
     companion object {
+        @Suppress("UNUSED_PARAMETER")
         @Deprecated(
             message = "Use TdApi.executeSynchronously instead",
             replaceWith = ReplaceWith("UserTdApi.executeSynchronously(request)", "dev.whyoleg.ktd.api.UserTdApi"),

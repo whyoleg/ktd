@@ -9,8 +9,8 @@ fun main(args: Array<String>) {
     parser().parse(args)
 }
 
-@UseExperimental(ExperimentalCli::class)
-private fun parser() = ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_STYLE.JVM).apply {
+@OptIn(ExperimentalCli::class)
+private fun parser() = ArgParser("ktd").apply {
     subcommands(
         TdlibCommand(),
         ApiCommand(),
@@ -22,7 +22,8 @@ private fun parser() = ArgParser("ktd", prefixStyle = ArgParser.OPTION_PREFIX_ST
 
 fun ArgParser.parse(string: String) = parse(string.cmd())
 
-fun main2() {
+@Suppress("UNUSED_VARIABLE")
+fun examples() {
     //example commands
     val api = "api -v 1.5.4"
     val copyLibs = "copyLibs -v 1.5.4"

@@ -4,7 +4,7 @@ import dev.whyoleg.ktd.cli.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
-import io.ktor.client.response.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.util.*
@@ -13,12 +13,12 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
 import java.util.*
 
-@UseExperimental(ExperimentalCli::class)
-class DispatchCommand : Subcommand("dispatch") {
+@OptIn(ExperimentalCli::class)
+class DispatchCommand : Subcommand("dispatch", "Dispatch GH action") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val type by option(ArgType.Choice(listOf("api", "tdlib")), "type", "t", "Type of event").required()
 
-    @UseExperimental(KtorExperimentalAPI::class)
+    @OptIn(KtorExperimentalAPI::class)
     override fun execute() {
         val client = HttpClient(CIO)
         runBlocking {
@@ -41,7 +41,6 @@ class DispatchCommand : Subcommand("dispatch") {
                     }
                 }.toString(), ContentType.Application.Json)
             }
-            println(response)
             println(response.status)
         }
     }

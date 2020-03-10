@@ -14,7 +14,8 @@ internal class TdJsonSerializer(serialModule: SerialModule) {
 
 private val jsonConfiguration = JsonConfiguration.Stable.copy(
     classDiscriminator = "@type",
-    strictMode = false,
+    ignoreUnknownKeys = true,
+    isLenient = true,
     encodeDefaults = false
 )
 
@@ -23,12 +24,12 @@ private val requestSerializer = PolymorphicSerializer(TdRequest::class)
 
 private val builtInJsonModule = SerializersModule {
     polymorphic<TdApiRequest> {
-        addSubclass(TdClose.serializer())
-        addSubclass(TdDestroy.serializer())
-        addSubclass(TdLogOut.serializer())
+        subclass(TdClose.serializer())
+        subclass(TdDestroy.serializer())
+        subclass(TdLogOut.serializer())
     }
     polymorphic<TdApiResponse> {
-        addSubclass(TdOk.serializer())
-        addSubclass(TdError.serializer())
+        subclass(TdOk.serializer())
+        subclass(TdError.serializer())
     }
 }

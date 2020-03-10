@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER", "DeprecatedCallableAddReplaceWith")
+
 package dev.whyoleg.ktd
 
 import dev.whyoleg.ktd.api.*

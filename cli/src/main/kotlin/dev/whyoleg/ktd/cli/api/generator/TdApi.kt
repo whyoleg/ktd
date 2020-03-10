@@ -84,7 +84,7 @@ fun TlSealedChild.realName(group: String): String {
 }
 
 private fun CodeBlock.Builder.subclass(type: String, secondType: String? = null, pcgOverride: String? = null): CodeBlock.Builder =
-    addStatement("addSubclass(%T.serializer())", ClassName(pcgOverride ?: pcg, "Td$type").let {
+    addStatement("subclass(%T.serializer())", ClassName(pcgOverride ?: pcg, "Td$type").let {
         if (secondType != null) it.nestedClass(secondType) else it
     })
 

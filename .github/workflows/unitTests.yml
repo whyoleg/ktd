@@ -5,7 +5,7 @@ env:
   JAVA_VERSION: 11
 
 jobs:
-  publish:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1

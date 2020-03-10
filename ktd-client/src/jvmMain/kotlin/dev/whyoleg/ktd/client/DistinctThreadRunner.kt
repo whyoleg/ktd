@@ -4,6 +4,11 @@ import dev.whyoleg.ktd.*
 import kotlinx.atomicfu.*
 import kotlin.concurrent.*
 
+/**
+ * [SynchronizedRunner] which creates new [Thread] on every [run] call
+ *
+ * @param timeout duration to block thread for receiving tdlib responses
+ */
 class DistinctThreadRunner(
     override val timeout: Double = TdApi.DEFAULT_RECEIVE_TIMEOUT
 ) : SynchronizedRunner {

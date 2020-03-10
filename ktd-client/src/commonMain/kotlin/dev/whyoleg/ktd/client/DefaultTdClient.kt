@@ -5,11 +5,15 @@ import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.*
 
 /**
- * Default high-level tdlib client.
+ * Create default high-level tdlib client.
+ *
+ * @receiver api to work with tdlib
  *
  * @param runner runner to handle tdlib responses
  * @param onClose callback called after client will be closed
  * @param updatesCallback callback called when [TdUpdate] received from tdlib
+ *
+ * @return [TdClient] default implementation
  */
 fun TdApi.defaultTdClient(
     runner: SynchronizedRunner = DefaultSynchronizedRunner(),

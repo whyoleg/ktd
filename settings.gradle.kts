@@ -22,15 +22,23 @@ buildscript {
     }
 }
 
-inline fun ModuleContext.m(name: String, path: String? = null, ignore: Boolean = false, block: ModuleContext.() -> Unit = {}) {
+inline fun ModuleContext.ktd(name: String, path: String? = null, ignore: Boolean = false, block: ModuleContext.() -> Unit = {}) {
     val p = path?.let { "$it/" } ?: ""
     name("${p}ktd-$name", ignore, block)
+}
+
+fun ModuleContext.ktd(folder: String, list: List<String>) {
+    "ktd-$folder" {
+        list.forEach {
+            ktd(it, "ktd-$folder")
+        }
+    }
 }
 
 fun ModuleContext.mf(folder: String): (modules: List<String>) -> Unit = { modules ->
     folder {
         modules.forEach {
-            m(it, folder)
+            ktd(it, folder)
         }
     }
 }
@@ -38,49 +46,49 @@ fun ModuleContext.mf(folder: String): (modules: List<String>) -> Unit = { module
 modules {
     "cli"()
     "benchmarks"()
+    "integration"()
     //    "samples"()
 
-    m("tdlib")
-    m("json")
-    m("core")
-    m("client")
-    m("test")
-
-    "api-integration"()
+    ktd("tdlib")
+    ktd("json")
+    ktd("core")
+    ktd("test")
+    ktd("clients", listOf("client", "client-suspend", "client-coroutines"))
+//    ktd("api", listOf("core", "user", "bots", "test").flatMap { listOf(it, "$it-suspend") }.map { "api-$it" })
     // latest: 1.6.0
-    mf("api")(
-        listOf(
-            "api-core",
-            "api-user",
-            "api-bots",
-            "api-test"
-        )
-    )
-    mf("api-suspend")(
-        listOf(
-            "api-core-suspend",
-            "api-user-suspend",
-            "api-bots-suspend",
-            "api-test-suspend"
-        )
-    )
-    mf("clients")(
-        listOf(
-            "client-suspend",
-            "client-coroutines"
-        )
-    )
-    mf("updates")(
-        listOf(
-            "updates-flow" //experimental
-        )
-    )
-
-    "migration" {
-        "v060" { //TODO remove in 0.6.1
-            "ktd-client-raw"()
-            "ktd-api-raw"()
-            "ktd-api-coroutines"()
-        }
-    }
+//    mf("api")(
+//        listOf(
+//            "api-core",
+//            "api-user",
+//            "api-bots",
+//            "api-test"
+//        )
+//    )
+//    mf("api-suspend")(
+//        listOf(
+//            "api-core-suspend",
+//            "api-user-suspend",
+//            "api-bots-suspend",
+//            "api-test-suspend"
+//        )
+//    )
+//    mf("clients")(
+//        listOf(
+//            "client-suspend",
+//            "client-coroutines"
+//        )
+//    )
+//    mf("updates")(
+//        listOf(
+//            "updates-flow" //experimental
+//        )
+//    )
+//
+//    "migration" {
+//        "v060" { //TODO remove in 0.6.1
+//            "ktd-client-raw"()
+//            "ktd-api-raw"()
+//            "ktd-api-coroutines"()
+//        }
+//    }
 }

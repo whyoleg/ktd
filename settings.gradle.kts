@@ -1,3 +1,5 @@
+import dev.whyoleg.kamp.project.*
+
 buildscript {
     repositories {
         maven("https://dl.bintray.com/whyoleg/kamp")

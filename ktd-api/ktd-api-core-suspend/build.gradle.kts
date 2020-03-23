@@ -1,1 +1,1 @@
-configureApi(ProjectModules.Clients.client_suspend, ProjectModules.Api.api_core)
+configureApi(ProjectModules.Client.clientSuspend, ProjectModules.Api.apiCore)

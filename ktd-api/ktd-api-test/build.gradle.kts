@@ -1,2 +1,2 @@
-configureApi(ProjectModules.Api.api_core)
+configureApi(ProjectModules.Api.apiCore)
 configureSerialization()

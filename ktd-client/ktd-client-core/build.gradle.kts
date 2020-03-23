@@ -1,5 +1,5 @@
 plugins {
-    use(Plugins.mppModule)
+    use(Plugins.mppModule + Plugins.atomicfuModule)
 }
 
 configureMultiplatform()
@@ -7,17 +7,20 @@ configureMultiplatform()
 kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
-        api(Dependencies.kotlinx.coroutines.core)
-        api(Dependencies.kotlinx.immutableCollections.metadata)
+        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
     }
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
         implementation(Dependencies.kotlin.annotations)
+        runtimeOnly(Dependencies.kotlinx.atomicfu.runtime)
     }
 
     metadata {
         dependenciesMain {
-            api(ProjectModules.Client.clientCore)
+            api(ProjectModules.core)
         }
+    }
+    metadataDependenciesTest {
+        api(ProjectModules.test)
     }
 }

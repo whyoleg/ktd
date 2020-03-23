@@ -8,7 +8,6 @@ kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
         api(Dependencies.kotlinx.coroutines.core)
-        api(Dependencies.kotlinx.immutableCollections.metadata)
     }
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
@@ -19,5 +18,8 @@ kotlin {
         dependenciesMain {
             api(ProjectModules.Client.clientCore)
         }
+    }
+    metadataDependenciesTest {
+        api(ProjectModules.test)
     }
 }

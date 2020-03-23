@@ -18,7 +18,7 @@ kotlin {
     metadata {
         dependenciesMain {
             if (tdIntegrationVersion == null) {
-//                implementation(ProjectModules.Api.api_test)
+                implementation(ProjectModules.Api.apiTest)
             } else {
                 implementation(Dependencies.ktdApiTest(tdIntegrationVersion))
             }

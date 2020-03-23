@@ -1,19 +1,11 @@
 import dev.whyoleg.kamp.modules.*
 
 object Versions {
-    val kotlin = KotlinVersion("1.3.70")
+    val kotlin = KotlinVersion.Stable
 
-    val kotlinx = KotlinxVersions(
-        coroutines = "1.3.4",
-        serialization = "0.20.0",
-        atomicfu = "0.14.2",
-        cli = "0.2.1",
-        immutableCollections = "0.3"
-        //todo add benchmarks here
-    )
+    val kotlinx = KotlinxVersions.Stable
 
-    val ktor = KtorVersion("1.3.1")
-    const val benchmarks = "0.2.0-dev-7"
+    val ktor = KtorVersion.Stable
 
     const val githubApi = "1.108"
     const val kotlinShell = "0.2.1"

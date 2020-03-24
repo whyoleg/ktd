@@ -16,6 +16,7 @@ tasks.create("unitTests") {
     getTasksByName("jvmTest", true).forEach {
         if (
             it.project.name != "benchmarks" &&
+            it.project.name != "integration" &&
             !it.project.name.startsWith("api-") &&
             it.project.parent?.parent?.name?.startsWith("migration") != true
         ) dependsOn(it)

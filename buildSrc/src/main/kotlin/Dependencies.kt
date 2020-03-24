@@ -1,7 +1,6 @@
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 import dev.whyoleg.kamp.modules.*
-import dev.whyoleg.kamp.platform.KampPlatform.*
 
 object Dependencies {
     val kotlin = KotlinModule(Versions.kotlin).dependencies
@@ -14,11 +13,6 @@ object Dependencies {
     val kotlinShell =
         group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
             .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
-
-    val benchmarks =
-        group("org.jetbrains.kotlinx", KotlinxModule.Provider)
-            .artifact("kotlinx.benchmark.runtime").version(Versions.benchmarks)
-            .platforms(jvm("jvm"), common("metadata"))
 
     val kotlinPoet =
         group("com.squareup", RepositoryProviders.mavenCentral)

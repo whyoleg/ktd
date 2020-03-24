@@ -10,12 +10,12 @@ kotlin {
     }
     metadata {
         dependenciesMain {
-            api(ProjectModules.Clients.client_coroutines)
-            api(ProjectModules.Api_suspend.api_core_suspend)
-            api(ProjectModules.Api_suspend.api_user_suspend)
-            api(ProjectModules.Api_suspend.api_bots_suspend)
-            api(ProjectModules.Api_suspend.api_test_suspend)
-            api(ProjectModules.Migration.V060.ktd_api_raw)
+            api(ProjectModules.Client.clientCoroutines)
+            api(ProjectModules.Api.apiCoreSuspend)
+            api(ProjectModules.Api.apiUserSuspend)
+            api(ProjectModules.Api.apiBotsSuspend)
+            api(ProjectModules.Api.apiTestSuspend)
+            api(ProjectModules.Migration.V060.apiRaw)
         }
     }
 }

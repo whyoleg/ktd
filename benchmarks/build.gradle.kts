@@ -8,12 +8,12 @@ kotlin {
     dependenciesMain {
         implementation(Dependencies.kotlin.stdlib)
         implementation(Dependencies.kotlinx.coroutines.core)
-        implementation(Dependencies.benchmarks)
+        implementation(Dependencies.kotlinx.benchmark.metadata)
     }
     metadata {
         dependenciesMain {
-            implementation(ProjectModules.Clients.client_suspend)
-            implementation(ProjectModules.Api.api_test)
+            implementation(ProjectModules.Client.clientSuspend)
+            implementation(ProjectModules.Api.apiTest)
         }
     }
 }

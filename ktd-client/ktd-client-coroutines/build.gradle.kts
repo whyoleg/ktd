@@ -8,7 +8,6 @@ kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
         api(Dependencies.kotlinx.coroutines.core)
-        api(Dependencies.kotlinx.immutableCollections.metadata)
     }
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
@@ -17,7 +16,9 @@ kotlin {
 
     metadata {
         dependenciesMain {
-            api(ProjectModules.client)
+            api(ProjectModules.Client.clientSuspend)
+            api(ProjectModules.Updates.updatesFlow)
+            api(ProjectModules.Migration.V060.clientRaw)
         }
     }
 }

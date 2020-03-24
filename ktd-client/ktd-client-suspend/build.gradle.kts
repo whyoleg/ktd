@@ -16,7 +16,7 @@ kotlin {
 
     metadata {
         dependenciesMain {
-            api(ProjectModules.client)
+            api(ProjectModules.Client.clientCore)
         }
     }
     metadataDependenciesTest {

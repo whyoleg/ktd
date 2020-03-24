@@ -11,7 +11,7 @@ import java.io.*
 class TdlibCommand : Subcommand("tdlib", "Generate tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
-    private val configPath by option(ArgType.String, "config", "c", "Path to .conf file").default("cli/tdlib.conf")
+    private val configPath by option(ArgType.String, "config", "c", "Path to .conf file").default("cli/tdlib/tdlib.conf")
 
     override fun execute(): Unit = runBlocking {
         println("Start build TdLib for $platform/$target ")

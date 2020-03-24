@@ -16,6 +16,7 @@ data class TdOk(@SerialName("@extra") override val extra: TdExtra = TdExtra.EMPT
  * @property code Error code
  *                If the error code is 406, the error message must not be processed in any way and must not be displayed to the user
  * @property message Error message
+ * @property extra Extra data shared between request and response
  */
 @Serializable
 @SerialName("error")
@@ -29,6 +30,8 @@ data class TdError(
  * Closes the TDLib instance.
  * All databases will be flushed to disk and properly closed.
  * After the close completes, updateAuthorizationState with authorizationStateClosed will be sent
+ *
+ * @property extra Extra data shared between request and response
  */
 @Serializable
 @SerialName("close")
@@ -40,6 +43,8 @@ data class TdClose(@SerialName("@extra") override val extra: TdExtra = TdExtra.E
  * Closes the TDLib instance, destroying all local data without a proper logout.
  * The current user session will remain in the list of all active sessions.
  * All local data will be destroyed. After the destruction completes updateAuthorizationState with authorizationStateClosed will be sent
+ *
+ * @property extra Extra data shared between request and response
  */
 @Serializable
 @SerialName("destroy")
@@ -52,6 +57,8 @@ data class TdDestroy(@SerialName("@extra") override val extra: TdExtra = TdExtra
  * Requires an available network connection.
  * All local data will be destroyed.
  * After the logout completes, updateAuthorizationState with authorizationStateClosed will be sent
+ *
+ * @property extra Extra data shared between request and response
  */
 @Serializable
 @SerialName("logOut")

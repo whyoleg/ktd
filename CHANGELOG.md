@@ -2,37 +2,41 @@
 
 ## 0.6.0
 > Unreleased
-###### That version contains many changes needed for future MPP support and creating `coroutines` independent clients    
+###### That version contains many backward incompatible changes with provided deprecation migrations
+###### That was done for future MPP support and creating `coroutines` independent clients 
+
 ##### API
-- Use `tdlib` JSON interface instead of JNI for future MPP support
+- Use `tdlib` JSON interface instead of JNI
 - Use `kotlinx.serialization` for MPP JSON support
 - Use `sealed` classes instead of `abstract` classes
-- All api requests now typed with responses
-- Split api into 4 modules:
-  - `core` - responses and requests which can be used both by USERS and BOTS
+- All api requests now typed with response type
+- Split `tdlib` api into 4 modules:
+  - `core` - updates, responses and requests which can be used both by USERS and BOTS
   - `user` - requests which can be used ONLY by USERS
   - `bots` - requests which can be used ONLY by BOTS
   - `test` - requests and responses which can be used for testing, that `tdlib` works
-- Separate modules with `suspend` functions
-- Repository now store only latest stable version, but all supported versions published
+- Separate modules with `suspend` api
+- Repository now store only latest stable version of tdlib api, but all supported versions published
 - Add support for `tdlib` `1.6.0` and `1.6.1` versions
-- Latest stable version: `1.6.0`
+- Now latest stable version: `1.6.0`
 
 ##### Core
 - Remove `kotlinx.coroutines` from core dependencies 
-- New basic api to create custom clients based on callbacks
+- New basic client api to create custom clients based on callbacks
 - Core modules:
-  - `tdlib` - prebuilt version of `tdlib` JSON
-  - `json` - low-level bindings to `tdlib` 
+  - `tdlib` - prebuilt version of `tdlib-json`
+  - `json` - low-level bindings to `tdlib` JSON api
   - `core` - low-level api interfaces and clients to work with `tdlib`
-  - `client` - client api for custom clients: `AbstractTdClient` and `SynchronizedRunner`
+  - `client` - default client and high-level client api: `AbstractTdClient` and `SynchronizedRunner`
 - Clients based on `kotlinx.coroutines` extracted in separate dependencies
 - `Flow` updates handler extracted in separate dependency
-- [TODO] Documentation added for `core` and `clients`
-- [TODO] Tests added for `core` and `clients`
 
-##### Migration from 0.5.0
-- [TODO]
+##### General
+- Documentation added
+- Tests added
+- Benchmarks added
+- Integration tests rewritten
+- Migration from 0.5.0
 
 ## 0.5.0
 > Released January 22, 2020

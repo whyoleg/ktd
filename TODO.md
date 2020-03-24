@@ -7,9 +7,9 @@ Ordering of implementation is not static.
 - [x] Artifacts per tdlib version **(done in 0.4.0)**
 - [x] Automated tdlib build for all platforms **(done in 0.5.0)**
 - [x] Android support **(done in 0.5.0)**
-- [ ] Documentation **(TODO in 0.6.0)**
-- [ ] Tests **(TODO in 0.6.0)**
-- [ ] Benchmarks **(done in 0.6.0)**
+- [x] Documentation **(done in 0.6.0)**
+- [x] Tests **(done in 0.6.0)**
+- [x] Benchmarks **(done in 0.6.0)**
 - [ ] Native support **(TODO in 0.7.x)**
 - [ ] iOS support **(TODO in 0.7.x)**
 - [ ] JS support **(TODO in 0.8.x)**

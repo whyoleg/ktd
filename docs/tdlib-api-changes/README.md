@@ -7,33 +7,89 @@
 
 ## 1.5.4
 
+### Updates:
+
+#### Added:
+
+------
+
+#### `UpdateMessageLiveLocationViewed` 
+A message with a live location was viewed. 
+When the update is received, the client is supposed to update the live location.
+
+##### Properties:
+| Name | Type | Description
+|---|---|---
+| chatId | Long | Identifier of the chat with the live location message
+| messageId | Long | Identifier of the message with live location
+
+------
+
+- added
+- removed
+- changed
+
+### Requests:
+
+#### Added:
+
+------
+
+#### `RequestQrCodeAuthentication` returns `Ok`
+Requests QR code authentication by scanning a QR code on another logged in device.
+Works only when the current authorization state is authorizationStateWaitPhoneNumber.
+##### Properties:
+| Name | Type | Description
+|---|---|---
+| otherUserIds | IntArray | List of user identifiers of other users currently using the client
+
+
+
+- added
+- removed
+- changed
+
+### Sealed:
+#### Added:
+
+------
+
+#### `MessageSchedulingState`
+Contains information about the time when a scheduled message will be sent.
+##### Subclasses:
+#### `SendAtDate`
+ The message will be sent at the specified date.
+##### Properties:
+| Name | Type | Description
+|---|---|---
+| sendDate | Int | Date the message will be sent. The date must be within 367 days in the future.
+#### `SendWhenOnline`
+The message will be sent when the peer will be online.
+Applicable to private chats only and when the exact online status of the peer is known.
+
+------
+
+- removed
+  - children
+- added
+  - children
+- changed
+  - child removed
+  - child added
+  - child changed
+ 
+
+Objects:
+
+- added
+- removed
+- changed
+
 ```diff
 Abstract classes:
-+ MessageSchedulingState
-+   Description:
-+     Contains information about the time when a scheduled message will be sent
-Objects:
-- TextEntityTypeBlockQuote : TextEntityType
-+ AuthorizationStateWaitOtherDeviceConfirmation : AuthorizationState
-+   Description:
-+     The user needs to confirm authorization on another logged in device by scanning a QR code with the provided link
-+   Properties:
-+     link: String
-+       Description:
-+         A tg:// URL for the QR code
-+         The link will be updated frequently
-+ MessageSchedulingStateSendAtDate : MessageSchedulingState
-+   Description:
-+     The message will be sent at the specified date
-+   Properties:
-+     sendDate: Int
-+       Description:
-+         Date the message will be sent
-+         The date must be within 367 days in the future
-+ MessageSchedulingStateSendWhenOnline : MessageSchedulingState
-+   Description:
-+     The message will be sent when the peer will be online
-+     Applicable to private chats only and when the exact online status of the peer is known
+
+
+
 + SendMessageOptions
 +   Description:
 +     Options to be used when a message is send

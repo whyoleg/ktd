@@ -38,11 +38,11 @@ jobs:
     name: JVM - java ${{ matrix.java }}, OS ${{ matrix.os }}, tdlib ${{ matrix.tdVersion }}
     runs-on: ${{ matrix.os }}
     strategy:
-      #      max-parallel: 3
+      max-parallel: 6
       matrix:
-        tdVersion: [1.5.0, 1.6.0]
-        java: [8] #, 13]
-        os: [ubuntu-latest] #, macos-latest, windows-latest]
+        tdVersion: [1.5.0, 1.5.4, 1.6.0, 1.6.1]
+        java: [8, 13]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
         with:
@@ -62,10 +62,6 @@ jobs:
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -lf libs/${{ matrix.tdVersion }}
 
-      - run: ls ktd-tdlib/src
-      - run: ls ktd-tdlib/src/jvmMain
-      - run: ls ktd-tdlib/src/jvmMain/jniLibs
-
       - uses: eskatos/gradle-command-action@v1
         name: Publish to local
         with:
@@ -76,38 +72,41 @@ jobs:
         with:
           arguments: :integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }} --info
 
-#  test-android:
-#    needs: [download-tdlib, download-cli]
-#    runs-on: macos-latest
-#    strategy:
-#      max-parallel: 3
-#      matrix:
-#        arch: [x86_64, x86]
-#        api-level: [21, 29]
-#    steps:
-#      - uses: actions/checkout@v1
-#        with:
-#          ref: dispatch #TODO develop
-#      - uses: actions/setup-java@v1
-#        with:
-#          java-version: 11
-#      - uses: actions/download-artifact@v1
-#        with:
-#          name: cli
-#      - uses: actions/download-artifact@v1
-#        with:
-#          name: libs
-#
-#      - name: Copy libs
-#        run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
-#
-#
-#      - uses: eskatos/gradle-command-action@v1
-#        with:
-#          arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
-#
-#      - uses: reactivecircus/android-emulator-runner
-#        with:
-#          api-level: ${{ matrix.api-level }}
-#          arch: ${{ matrix.arch }}
-#          script: ./gradlew :api:integration:connectedCheck --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}
+  test-android:
+    needs: [download-tdlib, download-cli]
+    runs-on: macos-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        tdVersion: [1.5.0, 1.5.4, 1.6.0, 1.6.1]
+        arch: [x86_64, x86]
+        api: [21, 29]
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: dispatch #TODO develop
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
+          name: libs
+
+      - name: Generate API
+        run: java -jar cli/cli.jar api -v ${{ matrix.tdVersion }}
+      - name: Copy libs
+        run: java -jar cli/cli.jar copyLibs -lf libs/${{ matrix.tdVersion }}
+
+      - uses: eskatos/gradle-command-action@v1
+        name: Publish to local
+        with:
+          arguments: publishToMavenLocal -PtdVersion=${{ matrix.tdVersion }} -PpublishAll=true
+
+      - uses: reactivecircus/android-emulator-runner
+        with:
+          api-level: ${{ matrix.api }}
+          arch: ${{ matrix.arch }}
+          script: ./gradlew :integration:connectedCheck --info -PtdIntegrationVersion=${{ matrix.tdVersion }}

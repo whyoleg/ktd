@@ -62,9 +62,6 @@ jobs:
       - name: Copy libs
         run: java -jar cli/cli.jar copyLibs -lf libs/${{ matrix.tdVersion }}
 
-      - run: ls
-      - run: ls libs
-      - run: ls libs/linux
       - run: ls ktd-tdlib/src
       - run: ls ktd-tdlib/src/jvmMain
       - run: ls ktd-tdlib/src/jvmMain/jniLibs

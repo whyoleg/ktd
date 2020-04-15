@@ -10,7 +10,7 @@ fun suspendTdApiFunctions(typedScheme: TlTypedScheme, kind: TlKind) {
     val tdClient = ClassName("dev.whyoleg.ktd.client", "SuspendTdClient")
 
     typedScheme.functions.forEach { data ->
-        file("Td${data.type}", "$pcg.suspend", "api-suspend", moduleName) {
+        file("Td${data.type}", "$pcg.suspend", "ktd-api", moduleName) {
             addFunction(FunSpec.builder(data.type.decapitalize()).apply {
                 addModifiers(KModifier.SUSPEND)
                 receiver(tdClient)

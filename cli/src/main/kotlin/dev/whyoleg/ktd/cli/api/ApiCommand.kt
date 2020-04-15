@@ -19,8 +19,8 @@ class ApiCommand : Subcommand("api", "Generate API") {
         val data = parseData(tdBytes, tlBytes)
         data.forEach { (kind, scheme) ->
             if (kind == TlKind.Ignore || kind == TlKind.All) return@forEach
-            File("api/ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
-            File("api-suspend/ktd-api-${kind.name.toLowerCase()}-suspend/src/commonMain/kotlin").deleteRecursively()
+            File("ktd-api/ktd-api-${kind.name.toLowerCase()}/src/commonMain/kotlin").deleteRecursively()
+            File("ktd-api/ktd-api-${kind.name.toLowerCase()}-suspend/src/commonMain/kotlin").deleteRecursively()
 
             tdApiFile(version, kind)
             tdApiClasses(scheme, kind)

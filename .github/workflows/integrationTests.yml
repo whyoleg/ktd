@@ -35,12 +35,14 @@ jobs:
 
   test-jvm:
     needs: [download-tdlib, download-cli]
+    name: JVM - java ${{ matrix.java }}, OS ${{ matrix.os }}, tdlib ${{ matrix.tdVersion }}
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 3
+      #      max-parallel: 3
       matrix:
-        java: [8, 11, 13]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        tdVersion: [1.5.0, 1.6.0]
+        java: [8] #, 13]
+        os: [ubuntu-latest] #, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v1
         with:
@@ -55,33 +57,27 @@ jobs:
         with:
           name: libs
 
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: publishToMavenLocal -PpublishCore
+      - name: Generate API
+        run: java -jar cli/cli.jar api -v ${{ matrix.tdVersion }}
+      - name: Copy libs
+        run: java -jar cli/cli.jar copyLibs -lf libs/${{ matrix.tdVersion }}
 
-      #1.5.0
-      - run: java -jar cli/cli.jar api -v 1.5.0
-      - run: java -jar cli/cli.jar copyLibs -lf libs/1.5.0
-
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: publishToMavenLocal -PtdVersion=1.5.0 -PpublishTdlib -PpublishApi --info
-
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: :integration:jvmTest --info -PtdIntegrationVersion=1.5.0
-
-      #1.6.0
-      - run: java -jar cli/cli.jar api -v 1.6.0
-      - run: java -jar cli/cli.jar copyLibs -lf libs/1.6.0
+      - run: ls
+      - run: ls libs
+      - run: ls libs/linux
+      - run: ls ktd-tdlib/src
+      - run: ls ktd-tdlib/src/jvmMain
+      - run: ls ktd-tdlib/src/jvmMain/jniLibs
 
       - uses: eskatos/gradle-command-action@v1
+        name: Publish to local
         with:
-          arguments: publishToMavenLocal -PtdVersion=1.6.0 -PpublishTdlib -PpublishApi --info
+          arguments: publishToMavenLocal -PtdVersion=${{ matrix.tdVersion }} -PpublishAll --info
 
       - uses: eskatos/gradle-command-action@v1
+        name: Run integration tests
         with:
-          arguments: :integration:jvmTest --info -PtdIntegrationVersion=1.6.0
+          arguments: :integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }}
 
 #  test-android:
 #    needs: [download-tdlib, download-cli]

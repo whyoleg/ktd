@@ -15,14 +15,14 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
     val moduleName = "ktd-api-$kindName"
 
     typedScheme.run { objects + functions }.forEach { data ->
-        file("Td${data.type}", pcg, "api", moduleName) {
+        file("Td${data.type}", pcg, "ktd-api", moduleName) {
             addType(tdDataType(data, data.type(typedScheme), pcg) {
                 setParents(data, typedScheme, false)
             })
         }
     }
     typedScheme.sealed.forEach { (sealed, children) ->
-        file("Td${sealed.type}", pcg, "api", moduleName) {
+        file("Td${sealed.type}", pcg, "ktd-api", moduleName) {
             addType(TypeSpec.classBuilder(ClassName(pcg, "Td${sealed.type}")).apply {
                 addModifiers(KModifier.SEALED)
                 addAnnotation(serializableAnnotation)
@@ -42,7 +42,7 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
     typedScheme.updates.forEach { (group, children) ->
         if (group == null) {
             children.map { child ->
-                file("Td${child.type}", "$pcg.updates", "api", moduleName) {
+                file("Td${child.type}", "$pcg.updates", "ktd-api", moduleName) {
                     addType(tdDataType(child, child.type(typedScheme), "$pcg.updates", false, "Td${child.type}") {
                         addSuperinterface(tdUpdateClass)
                         if (child.type == "UpdateAuthorizationState") {
@@ -57,7 +57,7 @@ fun tdApiClasses(typedScheme: TlTypedScheme, kind: TlKind) {
                 }
             }
         } else {
-            file("TdUpdate${group}", "$pcg.updates", "api", moduleName) {
+            file("TdUpdate${group}", "$pcg.updates", "ktd-api", moduleName) {
                 addType(
                     TypeSpec.classBuilder(ClassName("$pcg.updates", "TdUpdate${group}"))
                         .addModifiers(KModifier.SEALED)
@@ -169,7 +169,7 @@ fun builderFile(typedScheme: TlTypedScheme, kind: TlKind) {
         }
     }
 
-    file(builderName.capitalize(), pcg, "api", moduleName) {
+    file(builderName.capitalize(), pcg, "ktd-api", moduleName) {
         if (isFinalKind) addImport("kotlinx.serialization.modules", "plus")
         addProperty(
             PropertySpec.builder(builderName, ClassName("kotlin", "Lazy").parameterizedBy(SerialModuleClass))
@@ -207,9 +207,9 @@ fun tdApiFile(version: String, kind: TlKind) {
     val apiName = "${kindName.capitalize()}TdApi"
     val builderName = "${kindName}ApiBuilder"
 
-    file(apiName, pcg, "api", moduleName) {
+    file(apiName, pcg, "ktd-api", moduleName) {
+        addAnnotation(suppressDeprecationError)
         addType(TypeSpec.objectBuilder(ClassName(pcg, name)).apply {
-            addAnnotation(suppressDeprecationError)
             addImport("dev.whyoleg.ktd.internal", "JsonTdApi")
             addSuperinterface(
                 ClassName("dev.whyoleg.ktd", "TdApi"),

@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: aws s3 cp s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
-        uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v1
         with:
           name: libs
           path: libs

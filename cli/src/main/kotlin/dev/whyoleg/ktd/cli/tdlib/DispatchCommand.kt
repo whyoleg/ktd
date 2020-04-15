@@ -16,7 +16,7 @@ import java.util.*
 @OptIn(ExperimentalCli::class)
 class DispatchCommand : Subcommand("dispatch", "Dispatch GH action") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
-    private val type by option(ArgType.Choice(listOf("api", "tdlib")), "type", "t", "Type of event").required()
+    private val type by option(DispatchTypeArgType, "type", "t", "Type of dispatch").required()
 
     @OptIn(KtorExperimentalAPI::class)
     override fun execute() {
@@ -27,21 +27,37 @@ class DispatchCommand : Subcommand("dispatch", "Dispatch GH action") {
                 headers["Accept"] = "application/vnd.github.everest-preview+json"
                 headers["Authorization"] = "Basic " + Base64.getEncoder().encodeToString("whyoleg:$token".toByteArray())
                 body = TextContent(json {
-                    "event_type" to "generate_$type"
-                    "client_payload" to json {
-                        "lib_version" to "2"
-                        "version" to version
-                        "ref" to tdVersionRefs.getValue(version)
-                        "versions" to jsonArray {
-                            tdVersions.forEach { +it }
-                        }
-                        "refs" to json {
-                            tdVersionRefs.forEach { (v, ref) -> v to ref }
-                        }
-                    }
+                    "event_type" to type.name
+                    "client_payload" to buildPayload(type)
                 }.toString(), ContentType.Application.Json)
             }
             println(response.status)
         }
     }
+
+    fun buildPayload(type: DispatchType): JsonObject = when (type) {
+        DispatchType.BuildTdlib          -> json {
+            "lib_version" to "2"
+            "version" to version
+            "ref" to tdVersionRefs.getValue(version)
+        }
+        DispatchType.RunBenchmarks       -> json {
+            "version" to version
+        }
+        DispatchType.RunIntegrationTests -> json {}
+        DispatchType.Release             -> TODO()
+    }
+}
+
+enum class DispatchType {
+    BuildTdlib,
+    RunBenchmarks,
+    RunIntegrationTests,
+    Release
+}
+
+object DispatchTypeArgType : ArgType<DispatchType>(true) {
+    override val description: kotlin.String = "{ DispatchType }"
+    override fun convert(value: kotlin.String, name: kotlin.String): DispatchType =
+        DispatchType.values().find { it.name.contains(value, ignoreCase = true) } ?: error("Dispatch '$value' isn't supported")
 }

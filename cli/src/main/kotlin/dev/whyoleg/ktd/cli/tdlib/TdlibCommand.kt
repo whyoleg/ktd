@@ -4,6 +4,7 @@ import com.typesafe.config.*
 import dev.whyoleg.ktd.cli.tdlib.jvm.*
 import kotlinx.cli.*
 import kotlinx.coroutines.*
+import kotlinx.serialization.*
 import kotlinx.serialization.config.*
 import java.io.*
 
@@ -35,6 +36,7 @@ class TdlibCommand : Subcommand("tdlib", "Generate tdlib") {
         }
     }
 
+    @OptIn(ImplicitReflectionSerializer::class)
     private inline fun <reified T> config(path: String): T = ConfigParser.parse(ConfigFactory.parseFile(File(configPath)).getConfig(path))
 }
 

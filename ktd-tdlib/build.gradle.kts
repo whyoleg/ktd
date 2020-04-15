@@ -2,7 +2,8 @@ plugins {
     use(Plugins.mppAndroidModule)
 }
 
-configureMultiplatform(useAndroidLibrary = true)
+configureMultiplatform(android = true)
+configureTdlibPublishing()
 
 tasks.named<Jar>("jvmJar") {
     from(file("src/jvmMain/jniLibs")) { into("libs") }

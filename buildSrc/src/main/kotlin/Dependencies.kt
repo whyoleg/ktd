@@ -1,11 +1,14 @@
 import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.dependency.builder.*
 import dev.whyoleg.kamp.modules.*
+import dev.whyoleg.kamp.platform.*
 
 object Dependencies {
     val kotlin = KotlinModule(Versions.kotlin).dependencies
     val kotlinx = KotlinxModule(Versions.kotlinx).dependencies
     val ktor = KtorDependencies(Versions.ktor)
+
+    val atomicfuMpp = kotlinx.atomicfu.runtime.platforms(KampPlatform.common())
 
     val githubApi =
         group("org.kohsuke", RepositoryProviders.mavenCentral)
@@ -20,7 +23,7 @@ object Dependencies {
 
     fun ktdApiTest(tdVersion: String) =
         group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
-            .artifact("ktd-api-api-test").version(Versions.ktdVersion).common
+            .artifact("ktd-api-test").version("${Versions.ktdVersion}-$tdVersion").common
 
     object Reactive {
         val rx2 =

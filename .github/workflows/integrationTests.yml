@@ -1,0 +1,119 @@
+name: Run integration tests
+#TODO change
+#on: repository_dispatch
+#  types: [RunIntegrationTests]
+on:
+  push:
+    branches:
+      - dispatch
+
+env:
+  BUCKET: ${{ secrets.scaleway_bucket }}
+  ENDPOINT: ${{ secrets.scaleway_endpoint }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.scaleway_access_key }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.scaleway_secret_key }}
+  AWS_DEFAULT_REGION: ${{ secrets.scaleway_region }}
+
+jobs:
+  download-tdlib:
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/tdlib/${{ env.LIB_VERSION }} libs --recursive --endpoint-url ${{ env.ENDPOINT }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: libs
+          path: libs
+  download-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - run: aws s3 cp s3://${{ env.BUCKET }}/cli/cli.jar . --endpoint-url ${{ env.ENDPOINT }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: cli
+          path: cli.jar
+
+  test-jvm:
+    needs: [download-tdlib, download-cli]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 3
+      matrix:
+        java: [8, 11, 13]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: dispatch #TODO develop
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - uses: actions/download-artifact@v1
+        with:
+          name: cli
+      - uses: actions/download-artifact@v1
+        with:
+          name: libs
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: publishToMavenLocal -PpublishCore
+
+      #1.5.0
+      - run: java -jar cli/cli.jar api -v 1.5.0
+      - run: java -jar cli/cli.jar copyLibs -lf libs/1.5.0
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: publishToMavenLocal -PtdVersion=1.5.0 -PpublishTdlib -PpublishApi --info
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: :integration:jvmTest --info -PtdIntegrationVersion=1.5.0
+
+      #1.6.0
+      - run: java -jar cli/cli.jar api -v 1.6.0
+      - run: java -jar cli/cli.jar copyLibs -lf libs/1.6.0
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: publishToMavenLocal -PtdVersion=1.6.0 -PpublishTdlib -PpublishApi --info
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: :integration:jvmTest --info -PtdIntegrationVersion=1.6.0
+
+#  test-android:
+#    needs: [download-tdlib, download-cli]
+#    runs-on: macos-latest
+#    strategy:
+#      max-parallel: 3
+#      matrix:
+#        arch: [x86_64, x86]
+#        api-level: [21, 29]
+#    steps:
+#      - uses: actions/checkout@v1
+#        with:
+#          ref: dispatch #TODO develop
+#      - uses: actions/setup-java@v1
+#        with:
+#          java-version: 11
+#      - uses: actions/download-artifact@v1
+#        with:
+#          name: cli
+#      - uses: actions/download-artifact@v1
+#        with:
+#          name: libs
+#
+#      - name: Copy libs
+#        run: java -jar cli/cli.jar copyLibs -v ${{ matrix.tdVersion }} -lf libs/${{ matrix.tdVersion }}
+#
+#
+#      - uses: eskatos/gradle-command-action@v1
+#        with:
+#          arguments: publishToMavenLocal --info -PtdOnlyVersion=${{ matrix.tdVersion }}
+#
+#      - uses: reactivecircus/android-emulator-runner
+#        with:
+#          api-level: ${{ matrix.api-level }}
+#          arch: ${{ matrix.arch }}
+#          script: ./gradlew :api:integration:connectedCheck --info -PtdIntegrationVersion=${{ matrix.tdVersion }} -PtdOnlyVersion=${{ matrix.tdVersion }}

@@ -2,14 +2,12 @@ plugins {
     use(Plugins.mppModule + Plugins.atomicfuModule)
 }
 
-configureMultiplatform(
-    publishable = false
-)
+configureMultiplatform()
 
 kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
-        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
+        compileOnly(Dependencies.atomicfuMpp)
     }
     metadata {
         dependenciesMain {

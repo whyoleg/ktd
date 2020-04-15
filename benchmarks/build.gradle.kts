@@ -1,8 +1,8 @@
 plugins {
-    use(Plugins.mppModule + Plugins.benchmarks)
+    use(Plugins.mppModule + Plugins.benchmarksModule)
 }
 
-configureMultiplatform(publishable = false)
+configureMultiplatform()
 
 kotlin {
     dependenciesMain {

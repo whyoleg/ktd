@@ -3,16 +3,17 @@ plugins {
 }
 
 configureMultiplatform()
+configurePublishing("client-core")
 
 kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
-        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
+        compileOnly(Dependencies.atomicfuMpp)
     }
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
         implementation(Dependencies.kotlin.annotations)
-        runtimeOnly(Dependencies.kotlinx.atomicfu.runtime)
+        runtimeOnly(Dependencies.atomicfuMpp)
     }
 
     metadata {

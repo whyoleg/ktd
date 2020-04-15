@@ -3,17 +3,18 @@ plugins {
 }
 
 configureMultiplatform()
+configurePublishing("core")
 
 kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
         api(Dependencies.kotlinx.serialization.runtime)
-        compileOnly(Dependencies.kotlinx.atomicfu.runtime)
+        compileOnly(Dependencies.atomicfuMpp)
     }
     dependenciesTest {
         implementation(Dependencies.kotlin.test)
         implementation(Dependencies.kotlin.annotations)
-        runtimeOnly(Dependencies.kotlinx.atomicfu.runtime)
+        runtimeOnly(Dependencies.atomicfuMpp)
     }
 
     metadata {

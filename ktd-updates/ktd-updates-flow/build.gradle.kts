@@ -3,6 +3,7 @@ plugins {
 }
 
 configureMultiplatform()
+configurePublishing("updates-flow")
 
 kotlin {
     dependenciesMain {

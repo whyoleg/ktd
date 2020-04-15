@@ -3,6 +3,7 @@ plugins {
 }
 
 configureMultiplatform()
+configurePublishing("json")
 
 kotlin {
     dependenciesMain {

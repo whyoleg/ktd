@@ -77,6 +77,7 @@ class IncrementalTdApiClient(api: TdApi) {
  * @return id of request
  * TODO Only the top-level functions can have a contract for now.
  */
+@OptIn(ExperimentalContracts::class)
 inline fun IncrementalTdApiClient.send(request: TdApiRequest, preconfigure: (requestId: Long) -> Unit = {}): Long {
     contract {
         callsInPlace(preconfigure, InvocationKind.EXACTLY_ONCE)

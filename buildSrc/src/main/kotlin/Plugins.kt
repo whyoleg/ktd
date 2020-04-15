@@ -1,4 +1,3 @@
-import dev.whyoleg.kamp.dependency.*
 import dev.whyoleg.kamp.modules.*
 
 object Plugins {
@@ -15,5 +14,5 @@ object Plugins {
     )
 
     val serializationModule = listOf(KotlinPlugins.Stable.serialization)
-    val benchmarks = listOf(KampPlugin("kotlinx.benchmark"), KampPlugin("org.jetbrains.kotlin.plugin.allopen"))
+    val benchmarksModule = listOf(KotlinxPlugins.Stable.benchmark, KotlinPlugins.Stable.allOpen)
 }

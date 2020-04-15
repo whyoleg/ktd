@@ -14,7 +14,7 @@ fun Project.configureSerialization() {
 
 fun Project.configureApi(vararg modules: ProjectModule) {
     Plugins.mppAndroidModule.forEach { (name) -> plugins.apply(name) }
-    configureMultiplatform(useAndroidLibrary = true)
+    configureMultiplatform(android = true)
 
     extensions.configure<KotlinMultiplatformExtension> {
         dependenciesMain {

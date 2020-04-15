@@ -2,10 +2,7 @@ plugins {
     use(Plugins.mppAndroidModule)
 }
 
-configureMultiplatform(
-    useAndroidLibrary = true,
-    publishable = false
-)
+configureMultiplatform(android = true)
 
 val tdIntegrationVersion = properties["tdIntegrationVersion"]?.toString()
 

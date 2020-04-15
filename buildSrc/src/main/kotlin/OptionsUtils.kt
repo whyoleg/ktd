@@ -8,7 +8,12 @@ fun KotlinCommonOptions.default() {
     languageVersion = "1.3"
     apiVersion = "1.3"
     enableLanguageFeatures(listOf(LanguageFeature.InlineClasses, LanguageFeature.NewInference))
-    useExperimentalAnnotations(KotlinExperimentalAnnotations.All + KotlinxExperimentalAnnotations.All)
+    useExperimentalAnnotations(
+        listOf(
+            KotlinExperimentalAnnotations.ExperimentalTime,
+            KotlinxExperimentalAnnotations.ExperimentalCoroutinesApi
+        )
+    )
 }
 
 fun LanguageSettingsBuilder.default() {
@@ -16,7 +21,6 @@ fun LanguageSettingsBuilder.default() {
     languageVersion = "1.3"
     apiVersion = "1.3"
     enableLanguageFeatures(listOf(LanguageFeature.InlineClasses, LanguageFeature.NewInference))
-    useExperimentalAnnotations(KotlinExperimentalAnnotations.All + KotlinxExperimentalAnnotations.All)
 }
 
 fun KotlinJvmOptions.default() {

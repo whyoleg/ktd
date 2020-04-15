@@ -3,6 +3,7 @@ plugins {
 }
 
 configureMultiplatform()
+configureApiPublishing("api-raw")
 
 kotlin {
     dependenciesMain {

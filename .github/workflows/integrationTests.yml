@@ -69,12 +69,12 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Publish to local
         with:
-          arguments: publishToMavenLocal -PtdVersion=${{ matrix.tdVersion }} -PpublishAll=true --info
+          arguments: publishToMavenLocal -PtdVersion=${{ matrix.tdVersion }} -PpublishAll=true
 
       - uses: eskatos/gradle-command-action@v1
         name: Run integration tests
         with:
-          arguments: :integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }}
+          arguments: :integration:jvmTest --info -PtdIntegrationVersion=${{ matrix.tdVersion }} --info
 
 #  test-android:
 #    needs: [download-tdlib, download-cli]

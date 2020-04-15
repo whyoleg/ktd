@@ -39,10 +39,8 @@ class ConcurrentSuspendBenchmark {
 
     @Benchmark
     fun run(): Unit = runBlocking {
-        GlobalScope.launch {
-            clients.forEach { client ->
-                launch { client.exec(request) }
-            }
-        }.join()
+        clients.map { client ->
+            async { client.exec(request) }
+        }.awaitAll()
     }
 }

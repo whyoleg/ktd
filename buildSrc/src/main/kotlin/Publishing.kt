@@ -34,8 +34,10 @@ private fun Project.publishing(
         publications.all {
             this as MavenPublication
             pom(publication)
-            val target = artifactId.substringAfterLast("-", "")
-            val name = if (target.isBlank()) moduleName else "$moduleName-$target"
+            val name = when (val target = artifactId.substringAfterLast("-")) {
+                "jvm", "metadata", "android" -> "$moduleName-$target"
+                else                         -> moduleName
+            }
             artifactId = "ktd-$name"
             version = versionConfiguration()
             println("ARTIFACT: $artifactId:$version")

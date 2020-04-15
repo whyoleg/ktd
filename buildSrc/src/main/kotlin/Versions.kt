@@ -5,7 +5,8 @@ object Versions {
 
     val kotlinx = KotlinxVersions.Stable.copy(
         atomicfu = "0.14.3",
-        immutableCollections = "0.3.2"
+        immutableCollections = "0.3.2",
+        benchmark = "0.2.0-dev-7"
     )
 
     val ktor = KtorVersion.Stable

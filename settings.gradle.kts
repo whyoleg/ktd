@@ -7,6 +7,7 @@ buildscript {
         mavenCentral()
         google()
         jcenter()
+        gradlePluginPortal()
     }
     dependencies {
         val kotlinVersion = "1.3.72"
@@ -17,7 +18,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.3")
         classpath("com.github.jengelman.gradle.plugins:shadow:5.2.0")
-        classpath("org.jetbrains.kotlinx:kotlinx.benchmark.gradle:0.2.0-dev-8")
+        classpath("org.jetbrains.kotlinx:kotlinx.benchmark.gradle:0.2.0-dev-7")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.27.0")
     }
 }

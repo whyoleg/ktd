@@ -10,6 +10,11 @@ kotlin {
         implementation(Dependencies.kotlinx.coroutines.core)
         implementation(Dependencies.kotlinx.benchmark.metadata)
     }
+    jvm {
+        dependenciesMain {
+            implementation(Dependencies.kotlinx.benchmark.jvm)
+        }
+    }
     metadata {
         dependenciesMain {
             implementation(ProjectModules.Client.clientSuspend)

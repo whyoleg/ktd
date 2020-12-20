@@ -1,5 +1,5 @@
 plugins {
-    use(Plugins.mppModule + Plugins.atomicfuModule)
+    ids(Plugins.mppWithAtomic)
 }
 
 configureMultiplatform()
@@ -7,11 +7,9 @@ configureMultiplatform()
 kotlin {
     dependenciesMain {
         api(Dependencies.kotlin.stdlib)
-        compileOnly(Dependencies.atomicfuMpp)
+        compileOnly(Dependencies.atomicfuMetadata)
     }
-    metadata {
-        dependenciesMain {
-            api(ProjectModules.core)
-        }
+    kampCommonMain.dependencies {
+        api(KampModules.client)
     }
 }

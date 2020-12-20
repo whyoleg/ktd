@@ -1,3 +1,3 @@
-configureApi(ProjectModules.Api.apiCore)
+configureApi(KampModules.Api.apiCore)
 configureSerialization()
 configureApiPublishing("api-user")

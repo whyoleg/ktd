@@ -1,42 +1,31 @@
 import dev.whyoleg.kamp.dependency.*
-import dev.whyoleg.kamp.dependency.builder.*
-import dev.whyoleg.kamp.modules.*
-import dev.whyoleg.kamp.platform.*
+import dev.whyoleg.kamp.feature.kotlin.*
+import dev.whyoleg.kamp.feature.kotlinx.*
+import dev.whyoleg.kamp.feature.ktor.*
 
 object Dependencies {
-    val kotlin = KotlinModule(Versions.kotlin).dependencies
-    val kotlinx = KotlinxModule(Versions.kotlinx).dependencies
-    val ktor = KtorDependencies(Versions.ktor)
+    val kotlin = Kotlin.dependencies(KampVersions.kotlin)
+    val kotlinx = Kotlinx.dependencies(
+        KotlinxVersions(
+            coroutines = KampVersions.Kotlinx.coroutines,
+            serialization = KampVersions.Kotlinx.serialization,
+            atomicfu = KampVersions.Kotlinx.atomicfu,
+            cli = KampVersions.Kotlinx.cli,
+            immutableCollections = KampVersions.Kotlinx.immutableCollections,
+            benchmark = KampVersions.Kotlinx.benchmark
+        )
+    )
+    val atomicfuMetadata = kotlinx.atomicfu.platforms(KampPlatform.common)
 
-    val atomicfuMpp = kotlinx.atomicfu.runtime.platforms(KampPlatform.common())
+    val ktor = Ktor.dependencies()
 
-    val githubApi =
-        group("org.kohsuke", RepositoryProviders.mavenCentral)
-            .artifact("github-api").version(Versions.githubApi).jvm
-    val kotlinShell =
-        group("eu.jrie.jetbrains", RepositoryProviders.bintray("jakubriegel", "kotlin-shell"), KotlinModule.EapProvider)
-            .artifact("kotlin-shell-core").version(Versions.kotlinShell).jvm
+    val githubApi = dependency("org.kohsuke", "github-api", KampVersions.githubApi, KampPlatform.jvm)
+    val kotlinShell = dependency("eu.jrie.jetbrains", "kotlin-shell-core", KampVersions.kotlinShell, KampPlatform.jvm)
+    val kotlinPoet = dependency("com.squareup", "kotlinpoet", KampVersions.kotlinPoet, KampPlatform.jvm)
 
-    val kotlinPoet =
-        group("com.squareup", RepositoryProviders.mavenCentral)
-            .artifact("kotlinpoet").version(Versions.kotlinPoet).jvm
-
-    fun ktdApiTest(tdVersion: String) =
-        group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
-            .artifact("ktd-api-test").version("${Versions.ktdVersion}-$tdVersion").common
-
-    object Reactive {
-        val rx2 =
-            group("io.reactivex.rxjava2", RepositoryProviders.mavenCentral)
-                .artifact("rxjava").version(Versions.Reactive.rx2).jvm
-        val rx3 =
-            group("io.reactivex.rxjava3", RepositoryProviders.mavenCentral)
-                .artifact("rxjava").version(Versions.Reactive.rx3).jvm
-        val reactor =
-            group("io.projectreactor", RepositoryProviders.mavenCentral)
-                .artifact("reactor-core").version(Versions.Reactive.reactor).jvm
-        val reaktive =
-            group("com.badoo.reaktive", RepositoryProviders.bintray("badoo", "maven"))
-                .artifact("reaktive").version(Versions.Reactive.reaktive).common
-    }
 }
+//
+//    fun ktdApiTest(tdVersion: String) =
+//        group("dev.whyoleg.ktd", RepositoryProviders.mavenLocal)
+//            .artifact("ktd-api-test").version("${Versions.ktdVersion}-$tdVersion").common
+//

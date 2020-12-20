@@ -1,3 +1,6 @@
-configureApi(ProjectModules.core, ProjectModules.tdlib)
+plugins {
+    ids(Plugins.mppWithAndroidAndSerialization)
+}
+configureApi(KampModules.api, KampModules.tdlib)
 configureSerialization()
-configureApiPublishing("api-core")
+//configureApiPublishing("api-core")

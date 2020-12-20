@@ -1,2 +1,2 @@
-configureApi(ProjectModules.Api.apiCoreSuspend, ProjectModules.Api.apiBots)
+configureApi(KampModules.Api.apiCoreSuspend, KampModules.Api.apiBots)
 configureApiPublishing("api-bots-suspend")

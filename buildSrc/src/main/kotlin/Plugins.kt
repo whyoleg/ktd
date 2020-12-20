@@ -1,18 +1,24 @@
-import dev.whyoleg.kamp.modules.*
+import dev.whyoleg.kamp.feature.kotlin.*
+import dev.whyoleg.kamp.feature.kotlinx.*
+import dev.whyoleg.kamp.feature.shadow.*
+import dev.whyoleg.kamp.feature.gradle.*
+import dev.whyoleg.kamp.feature.android.*
 
 object Plugins {
-    val mppModule = listOf(KotlinPlugins.Stable.kotlinMpp, GradleBuiltInPlugins.mavenPublish)
-    val mppAndroidModule = mppModule + BuiltInPlugins.Stable.androidLib
-    val exampleModule = listOf(KotlinPlugins.Stable.kotlinMpp)
-    val atomicfuModule = listOf(KotlinxPlugins.Stable.atomicfu)
-    val cliModule = listOf(
-        KotlinPlugins.Stable.kotlinJvm,
-        KotlinPlugins.Stable.serialization,
-        BuiltInPlugins.Stable.shadow,
-        GradleBuiltInPlugins.application,
-        GradleBuiltInPlugins.mavenPublish
+    val cli = listOf(
+        KotlinPlugins.jvm,
+        KotlinPlugins.serialization,
+        GradlePlugins.application,
+        GradlePlugins.mavenPublish,
+        Shadow.plugin
     )
 
-    val serializationModule = listOf(KotlinPlugins.Stable.serialization)
-    val benchmarksModule = listOf(KotlinxPlugins.Stable.benchmark, KotlinPlugins.Stable.allOpen)
+    val mpp = listOf(KotlinPlugins.multiplatform, GradlePlugins.mavenPublish)
+    val mppWithAndroid = mpp + AndroidPlugins.library
+    val mppWithAndroidAndSerialization = mppWithAndroid + KotlinPlugins.serialization
+
+    val mppWithAtomic = mpp + KotlinxPlugins.atomicfu
+    val core = mppWithAtomic + KotlinPlugins.serialization
+
+    val benchmarks = mpp + KotlinxPlugins.benchmark + KotlinPlugins.allOpen
 }

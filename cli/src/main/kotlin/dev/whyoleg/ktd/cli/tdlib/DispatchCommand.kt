@@ -13,12 +13,10 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
 import java.util.*
 
-@OptIn(ExperimentalCli::class)
 class DispatchCommand : Subcommand("dispatch", "Dispatch GH action") {
     private val version by option(ArgType.String, "version", "v", "Version of TdLib").required()
     private val type by option(DispatchTypeArgType, "type", "t", "Type of dispatch").required()
 
-    @OptIn(KtorExperimentalAPI::class)
     override fun execute() {
         val client = HttpClient(CIO)
         runBlocking {

@@ -1,6 +1,5 @@
 package dev.whyoleg.ktd.test
 
-import dev.whyoleg.ktd.*
 import dev.whyoleg.ktd.api.*
 import kotlinx.atomicfu.*
 

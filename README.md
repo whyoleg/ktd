@@ -115,3 +115,23 @@ Now library published only to bintray, it will change in future.
 ## Status
 
 For now, library has experimental status, so public interface can be changed any time until 1.0 version.
+
+
+
+modules: 
+
+- benchmarks
+- cli
+- examples
+- integration
+
+- ktd-test
+- ktd-migration                           :0.6.0 (only)
+
+- ktd-client                              :0.6.0
+- ktd-client                   -coroutines:0.6.0
+
+- ktd-api-[base|bots|user|test]           :0.6.0-[1.5.0|1.6.0|1.6.4]
+- ktd-api-[base|bots|user|test]-coroutines:0.6.0-[1.5.0|1.6.0|1.6.4]    
+
+- ktd-tdlib                               :2    -[1.5.0|1.6.0|1.6.4]

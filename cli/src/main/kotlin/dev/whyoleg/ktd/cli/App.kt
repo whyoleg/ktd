@@ -9,7 +9,6 @@ fun main(args: Array<String>) {
     parser().parse(args)
 }
 
-@OptIn(ExperimentalCli::class)
 private fun parser() = ArgParser("ktd").apply {
     subcommands(
         TdlibCommand(),

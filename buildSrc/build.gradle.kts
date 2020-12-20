@@ -1,4 +1,19 @@
-plugins { `kotlin-dsl` }
+buildscript {
+    repositories {
+        maven("https://dl.bintray.com/whyoleg/kamp")
+    }
+    dependencies {
+        classpath("dev.whyoleg.kamp:kamp-build:0.3.0.beta.1")
+    }
+}
+
+plugins {
+    `kotlin-dsl`
+}
+
+kotlinDslPluginOptions {
+    experimentalWarning.set(false)
+}
 
 repositories {
     maven("https://dl.bintray.com/whyoleg/kamp")
@@ -7,9 +22,19 @@ repositories {
     jcenter()
 }
 
+kampBuild {
+    publication = true
+    features {
+        android = true
+        kotlin = true
+        kotlinx = true
+        ktor = true
+        gradle = true
+        shadow = true
+        updates = true
+    }
+}
+
 dependencies {
-    implementation("dev.whyoleg.kamp:kamp:0.2.1-pre-5")
-    implementation("com.android.tools.build:gradle:3.5.3")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.70")
-    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.3.70")
+    implementation("com.android.tools.build:gradle:3.6.0")
 }

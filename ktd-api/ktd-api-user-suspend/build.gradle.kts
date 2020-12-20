@@ -1,2 +1,2 @@
-configureApi(ProjectModules.Api.apiCoreSuspend, ProjectModules.Api.apiUser)
+configureApi(KampModules.Api.apiCoreSuspend, KampModules.Api.apiUser)
 configureApiPublishing("api-user-suspend")

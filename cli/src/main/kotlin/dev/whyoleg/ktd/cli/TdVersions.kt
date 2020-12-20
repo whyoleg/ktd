@@ -9,6 +9,7 @@ val tdVersionRefs = mapOf(
     "1.6.0" to "c41640df44c259a8cb6686f53e3869f4e1342e1b",
     "1.6.1" to "545ed2a683b90ee305549ba27b1022f24d04adcd",
     "1.6.2" to "9679cef0bb0b8a8c2d7fecb51fa901392cfa196b"
+    //1.6.7 - latest
 )
 
 val tdVersions = tdVersionRefs.keys.sorted()

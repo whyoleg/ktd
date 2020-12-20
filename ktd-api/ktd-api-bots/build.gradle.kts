@@ -1,3 +1,3 @@
-configureApi(ProjectModules.Api.apiCore)
+configureApi(KampModules.Api.core)
 configureSerialization()
-configureApiPublishing("api-bots")
+//configureApiPublishing("api-bots")

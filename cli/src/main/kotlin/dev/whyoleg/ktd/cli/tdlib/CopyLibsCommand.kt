@@ -3,7 +3,6 @@ package dev.whyoleg.ktd.cli.tdlib
 import kotlinx.cli.*
 import java.io.*
 
-@OptIn(ExperimentalCli::class)
 class CopyLibsCommand : Subcommand("copyLibs", "Copy libs to right folders") {
     private val libsFolder by option(ArgType.String, "libsFolder", "lf", "Folder with generated libs").default("libs")
 

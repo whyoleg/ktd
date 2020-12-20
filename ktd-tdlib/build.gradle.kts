@@ -1,9 +1,11 @@
 plugins {
-    use(Plugins.mppAndroidModule)
+    ids(Plugins.mppWithAndroid)
 }
 
-configureMultiplatform(android = true)
-configureTdlibPublishing()
+configureMultiplatform {
+    defaultTargets()
+}
+//configureTdlibPublishing()
 
 tasks.named<Jar>("jvmJar") {
     from(file("src/jvmMain/jniLibs")) { into("libs") }

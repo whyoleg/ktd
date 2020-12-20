@@ -17,8 +17,8 @@ kotlin {
     }
     metadata {
         dependenciesMain {
-            implementation(ProjectModules.Client.clientSuspend)
-            implementation(ProjectModules.Api.apiTest)
+            implementation(KampModules.Client.clientSuspend)
+            implementation(KampModules.Api.apiTest)
         }
     }
 }

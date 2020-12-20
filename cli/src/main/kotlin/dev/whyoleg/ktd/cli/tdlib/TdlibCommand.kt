@@ -7,8 +7,8 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.config.*
 import java.io.*
+import kotlin.time.*
 
-@OptIn(ExperimentalCli::class)
 class TdlibCommand : Subcommand("tdlib", "Generate tdlib") {
     private val platform by option(BuildPlatformArgType, "platform", "p", "Platform for build").required()
     private val target by option(BuildTargetArgType, "target", "t", "Target for build").required()
@@ -36,7 +36,6 @@ class TdlibCommand : Subcommand("tdlib", "Generate tdlib") {
         }
     }
 
-    @OptIn(ImplicitReflectionSerializer::class)
     private inline fun <reified T> config(path: String): T = ConfigParser.parse(ConfigFactory.parseFile(File(configPath)).getConfig(path))
 }
 

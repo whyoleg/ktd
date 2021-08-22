@@ -1,8 +1,14 @@
 # ktd
 
-![](https://github.com/whyoleg/ktd/workflows/Build%20version/badge.svg)
-[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Download](https://api.bintray.com/packages/whyoleg/ktd/ktd/images/download.svg)](https://bintray.com/whyoleg/ktd/ktd/_latestVersion)
+## ⚠️⚠️⚠️ 
+## This project isn't maintained anymore and will be reborned in some way in 2022 
+## ⚠️⚠️⚠️
+
+
+
+
+
+
 
 Library provide wrapper over [tdlib](https://github.com/tdlib/td) Telegram API using coroutines `Flow` and `suspend` functions.
 For every tdlib function exists easy to use extension function with parameters and return type.
